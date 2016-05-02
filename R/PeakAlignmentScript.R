@@ -13,12 +13,12 @@ rm(list=ls())
 library(readr)
 library(stringr)
 
-source('RetentionCutoff.R')
-source('LinearTransformation.R')
-source('MatrixOperations.R')
-source('CorrectRows.R')
-source('ReNaming.R')
-source('ChromaVariation.R')
+source('R/RetentionCutoff.R')
+source('R/LinearTransformation.R')
+source('R/MatrixOperations.R')
+source('R/CorrectRows.R')
+source('R/ReNaming.R')
+source('R/ChromaVariation.R')
 # preprocessing -------------------------------------------------------------------------------
 
 # load data
@@ -34,33 +34,56 @@ ind_names <- str_replace(ind_names, "-1.raw", "")
 ind_names <- tolower(ind_names)
 
 # transform GC data to list of individual GC matrices 
-extract <- seq(from = 1, to = ncol(chroma), by = 7)
-Chromatograms <- lapply(extract, function(x) chroma[, x:(x+6)])
+# extract <- seq(from = 1, to = ncol(chroma), by = 7)
+# Chromatograms <- lapply(extract, function(x) chroma[, x:(x+6)])
 
 # name list elements according to individuals
-names(Chromatograms) <- ind_names
+# names(Chromatograms) <- ind_names
 
 # rename columns in data.frames
-Chromatograms <- lapply(Chromatograms, ReName)
+# Chromatograms <- lapply(Chromatograms, ReName)
 
+
+rm(list=c('ind_names','extract','ReName','delete_space_colnames'))
+
+# extract names of individuals 
+# ind_names <- unlist(read_csv2("data/Preen.csv", skip = 1, n_max = 1, col_names = FALSE ))
+# ind_names <- ind_names[!is.na(ind_names)]
+# ind_names <- str_replace(ind_names, "-1.raw", "")
+# ind_names <- tolower(ind_names)
+
+# start of package?
+
+# transform GC data to list of individual GC matrices 
+# GC_mat_to_list <- function(all_gc_mat, ind_names, var_names) {
+#     extract <- seq(from = 1, to = ncol(all_gc_mat), by = length(var_names))
+#     chromatograms <- lapply(extract, function(x) chromatograms[, x:(x+length(var_names))])
+#     names(chromatograms) <- ind_names
+#     chromatograms <- lapply(chromatograms, ReName)
+# }
+
+
+source("R/conv_gc_mat_to_list.R")
+source("R/rename_cols.R")
+chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = c("RT", "startRT", "endRT", "Area", "xArea", "Height", "xHeight"))
 
 rm(list=c('ind_names','extract','ReName','delete_space_colnames'))
 # Start of processing --------------------------------------------------------------------------
 
+source("R/rt_cutoff.R")
 # 1.) cut retention times below 8
-Chromatograms <- lapply(Chromatograms, RetentionCutoff)
+chromatograms <- lapply(chromatograms, rt_cutoff, low = 11, high = 20, rt_col_name = "RT")
 
+source("R/linear_transformation.R")
 # 2.) Linear Transformation of Retentiontimes
-Chroma_aligned <- AlignPeaks(Chromatograms = Chromatograms, References = "w4",
-                             Shift=0.05,StepSize=0.005,Error=0.02)
+chroma_aligned <- linear_transformation(chromatograms, shift=0.05, step_size=0.01, error=0, reference = "w3", rt_col_name = "RT")
 
-names(Chroma_aligned) <- names(Chromatograms) 
-
-Chromatograms <- Chroma_aligned
 # Make List equal in length
-Chromatograms <- lapply(Chromatograms, MatrixAppend, Chromatograms)
+source("R/matrix_append.R")
+Chromatograms <- lapply(chroma_aligned, matrix_append, chroma_aligned)
 
-Length <- (max(sapply(Chromatograms,function(x) out <- MatrixLength(Chromatograms[[1]]))))# To obtain Rows after run of the algorithm
+
+Length <- (max(sapply(Chromatograms,function(x) out <- nrow(Chromatograms[[1]]))))# To obtain Rows after run of the algorithm
 Variation <- mean(VarRows(Chromatograms),na.rm = T)
 
 rm(list=c("Chroma_aligned","chroma","AdjustRetentionTime","AlignPeaks","BestShift",
@@ -83,7 +106,7 @@ for (R in 1:1){
     # Leave Samples with RT within error range at their positions
     
     for (S in 2:length(Chromatograms)){                                               
-      RT <- Chromatograms[[S]]$ApexRT[Row]                                 
+      RT <- Chromatograms[[S]]$RT[Row]                                 
       AvRT <- MeanOfSamples(Chromatograms,Objects =1:(S-1),Row)          
       
       if(is.nan(AvRT)){
@@ -102,13 +125,13 @@ for (R in 1:1){
         for(J in 1:(S-1)){     
           # in case that one RT before the current RT is smaller current RT minus Error
           # we think that a second run makes this step unnecessary
-          #                 if(Chromatograms[[J]]$ApexRT[Row] < (RT-Error) {
+          #                 if(Chromatograms[[J]]$RT[Row] < (RT-Error) {
           #                     all_but <- c(1:(S-1))[-J]
           #                     for (i in 1:all_but){
           #                         Chromatograms <- ShiftRows(Chromatograms, i, Row, Error)
           #                     }
           #                 }
-          if(Chromatograms[[J]]$ApexRT[Row] <= (RT + Error)){
+          if(Chromatograms[[J]]$RT[Row] <= (RT + Error)){
             # Do nothing, substance?position is valid
           }else{
             Chromatograms <- ShiftRows(Chromatograms,J,Row,Error)
@@ -118,7 +141,7 @@ for (R in 1:1){
       
     }
     Row <- Row+1
-    Chromatograms <- lapply(Chromatograms, MatrixAppend, Chromatograms)# Make all equal in length
+    Chromatograms <- lapply(Chromatograms, matrix_append, Chromatograms)# Make all equal in length
     LastSubstance <- max(which(MeanRows(Chromatograms)==max(MeanRows(Chromatograms),na.rm=T)))
     # Remove tail of all-zero rows
     Chromatograms <- lapply(Chromatograms,DeleteZeros) # Remove appended zeros

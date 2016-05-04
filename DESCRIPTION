@@ -12,6 +12,9 @@ Depends:
 Import: dplyr,
         stringr,
         readr
-License:
+License: 
 LazyData: true
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

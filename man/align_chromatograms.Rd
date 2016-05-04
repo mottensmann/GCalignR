@@ -23,9 +23,6 @@ two columns (the retention time and the a)}
 \description{
 Aligning chromatograms based on retention times
 }
-\examples{
-
-}
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)

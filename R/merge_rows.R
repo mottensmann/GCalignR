@@ -14,7 +14,8 @@
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
 #' @export
-merge_redundant_rows <- function(chromatograms, average_rts,  min_distance=0.05){
+#'
+merge_redundant_rows <- function(chromatograms, average_rts, min_distance=0.05){
 
     Merging <- 'Start'
     while(Merging != 'Stop'){
@@ -43,7 +44,7 @@ merge_redundant_rows <- function(chromatograms, average_rts,  min_distance=0.05)
                 Merging <- "Stop"
                 break
             }
-            redundant <- sapply(lapply(chromatograms, check_redundancy, similar[counter]),as.vector) #Check first position
+            redundant <- sapply(lapply(chromatograms, check_redundancy, similar[counter]), as.vector) #Check first position
 
             # checks whether all individuals just have substances in one of the rows ("Strict")
             # checks whether at least 95% of individuals just have substances in one of the rows ("Proportional")
@@ -99,7 +100,7 @@ similar_rows <- function(average_rts, min_distance=0.05){
 #' If only one of two neighbouring rows contain a substancethey are redundant, coded by a One
 #'
 #' @param chromatograms
-#' @param  similar
+#' @param similar
 #'
 #' @return
 #' if similar rows are redundant, 1, else 0

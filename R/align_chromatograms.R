@@ -3,9 +3,16 @@
 #' @param datafile datafile is a tab-delimited txt file. The first rows needs to contain
 #' sample ID´s, the second row column names of the corresponding chromatograms. Starting with
 #' the third row chromatograms are included, whereby single samples are concatenated horizontally
-#' Each chromatogram needs to contain at least
-#' two columns (the retention time and the a)
-#' @param rt_name
+#' Each chromatogram needs to consist of the same number of columns, at least
+#' two are required (the retention time and the area)
+#' @param rt_name character, name of the column holding retention times
+#'
+#' @param rt_cutoff_low numeric, lower threshold under which retention times are cutted
+#'
+#' @param rt_cutoff_high numeric, upper threshold above which retention times are cutted
+#'
+#' @param reference character, a sample to which all other samples are aligned to by means of a
+#' linear shift
 #'
 #' @return
 #'

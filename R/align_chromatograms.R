@@ -27,6 +27,10 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 
     if (is.null(rt_name)) stop("specify name of retention time column")
     if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
+
+    ## check for leading or tailing whitespaces in the names etc
+
+
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
         stringr::str_split(pattern = "\t") %>%
@@ -42,7 +46,11 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     # extract data
     chroma <- read.table(datafile, skip = 2, sep = "\t", stringsAsFactors = F)
 
+    # for cara replace commas
+    # chroma <- apply(chroma, 2, function(x) x <- str_replace_all(x, ",", "."))
+
     # transform to numeric
+
     chroma <-  as.data.frame(apply(chroma, 2, as.numeric))
 
     # check 1
@@ -56,8 +64,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 # Start of processing --------------------------------------------------------------------------
 
     # 1.) cut retention times
-    chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high,
-                            rt_col_name = rt_name)
+    chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_name)
 
     # 2.) Linear Transformation of Retentiontimes
 

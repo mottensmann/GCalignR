@@ -1,8 +1,9 @@
 #' Aligning chromatograms based on retention times
 #'
-#' @param datafile The datafile is a tab-delimited txt file. The first row contains the individual names,
-#' the second row contains the names of the columns per individuals (i.e. RT, Area, Height),
-#' the third row to the end contains the data GC data table. Each individual should contain at least
+#' @param datafile datafile is a tab-delimited txt file. The first rows needs to contain
+#' sample ID´s, the second row column names of the corresponding chromatograms. Starting with
+#' the third row chromatograms are included, whereby single samples are concatenated horizontally
+#' Each chromatogram needs to contain at least
 #' two columns (the retention time and the a)
 #' @param rt_name
 #'

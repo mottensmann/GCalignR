@@ -4,7 +4,8 @@
 \alias{align_individual_peaks}
 \title{algorithm to adjust unreliability of chromatograms on an individual peak basis}
 \usage{
-align_individual_peaks(chromatograms, error_span = 0.02, n_iter = 1)
+align_individual_peaks(chromatograms, error_span = 0.02, n_iter = 1,
+  rt_col_name)
 }
 \arguments{
 \item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
@@ -15,6 +16,8 @@ time, retention time has to be named RT.}
 
 \item{n_iter}{number of iterations for the algorithm. One iteration is usually optimal, but
 for large datasets more iteration might be better. Has to be evaluated properly.}
+
+\item{rt_col_name}{column name of retention time}
 }
 \value{
 aligned chromatograms

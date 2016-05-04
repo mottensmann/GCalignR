@@ -4,7 +4,7 @@
 \alias{check_redundancy}
 \title{If only one of two neighbouring rows contain a substancethey are redundant, coded by a One}
 \usage{
-check_redundancy(chromatogram, similar)
+check_redundancy(chromatogram, similar, rt_col_name)
 }
 \arguments{
 \item{similar}{}

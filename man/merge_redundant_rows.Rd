@@ -4,7 +4,8 @@
 \alias{merge_redundant_rows}
 \title{merges redundant rows}
 \usage{
-merge_redundant_rows(chromatograms, average_rts, min_distance = 0.05)
+merge_redundant_rows(chromatograms, average_rts, min_distance = 0.05,
+  rt_col_name)
 }
 \arguments{
 \item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for

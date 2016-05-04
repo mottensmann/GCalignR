@@ -32,7 +32,7 @@ linear_transformation <- function(chromatograms,reference,
 
     shift_rts <- function(sample_df, ref_df, shift, step_size, error) {
         optimal_shift <- peak_shift(sample_df, ref_df, shift, step_size, error, rt_col_name)
-        shifted <- adj_ret_time(sample_df, optimal_shift)
+        shifted <- adj_ret_time(sample_df, optimal_shift, rt_col_name)
     }
 
     chroma_aligned <- lapply(chromatograms, shift_rts, ref_df = ref, shift = shift, step_size = step_size, error = error)

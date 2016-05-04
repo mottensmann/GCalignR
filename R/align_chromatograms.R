@@ -14,9 +14,6 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#' @example
-#'
-#'
 #'
 #'
 #' @export
@@ -27,7 +24,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
                                 del_single_sub = FALSE) {
 
     if (is.null(rt_name)) stop("specify name of retention time column")
-
+    if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
         stringr::str_split(pattern = "\t") %>%

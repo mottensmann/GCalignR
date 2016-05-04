@@ -4,7 +4,7 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, rt_name = "RT", output = NULL,
+align_chromatograms(datafile, rt_name = NULL, write_output = NULL,
   rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
   step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05,
   blanks = NULL, del_single_sub = FALSE)

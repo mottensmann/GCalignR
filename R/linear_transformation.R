@@ -40,6 +40,23 @@ linear_transformation <- function(chromatograms,reference,
     chroma_aligned
 }
 
+#' shifts retention times of a chromatogram and estimates the number of shared peaks with the
+#' reference.
+#' 
+#' @param sample_df \code{data.frame} with individual gc data
+#' @param ref_df \code{data.frame} with individual gc data of the reference chromatogram
+#' @param shift shift span to try for maximising shared peaks
+#' @param step_size steps to take within the shift span
+#' @param error allowed error
+#' @param rt_col_name RT time column name
+#'   
+#' @return Numeric Value, indicating the best shift (e.g. -0.02 seconds)
+#' 
+#' 
+#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#'   (meinolf.ottensmann@@web.de)
+#'   
+ 
 
 #### doc missing
 peak_shift <- function(sample_df, ref_df, shift=0.05, step_size=0.01, error=0, rt_col_name){
@@ -59,6 +76,23 @@ peak_shift <- function(sample_df, ref_df, shift=0.05, step_size=0.01, error=0, r
 }
 
 
+#' Calculate the Number of shared peaks between a Chromatogram and its reference
+#' 
+#' 
+#' @param sample_df \code{data.frame} with individual gc data
+#' @param ref_df \code{data.frame} with individual gc data of the reference chromatogram
+#' @param shift_steps steps to taken within the shift span
+#' @param error allowed error
+#' @param rt_col_name RT time column name
+#'   
+#' @return list of number of peaks and shift steps
+#' 
+#' @details Shared peaks fall within the retention time of the reference and +- the Error [s]
+#' 
+#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#'   (meinolf.ottensmann@@web.de)
+#'   
+#'   
 shared_peaks <- function(sample_df, ref_df, shift_steps, error=0, rt_col_name) {
     # Calculate the Number of shared peaks between a Chromatogram and its reference
     # Shared peaks fall within the retention time of the reference and +- the Error [s]
@@ -68,12 +102,12 @@ shared_peaks <- function(sample_df, ref_df, shift_steps, error=0, rt_col_name) {
     for (j in 1:length(shift_steps)){
         temp <- sample_df[[rt_col_name]]+shift_steps[j] # Shift all Peaks by the same step 
         peaks <- 0
-        for (k in 1:length(  temp)){ # loop through all Peaks of the current Sample
+        for (k in 1:length(temp)){ # loop through all Peaks of the current Sample
             for (l in 1:length(ref)){ # loop through the Reference Chromatogram
                 temp_peak <- temp[k]
                 ref_peak <- ref[l]
                 if ( temp_peak!=0){ # Avoid comparison with cases of RT=0
-                    if (( temp_peak <= ref_peak+error) & (temp_peak >= ref_peak-error)){
+                    if ((temp_peak <= ref_peak+error) & (temp_peak >= ref_peak-error)){
                         peaks <- peaks+1
                     }
                 }
@@ -86,12 +120,24 @@ shared_peaks <- function(sample_df, ref_df, shift_steps, error=0, rt_col_name) {
     output <- list(no_of_peaks ,shift_steps)
 }
 
-best_shift <- function(List){
-    # Selects the optimal Shifting time leading to the maximum number of shared peaks
-    # If competing shifts exists (i.e. same number of peaks are shared)
-    # selects the smallest absolute value of a shift
-    ShiftTime <- as.vector(List[[1]])
-    Peaks <- as.vector(List[[2]])
+#' Selects the optimal Shifting time leading to the maximum number of shared peaks
+#' 
+#' @param list, output from shared_peaks
+#'   
+#' @return list of number of peaks and shift step for which this is maximised
+#' 
+#' @details If competing shifts exists (i.e. same number of peaks are shared), 
+#'          selects the smallest absolute value of a shift
+#' 
+#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#'   (meinolf.ottensmann@@web.de)
+#'   
+#'  
+#'  
+best_shift <- function(list){
+
+    ShiftTime <- as.vector(list[[1]])
+    Peaks <- as.vector(list[[2]])
     Index <- which(ShiftTime==max(ShiftTime)) # find the best fit = maximum of shared peaks
     BestFit <- Peaks[Index]
     BestFit
@@ -104,9 +150,25 @@ best_shift <- function(List){
     }
     
 }
-adj_ret_time <- function(Data,OptimalShift){
+
+#' Apply the estimated shift of the retention time to the selected chromatogram 
+#' to maximize the similarity compared to the reference
+#' 
+#' @param list, output from shared_peaks
+#'   
+#' @return list of number of peaks and shift step for which this is maximised
+#' 
+#' @details If competing shifts exists (i.e. same number of peaks are shared), 
+#'          selects the smallest absolute value of a shift
+#' 
+#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#'   (meinolf.ottensmann@@web.de)
+#'   
+#'  
+
+adj_ret_time <- function(Data, OptimalShift, ret_col_name){
     # Apply the estimated shift of the retention time to the 
     # selected chromatogram to maximize the similarity compared to the reference
-    Data$RT <- Data$RT + OptimalShift
+    Data[, ret_col_name] <- Data[, ret_col_name] + OptimalShift
     Data
 }

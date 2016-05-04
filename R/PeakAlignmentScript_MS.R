@@ -33,39 +33,42 @@ ind_names <- ind_names[!is.na(ind_names)]
 ind_names <- str_replace(ind_names, "-1.raw", "")
 ind_names <- tolower(ind_names)
 
-# transform GC data to list of individual GC matrices 
-# extract <- seq(from = 1, to = ncol(chroma), by = 7)
-# Chromatograms <- lapply(extract, function(x) chroma[, x:(x+6)])
 
-# name list elements according to individuals
-# names(Chromatograms) <- ind_names
-
-# rename columns in data.frames
-# Chromatograms <- lapply(Chromatograms, ReName)
+library(WriteXLS)
+library(readr)
+chromatest <- chroma[, c(1:(15 * 7))]
+WriteXLS(chromatest, "data/testchroma.xls")
+writeLines(ind_names[1:15], "data/indnames.txt")
 
 
-# rm(list=c('ind_names','extract','ReName','delete_space_colnames'))
 
-# extract names of individuals 
-# ind_names <- unlist(read_csv2("data/Preen.csv", skip = 1, n_max = 1, col_names = FALSE ))
-# ind_names <- ind_names[!is.na(ind_names)]
-# ind_names <- str_replace(ind_names, "-1.raw", "")
-# ind_names <- tolower(ind_names)
+library(dplyr)
+datafile <- "data/testchroma.txt"
+# extract names
+ind_names <- readr::read_lines("data/testchroma.txt", n_max = 1) %>%
+                        stringr::str_split(pattern = "\t") %>%
+                        unlist() %>%
+                        .[. != ""]
 
-# start of package?
+# extract column names
+col_names <- readr::read_lines("data/testchroma.txt", n_max = 1, skip = 1) %>%
+    stringr::str_split(pattern = "\t") %>%
+    unlist() %>%
+    .[. != ""]
 
-# transform GC data to list of individual GC matrices 
-# GC_mat_to_list <- function(all_gc_mat, ind_names, var_names) {
-#     extract <- seq(from = 1, to = ncol(all_gc_mat), by = length(var_names))
-#     chromatograms <- lapply(extract, function(x) chromatograms[, x:(x+length(var_names))])
-#     names(chromatograms) <- ind_names
-#     chromatograms <- lapply(chromatograms, ReName)
-# }
+# extract data
+chroma <- read.table("data/testchroma.txt", skip = 2, sep = "\t", stringsAsFactors = F)
+chroma <- lapply(chroma, as.numeric)
+
+# check 1
+if (!((ncol(chroma) / length(col_names)) %% 1) == 0) stop("number of data columns is not a multiple of the column names provided")
+# check 2
+if (!((ncol(chroma) / length(col_names))  == length(ind_names))) stop("the number of individual ids provided does not fit to the number of columns in the data")
 
 
 source("R/conv_gc_mat_to_list.R")
 source("R/rename_cols.R")
-chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = c("RT", "startRT", "endRT", "Area", "xArea", "Height", "xHeight"))
+chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
 
 
 chromatograms <- chromatograms[1:10]
@@ -201,12 +204,34 @@ for (i in blanks) {
 # delete single substances
 # create matrix with all retention times
 rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x$RT))
+
+
+#### delete blanks here ####
+
+
 # find single retention times in rows
 single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
 # delete substances occuring in just one individual
 chromatograms <- lapply(chromatograms, function(x) x[-single_subs_ind, ]) 
 
+# calculate final retention times
+rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x$RT))
 
+# mean per row without 0
+nzmean <- function(x) {
+    if (all(x==0)) 0 else mean(x[x!=0])
+}
+mean_per_row <- apply(rt_mat,1,nzmean)
+
+# abundance matrix
+area_df <- as.data.frame(do.call(cbind, lapply(chromatograms, function(x) x$Area)))
+
+# rownames
+row.names(area_df) <- mean_per_row
+
+
+library(WriteXLS)
+WriteXLS(area_df, "gc.xls")
 
 # Define the Retention times of each chromatogram by the mean retention time among all 
 # rm(list=ls())

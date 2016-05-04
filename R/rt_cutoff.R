@@ -8,7 +8,7 @@
 #' @param high Upper threshold for retention times. RTs lower than \code{high} will be kept
 #' 
 #' @return 
-#' gc table with retention times cut
+#' gc table with retention times cut NAs cut
 #'
 #' @references 
 #' 
@@ -27,17 +27,14 @@ rt_cutoff <- function(data, rt_col_name, low=NULL, high=NULL){
   # can be applied.
     highrow <- nrow(data)
     lowrow <- 1
-    if (is.null(low) | low < 0){
-        low <- 0
-    } else {
+    if (!is.null(low)){
         lowrow <- min(which(data[[rt_col_name]] > low))
     }
-    if (is.null(high)| high < 0){
-        high <- nrow(data)
-    } else {
+    if (!is.null(high)){
         highrow <- max(which(data[[rt_col_name]] < high))
     }
     
-    out <- data[lowrow:highrow, ]
+    data <- data[lowrow:highrow, ]
+    out <- data[!is.na(data[, rt_col_name]), ]
 
 }

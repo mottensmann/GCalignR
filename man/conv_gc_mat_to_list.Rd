@@ -12,7 +12,7 @@ in adjacent columns. The first column for all individuals has to be the retentio
 
 \item{ind_names}{character vector with names of individuals}
 
-\item{var_names}{character vector with names of columns from all_gc_mat, 
+\item{var_names}{character vector with names of columns from all_gc_mat,
 such as c("RT", "Area", "Height"). The first name has to specify the retention time}
 }
 \value{

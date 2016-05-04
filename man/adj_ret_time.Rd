@@ -2,7 +2,7 @@
 % Please edit documentation in R/linear_transformation.R
 \name{adj_ret_time}
 \alias{adj_ret_time}
-\title{Apply the estimated shift of the retention time to the selected chromatogram 
+\title{Apply the estimated shift of the retention time to the selected chromatogram
 to maximize the similarity compared to the reference}
 \usage{
 adj_ret_time(Data, OptimalShift, ret_col_name)
@@ -14,11 +14,11 @@ adj_ret_time(Data, OptimalShift, ret_col_name)
 list of number of peaks and shift step for which this is maximised
 }
 \description{
-Apply the estimated shift of the retention time to the selected chromatogram 
+Apply the estimated shift of the retention time to the selected chromatogram
 to maximize the similarity compared to the reference
 }
 \details{
-If competing shifts exists (i.e. same number of peaks are shared), 
+If competing shifts exists (i.e. same number of peaks are shared),
          selects the smallest absolute value of a shift
 }
 \author{

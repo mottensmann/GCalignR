@@ -1,22 +1,21 @@
 #' cuts retention time below and above specified times
-#' 
+#'
 #' @param data \code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
 #'   one individual in adjacent columns. The first column for all individuals has to be the retention
 #'   time
 #' @param rt_col_name character string for name of retention time in gc table
 #' @param low Lower threshold for retention times. RTs higher than \code{low} will be kept
 #' @param high Upper threshold for retention times. RTs lower than \code{high} will be kept
-#' 
-#' @return 
+#'
+#' @return
 #' gc table with retention times cut NAs cut
 #'
-#' @references 
-#' 
+#' @references
+#'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'      
+#'
 #' @export
-#' 
 
 
 
@@ -33,7 +32,7 @@ rt_cutoff <- function(data, rt_col_name, low=NULL, high=NULL){
     if (!is.null(high)){
         highrow <- max(which(data[[rt_col_name]] < high))
     }
-    
+
     data <- data[lowrow:highrow, ]
     out <- data[!is.na(data[, rt_col_name]), ]
 

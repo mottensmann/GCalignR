@@ -16,7 +16,7 @@ list of number of peaks and shift step for which this is maximised
 Selects the optimal Shifting time leading to the maximum number of shared peaks
 }
 \details{
-If competing shifts exists (i.e. same number of peaks are shared), 
+If competing shifts exists (i.e. same number of peaks are shared),
          selects the smallest absolute value of a shift
 }
 \author{

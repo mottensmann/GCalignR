@@ -1,6 +1,9 @@
 #' Aligning chromatograms based on retention times
 #'
-#' @param datafile
+#' @param datafile The datafile is a tab-delimited txt file. The first row contains the individual names,
+#' the second row contains the names of the columns per individuals (i.e. RT, Area, Height),
+#' the third row to the end contains the data GC data table. Each individual should contain at least
+#' two columns (the retention time and the a)
 #' @param rt_name
 #'
 #' @return
@@ -11,13 +14,19 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
+#' @example
+#'
+#'
+#'
+#'
 #' @export
 #'
 
-
-align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
+align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
                                 del_single_sub = FALSE) {
+
+    if (is.null(rt_name)) stop("specify name of retention time column")
 
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
@@ -33,8 +42,8 @@ align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, 
 
     # extract data
     chroma <- read.table(datafile, skip = 2, sep = "\t", stringsAsFactors = F)
-    # how to deal with commas?
-    chroma <- as.data.frame(apply(chroma, 2, function(x) str_replace_all(x, ",", ".")))
+
+    # transform to numeric
     chroma <-  as.data.frame(apply(chroma, 2, as.numeric))
 
     # check 1
@@ -43,22 +52,19 @@ align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, 
     if (!((ncol(chroma) / length(col_names))  == length(ind_names))) stop("the number of individual ids provided does not fit to the number of columns in the data")
 
     # matrix to list
-    # source("R/conv_gc_mat_to_list.R")
-    # source("R/rename_cols.R")
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
 
+# Start of processing --------------------------------------------------------------------------
 
-    # Start of processing --------------------------------------------------------------------------
+    # 1.) cut retention times
+    chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high,
+                            rt_col_name = rt_name)
 
-    # source("R/rt_cutoff.R")
-    # 1.) cut retention times below 8
-    chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_name)
-
-    # source("R/linear_transformation.R")
     # 2.) Linear Transformation of Retentiontimes
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual
-    chroma_aligned <- linear_transformation(chromatograms, shift=step1_maxshift, step_size=0.01, error=0, reference = reference, rt_col_name = rt_name)
+    chroma_aligned <- linear_transformation(chromatograms, shift=step1_maxshift, step_size=0.01,
+                                            error=0, reference = reference, rt_col_name = rt_name)
 
     # Make List equal in length
     # source("R/matrix_append.R")
@@ -66,17 +72,13 @@ align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, 
 
 
     # source("R/evaluate_chroma.R")
-    Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
-    Variation <- mean(var_per_row(chromatograms),na.rm = T)
+    # Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
+    # Variation <- mean(var_per_row(chromatograms),na.rm = T)
 
-    #rm(list=c("Chroma_aligned","chroma","AdjustRetentionTime","AlignPeaks","BestShift",
-    #          "RetentionCutoff","SharedPeaks","PeakShift"))
-
-    # source("R/align_individual_peaks.R")
-    # source("R/shift_rows.R")
+    # align peaks
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1)
 
-
+    # see whether zero rows are present
     average_rts <- mean_per_row(chromatograms_aligned)
 
     # delete empty rows (if existing)
@@ -85,23 +87,20 @@ align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, 
         out <- x[keep_rows, ]
     })
 
-    # still empty rows?
-    rt_mat1 <- do.call(cbind, lapply(chromatograms, function(x) x$RT))
-    rowSums(rt_mat1>0)
-
-    # source("R/merge_rows.R")
+    # calculate average rts again for merging
     average_rts <- mean_per_row(chromatograms)
 
+    # merging step
     # min distance here is crucial --> depends on sample size
     chroma_merged <- merge_redundant_rows(chromatograms, average_rts, min_distance=step3_maxdiff)
 
+    ### just evaluation
+    # average_rts <- mean_per_row(chroma_merged)
+    # rt_mat2 <- do.call(cbind, lapply(chroma_merged, function(x) x$RT))
+
     average_rts <- mean_per_row(chroma_merged)
-    rt_mat2 <- do.call(cbind, lapply(chroma_merged, function(x) x$RT))
 
-
-    average_rts <- mean_per_row(chroma_merged)
-
-    # delete empty rows
+    # delete empty rows again
     del_empty_rows <- function(chromatogram, average_rts){
         chromatogram <- chromatogram[!is.na(average_rts), ]
         chromatogram
@@ -121,7 +120,6 @@ align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, 
             chromatograms <- delete_blank(i, chromatograms)
         }
     }
-
 
     # delete single substances
     # create matrix with all retention times
@@ -143,12 +141,32 @@ align_chromatograms <- function(datafile, rt_name = "RT", rt_cutoff_low = NULL, 
     }
     mean_per_row <- apply(rt_mat,1, row_mean)
 
-    # create abundance matrix
-    area_df <- as.data.frame(do.call(cbind, lapply(chromatograms, function(x) x$Area)))
 
-    # rownames
-    row.names(area_df) <- mean_per_row
+    # create output matrices for all variables
+    output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(chromatograms, function(x) x[y]))))
+    output <- lapply(output, function(x){
+                        names(x) <- ind_names
+                        x
+    })
 
+    output <- lapply(output, function(x){
+        x <- cbind(mean_per_row, x)
+        x
+    })
+
+    output <- lapply(output, function(x){
+                        names(x)[1] <- "mean_RT"
+                        x
+    })
+    names(output) <- col_names
+    if (!is.null(write_output)){
+        write_files <- function(x) {
+            write.table(output[[x]], file = paste0(x, ".txt"), sep = "\t", row.names = FALSE)
+        }
+        lapply(write_output, write_files)
+    }
+
+    output
 }
 
 

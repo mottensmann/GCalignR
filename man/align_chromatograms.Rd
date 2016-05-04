@@ -4,12 +4,17 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, rt_name = "RT", rt_cutoff_low = NULL,
-  rt_cutoff_high = NULL, reference = NULL, step1_maxshift = 0.05,
-  step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
-  del_single_sub = FALSE)
+align_chromatograms(datafile, rt_name = "RT", output = NULL,
+  rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
+  step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05,
+  blanks = NULL, del_single_sub = FALSE)
 }
 \arguments{
+\item{datafile}{The datafile is a tab-delimited txt file. The first row contains the individual names,
+the second row contains the names of the columns per individuals (i.e. RT, Area, Height),
+the third row to the end contains the data GC data table. Each individual should contain at least
+two columns (the retention time and the a)}
+
 \item{rt_name}{}
 }
 \value{
@@ -17,6 +22,9 @@ align_chromatograms(datafile, rt_name = "RT", rt_cutoff_low = NULL,
 }
 \description{
 Aligning chromatograms based on retention times
+}
+\examples{
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

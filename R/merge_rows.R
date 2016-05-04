@@ -13,7 +13,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#'
+#' @export
 merge_redundant_rows <- function(chromatograms, average_rts,  min_distance=0.05){
 
     Merging <- 'Start'

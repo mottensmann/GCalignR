@@ -4,7 +4,7 @@
 \alias{merge_rows}
 \title{algorithm to adjust unreliability of chromatograms on an individual peak basis}
 \usage{
-merge_rows(chromatogram, to_merge, criterion = "zero")
+merge_rows(chromatogram, to_merge, criterion = "zero", rt_col_name)
 }
 \arguments{
 \item{chromatogram}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for

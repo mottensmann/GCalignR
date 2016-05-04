@@ -75,7 +75,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     # Variation <- mean(var_per_row(chromatograms),na.rm = T)
 
     # align peaks
-    chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1)
+    chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
 
     # see whether zero rows are present
     average_rts <- mean_per_row(chromatograms_aligned)
@@ -91,7 +91,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 
     # merging step
     # min distance here is crucial --> depends on sample size
-    chroma_merged <- merge_redundant_rows(chromatograms, average_rts, min_distance=step3_maxdiff)
+    chroma_merged <- merge_redundant_rows(chromatograms, average_rts, min_distance=step3_maxdiff, rt_col_name = rt_name)
 
     ### just evaluation
     # average_rts <- mean_per_row(chroma_merged)
@@ -122,7 +122,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 
     # delete single substances
     # create matrix with all retention times
-    rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x$RT))
+    rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
     if (del_single_sub) {
         # find single retention times in rows
@@ -132,7 +132,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     }
 
     # calculate final retention times
-    rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x$RT))
+    rt_mat <- do.call(cbind, lapply(chromatograms, function(x)  x[[rt_name]]))
 
     # mean per row without 0
     row_mean <- function(x) {

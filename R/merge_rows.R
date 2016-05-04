@@ -15,7 +15,7 @@
 #'
 #' @export
 #'
-merge_redundant_rows <- function(chromatograms, average_rts, min_distance=0.05){
+merge_redundant_rows <- function(chromatograms, average_rts, min_distance=0.05, rt_col_name){
 
     Merging <- 'Start'
     while(Merging != 'Stop'){
@@ -44,14 +44,14 @@ merge_redundant_rows <- function(chromatograms, average_rts, min_distance=0.05){
                 Merging <- "Stop"
                 break
             }
-            redundant <- sapply(lapply(chromatograms, check_redundancy, similar[counter]), as.vector) #Check first position
+            redundant <- sapply(lapply(chromatograms, check_redundancy, similar[counter], rt_col_name), as.vector) #Check first position
 
             # checks whether all individuals just have substances in one of the rows ("Strict")
             # checks whether at least 95% of individuals just have substances in one of the rows ("Proportional")
             criterion <- is_redundant(redundant = redundant, criterion="strict")
 
             if (criterion == 1){ # only merge if criterion proves redundancy of one of the rows
-                chromatograms <- lapply(chromatograms, merge_rows, to_merge = similar[counter], criterion="zero")
+                chromatograms <- lapply(chromatograms, merge_rows, to_merge = similar[counter], criterion="zero", rt_col_name)
 
                 # check2 <- similar[counter]
                 counter <- 'Stop'
@@ -109,11 +109,11 @@ similar_rows <- function(average_rts, min_distance=0.05){
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
 
-check_redundancy <- function(chromatogram, similar){
+check_redundancy <- function(chromatogram, similar, rt_col_name){
     # If only one of two neighbouring rows contain a substance
     # they are redundant, coded by a One
-    Row1 <- chromatogram$RT[similar-1] # Extract previous row
-    Row2 <- chromatogram$RT[similar] # Extract current row
+    Row1 <- chromatogram[similar-1, rt_col_name] # Extract previous row
+    Row2 <- chromatogram[similar, rt_col_name] # Extract current row
     Redundant <- 0
     if (Row1==0 | Row2==0){
         Redundant <- 1
@@ -169,13 +169,13 @@ is_redundant <- function(similar, redundant, criterion="strict"){
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
 #'
-merge_rows <- function(chromatogram, to_merge, criterion="zero"){
+merge_rows <- function(chromatogram, to_merge, criterion="zero", rt_col_name){
     # Check always the row containing just zeros, in case of zeros in both, just delete one of them
     # To Merge == Last row of a similar pair
     Row1 <- to_merge-1 # Previous Row
     Row2 <- to_merge # Current Row
-    R1 <- chromatogram$RT[Row1]
-    R2 <- chromatogram$RT[Row2]
+    R1 <- chromatogram[Row1, rt_col_name]
+    R2 <- chromatogram[Row2, rt_col_name]
     if (criterion=="zero"){
        if (Row1 > 1 & Row2 < nrow(chromatogram)){ # Avoid taking first and last rows
             if (R1 == 0){

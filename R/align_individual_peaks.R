@@ -6,6 +6,7 @@
 #' @param error_span maximum error under which two retention times are still counted as the same peak
 #' @param n_iter number of iterations for the algorithm. One iteration is usually optimal, but
 #'               for large datasets more iteration might be better. Has to be evaluated properly.
+#' @param rt_col_name column name of retention time
 #'
 #' @return
 #' aligned chromatograms
@@ -16,7 +17,7 @@
 #' @export
 #'
 
-align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1) {
+align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1, rt_col_name) {
 
     for (R in 1:n_iter){
         shuffle_order <- sample(1:length(chromatograms))
@@ -34,7 +35,7 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1)
             # Leave Samples with RT within error range at their positions
 
             for (S in 2:length(chromatograms)){
-                current_RT <- chromatograms[[S]]$RT[current_row]
+                current_RT <- chromatograms[[S]][current_row, rt_col_name]
                 av_rt <- mean_of_samples(chromatograms, samples =1:(S-1), retention_row = current_row)
 
                 # if all rows are 0 ?
@@ -53,7 +54,7 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1)
 
                 } else if (current_RT < (av_rt - error_span)) {
                     for(J in 1:(S-1)){
-                        if(chromatograms[[J]]$RT[current_row] <= (current_RT + error_span)){
+                        if(chromatograms[[J]][current_row, rt_col_name] <= (current_RT + error_span)){
                             # Do nothing, substance?position is valid
                         } else {
                             chromatograms <- shift_rows(chromatograms,J,current_row)

@@ -7,7 +7,9 @@
 is_redundant(similar, redundant, criterion = "strict")
 }
 \arguments{
-\item{similar}{}
+\item{similar}{position of a row, that is similar to the previous, i.e. row 5 is similar to 4}
+
+\item{redundant}{??}
 }
 \value{
 if similar rows are redundant, 1, else 0

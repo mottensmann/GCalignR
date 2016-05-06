@@ -4,7 +4,7 @@
 \alias{mean_of_samples}
 \title{calculates mean of retention times up to a certain sample (not including 0s)}
 \usage{
-mean_of_samples(chromatograms, samples, retention_row)
+mean_of_samples(chromatograms, samples, retention_row, rt_col_name)
 }
 \arguments{
 \item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
@@ -14,6 +14,8 @@ time, retention time has to be named RT.}
 \item{samples}{indices of samples up to sample of interest (1:sample-1)}
 
 \item{retention_row}{current retention time row to be compared}
+
+\item{rt_col_name}{name of retention time column}
 }
 \value{
 mean of rts

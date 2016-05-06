@@ -7,7 +7,11 @@
 check_redundancy(chromatogram, similar, rt_col_name)
 }
 \arguments{
-\item{similar}{}
+\item{chromatogram}{\code{data.frame} with gc data}
+
+\item{similar}{position of a row, that is similar to the previous, i.e. row 5 is similar to 4}
+
+\item{rt_col_name}{name of the retention time column.}
 }
 \value{
 if similar rows are redundant, 1, else 0

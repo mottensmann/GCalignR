@@ -1,7 +1,7 @@
 #' Aligning chromatograms based on retention times
 #'
 #' @param datafile datafile is a tab-delimited txt file. The first rows needs to contain
-#' sample ID´s, the second row column names of the corresponding chromatograms. Starting with
+#' sample IDs, the second row column names of the corresponding chromatograms. Starting with
 #' the third row chromatograms are included, whereby single samples are concatenated horizontally
 #' Each chromatogram needs to consist of the same number of columns, at least
 #' two are required (the retention time and the area)
@@ -26,7 +26,6 @@
 #'
 #' @export
 #'
-#' @import dplyr
 
 align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
@@ -50,14 +49,20 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
         unlist() %>%
         .[. != ""]
 
+    # remove leading and tailing whitespaces
+    col_names <- stringr::str_trim(col_names)
+    ind_names <- stringr::str_trim(ind_names)
+
     # extract data
     chroma <- read.table(datafile, skip = 2, sep = "\t", stringsAsFactors = F)
+
+    # remove pure NA rows
+    chroma <- chroma[!(rowSums(is.na(chroma)) == nrow(chroma)), ]
 
     # for cara replace commas
     # chroma <- apply(chroma, 2, function(x) x <- str_replace_all(x, ",", "."))
 
     # transform to numeric
-
     chroma <-  as.data.frame(apply(chroma, 2, as.numeric))
 
     # check 1
@@ -92,7 +97,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
 
     # see whether zero rows are present
-    average_rts <- mean_per_row(chromatograms_aligned)
+    average_rts <- mean_per_row(chromatograms_aligned, rt_col_name = rt_name)
 
     # delete empty rows (if existing)
     chromatograms <- lapply(chromatograms_aligned, function(x) {
@@ -101,7 +106,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     })
 
     # calculate average rts again for merging
-    average_rts <- mean_per_row(chromatograms)
+    average_rts <- mean_per_row(chromatograms, rt_col_name = rt_name)
 
     # merging step
     # min distance here is crucial --> depends on sample size
@@ -111,7 +116,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     # average_rts <- mean_per_row(chroma_merged)
     # rt_mat2 <- do.call(cbind, lapply(chroma_merged, function(x) x$RT))
 
-    average_rts <- mean_per_row(chroma_merged)
+    average_rts <- mean_per_row(chroma_merged, rt_col_name = rt_name)
 
     # delete empty rows again
     del_empty_rows <- function(chromatogram, average_rts){
@@ -146,7 +151,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     }
 
     # calculate final retention times
-    rt_mat <- do.call(cbind, lapply(chromatograms, function(x)  x[[rt_name]]))
+    rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
     # mean per row without 0
     row_mean <- function(x) {

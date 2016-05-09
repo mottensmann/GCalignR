@@ -1,7 +1,7 @@
 #' Aligning chromatograms based on retention times
 #'
 #' @param datafile datafile is a tab-delimited txt file. The first rows needs to contain
-#' sample ID´s, the second row column names of the corresponding chromatograms. Starting with
+#' sample names, the second row column names of the corresponding chromatograms. Starting with
 #' the third row chromatograms are included, whereby single samples are concatenated horizontally
 #' Each chromatogram needs to consist of the same number of columns, at least
 #' two are required (the retention time and the area)
@@ -13,6 +13,23 @@
 #'
 #' @param reference character, a sample to which all other samples are aligned to by means of a
 #' linear shift
+#'
+#' @param step1_maxshift numeric, defines a window to search for an optimal linear shift of samples
+#' with respect to the reference. Shifts are evaluated within - step1_maxshift:step1_maxshift
+#'
+#' @param step2_maxshift numeric, defines the allowed deviation of retention times around the mean
+#' of the corresponding  row
+#'
+#' @param step3_maxdiff numeric, defines the minimum difference in retention times among distict
+#' substances. Substances that do not differ enough, are merged if applicable
+#'
+#' @param delete_single_sub logical, determines whether substances that occur in just one sample
+#' are removed or not
+#'
+#' @param blanks character vector of blanks. If specified, all substance found in any of the blanks
+#' will be removed from all samples
+#'
+#' @param write.output character. If specified the output is written to a text file
 #'
 #' @return
 #'
@@ -53,9 +70,9 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     chroma <-  as.data.frame(apply(chroma, 2, as.numeric))
 
     # check 1
-    if (!((ncol(chroma) / length(col_names)) %% 1) == 0) stop("number of data columns is not a multiple of the column names provided")
+    if (!((ncol(chroma) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
     # check 2
-    if (!((ncol(chroma) / length(col_names))  == length(ind_names))) stop("the number of individual ids provided does not fit to the number of columns in the data")
+    if (!((ncol(chroma) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
 
     # matrix to list
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)

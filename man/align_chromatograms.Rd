@@ -10,12 +10,20 @@ align_chromatograms(datafile, rt_name = NULL, write_output = NULL,
   blanks = NULL, del_single_sub = FALSE)
 }
 \arguments{
-\item{datafile}{The datafile is a tab-delimited txt file. The first row contains the individual names,
-the second row contains the names of the columns per individuals (i.e. RT, Area, Height),
-the third row to the end contains the data GC data table. Each individual should contain at least
-two columns (the retention time and the a)}
+\item{datafile}{datafile is a tab-delimited txt file. The first rows needs to contain
+sample ID´s, the second row column names of the corresponding chromatograms. Starting with
+the third row chromatograms are included, whereby single samples are concatenated horizontally
+Each chromatogram needs to consist of the same number of columns, at least
+two are required (the retention time and the area)}
 
-\item{rt_name}{}
+\item{rt_name}{character, name of the column holding retention times}
+
+\item{rt_cutoff_low}{numeric, lower threshold under which retention times are cutted}
+
+\item{rt_cutoff_high}{numeric, upper threshold above which retention times are cutted}
+
+\item{reference}{character, a sample to which all other samples are aligned to by means of a
+linear shift}
 }
 \value{
 

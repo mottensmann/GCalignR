@@ -9,6 +9,8 @@
 #'
 #' @param rt_name character, name of the column holding retention times
 #'
+#' @param write.output character. If specified the output is written to a text file
+#'
 #' @param rt_cutoff_low numeric, lower threshold under which retention times are cutted
 #'
 #' @param rt_cutoff_high numeric, upper threshold above which retention times are cutted
@@ -25,13 +27,12 @@
 #' @param step3_maxdiff numeric, defines the minimum difference in retention times among distict
 #' substances. Substances that do not differ enough, are merged if applicable
 #'
+#'@param blanks character vector of blanks. If specified, all substance found in any of the blanks
+#' will be removed from all samples
+#'
 #' @param delete_single_sub logical, determines whether substances that occur in just one sample
 #' are removed or not
 #'
-#' @param blanks character vector of blanks. If specified, all substance found in any of the blanks
-#' will be removed from all samples
-#'
-#' @param write.output character. If specified the output is written to a text file
 #'
 #' @return
 #'

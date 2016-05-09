@@ -16,6 +16,8 @@ time, retention time has to be named RT.}
 
 \item{min_distance}{difference between the mean retention time of two rows of the chromatograms
 to be considered for merging if no individual has substances in both rows.}
+
+\item{rt_col_name}{name of retention time column.}
 }
 \value{
 chromatograms with merged rows

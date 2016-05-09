@@ -36,7 +36,7 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1,
 
             for (S in 2:length(chromatograms)){
                 current_RT <- chromatograms[[S]][current_row, rt_col_name]
-                av_rt <- mean_of_samples(chromatograms, samples =1:(S-1), retention_row = current_row)
+                av_rt <- mean_of_samples(chromatograms, samples =1:(S-1), retention_row = current_row, rt_col_name)
 
                 # if all rows are 0 ?
                 if(is.na(av_rt)){
@@ -65,9 +65,9 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1,
             }
             current_row <- current_row+1
             chromatograms <- lapply(chromatograms, matrix_append, chromatograms)# Make all equal in length
-            last_substance_index <- max(which(mean_per_row(chromatograms)==max(mean_per_row(chromatograms),na.rm=T)))
+            last_substance_index <- max(which(mean_per_row(chromatograms, rt_col_name)==max(mean_per_row(chromatograms, rt_col_name),na.rm=T)))
             # Remove tail of all-zero rows
-            chromatograms <- lapply(chromatograms, function(x) x[1:last_substance_index, ]) # Remove appended zeros
+            chromatograms <- lapply(chromatograms, function(x) x[c(1:last_substance_index), ]) # Remove appended zeros
 
             if (current_row>dim(chromatograms[[S]])[1]){
                 current_row <- 'Stop' # Signal the end of the iteration

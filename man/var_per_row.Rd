@@ -4,7 +4,7 @@
 \alias{var_per_row}
 \title{calculates mean retention time per row}
 \usage{
-var_per_row(chromatograms)
+var_per_row(chromatograms, rt_col_name)
 }
 \arguments{
 \item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for

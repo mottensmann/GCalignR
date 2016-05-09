@@ -5,6 +5,7 @@
 #'   time, retention time has to be named RT.
 #' @param samples indices of samples up to sample of interest (1:sample-1)
 #' @param retention_row current retention time row to be compared
+#' @param rt_col_name name of retention time column
 #'
 #' @return
 #' mean of rts
@@ -15,8 +16,8 @@
 #' @export
 #'
 
-mean_of_samples <- function(chromatograms, samples, retention_row){
-    rts <- unlist(lapply(chromatograms[samples], function(x) x$RT[retention_row]))
+mean_of_samples <- function(chromatograms, samples, retention_row, rt_col_name){
+    rts <- unlist(lapply(chromatograms[samples], function(x) x[retention_row, rt_col_name]))
     mean_rt <- mean(rts[!(rts == 0)], na.rm = TRUE)
     ## round ?
 
@@ -29,6 +30,7 @@ mean_of_samples <- function(chromatograms, samples, retention_row){
 #'   time, retention time has to be named RT.
 #' @param samples indices of samples up to sample of interest (1:sample-1)
 #' @param retention_row current retention time row to be compared
+#' @param rt_col_name name of retention time column
 #'
 #' @return
 #' var of rts
@@ -38,10 +40,10 @@ mean_of_samples <- function(chromatograms, samples, retention_row){
 #'
 #' @export
 #'
-var_of_samples <- function(chromatograms, samples, retention_row){
+var_of_samples <- function(chromatograms, samples, retention_row, rt_col_name){
     # Estimate the Variation in Retention Times within Rows
     # NA indicates that only one Substance exists
-    rts <- unlist(lapply(chromatograms[samples], function(x) x$RT[retention_row]))
+    rts <- unlist(lapply(chromatograms[samples], function(x) x[retention_row, rt_col_name]))
     mean_rt <- var(rts[!(rts == 0)], na.rm = TRUE)
 }
 
@@ -59,10 +61,10 @@ var_of_samples <- function(chromatograms, samples, retention_row){
 #'
 #' @export
 
-mean_per_row = function(chromatograms){
+mean_per_row = function(chromatograms, rt_col_name){
     n_substance <- nrow(chromatograms[[1]]) # all_chromatograms have equal number of rows
     out <- unlist(lapply(1:n_substance,
-                    function(x) mean_of_samples(chromatograms, 1:length(chromatograms), x)))
+                    function(x) mean_of_samples(chromatograms, 1:length(chromatograms), x, rt_col_name)))
     out
 
 }
@@ -81,10 +83,10 @@ mean_per_row = function(chromatograms){
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 
 
-var_per_row = function(chromatograms){
+var_per_row = function(chromatograms, rt_col_name){
     n_substance <- nrow(chromatograms[[1]]) # all_chromatograms have equal number of rows
     out <- unlist(lapply(1:n_substance,
-        function(x) var_of_samples(chromatograms, 1:length(chromatograms), x)))
+        function(x) var_of_samples(chromatograms, 1:length(chromatograms), x, rt_col_name)))
     out
 }
 

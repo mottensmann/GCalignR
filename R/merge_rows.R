@@ -6,6 +6,7 @@
 #' @param average_rts average retention times across samples per row
 #' @param min_distance difference between the mean retention time of two rows of the chromatograms
 #'        to be considered for merging if no individual has substances in both rows.
+#' @param rt_col_name name of retention time column.
 #'
 #' @return
 #' chromatograms with merged rows
@@ -29,7 +30,7 @@ merge_redundant_rows <- function(chromatograms, average_rts, min_distance=0.05, 
         # if non is ready to merge anymore, stop the merging algorithm
 
         # Updating merging criterions
-        average_rts <- mean_per_row(chromatograms) # Average RTs, after merging rows
+        average_rts <- mean_per_row(chromatograms, rt_col_name) # Average RTs, after merging rows
         similar <- similar_rows(average_rts, min_distance)    # remaining similarities
         # print(similar)
 
@@ -99,8 +100,9 @@ similar_rows <- function(average_rts, min_distance=0.05){
 
 #' If only one of two neighbouring rows contain a substancethey are redundant, coded by a One
 #'
-#' @param chromatograms
-#' @param similar
+#' @param chromatogram \code{data.frame} with gc data
+#' @param similar position of a row, that is similar to the previous, i.e. row 5 is similar to 4
+#' @param rt_col_name name of the retention time column.
 #'
 #' @return
 #' if similar rows are redundant, 1, else 0
@@ -123,8 +125,8 @@ check_redundancy <- function(chromatogram, similar, rt_col_name){
 
 #' Indicates by a binary output variable (1/0) if rows should be merged
 #'
-#' @param chromatograms
-#' @param  similar
+#' @param similar position of a row, that is similar to the previous, i.e. row 5 is similar to 4
+#' @param redundant ??
 #'
 #' @details  Methods: "strict": A single sample with two peaks prevents merging
 #           "proportional": Merging is acceptabel if only 5 % of samples show two peaks
@@ -162,11 +164,14 @@ is_redundant <- function(similar, redundant, criterion="strict"){
 #' @param criterion "Zero" - delete a row containing zeros, or
 #'        "area": take the larger of two peaks, defined by the are of the peaks. "area" is just
 #'        useful when redundancy criterion was "proportional" instead of the default "strict".
+#' @param rt_col_name name of the retention time column.
+#'
 #' @return
 #' aligned chromatograms
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
+#'
 #'
 #'
 merge_rows <- function(chromatogram, to_merge, criterion="zero", rt_col_name){

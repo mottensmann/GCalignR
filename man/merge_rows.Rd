@@ -16,6 +16,8 @@ time, retention time has to be named RT.}
 \item{criterion}{"Zero" - delete a row containing zeros, or
 "area": take the larger of two peaks, defined by the are of the peaks. "area" is just
 useful when redundancy criterion was "proportional" instead of the default "strict".}
+
+\item{rt_col_name}{name of the retention time column.}
 }
 \value{
 aligned chromatograms

@@ -2,9 +2,11 @@
 #'
 #' @param datafile datafile is a tab-delimited txt file. The first rows needs to contain
 #' sample names, the second row column names of the corresponding chromatograms. Starting with
+#' sample IDs, the second row column names of the corresponding chromatograms. Starting with
 #' the third row chromatograms are included, whereby single samples are concatenated horizontally
 #' Each chromatogram needs to consist of the same number of columns, at least
 #' two are required (the retention time and the area)
+#'
 #' @param rt_name character, name of the column holding retention times
 #'
 #' @param rt_cutoff_low numeric, lower threshold under which retention times are cutted
@@ -43,7 +45,6 @@
 #'
 #' @export
 #'
-#' @import dplyr
 
 align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
@@ -51,6 +52,10 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 
     if (is.null(rt_name)) stop("specify name of retention time column")
     if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
+
+    ## check for leading or tailing whitespaces in the names etc
+
+
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
         stringr::str_split(pattern = "\t") %>%
@@ -63,8 +68,18 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
         unlist() %>%
         .[. != ""]
 
+    # remove leading and tailing whitespaces
+    col_names <- stringr::str_trim(col_names)
+    ind_names <- stringr::str_trim(ind_names)
+
     # extract data
     chroma <- read.table(datafile, skip = 2, sep = "\t", stringsAsFactors = F)
+
+    # remove pure NA rows
+    chroma <- chroma[!(rowSums(is.na(chroma)) == nrow(chroma)), ]
+
+    # for cara replace commas
+    # chroma <- apply(chroma, 2, function(x) x <- str_replace_all(x, ",", "."))
 
     # transform to numeric
     chroma <-  as.data.frame(apply(chroma, 2, as.numeric))
@@ -80,8 +95,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 # Start of processing --------------------------------------------------------------------------
 
     # 1.) cut retention times
-    chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high,
-                            rt_col_name = rt_name)
+    chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_name)
 
     # 2.) Linear Transformation of Retentiontimes
 
@@ -102,7 +116,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
 
     # see whether zero rows are present
-    average_rts <- mean_per_row(chromatograms_aligned)
+    average_rts <- mean_per_row(chromatograms_aligned, rt_col_name = rt_name)
 
     # delete empty rows (if existing)
     chromatograms <- lapply(chromatograms_aligned, function(x) {
@@ -111,7 +125,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     })
 
     # calculate average rts again for merging
-    average_rts <- mean_per_row(chromatograms)
+    average_rts <- mean_per_row(chromatograms, rt_col_name = rt_name)
 
     # merging step
     # min distance here is crucial --> depends on sample size
@@ -121,7 +135,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     # average_rts <- mean_per_row(chroma_merged)
     # rt_mat2 <- do.call(cbind, lapply(chroma_merged, function(x) x$RT))
 
-    average_rts <- mean_per_row(chroma_merged)
+    average_rts <- mean_per_row(chroma_merged, rt_col_name = rt_name)
 
     # delete empty rows again
     del_empty_rows <- function(chromatogram, average_rts){
@@ -156,7 +170,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     }
 
     # calculate final retention times
-    rt_mat <- do.call(cbind, lapply(chromatograms, function(x)  x[[rt_name]]))
+    rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
     # mean per row without 0
     row_mean <- function(x) {

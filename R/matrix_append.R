@@ -10,7 +10,7 @@ matrix_append <- function(Matrix, Chromatograms){
     # Add zeros matrices to fit the dimensions of the largest matrix
     MaxLength <- max(sapply(Chromatograms,function(x) nrow(x)))
     ToAppend <- MaxLength-dim(Matrix)[1]
-    Cols <- dim(Matrix)[2]
+    Cols <- ncol(Matrix)
     Zeros <- matrix(0,nrow=ToAppend,ncol=Cols)
     colnames(Zeros) <- names(Matrix)
     Matrix<- rbind(Matrix[,],Zeros)

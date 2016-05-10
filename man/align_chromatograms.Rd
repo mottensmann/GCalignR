@@ -11,7 +11,11 @@ align_chromatograms(datafile, rt_name = NULL, write_output = NULL,
 }
 \arguments{
 \item{datafile}{datafile is a tab-delimited txt file. The first rows needs to contain
+<<<<<<< HEAD
+sample ID´s, the second row column names of the corresponding chromatograms. Starting with
+=======
 sample IDs, the second row column names of the corresponding chromatograms. Starting with
+>>>>>>> 2605e41ff901173b66a8ad9cb24c30de43a5a015
 the third row chromatograms are included, whereby single samples are concatenated horizontally
 Each chromatogram needs to consist of the same number of columns, at least
 two are required (the retention time and the area)}

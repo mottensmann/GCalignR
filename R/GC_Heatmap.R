@@ -18,12 +18,18 @@
 #'
 #' @import ggplot2
 #'
+#' @import RColorBrewer
+#'
 #'
 #' @export
 #'
 
 
-GC_Heatmap =function(rts_matrix){
+GC_Heatmap <-function(rts_matrix){
+
+    # Default final alignment
+    # optional several plots, which a accessible through click like plot.glm
+    # Not included yet
 
     # format for ggplot, three columns, sample, substance and rt
     # ##########################################################
@@ -40,7 +46,7 @@ GC_Heatmap =function(rts_matrix){
 
     for (i in 1:nrow(rts_matrix)){
 heat_matrix[steps[i]:(steps[i]+(ncol(rts_matrix)-1)),1] <- rownames(rts_matrix)[i]
-heat_matrix[steps[i]:(steps[i]+(ncol(rts_matrix)-1)),2] <- abs(rts_matrix[i,]-comp_means)
+heat_matrix[steps[i]:(steps[i]+(ncol(rts_matrix)-1)),2] <- (rts_matrix[i,]-comp_means) # before abs()
 heat_matrix[steps[i]:(steps[i]+(ncol(rts_matrix)-1)),3] <- colnames(rts_matrix)
     }
     heat_matrix <- data.frame(ID = heat_matrix[,1],
@@ -57,15 +63,23 @@ heat_matrix[steps[i]:(steps[i]+(ncol(rts_matrix)-1)),3] <- colnames(rts_matrix)
     heat_matrix[,1] <-
         ordered( heat_matrix[,1], levels = as.factor(rownames(rts_matrix)))
 
+    myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
 
     # Plot the Heatmap
     # #################
     gg <- ggplot(heat_matrix, aes(x=RT, y=ID, fill=val))
-    gg <- gg + geom_tile(color="white", size=0.1)
-    gg <- gg + scale_fill_gradient(name="Deviation", low="white",high = 'blue')
-    gg <- gg + coord_equal()
+    gg <- gg + geom_tile(color="white", size=0.01)
+    gg <- gg + scale_fill_gradientn(colours = myPalette(3),limits=c(-0.35,0.35))
     gg <- gg + labs(x=NULL, y=NULL, title="Variation of Retention times per Substance among Chromatograms")
     gg <- gg + theme(plot.title=element_text(hjust=0))
-    gg <- gg + theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+    # gg <- gg + theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+    gg <- gg + theme(axis.title.x=element_blank(),
+                     axis.text.x=element_blank(),
+                     axis.ticks=element_blank())
+    gg <- gg + coord_equal(10)
     gg
+
 }
+
+
+

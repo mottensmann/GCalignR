@@ -66,6 +66,11 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1,
             current_row <- current_row+1
             chromatograms <- lapply(chromatograms, matrix_append, chromatograms)# Make all equal in length
             last_substance_index <- max(which(mean_per_row(chromatograms, rt_col_name)==max(mean_per_row(chromatograms, rt_col_name),na.rm=T)))
+
+            # rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[, rt_col_name]))
+            # max_rt_row <- max(rt_mat)
+            #
+            # last_substance_index <- lapply(chromatograms, function(x))
             # Remove tail of all-zero rows
             chromatograms <- lapply(chromatograms, function(x) x[c(1:last_substance_index), ]) # Remove appended zeros
 

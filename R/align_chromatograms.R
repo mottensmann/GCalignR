@@ -7,7 +7,7 @@
 #'  retention time and the area).
 #'
 #'@param sep  the field separator character. Values on each line of the file are separated by this
-#'  character. The default is tab seperated (sep = "\t"). See sep argument in read.table for details.
+#'  character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.
 #'
 #'@param rt_name Name of the column holding retention times (i.e. "RT")
 #'
@@ -15,9 +15,9 @@
 #'       to write the aligned matrices of the retention times and areas to txt files (the names have
 #'       to correspond to the column names given in the second row of the datafile).
 #'
-#'@param rt_cutoff_low lower threshold under which retention times are cutted (i.e. 5)
+#'@param rt_cutoff_low lower threshold under which retention times are cut (i.e. 5)
 #'
-#'@param rt_cutoff_high Upper threshold above which retention times are cutted (i.e. 35)
+#'@param rt_cutoff_high Upper threshold above which retention times are cut (i.e. 35)
 #'
 #'@param reference A sample(name) to which all other samples are aligned to by means of a
 #'  linear shift (i.e. "individual3") The name has to correspond to an individual name given
@@ -51,8 +51,12 @@
 #'
 #'@import stringr
 #'@import readr
+#'@import magrittr
 #'
 #'@export
+#'
+#'@examples
+#' datafile <- system.file("extdata", "plovers.txt", package = "GCalignR")
 #'
 #'
 

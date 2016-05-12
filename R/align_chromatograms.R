@@ -117,7 +117,6 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # source("R/matrix_append.R")
     chromatograms <- lapply(chroma_aligned, matrix_append, chroma_aligned)
 
-
     # source("R/evaluate_chroma.R")
     # Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
     # Variation <- mean(var_per_row(chromatograms),na.rm = T)

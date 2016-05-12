@@ -30,13 +30,13 @@
 #'@param step2_maxshift Defines the allowed deviation of retention times around the mean of
 #'  the corresponding row. Default is 0.02.
 #'
-<<<<<<< HEAD
+#'
 #' @param blanks character vector of blanks. If specified, all substance found in any of the blanks
 #' will be removed from all samples
-=======
+#'
 #'@param step3_maxdiff Defines the minimum difference in retention times among distinct
 #'  substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.
->>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
+#'
 #'
 #'@param blanks Character vector of the names of blanks. If specified, all substance found in any of the blanks
 #'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
@@ -104,6 +104,11 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # matrix to list
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
 
+    #####################
+    # save for later use
+    ####################
+    chroma_raw <- lapply(chromatograms,matrix_append,chromatograms)
+
     ########################
     # Start of processing
     ########################
@@ -121,12 +126,18 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # source("R/matrix_append.R")
     chromatograms <- lapply(chroma_aligned, matrix_append, chroma_aligned)
 
+    ######################
+    # save for later use
+    ####################
+    chroma_linear <- chromatograms
+
     # source("R/evaluate_chroma.R")
     # Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
     # Variation <- mean(var_per_row(chromatograms),na.rm = T)
 
     # align peaks
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
+
 
     # see whether zero rows are present
     average_rts <- mean_per_row(chromatograms_aligned, rt_col_name = rt_name)
@@ -185,6 +196,14 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # calculate final retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
+    #######################
+    # Outputs for Heatmaps
+    #######################
+
+    rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+
+    # ============================
     # mean per row without 0
     row_mean <- function(x) {
         if (all(x==0)) 0 else mean(x[x!=0])
@@ -218,18 +237,13 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
         lapply(write_output, write_files)
     }
 
-<<<<<<< HEAD
-    output
-#     res <- list(call=match.call(),
-#                 g2 = g2_emp, p_val = p_permut, g2_permut = g2_permut,
-#                 g2_boot = g2_boot, CI_boot = CI_boot, g2_se = g2_se,
-#                 nobs = nrow(genotypes), nloc = ncol(genotypes))
-#
-#     class(output) <- "GCalign" # name of list
-#     return(output)
-=======
-    class(output) <- "GCalign"
->>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
+    #output
+    output_algorithm <- list(call=match.call(),
+                chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
+                rt_aligned = rt_mat)
+
+    class(output_algorithm) <- "GCalign" # name of list
+    return(output_algorithm)
 }
 
 

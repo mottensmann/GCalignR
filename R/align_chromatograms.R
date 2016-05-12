@@ -1,54 +1,67 @@
-#' Aligning chromatograms based on retention times
+#'Aligning chromatograms based on retention times
 #'
-#' @param datafile datafile is a tab-delimited txt file. The first rows needs to contain
-#' sample names, the second row column names of the corresponding chromatograms. Starting with
-#' sample IDs, the second row column names of the corresponding chromatograms. Starting with
-#' the third row chromatograms are included, whereby single samples are concatenated horizontally
-#' Each chromatogram needs to consist of the same number of columns, at least
-#' two are required (the retention time and the area)
+#'@param datafile path to the datafile. It has to be a .txt file. The first row needs to contain
+#'  sample names, the second row column names of the corresponding chromatograms. Starting with the
+#'  third row chromatograms are included, whereby single samples are concatenated horizontally Each
+#'  chromatogram needs to consist of the same number of columns, at least two are required (the
+#'  retention time and the area).
 #'
-#' @param rt_name character, name of the column holding retention times
+#'@param sep  the field separator character. Values on each line of the file are separated by this
+#'  character. The default is tab seperated (sep = "\t"). See sep argument in read.table for details.
 #'
-#' @param write.output character. If specified the output is written to a text file
+#'@param rt_name Name of the column holding retention times (i.e. "RT")
 #'
-#' @param rt_cutoff_low numeric, lower threshold under which retention times are cutted
+#'@param write_output If specified the aligned output is written to a text file. (i.e. write_output = c("RT", "area")
+#'       to write the aligned matrices of the retention times and areas to txt files (the names have
+#'       to correspond to the column names given in the second row of the datafile).
 #'
-#' @param rt_cutoff_high numeric, upper threshold above which retention times are cutted
+#'@param rt_cutoff_low lower threshold under which retention times are cutted (i.e. 5)
 #'
-#' @param reference character, a sample to which all other samples are aligned to by means of a
-#' linear shift
+#'@param rt_cutoff_high Upper threshold above which retention times are cutted (i.e. 35)
 #'
-#' @param step1_maxshift numeric, defines a window to search for an optimal linear shift of samples
-#' with respect to the reference. Shifts are evaluated within - step1_maxshift:step1_maxshift
+#'@param reference A sample(name) to which all other samples are aligned to by means of a
+#'  linear shift (i.e. "individual3") The name has to correspond to an individual name given
+#'  in the first line of the datafile.
 #'
-#' @param step2_maxshift numeric, defines the allowed deviation of retention times around the mean
-#' of the corresponding  row
+#'@param step1_maxshift Defines a window to search for an optimal linear shift of samples
+#'  with respect to the reference. Shifts are evaluated within - step1_maxshift to + step1_maxshift.
+#'  Default is 0.05.
 #'
-#' @param step3_maxdiff numeric, defines the minimum difference in retention times among distict
-#' substances. Substances that do not differ enough, are merged if applicable
+#'@param step2_maxshift Defines the allowed deviation of retention times around the mean of
+#'  the corresponding row. Default is 0.02.
 #'
+<<<<<<< HEAD
 #' @param blanks character vector of blanks. If specified, all substance found in any of the blanks
 #' will be removed from all samples
+=======
+#'@param step3_maxdiff Defines the minimum difference in retention times among distinct
+#'  substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.
+>>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
 #'
-#' @param delete_single_sub logical, determines whether substances that occur in just one sample
-#' are removed or not
+#'@param blanks Character vector of the names of blanks. If specified, all substance found in any of the blanks
+#'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
+#'  to a name given in the first line of the datafile.
+#'
+#'@param delete_single_sub logical, determines whether substances that occur in just one sample are
+#'  removed or not.
 #'
 #'
-#' @return
+#'@return
 #'
 #'
-#' @references
+#'@references
 #'
-#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
-#'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
+#'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#'  (meinolf.ottensmann@@web.de)
 #'
-#' @import stringr
-#' @import readr
+#'@import stringr
+#'@import readr
 #'
-#' @export
+#'@export
+#'
 #'
 
-align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
+align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
                                 del_single_sub = FALSE) {
 
@@ -57,13 +70,13 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
-        stringr::str_split(pattern = "\t") %>%
+        stringr::str_split(pattern = sep) %>%
         unlist() %>%
         .[. != ""]
 
     # extract column names
     col_names <- readr::read_lines(datafile, n_max = 1, skip = 1) %>%
-        stringr::str_split(pattern = "\t") %>%
+        stringr::str_split(pattern = sep) %>%
         unlist() %>%
         .[. != ""]
 
@@ -72,7 +85,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     ind_names <- stringr::str_trim(ind_names)
 
     # extract data
-    chroma <- read.table(datafile, skip = 2, sep = "\t", stringsAsFactors = F)
+    chroma <- read.table(datafile, skip = 2, sep = sep, stringsAsFactors = F)
 
     # remove pure NA rows
     chroma <- chroma[!(rowSums(is.na(chroma)) == nrow(chroma)), ]
@@ -107,7 +120,6 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     # Make List equal in length
     # source("R/matrix_append.R")
     chromatograms <- lapply(chroma_aligned, matrix_append, chroma_aligned)
-
 
     # source("R/evaluate_chroma.R")
     # Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
@@ -197,6 +209,8 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
                         x
     })
     names(output) <- col_names
+
+
     if (!is.null(write_output)){
         write_files <- function(x) {
             write.table(output[[x]], file = paste0(x, ".txt"), sep = "\t", row.names = FALSE)
@@ -204,6 +218,7 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
         lapply(write_output, write_files)
     }
 
+<<<<<<< HEAD
     output
 #     res <- list(call=match.call(),
 #                 g2 = g2_emp, p_val = p_permut, g2_permut = g2_permut,
@@ -212,6 +227,9 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 #
 #     class(output) <- "GCalign" # name of list
 #     return(output)
+=======
+    class(output) <- "GCalign"
+>>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
 }
 
 

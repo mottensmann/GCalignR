@@ -4,10 +4,10 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, rt_name = NULL, write_output = NULL,
-  rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
-  step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05,
-  blanks = NULL, del_single_sub = FALSE)
+align_chromatograms(datafile, sep = "\\t", rt_name = NULL,
+  write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
+  reference = NULL, step1_maxshift = 0.05, step2_maxshift = 0.02,
+  step3_maxdiff = 0.05, blanks = NULL, del_single_sub = FALSE)
 }
 \arguments{
 \item{datafile}{datafile is a tab-delimited txt file. The first rows needs to contain
@@ -30,7 +30,11 @@ linear shift}
 with respect to the reference. Shifts are evaluated within - step1_maxshift:step1_maxshift}
 
 \item{step2_maxshift}{numeric, defines the allowed deviation of retention times around the mean
+<<<<<<< HEAD
 of the corresponding  row}
+=======
+of the corresponding row}
+>>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
 
 \item{step3_maxdiff}{numeric, defines the minimum difference in retention times among distict
 substances. Substances that do not differ enough, are merged if applicable}

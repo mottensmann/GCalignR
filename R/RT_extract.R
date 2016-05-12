@@ -13,8 +13,11 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
+<<<<<<< HEAD
 #'
 #'
+=======
+>>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
 #'
 #' @export
 #'

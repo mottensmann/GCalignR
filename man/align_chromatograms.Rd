@@ -11,11 +11,8 @@ align_chromatograms(datafile, rt_name = NULL, write_output = NULL,
 }
 \arguments{
 \item{datafile}{datafile is a tab-delimited txt file. The first rows needs to contain
-<<<<<<< HEAD
-sample ID´s, the second row column names of the corresponding chromatograms. Starting with
-=======
+sample names, the second row column names of the corresponding chromatograms. Starting with
 sample IDs, the second row column names of the corresponding chromatograms. Starting with
->>>>>>> 2605e41ff901173b66a8ad9cb24c30de43a5a015
 the third row chromatograms are included, whereby single samples are concatenated horizontally
 Each chromatogram needs to consist of the same number of columns, at least
 two are required (the retention time and the area)}
@@ -28,6 +25,23 @@ two are required (the retention time and the area)}
 
 \item{reference}{character, a sample to which all other samples are aligned to by means of a
 linear shift}
+
+\item{step1_maxshift}{numeric, defines a window to search for an optimal linear shift of samples
+with respect to the reference. Shifts are evaluated within - step1_maxshift:step1_maxshift}
+
+\item{step2_maxshift}{numeric, defines the allowed deviation of retention times around the mean
+of the corresponding  row}
+
+\item{step3_maxdiff}{numeric, defines the minimum difference in retention times among distict
+substances. Substances that do not differ enough, are merged if applicable}
+
+\item{blanks}{character vector of blanks. If specified, all substance found in any of the blanks
+will be removed from all samples}
+
+\item{write.output}{character. If specified the output is written to a text file}
+
+\item{delete_single_sub}{logical, determines whether substances that occur in just one sample
+are removed or not}
 }
 \value{
 

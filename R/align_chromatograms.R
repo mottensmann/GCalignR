@@ -27,7 +27,7 @@
 #' @param step3_maxdiff numeric, defines the minimum difference in retention times among distict
 #' substances. Substances that do not differ enough, are merged if applicable
 #'
-#'@param blanks character vector of blanks. If specified, all substance found in any of the blanks
+#' @param blanks character vector of blanks. If specified, all substance found in any of the blanks
 #' will be removed from all samples
 #'
 #' @param delete_single_sub logical, determines whether substances that occur in just one sample
@@ -54,9 +54,6 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
 
     if (is.null(rt_name)) stop("specify name of retention time column")
     if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
-
-    ## check for leading or tailing whitespaces in the names etc
-
 
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
@@ -94,14 +91,16 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     # matrix to list
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
 
-# Start of processing --------------------------------------------------------------------------
+    ########################
+    # Start of processing
+    ########################
 
     # 1.) cut retention times
     chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_name)
 
     # 2.) Linear Transformation of Retentiontimes
 
-    ## thinking about reference: default is chromatogram with most peaks - optional: manual
+    ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     chroma_aligned <- linear_transformation(chromatograms, shift=step1_maxshift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_name)
 
@@ -206,6 +205,13 @@ align_chromatograms <- function(datafile, rt_name = NULL, write_output = NULL, r
     }
 
     output
+#     res <- list(call=match.call(),
+#                 g2 = g2_emp, p_val = p_permut, g2_permut = g2_permut,
+#                 g2_boot = g2_boot, CI_boot = CI_boot, g2_se = g2_se,
+#                 nobs = nrow(genotypes), nloc = ncol(genotypes))
+#
+#     class(output) <- "GCalign" # name of list
+#     return(output)
 }
 
 

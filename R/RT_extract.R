@@ -3,7 +3,7 @@
 #'  and columns retention times. Columnames represent the order of substances
 #'  starting with the lowest retention time
 #'
-#' @param chromatograms List of Chromatograms
+#' @param chromatograms List of Chromatograms with just a column for Retention Times
 #'
 #' @return
 #'
@@ -13,16 +13,17 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#' @import
+#'
 #'
 #'
 #' @export
 #'
 #'
-RT_extract = function(chromatograms,rt_name){
+RT_extract <- function(chromatograms){ # , rt_name
 
-    chromatograms <- lapply(chromatograms,matrix_append,chromatograms) # equal length
-    rts <- lapply(chromatograms, function(x) out <- x[1][,rt_name])  # just extract RTs
+    # chromatograms <- lapply(chromatograms,matrix_append,chromatograms) # equal length
+    # rts <- lapply(chromatograms, function(x) out <- x[1][,rt_name])  # just extract RTs
+    rts <- chromatograms
     rts_matrix <- matrix(NA, nrow = length(rts),ncol = length(rts[[1]]))
 
     for (C in 1:length(rts)){

@@ -7,10 +7,10 @@
  and columns retention times. Columnames represent the order of substances
  starting with the lowest retention time}
 \usage{
-RT_extract(chromatograms, rt_name)
+RT_extract(chromatograms)
 }
 \arguments{
-\item{chromatograms}{List of Chromatograms}
+\item{chromatograms}{List of Chromatograms with just a column for Retention Times}
 }
 \value{
 

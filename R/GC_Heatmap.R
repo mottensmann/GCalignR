@@ -69,7 +69,7 @@ heat_matrix[steps[i]:(steps[i]+(ncol(rts_matrix)-1)),3] <- colnames(rts_matrix)
     # #################
     gg <- ggplot(heat_matrix, aes(x=RT, y=ID, fill=val))
     gg <- gg + geom_tile(color="white", size=0.01)
-    gg <- gg + scale_fill_gradientn(colours = myPalette(3),limits=c(-0.35,0.35))
+    gg <- gg + scale_fill_gradientn(colours = myPalette(3),limits=c(-0.4,0.4))
     gg <- gg + labs(x=NULL, y=NULL, title="Variation of Retention times per Substance among Chromatograms")
     gg <- gg + theme(plot.title=element_text(hjust=0))
     # gg <- gg + theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))

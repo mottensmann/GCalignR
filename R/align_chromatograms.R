@@ -196,12 +196,16 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # calculate final retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
-    #######################
-    # Outputs for Heatmaps
-    #######################
+#     #######################
+#     # Outputs for Heatmaps
+#     #######################
+#
+#     rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+#     rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+    rt_raw <- rt_extract_heatmap(chromatograms = chroma_aligned,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
 
-    rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
-    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
 
     # ============================
     # mean per row without 0
@@ -240,7 +244,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     #output
     output_algorithm <- list(call=match.call(),
                 chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
-                rt_aligned = rt_mat)
+                rt_aligned = rt_aligned)
 
     class(output_algorithm) <- "GCalign" # name of list
     return(output_algorithm)

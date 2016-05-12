@@ -20,6 +20,16 @@
 #'
 rt_extract_heatmap <- function(chromatograms,blanks,rt_name,del_single_sub){
 
+    ###############################################
+    # Make length equal, if differences are present
+    ###############################################
+
+    chromatograms <- lapply(chromatograms, matrix_append, chromatograms)
+    id <- names(chromatograms)
+
+    ####################################################################
+    # optional, depends on arguments regarding blanks and del_single_sub
+    ####################################################################
 
     # delete blanks
     if (!is.null(blanks)) {
@@ -45,6 +55,21 @@ rt_extract_heatmap <- function(chromatograms,blanks,rt_name,del_single_sub){
         chromatograms <- lapply(chromatograms, function(x) x[-single_subs_ind, ])
     }
 
+    #############################################################################
+    #############################################################################
+    #############################################################################
+
+    #################################
     # calculate final retention times
+    #################################
+
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
+    rt_mat <- as.data.frame(t(rt_mat))
+    rt_mat2 <- rt_mat
+    rt_mat2[rt_mat2==0] <- NA
+    colnames(rt_mat) <-
+        as.character(round(colMeans(rt_mat2,na.rm = T),3))
+    rt_mat <- cbind(id,rt_mat)
+
+
 }

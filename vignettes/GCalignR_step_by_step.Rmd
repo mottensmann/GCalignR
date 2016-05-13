@@ -1,0 +1,89 @@
+---
+title: "GCalignR step by step"
+author: "Martin A. Stoffel & Meinolf Ottensmann"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+vignette: >
+    %\VignetteIndexEntry{GCalignR step by step}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
+    fig.width = 5, fig.height = 4) # warning = FALSE
+```
+
+
+## GCalignR
+
+GCalignR provides a simple means of aligning chromatograms from gas-chromatography (GC)
+and gas-chromatography mass-spectrometry (GC-MS). Chromatograms of multiple samples are not
+directly comparable as the retention times vary across samples due to sublte, random and often
+unavoidable variation the GC-MS machine parameters [@pierce2005classification]. For studies
+interested in broad patterns within chemical samples it is crucial that the same substances
+will have the same retention times to compare them across samples. Suprisingly, within the
+relatively young field of mammalian olfactory communication, most researchers seem to align
+chromatograms manually (some citations) rather than using automated alignment algorithms, 
+which are used by chemists or chemical plant biologists for a while (i am not sure about this,
+needs citations). This might be due to (to what might it be due? No idea, but we also didn´t use
+them obviously).
+
+## The alignment algorithm
+
+## Installation
+
+The development version can be downloaded from [GitHub](https://github.com/mastoffel/GCalignR) with the following code:
+
+```{r, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("mastoffel/inbreedR", build_vignettes = TRUE)
+```
+
+The package provides a comprehensive documentation, check out the `GCalignR` help file.
+
+```{r}
+library("GCalignR")
+```
+
+```{r, eval = FALSE}
+?GCalignR
+```
+
+## GCalignR contains the following functions: 
+
+* `align_chromatograms`: Aligns gas-chromatography data by retention times. 
+* `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap,
+the user can visually inspect the quality of the alignment and if necessary adjust the parameters.
+
+## Step by step guide to aligning chromatograms with GCalignR
+
+GC and GC-MS machines are coupled to specific software to look at the chromatograms and mass-spectra (i.e. Xcalibur).
+These programs usually allow to extract the peaks of the chromatograms along with the areas under the peaks
+and additional variables such as the peak height. The aim of GCalignR is to align these extracted peaks across individuals
+using just their retention times (and not the mass-spectra). The simple underlying assumption is
+that peaks with similar retention times represent the same substances. However, it is highly recommended
+to verify this assumption by comparing also the mass-spectra (if available) of the substances of interest.
+
+The alignment algorithm follows the following steps:
+
+1. Given a reference chromatogram within the sample, all chromatograms are aligned to this reference
+by means of shifting them to maximise shared peaks with the reference. This step corrects overall
+differences in the retention times of chromatograms.
+
+2. This step corrects unreliability of chromatograms on an individual peak basis and essentially
+tries to minimise variation  within a retention time row. 
+
+3. In a third step, retention time rows are merged if they have similar retention time means 
+and non of the samples shows peaks in both or the rows (with the assumption that these two
+rows represent a single substance)
+
+
+## input file
+
+
+## Literature
+
+

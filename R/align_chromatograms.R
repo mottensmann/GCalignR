@@ -1,4 +1,4 @@
-#'Aligning chromatograms based on retention times
+#' Aligning chromatograms based on retention times
 #'
 #'@param datafile path to the datafile. It has to be a .txt file. The first row needs to contain
 #'  sample names, the second row column names of the corresponding chromatograms. Starting with the
@@ -7,7 +7,7 @@
 #'  retention time and the area).
 #'
 #'@param sep  the field separator character. Values on each line of the file are separated by this
-#'  character. The default is tab seperated (sep = "\t"). See sep argument in read.table for details.
+#'  character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.
 #'
 #'@param rt_name Name of the column holding retention times (i.e. "RT")
 #'
@@ -15,9 +15,9 @@
 #'       to write the aligned matrices of the retention times and areas to txt files (the names have
 #'       to correspond to the column names given in the second row of the datafile).
 #'
-#'@param rt_cutoff_low lower threshold under which retention times are cutted (i.e. 5)
+#'@param rt_cutoff_low lower threshold under which retention times are cut (i.e. 5)
 #'
-#'@param rt_cutoff_high Upper threshold above which retention times are cutted (i.e. 35)
+#'@param rt_cutoff_high Upper threshold above which retention times are cut (i.e. 35)
 #'
 #'@param reference A sample(name) to which all other samples are aligned to by means of a
 #'  linear shift (i.e. "individual3") The name has to correspond to an individual name given
@@ -29,10 +29,6 @@
 #'
 #'@param step2_maxshift Defines the allowed deviation of retention times around the mean of
 #'  the corresponding row. Default is 0.02.
-#'
-#'
-#' @param blanks character vector of blanks. If specified, all substance found in any of the blanks
-#' will be removed from all samples
 #'
 #'@param step3_maxdiff Defines the minimum difference in retention times among distinct
 #'  substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.
@@ -46,7 +42,13 @@
 #'  removed or not.
 #'
 #'
-#'@return
+#' @return
+#' Returns an object of class GCalign that is a a list with the following elements:
+#' \item{call}{function call}
+#' \item{chroma_aligned}{a list containing data.frames with the aligned variables}.
+#' \item{rt_raw}{a data.frame with the retention times before alignment}
+#' \item{rt_linear}{a data.frame with the retention times after the linear transformation}
+#' \item{rt_aligned}{a data.frame with the final aligned retention times}
 #'
 #'
 #'@references
@@ -54,8 +56,7 @@
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
-#'@import stringr
-#'@import readr
+#'@import magrittr
 #'
 #'@export
 #'

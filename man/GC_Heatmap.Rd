@@ -4,6 +4,7 @@
 \alias{GC_Heatmap}
 \title{GC_Heatmap visualises the goodness of chromatogram alignment}
 \usage{
+<<<<<<< HEAD
 GC_Heatmap(GcOut, all = FALSE)
 }
 \arguments{
@@ -12,6 +13,12 @@ where samples are ordered in rows}
 
 \item{all}{logical, indicating whether all or just the final retention times
 are plotted. Default \code{all=FALSE}}
+=======
+GC_Heatmap(rt_df)
+}
+\arguments{
+\item{rt_df}{Dataframe}
+>>>>>>> 89576ca767e3575ff20d45eaf308c23e3efc35f6
 }
 \value{
 

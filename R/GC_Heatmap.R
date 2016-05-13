@@ -17,10 +17,8 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#' @import ggplot2
 #'
-#' @import RColorBrewer
-#'
+#' @import ggplot2 RColorBrewer
 #'
 #' @export
 #'

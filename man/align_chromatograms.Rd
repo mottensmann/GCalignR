@@ -17,7 +17,11 @@ chromatogram needs to consist of the same number of columns, at least two are re
 retention time and the area).}
 
 \item{sep}{the field separator character. Values on each line of the file are separated by this
+<<<<<<< HEAD
 character. The default is tab seperated (sep = "\t"). See sep argument in read.table for details.}
+=======
+character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.}
+>>>>>>> 89576ca767e3575ff20d45eaf308c23e3efc35f6
 
 \item{rt_name}{Name of the column holding retention times (i.e. "RT")}
 
@@ -25,9 +29,15 @@ character. The default is tab seperated (sep = "\t"). See sep argument in read.t
 to write the aligned matrices of the retention times and areas to txt files (the names have
 to correspond to the column names given in the second row of the datafile).}
 
+<<<<<<< HEAD
 \item{rt_cutoff_low}{lower threshold under which retention times are cutted (i.e. 5)}
 
 \item{rt_cutoff_high}{Upper threshold above which retention times are cutted (i.e. 35)}
+=======
+\item{rt_cutoff_low}{lower threshold under which retention times are cut (i.e. 5)}
+
+\item{rt_cutoff_high}{Upper threshold above which retention times are cut (i.e. 35)}
+>>>>>>> 89576ca767e3575ff20d45eaf308c23e3efc35f6
 
 \item{reference}{A sample(name) to which all other samples are aligned to by means of a
 linear shift (i.e. "individual3") The name has to correspond to an individual name given
@@ -36,25 +46,43 @@ in the first line of the datafile.}
 \item{step1_maxshift}{Defines a window to search for an optimal linear shift of samples
 with respect to the reference. Shifts are evaluated within - step1_maxshift to + step1_maxshift.
 Default is 0.05.}
+<<<<<<< HEAD
 
 \item{step2_maxshift}{Defines the allowed deviation of retention times around the mean of
 the corresponding row. Default is 0.02.}
 
 \item{step3_maxdiff}{Defines the minimum difference in retention times among distinct
 substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.}
+=======
+>>>>>>> 89576ca767e3575ff20d45eaf308c23e3efc35f6
 
-\item{blanks}{character vector of blanks. If specified, all substance found in any of the blanks
-will be removed from all samples}
+\item{step2_maxshift}{Defines the allowed deviation of retention times around the mean of
+the corresponding row. Default is 0.02.}
+
+<<<<<<< HEAD
+\item{blanks}{Character vector of the names of blanks. If specified, all substance found in any of the blanks
+will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
+to a name given in the first line of the datafile.}
+
+=======
+\item{step3_maxdiff}{Defines the minimum difference in retention times among distinct
+substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.}
 
 \item{blanks}{Character vector of the names of blanks. If specified, all substance found in any of the blanks
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 to a name given in the first line of the datafile.}
 
+>>>>>>> 89576ca767e3575ff20d45eaf308c23e3efc35f6
 \item{delete_single_sub}{logical, determines whether substances that occur in just one sample are
 removed or not.}
 }
 \value{
-
+Returns an object of class GCalign that is a a list with the following elements:
+\item{call}{function call}
+\item{chroma_aligned}{a list containing data.frames with the aligned variables}.
+\item{rt_raw}{a data.frame with the retention times before alignment}
+\item{rt_linear}{a data.frame with the retention times after the linear transformation}
+\item{rt_aligned}{a data.frame with the final aligned retention times}
 }
 \description{
 Aligning chromatograms based on retention times

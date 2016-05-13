@@ -7,12 +7,10 @@ gc_heatmap visualises the current variation of retention times among all samples
 within the same row. Therefore the absolute deviation from the mean of the row is calculated
 for each sample}
 \usage{
-GC_Heatmap(rts_matrix)
+GC_Heatmap(rt_df)
 }
 \arguments{
-\item{rts_matrix}{Matrix of Retention times, where samples are sorted in rows
-and retention times in columns. Absence of substances in a sample are
-coded by NA. These values are ignored in calculating the row means}
+\item{rt_df}{Dataframe}
 }
 \value{
 

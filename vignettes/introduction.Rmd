@@ -33,7 +33,35 @@ them obviously).
 
 ## The alignment algorithm
 
-## Aligning chromatograms with GCalignR
+## Installation
+
+The development version can be downloaded from [GitHub](https://github.com/mastoffel/GCalignR) with the following code:
+
+```{r, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("mastoffel/inbreedR", build_vignettes = TRUE)
+```
+
+The package provides documentation for every function. To get an overview, just look at `GCalignR`'s help file.
+
+```{r}
+library("GCalignR")
+```
+
+```{r, eval = FALSE}
+?GCalignR
+```
+
+## GCalignR contains the following functions: 
+
+* `align_chromatograms`: Aligns gas-chromatography data by retention times. 
+* `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap,
+the user can visually inspect the quality of the alignment and if necessary adjust the parameters.
+
+## Step by step guide to aligning chromatograms with GCalignR
+
+# input file
+The 
 
 ## Literature
 

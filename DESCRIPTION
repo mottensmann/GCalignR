@@ -11,7 +11,10 @@ Depends:
     R (>= 3.2.3)
 Import: stringr,
         readr,
-        magrittr
+        magrittr,
+        ggplot2,
+        RColorBrewer,
+        reshape2
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1

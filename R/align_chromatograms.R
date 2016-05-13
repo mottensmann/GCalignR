@@ -1,4 +1,4 @@
-#'Aligning chromatograms based on retention times
+#' Aligning chromatograms based on retention times
 #'
 #'@param datafile path to the datafile. It has to be a .txt file. The first row needs to contain
 #'  sample names, the second row column names of the corresponding chromatograms. Starting with the
@@ -33,6 +33,7 @@
 #'@param step3_maxdiff Defines the minimum difference in retention times among distinct
 #'  substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.
 #'
+#'
 #'@param blanks Character vector of the names of blanks. If specified, all substance found in any of the blanks
 #'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 #'  to a name given in the first line of the datafile.
@@ -41,7 +42,13 @@
 #'  removed or not.
 #'
 #'
-#'@return
+#' @return
+#' Returns an object of class GCalign that is a a list with the following elements:
+#' \item{call}{function call}
+#' \item{chroma_aligned}{a list containing data.frames with the aligned variables}.
+#' \item{rt_raw}{a data.frame with the retention times before alignment}
+#' \item{rt_linear}{a data.frame with the retention times after the linear transformation}
+#' \item{rt_aligned}{a data.frame with the final aligned retention times}
 #'
 #'
 #'@references
@@ -55,9 +62,6 @@
 #'
 #'@export
 #'
-#'@examples
-#' datafile <- system.file("extdata", "plovers.txt", package = "GCalignR")
-#'
 #'
 
 align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
@@ -66,9 +70,6 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
 
     if (is.null(rt_name)) stop("specify name of retention time column")
     if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
-
-    ## check for leading or tailing whitespaces in the names etc
-
 
     # extract names
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
@@ -106,14 +107,21 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # matrix to list
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
 
-# Start of processing --------------------------------------------------------------------------
+    #####################
+    # save for later use
+    ####################
+    chroma_raw <- lapply(chromatograms,matrix_append,chromatograms)
+
+    ########################
+    # Start of processing
+    ########################
 
     # 1.) cut retention times
     chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_name)
 
     # 2.) Linear Transformation of Retentiontimes
 
-    ## thinking about reference: default is chromatogram with most peaks - optional: manual
+    ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     chroma_aligned <- linear_transformation(chromatograms, shift=step1_maxshift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_name)
 
@@ -121,12 +129,18 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # source("R/matrix_append.R")
     chromatograms <- lapply(chroma_aligned, matrix_append, chroma_aligned)
 
+    ######################
+    # save for later use
+    ####################
+    chroma_linear <- chromatograms
+
     # source("R/evaluate_chroma.R")
     # Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
     # Variation <- mean(var_per_row(chromatograms),na.rm = T)
 
     # align peaks
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
+
 
     # see whether zero rows are present
     average_rts <- mean_per_row(chromatograms_aligned, rt_col_name = rt_name)
@@ -185,6 +199,18 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # calculate final retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
+#     #######################
+#     # Outputs for Heatmaps
+#     #######################
+#
+#     rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+#     rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+    rt_raw <- rt_extract_heatmap(chromatograms = chroma_aligned,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+
+
+    # ============================
     # mean per row without 0
     row_mean <- function(x) {
         if (all(x==0)) 0 else mean(x[x!=0])
@@ -218,7 +244,13 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
         lapply(write_output, write_files)
     }
 
-    class(output) <- "GCalign"
+    #output
+    output_algorithm <- list(call=match.call(),
+                chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
+                rt_aligned = rt_aligned)
+
+    class(output_algorithm) <- "GCalign" # name of list
+    return(output_algorithm)
 }
 
 

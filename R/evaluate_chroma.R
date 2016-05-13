@@ -40,6 +40,7 @@ mean_of_samples <- function(chromatograms, samples, retention_row, rt_col_name){
 #'
 #' @export
 #'
+#'
 var_of_samples <- function(chromatograms, samples, retention_row, rt_col_name){
     # Estimate the Variation in Retention Times within Rows
     # NA indicates that only one Substance exists

@@ -3,6 +3,8 @@
 GCalignR
 ========
 
+![Build Status](https://travis-ci.org/mastoffel/GCalignR.svg?branch=master)
+
 `GCalignR` provides simple functions to align gas-chromatography data based on retention times and plots to evaluate the quality of the alignment.
 
 You can install:

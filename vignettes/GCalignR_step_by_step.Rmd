@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
 vignette: >
-    %\VignetteIndexEntry{inbreedR step by step}
+    %\VignetteIndexEntry{GCalignR step by step}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
@@ -42,7 +42,7 @@ install.packages("devtools")
 devtools::install_github("mastoffel/inbreedR", build_vignettes = TRUE)
 ```
 
-The package provides documentation for every function. To get an overview, just look at `GCalignR`'s help file.
+The package provides a comprehensive documentation, check out the `GCalignR` help file.
 
 ```{r}
 library("GCalignR")
@@ -60,8 +60,29 @@ the user can visually inspect the quality of the alignment and if necessary adju
 
 ## Step by step guide to aligning chromatograms with GCalignR
 
-# input file
-The 
+GC and GC-MS machines are coupled to specific software to look at the chromatograms and mass-spectra (i.e. Xcalibur).
+These programs usually allow to extract the peaks of the chromatograms along with the areas under the peaks
+and additional variables such as the peak height. The aim of GCalignR is to align these extracted peaks across individuals
+using just their retention times (and not the mass-spectra). The simple underlying assumption is
+that peaks with similar retention times represent the same substances. However, it is highly recommended
+to verify this assumption by comparing also the mass-spectra (if available) of the substances of interest.
+
+The alignment algorithm follows the following steps:
+
+1. Given a reference chromatogram within the sample, all chromatograms are aligned to this reference
+by means of shifting them to maximise shared peaks with the reference. This step corrects overall
+differences in the retention times of chromatograms.
+
+2. This step corrects unreliability of chromatograms on an individual peak basis and essentially
+tries to minimise variation  within a retention time row. 
+
+3. In a third step, retention time rows are merged if they have similar retention time means 
+and non of the samples shows peaks in both or the rows (with the assumption that these two
+rows represent a single substance)
+
+
+## input file
+
 
 ## Literature
 

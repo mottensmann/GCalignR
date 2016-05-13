@@ -9,7 +9,7 @@ Description: Aligns chromatography peaks with a three step algorithm: (1) Linear
     complementary peak patterns and similar retention time means
 Depends:
     R (>= 3.2.3)
-Import: stringr,
+Imports: stringr,
         readr,
         magrittr,
         ggplot2,

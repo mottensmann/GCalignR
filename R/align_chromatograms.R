@@ -236,7 +236,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
 
     if (!is.null(write_output)){
         write_files <- function(x) {
-            write.table(output[[x]], file = paste0(x, ".txt"), sep = "\t", row.names = FALSE)
+            write.table(output[[x]], file = paste0(x, ".txt"), sep = "\\t", row.names = FALSE)
         }
         lapply(write_output, write_files)
     }

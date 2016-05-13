@@ -13,7 +13,8 @@ Import: stringr,
         readr,
         ggplot2,
         RColorBrewer,
-        reshape2
+        reshape2,
+        gridExtra
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1

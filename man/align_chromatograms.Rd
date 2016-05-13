@@ -10,42 +10,48 @@ align_chromatograms(datafile, sep = "\\t", rt_name = NULL,
   step3_maxdiff = 0.05, blanks = NULL, del_single_sub = FALSE)
 }
 \arguments{
-\item{datafile}{datafile is a tab-delimited txt file. The first rows needs to contain
-sample names, the second row column names of the corresponding chromatograms. Starting with
-sample IDs, the second row column names of the corresponding chromatograms. Starting with
-the third row chromatograms are included, whereby single samples are concatenated horizontally
-Each chromatogram needs to consist of the same number of columns, at least
-two are required (the retention time and the area)}
+\item{datafile}{path to the datafile. It has to be a .txt file. The first row needs to contain
+sample names, the second row column names of the corresponding chromatograms. Starting with the
+third row chromatograms are included, whereby single samples are concatenated horizontally Each
+chromatogram needs to consist of the same number of columns, at least two are required (the
+retention time and the area).}
 
-\item{rt_name}{character, name of the column holding retention times}
+\item{sep}{the field separator character. Values on each line of the file are separated by this
+character. The default is tab seperated (sep = "\t"). See sep argument in read.table for details.}
 
-\item{rt_cutoff_low}{numeric, lower threshold under which retention times are cutted}
+\item{rt_name}{Name of the column holding retention times (i.e. "RT")}
 
-\item{rt_cutoff_high}{numeric, upper threshold above which retention times are cutted}
+\item{write_output}{If specified the aligned output is written to a text file. (i.e. write_output = c("RT", "area")
+to write the aligned matrices of the retention times and areas to txt files (the names have
+to correspond to the column names given in the second row of the datafile).}
 
-\item{reference}{character, a sample to which all other samples are aligned to by means of a
-linear shift}
+\item{rt_cutoff_low}{lower threshold under which retention times are cutted (i.e. 5)}
 
-\item{step1_maxshift}{numeric, defines a window to search for an optimal linear shift of samples
-with respect to the reference. Shifts are evaluated within - step1_maxshift:step1_maxshift}
+\item{rt_cutoff_high}{Upper threshold above which retention times are cutted (i.e. 35)}
 
-\item{step2_maxshift}{numeric, defines the allowed deviation of retention times around the mean
-<<<<<<< HEAD
-of the corresponding  row}
-=======
-of the corresponding row}
->>>>>>> 3579af0443af1e4f7aec0512dbbf7a8eaf9ca15f
+\item{reference}{A sample(name) to which all other samples are aligned to by means of a
+linear shift (i.e. "individual3") The name has to correspond to an individual name given
+in the first line of the datafile.}
 
-\item{step3_maxdiff}{numeric, defines the minimum difference in retention times among distict
-substances. Substances that do not differ enough, are merged if applicable}
+\item{step1_maxshift}{Defines a window to search for an optimal linear shift of samples
+with respect to the reference. Shifts are evaluated within - step1_maxshift to + step1_maxshift.
+Default is 0.05.}
+
+\item{step2_maxshift}{Defines the allowed deviation of retention times around the mean of
+the corresponding row. Default is 0.02.}
+
+\item{step3_maxdiff}{Defines the minimum difference in retention times among distinct
+substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.}
 
 \item{blanks}{character vector of blanks. If specified, all substance found in any of the blanks
 will be removed from all samples}
 
-\item{write.output}{character. If specified the output is written to a text file}
+\item{blanks}{Character vector of the names of blanks. If specified, all substance found in any of the blanks
+will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
+to a name given in the first line of the datafile.}
 
-\item{delete_single_sub}{logical, determines whether substances that occur in just one sample
-are removed or not}
+\item{delete_single_sub}{logical, determines whether substances that occur in just one sample are
+removed or not.}
 }
 \value{
 
@@ -54,8 +60,8 @@ are removed or not}
 Aligning chromatograms based on retention times
 }
 \author{
-Martin Stoffel (martin.adam.stoffel@gmail.com) &
-        Meinolf Ottensmann (meinolf.ottensmann@web.de)
+Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
+ (meinolf.ottensmann@web.de)
 }
 \references{
 

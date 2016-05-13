@@ -69,7 +69,9 @@ rt_extract_heatmap <- function(chromatograms,blanks,rt_name,del_single_sub){
     rt_mat2[rt_mat2==0] <- NA
     colnames(rt_mat) <-
         as.character(round(colMeans(rt_mat2,na.rm = T),3))
+    colnames(rt_mat)[1] <- as.character('id')
     rt_mat <- cbind(id,rt_mat)
+
 
 
 }

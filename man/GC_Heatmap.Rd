@@ -2,26 +2,23 @@
 % Please edit documentation in R/GC_Heatmap.R
 \name{GC_Heatmap}
 \alias{GC_Heatmap}
-\title{Visualise deviation of retention times from the mean per row
-gc_heatmap visualises the current variation of retention times among all samples
-within the same row. Therefore the absolute deviation from the mean of the row is calculated
-for each sample}
+\title{GC_Heatmap visualises the goodness of chromatogram alignment}
 \usage{
-GC_Heatmap(rts_matrix)
+GC_Heatmap(GcOut, all = FALSE)
 }
 \arguments{
-\item{rts_matrix}{Matrix of Retention times, where samples are sorted in rows
-and retention times in columns. Absence of substances in a sample are
-coded by NA. These values are ignored in calculating the row means}
+\item{GcOut}{\code{data.frame} representing a matrix of retention times,
+where samples are ordered in rows}
+
+\item{all}{logical, indicating whether all or just the final retention times
+are plotted. Default \code{all=FALSE}}
 }
 \value{
 
 }
 \description{
-Visualise deviation of retention times from the mean per row
-gc_heatmap visualises the current variation of retention times among all samples
-within the same row. Therefore the absolute deviation from the mean of the row is calculated
-for each sample
+Visualises the deviation of retention of sample from the mean of all other,
+ to indicate how well chromatograms are aligned. Small deviations indicate a good alignment
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

@@ -25,9 +25,9 @@
 
 
 
-GC_Heatmap <-function(GcOut, all=FALSE){
+GC_Heatmap <-function(GcOut, all=FALSE,step='rt_aligned'){
 
-    rt_df <- GcOut[['rt_aligned']]
+    rt_df <- GcOut[[step]]
 
     ##########################################
     rt_df[,'id'] <- as.character(rt_df[,'id'])

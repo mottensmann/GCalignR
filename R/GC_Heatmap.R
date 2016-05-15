@@ -6,8 +6,11 @@
 #' @param GcOut \code{data.frame} representing a matrix of retention times,
 #'          where samples are ordered in rows
 #'
-#' @param all logical, indicating whether all or just the final retention times
-#'          are plotted. Default \code{all=FALSE}
+#' @param step character, indicating which step of the algorithm to plot. Either
+#'          {rt_raw}, {rt_linear} or {rt_aligned}
+#'
+#' @param substance_subset vector containing indices of substances (i.e. rows) to plot
+#'          By default {NULL} indicating all substances are plotted
 #'
 #' @return
 #'
@@ -25,9 +28,13 @@
 
 
 
-GC_Heatmap <-function(GcOut, all=FALSE,step='rt_aligned'){
+GC_Heatmap <-function(GcOut,step='rt_aligned',substance_subset=NULL){
 
     rt_df <- GcOut[[step]]
+
+    if(!is.null(substance_subset)){
+        rt_df <- rt_df(,substance_subset)
+    }
 
     ##########################################
     rt_df[,'id'] <- as.character(rt_df[,'id'])
@@ -79,7 +86,7 @@ GC_Heatmap <-function(GcOut, all=FALSE,step='rt_aligned'){
                      axis.text.x=element_blank(),
                      axis.ticks=element_blank(),
                      axis.text.y=element_text(size = 10))
-    gg <- gg + coord_equal(10)
+    gg <- gg + coord_equal(ratio = ncol(rt_df)/nrow(rt_df))
 
     gg
 

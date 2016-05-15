@@ -4,21 +4,17 @@
 \alias{GC_Heatmap}
 \title{GC_Heatmap visualises the goodness of chromatogram alignment}
 \usage{
-<<<<<<< HEAD
-GC_Heatmap(GcOut, all = FALSE)
+GC_Heatmap(GcOut, step = "rt_aligned", substance_subset = NULL)
 }
 \arguments{
 \item{GcOut}{\code{data.frame} representing a matrix of retention times,
 where samples are ordered in rows}
 
-\item{all}{logical, indicating whether all or just the final retention times
-are plotted. Default \code{all=FALSE}}
-=======
-GC_Heatmap(rt_df)
-}
-\arguments{
-\item{rt_df}{Dataframe}
->>>>>>> 89576ca767e3575ff20d45eaf308c23e3efc35f6
+\item{step}{character, indicating which step of the algorithm to plot. Either
+{rt_raw}, {rt_linear} or {rt_aligned}}
+
+\item{substance_subset}{vector containing indices of substances (i.e. rows) to plot
+By default {NULL} indicating all substances are plotted}
 }
 \value{
 

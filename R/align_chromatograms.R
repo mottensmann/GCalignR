@@ -65,6 +65,8 @@
 align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
                                 del_single_sub = FALSE) {
+start.time <- pracma::tic() # Start a clock
+    cat(paste('Run GCalignR\n','Time:',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n##########','\n','\n'))
 
     if (is.null(rt_name)) stop("specify name of retention time column")
     if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
@@ -105,6 +107,8 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # matrix to list
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
 
+    cat(paste0('Chromatograms of ',as.character(length(ind_names)),' samples loaded','\n##########','\n','\n'))
+
     #####################
     # save for later use
     ####################
@@ -117,11 +121,29 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # 1.) cut retention times
     chromatograms <- lapply(chromatograms, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_name)
 
+    if(!is.null(rt_cutoff_low)){
+    cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n##########','\n','\n'))
+    }
+
+    if(!is.null(rt_cutoff_high)){
+        cat(paste0('Retention time cut-off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted'))
+    }
+
+    if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
+        cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted'))
+    }
+
+
+
+
     # 2.) Linear Transformation of Retentiontimes
+
+    cat('Linear Transformation...\n')
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     chroma_aligned <- linear_transformation(chromatograms, shift=step1_maxshift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_name)
+    cat(paste('Linear Transformation done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##########','\n','\n')
 
     # Make List equal in length
     # source("R/matrix_append.R")
@@ -137,8 +159,12 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # Variation <- mean(var_per_row(chromatograms),na.rm = T)
 
     # align peaks
+
+    cat(c('Start alignment of peaks...','This might take a while!','\n','\n'))
+    Fun_Fact()
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
 
+    cat(paste('Peak alignment done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##########','\n','\n')
 
     # see whether zero rows are present
     average_rts <- mean_per_row(chromatograms_aligned, rt_col_name = rt_name)
@@ -154,11 +180,14 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
 
     # merging step
     # min distance here is crucial --> depends on sample size
-    chroma_merged <- merge_redundant_rows(chromatograms, average_rts, min_distance=step3_maxdiff, rt_col_name = rt_name)
 
+    cat('Merge rows...','\n')
+    chroma_merged <- merge_redundant_rows(chromatograms, average_rts, min_distance=step3_maxdiff, rt_col_name = rt_name)
+    cat(paste('Merge rows done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##########','\n','\n')
     ### just evaluation
     # average_rts <- mean_per_row(chroma_merged)
     # rt_mat2 <- do.call(cbind, lapply(chroma_merged, function(x) x$RT))
+
 
     average_rts <- mean_per_row(chroma_merged, rt_col_name = rt_name)
 
@@ -167,7 +196,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
         chromatogram <- chromatogram[!is.na(average_rts), ]
         chromatogram
     }
-    chromatograms <- lapply(chromatograms, del_empty_rows, average_rts)
+    chromatograms <- lapply(chroma_merged, del_empty_rows, average_rts)
 
 
     # delete blanks
@@ -183,6 +212,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
         }
     }
 
+
     # delete single substances
     # create matrix with all retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
@@ -194,6 +224,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
         chromatograms <- lapply(chromatograms, function(x) x[-single_subs_ind, ])
     }
 
+
     # calculate final retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
@@ -203,9 +234,19 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
 #
 #     rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
 #     rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+
+    cat('output for heatmaps')
+
     rt_raw <- rt_extract_heatmap(chromatograms = chroma_aligned,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
-    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
-    rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+
+    cat('raw')
+
+     rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+
+
+     rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+
+     cat('linear')
 
 
     # ============================
@@ -248,7 +289,11 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
                 rt_aligned = rt_aligned)
 
     class(output_algorithm) <- "GCalign" # name of list
+
+    end.time <- pracma::toc(echo = F)
+    cat(paste('Alignment was successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\nElapsed time:',as.character(floor(end.time[[1]]/60)),'minutes','\n')
     return(output_algorithm)
+
 }
 
 

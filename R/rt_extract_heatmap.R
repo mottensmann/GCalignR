@@ -32,28 +32,28 @@ rt_extract_heatmap <- function(chromatograms,blanks,rt_name,del_single_sub){
     ####################################################################
 
     # delete blanks
-    if (!is.null(blanks)) {
-        # delete one blank
-        delete_blank <- function(blank, chromatograms) {
-            del_substances <- which(chromatograms[[blank]]$RT > 0)
-            chroma_out <- lapply(chromatograms, function(x) x[-del_substances, ])
-        }
-        # delete all blanks
-        for (i in blanks) {
-            chromatograms <- delete_blank(i, chromatograms)
-        }
-    }
+#     if (!is.null(blanks)) {
+#         # delete one blank
+#         delete_blank <- function(blank, chromatograms) {
+#             del_substances <- which(chromatograms[[blank]]$RT > 0)
+#             chroma_out <- lapply(chromatograms, function(x) x[-del_substances, ])
+#         }
+#         # delete all blanks
+#         for (i in blanks) {
+#             chromatograms <- delete_blank(i, chromatograms)
+#         }
+#     }
 
     # delete single substances
     # create matrix with all retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
-    if (del_single_sub) {
-        # find single retention times in rows
-        single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
-        # delete substances occuring in just one individual
-        chromatograms <- lapply(chromatograms, function(x) x[-single_subs_ind, ])
-    }
+#     if (del_single_sub) {
+#         # find single retention times in rows
+#         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
+#         # delete substances occuring in just one individual
+#         chromatograms <- lapply(chromatograms, function(x) x[-single_subs_ind, ])
+#     }
 
     #############################################################################
     #############################################################################

@@ -275,18 +275,45 @@ start.time <- pracma::tic() # Start a clock
     })
     names(output) <- col_names
 
+    # Extract the name of the data source to write for example plover_area.txt instead
+    # of just an unprecise area.txt
+
+    prefix <- strsplit(datafile,split = "/")
+    prefix <- as.character(prefix[[1]][length(prefix[[1]])])
+    prefix <- as.character(strsplit(prefix,split = ".txt"))
 
     if (!is.null(write_output)){
         write_files <- function(x) {
-            write.table(output[[x]], file = paste0(x, ".txt"), sep = "\\t", row.names = FALSE)
+            write.table(output[[x]], file = paste0(prefix,"_", x, ".txt"), sep = "\\t", row.names = FALSE)
         }
         lapply(write_output, write_files)
     }
 
+    ### Write paramters choosen for the algorithm to a file for documentation
+
+    parameter <- data.frame(datafile=datafile,
+                            reference=reference,
+                            step1_maxshift=step1_maxshift,
+                            step2_maxshift=step2_maxshift,
+                            step3_maxdiff=step3_maxdiff,
+                            del_single_sub=del_single_sub,
+                            initial_maximum_substances=ncol(rt_raw),
+                            number_of_substances_final=ncol(rt_aligned))
+    if(!is.null(rt_cutoff_high)){
+        parameter['rt_cutoff_high'] <- rt_cutoff_high
+    }
+    if(!is.null(rt_cutoff_low)){
+        parameter['rt_cutoff_low'] <- rt_cutoff_low
+    }
+    if(!is.null(blanks)){
+        parameter['blanks'] <- paste(blanks, collapse = '; ')
+    }
+
+
     #output
     output_algorithm <- list(call=match.call(),
                 chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
-                rt_aligned = rt_aligned)
+                rt_aligned = rt_aligned,parameter=parameter)
 
     class(output_algorithm) <- "GCalign" # name of list
 
@@ -295,5 +322,7 @@ start.time <- pracma::tic() # Start a clock
     return(output_algorithm)
 
 }
+
+
 
 

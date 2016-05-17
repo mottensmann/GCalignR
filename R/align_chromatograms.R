@@ -65,7 +65,7 @@
 align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
                                 del_single_sub = FALSE) {
-start.time <- pracma::tic() # Start a clock
+    start.time <- pracma::tic() # Start a clock
     cat(paste('Run GCalignR\n','Time:',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n##########','\n','\n'))
 
     if (is.null(rt_name)) stop("specify name of retention time column")
@@ -284,7 +284,7 @@ start.time <- pracma::tic() # Start a clock
 
     if (!is.null(write_output)){
         write_files <- function(x) {
-            write.table(output[[x]], file = paste0(prefix,"_", x, ".txt"), sep = "\\t", row.names = FALSE)
+            write.table(output[[x]], file = paste0(prefix,"_", x, ".txt"), sep = "\t", row.names = FALSE)
         }
         lapply(write_output, write_files)
     }

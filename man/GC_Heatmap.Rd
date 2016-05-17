@@ -2,32 +2,44 @@
 % Please edit documentation in R/GC_Heatmap.R
 \name{GC_Heatmap}
 \alias{GC_Heatmap}
-\title{GC_Heatmap visualises the goodness of chromatogram alignment}
+\title{GC_Heatmap visualises the goodness of the chromatogram alignment}
 \usage{
-GC_Heatmap(GcOut, step = "rt_aligned", substance_subset = NULL,
-  guide = "colourbar", limits = c(-0.05, 0.05))
+GC_Heatmap(GcOut, algorithm_step = "rt_aligned", substance_subset = NULL,
+  guide = "legend", samples_subset = NULL, type = "binary",
+  threshold = 0.02)
 }
 \arguments{
 \item{GcOut}{\code{data.frame} representing a matrix of retention times,
 where samples are ordered in rows}
 
-\item{step}{character, indicating which step of the algorithm to plot. Either
-{rt_raw}, {rt_linear} or {rt_aligned}}
+\item{algorithm_step}{\code{character} indicating which step of the algorithm is plotted. Either
+\code{rt_raw}, \code{rt_linear} or \code{rt_aligned}}
 
-\item{substance_subset}{vector containing indices of substances (i.e. rows) to plot
-By default {NULL} indicating all substances are plotted}
+\item{substance_subset}{\code{vector} containing indices of substances (i.e. rows) to plot
+By default \code{NULL} indicating all substances are plotted}
 
-\item{guide}{character, indicating type of colourbar as discrete (i.e 'legend')
+\item{guide}{\code{character} indicating type of colourbar as discrete (i.e 'legend')
 or gradient (i.e 'colourbar)}
 
-\item{limits}{vector, allows to finetune the scaling of the colourbar}
+\item{samples_subset}{\code{vector} indicating which samples are plotted on the heatmap.
+Either a \code{numeric} \code{vector} of indices or a \code{character} \code{vector}
+of sample names}
+
+\item{type}{\code{character} specifying whether a binary heatmap or a heatmap of continous
+deviations is plotted}
+
+\item{threshold}{\code{numeric} indicates the maximum allowed deviation from means}
 }
 \value{
 
 }
 \description{
-Visualises the deviation of retention of sample from the mean of all other,
- to indicate how well chromatograms are aligned. Small deviations indicate a good alignment
+Visualises the deviation of single samples from the whole population by comparing
+         the actual retention time against the mean of all other samples containing the same
+         substance. Two types of heatmaps are available. A binary heatmap allows to determine
+         if single samples within each chromatogram are correctly assigned to a certain substance,
+         by setting a fixed threshold of allowed deviations from the mean. The optional discrete
+         heatmap allows to check the deviations quantitatively.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

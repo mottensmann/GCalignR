@@ -1,21 +1,21 @@
-#'Funfacts about birds and maybee other wildlife
+#' Funfacts about birds and maybee other wildlife
 #'
-#'@description randomly selects a trivia from the list  of astonishing facts
+#' @description randomly selects a trivia from the list  of astonishing facts
 #'
-#'@return
-#'\item{text}{a short trivia}
+#' @return
+#' \item{text}{a short trivia}
 #'
-#'@references
+#' @references
 #'  https://www.audubon.org/news/11-fun-facts-about-owls
 #'  https://www.audubon.org/news/9-fun-facts-about-turkeys
 #'  https://www.audubon.org/news/9-awesome-facts-about-bird-migration
 #'
-#'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
-#'  @export
+#' @export
 #'
-#'  @
+#'
 #'
 Fun_Fact <- function(){
     trivia <- list()

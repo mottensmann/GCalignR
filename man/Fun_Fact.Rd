@@ -15,10 +15,6 @@ randomly selects a trivia from the list  of astonishing facts
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
-
- @export
-
- @
 }
 \references{
 https://www.audubon.org/news/11-fun-facts-about-owls

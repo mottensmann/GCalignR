@@ -49,9 +49,9 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
     # A. Select retention times to visualise
     ########################################
     rt_df <- GcOut[[algorithm_step]]
-
-    rt_df <- rt_df[,c(1,3:ncol(rt_df))] # JUst for now, bugfix for rt_extract_heatmap
-    rt_df_org <-rt_df # JUst for now, bugfix for rt_extract_heatmap
+#
+#     rt_df <- rt_df[,c(1,3:ncol(rt_df))] # JUst for now, bugfix for rt_extract_heatmap
+#     rt_df_org <-rt_df # JUst for now, bugfix for rt_extract_heatmap
 
     ##########################
     # B Formatting and sorting

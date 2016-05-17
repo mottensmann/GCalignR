@@ -49,9 +49,11 @@
 #' \item{rt_raw}{a data.frame with the retention times before alignment}
 #' \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 #' \item{rt_aligned}{a data.frame with the final aligned retention times}
+#' \item{parameter}{a data.frame} containing the arguments of the function call
 #'
 #'
 #'@references
+#'
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
@@ -184,9 +186,6 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     cat('Merge rows...','\n')
     chroma_merged <- merge_redundant_rows(chromatograms, average_rts, min_distance=step3_maxdiff, rt_col_name = rt_name)
     cat(paste('Merge rows done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##########','\n','\n')
-    ### just evaluation
-    # average_rts <- mean_per_row(chroma_merged)
-    # rt_mat2 <- do.call(cbind, lapply(chroma_merged, function(x) x$RT))
 
 
     average_rts <- mean_per_row(chroma_merged, rt_col_name = rt_name)
@@ -228,25 +227,16 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     # calculate final retention times
     rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[[rt_name]]))
 
-#     #######################
-#     # Outputs for Heatmaps
-#     #######################
-#
-#     rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
-#     rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name = rt_name,del_single_sub = del_single_sub)
+     #######################
+     # Outputs for Heatmaps
+     #######################
 
-    cat('output for heatmaps')
 
     rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
-
-    cat('raw')
-
-     rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
 
 
-     rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
-
-     cat('linear')
 
 
     # ============================

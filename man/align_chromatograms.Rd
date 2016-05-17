@@ -57,6 +57,7 @@ Returns an object of class GCalign that is a a list with the following elements:
 \item{rt_raw}{a data.frame with the retention times before alignment}
 \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 \item{rt_aligned}{a data.frame with the final aligned retention times}
+\item{parameter}{a data.frame} containing the arguments of the function call
 }
 \description{
 Aligning chromatograms based on retention times

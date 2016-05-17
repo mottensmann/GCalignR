@@ -1,9 +1,16 @@
-#' merges redundant rows
+#' Merges redundant rows
 #'
-#' @param chromatograms \code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-#'   one individual in adjacent columns. The first column for all individuals has to be the retention
-#'   time, retention time has to be named RT.
-#' @param average_rts average retention times across samples per row
+#'@param merge_rows allows to combine neighbouring rows (i.e substances) of similiar retention time. All rows
+#'          that are similar in retention times (definded by \code{min_distance}) are combined, in case that
+#'          samples contain either one or none of two compared samples, but never both. An optional procedure
+#'          allows to merge close substances if only a small subset of samples contains both.
+#'
+#'
+#' @param chromatograms \code{data.frame} containing GC data (retention times, peak area, peak height etc.) for
+#'   one individual in adjacent columns.
+#'
+#' @param average_rts \code{vector} of average retention times per row (i.e substance) among samples
+#'
 #' @param min_distance difference between the mean retention time of two rows of the chromatograms
 #'        to be considered for merging if no individual has substances in both rows.
 #' @param rt_col_name name of retention time column.

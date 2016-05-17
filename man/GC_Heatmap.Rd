@@ -9,8 +9,7 @@ GC_Heatmap(GcOut, algorithm_step = "rt_aligned", substance_subset = NULL,
   threshold = 0.02)
 }
 \arguments{
-\item{GcOut}{\code{data.frame} representing a matrix of retention times,
-where samples are ordered in rows}
+\item{GcOut}{\code{data.frame} output of align_chromatograms. Class \code{GCalign}}
 
 \item{algorithm_step}{\code{character} indicating which step of the algorithm is plotted. Either
 \code{rt_raw}, \code{rt_linear} or \code{rt_aligned}}

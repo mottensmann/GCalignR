@@ -7,8 +7,7 @@
 #'          by setting a fixed threshold of allowed deviations from the mean. The optional discrete
 #'          heatmap allows to check the deviations quantitatively.
 #'
-#' @param GcOut \code{data.frame} representing a matrix of retention times,
-#'          where samples are ordered in rows
+#' @param GcOut \code{data.frame} output of align_chromatograms. Class \code{GCalign}
 #'
 #' @param algorithm_step \code{character} indicating which step of the algorithm is plotted. Either
 #'          \code{rt_raw}, \code{rt_linear} or \code{rt_aligned}

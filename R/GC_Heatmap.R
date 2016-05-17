@@ -12,6 +12,11 @@
 #' @param substance_subset vector containing indices of substances (i.e. rows) to plot
 #'          By default {NULL} indicating all substances are plotted
 #'
+#' @param guide character, indicating type of colourbar as discrete (i.e 'legend')
+#'          or gradient (i.e 'colourbar)
+#'
+#' @param  limits vector, allows to finetune the scaling of the colourbar
+#'
 #' @return
 #'
 #'
@@ -28,12 +33,14 @@
 
 
 
-GC_Heatmap <-function(GcOut,step='rt_aligned',substance_subset=NULL){
-
+GC_Heatmap <-function(GcOut,step='rt_aligned',substance_subset=NULL,guide='colourbar',
+                      limits=c(-0.05,0.05)){
     rt_df <- GcOut[[step]]
 
     if(!is.null(substance_subset)){
-        rt_df <- rt_df(,substance_subset)
+        substance_subset <- substance_subset+1 # because first holds ids
+
+        rt_df <- rt_df[,c(1,substance_subset)] # always keep id
     }
 
     ##########################################
@@ -77,15 +84,15 @@ GC_Heatmap <-function(GcOut,step='rt_aligned',substance_subset=NULL){
     # #################
     gg <- ggplot(heat_matrix, aes(x=substance, y=id, fill=diff))
     gg <- gg + geom_tile(color="white", size=0.01)
-    gg <- gg + scale_fill_gradientn(colours = myPalette(10),limits=c(-0.4,0.4),
-                                    guide = 'colourbar')
+    gg <- gg + scale_fill_gradientn(colours = myPalette(10),limits=limits,
+                                    guide = guide)
     gg <- gg + labs(x=NULL, y=NULL, title="Variation of retention times among samples")
     gg <- gg + theme(plot.title=element_text(hjust=0,size = 22,face = 'bold'))
     # gg <- gg + theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
     gg <- gg + theme(axis.title.x=element_blank(),
                      axis.text.x=element_blank(),
                      axis.ticks=element_blank(),
-                     axis.text.y=element_text(size = 10))
+                     axis.text.y=element_text(size = 6))
     gg <- gg + coord_equal(ratio = ncol(rt_df)/nrow(rt_df))
 
     gg

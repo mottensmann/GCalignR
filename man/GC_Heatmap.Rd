@@ -4,7 +4,8 @@
 \alias{GC_Heatmap}
 \title{GC_Heatmap visualises the goodness of chromatogram alignment}
 \usage{
-GC_Heatmap(GcOut, step = "rt_aligned", substance_subset = NULL)
+GC_Heatmap(GcOut, step = "rt_aligned", substance_subset = NULL,
+  guide = "colourbar", limits = c(-0.05, 0.05))
 }
 \arguments{
 \item{GcOut}{\code{data.frame} representing a matrix of retention times,
@@ -15,6 +16,11 @@ where samples are ordered in rows}
 
 \item{substance_subset}{vector containing indices of substances (i.e. rows) to plot
 By default {NULL} indicating all substances are plotted}
+
+\item{guide}{character, indicating type of colourbar as discrete (i.e 'legend')
+or gradient (i.e 'colourbar)}
+
+\item{limits}{vector, allows to finetune the scaling of the colourbar}
 }
 \value{
 

@@ -237,7 +237,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
 
     cat('output for heatmaps')
 
-    rt_raw <- rt_extract_heatmap(chromatograms = chroma_aligned,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
 
     cat('raw')
 

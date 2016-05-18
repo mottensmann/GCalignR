@@ -2,20 +2,24 @@
 % Please edit documentation in R/linear_transformation.R
 \name{adj_ret_time}
 \alias{adj_ret_time}
-\title{Apply the estimated shift of the retention time to the selected chromatogram
-to maximize the similarity compared to the reference}
+\title{Apply a linear shift to all retention times of a chromatogram}
 \usage{
-adj_ret_time(Data, OptimalShift, ret_col_name)
+adj_ret_time(chromatogram, OptimalShift, ret_col_name)
 }
 \arguments{
-\item{list, }{output from shared_peaks}
+\item{chromatogram}{\code{data.frame} containing gc data of an individual sample}
+
+\item{OptimalShift}{\code{numeric} value indicating the optimal shift to apply to
+maximize the similarity to a reference}
+
+\item{ret_col_name}{name of the column containing retention times}
 }
 \value{
-list of number of peaks and shift step for which this is maximised
+\code{chromatogram}{\code{data.frame} cotaining linear adjusted chromatogram}
 }
 \description{
-Apply the estimated shift of the retention time to the selected chromatogram
-to maximize the similarity compared to the reference
+Shifts retention times of a sample by an previously defined value to optimise the
+             similarity to the reference list by maximizing the number of shared  peaks
 }
 \details{
 If competing shifts exists (i.e. same number of peaks are shared),

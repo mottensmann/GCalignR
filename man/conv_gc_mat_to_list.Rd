@@ -2,12 +2,12 @@
 % Please edit documentation in R/conv_gc_mat_to_list.R
 \name{conv_gc_mat_to_list}
 \alias{conv_gc_mat_to_list}
-\title{transform GC data to list of individual GC matrices}
+\title{Transform large \code{data.frame} containing multiple chromatograms to a list of individual chromatograms}
 \usage{
 conv_gc_mat_to_list(all_gc_mat, ind_names, var_names)
 }
 \arguments{
-\item{all_gc_mat}{matrix or data.frame containing GC data (retention times, peak area, peak hight etc) for all individuals
+\item{all_gc_mat}{\code{matrix} or \code{data.frame} containing GC data (retention times, peak area, peak hight etc) for all individuals
 in adjacent columns. The first column for all individuals has to be the retention time}
 
 \item{ind_names}{character vector with names of individuals}
@@ -16,7 +16,7 @@ in adjacent columns. The first column for all individuals has to be the retentio
 such as c("RT", "Area", "Height"). The first name has to specify the retention time}
 }
 \value{
-List of data.frames. Each list element is the GC data for one individual
+\item{chromatograms}{List of data.frames. Each list element contains the GC data for one individual}
 }
 \description{
 Transforms a Matrix containing GC data (retention times, peak area, peak hight etc) in adjacent
@@ -25,8 +25,5 @@ columns.
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

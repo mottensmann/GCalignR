@@ -7,48 +7,51 @@
 align_chromatograms(datafile, sep = "\\t", rt_name = NULL,
   write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
   reference = NULL, step1_maxshift = 0.05, step2_maxshift = 0.02,
-  step3_maxdiff = 0.05, blanks = NULL, del_single_sub = FALSE)
+  step3_maxdiff = 0.05, blanks = NULL, del_single_sub = FALSE,
+  n_iter = 1)
 }
 \arguments{
-\item{datafile}{path to the datafile. It has to be a .txt file. The first row needs to contain
+\item{datafile}{path to a datafile. It has to be a .txt file. The first row needs to contain
 sample names, the second row column names of the corresponding chromatograms. Starting with the
-third row chromatograms are included, whereby single samples are concatenated horizontally Each
-chromatogram needs to consist of the same number of columns, at least two are required (the
-retention time and the area).}
+third row chromatograms are included, whereby single samples are concatenated horizontally. Each
+chromatogram needs to consist of the same number of columns, at least two are required:The
+retention time and a measure of concentration (e.g. peak area or height).}
 
 \item{sep}{the field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.}
 
-\item{rt_name}{Name of the column holding retention times (i.e. "RT")}
+\item{rt_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 
-\item{write_output}{If specified the aligned output is written to a text file. (i.e. write_output = c("RT", "area")
-to write the aligned matrices of the retention times and areas to txt files (the names have
-to correspond to the column names given in the second row of the datafile).}
+\item{write_output}{character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
+The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.}
 
-\item{rt_cutoff_low}{lower threshold under which retention times are cut (i.e. 5)}
+\item{rt_cutoff_low}{lower threshold under which retention times are cutted (i.e. 5)}
 
-\item{rt_cutoff_high}{Upper threshold above which retention times are cut (i.e. 35)}
+\item{rt_cutoff_high}{upper threshold above which retention times are cutted (i.e. 35)}
 
-\item{reference}{A sample(name) to which all other samples are aligned to by means of a
+\item{reference}{\code{character}, a sample(name) to which all other samples are aligned to by means of a
 linear shift (i.e. "individual3") The name has to correspond to an individual name given
-in the first line of the datafile.}
+in the first line of \code{datafile}.}
 
-\item{step1_maxshift}{Defines a window to search for an optimal linear shift of samples
+\item{step1_maxshift}{defines a window to search for an optimal linear shift of samples
 with respect to the reference. Shifts are evaluated within - step1_maxshift to + step1_maxshift.
 Default is 0.05.}
 
-\item{step2_maxshift}{Defines the allowed deviation of retention times around the mean of
+\item{step2_maxshift}{defines the allowed deviation of retention times around the mean of
 the corresponding row. Default is 0.02.}
 
-\item{step3_maxdiff}{Defines the minimum difference in retention times among distinct
-substances. Substances that do not differ enough, are merged if applicable. Defailt is 0.05.}
+\item{step3_maxdiff}{defines the minimum difference in retention times among distinct
+substances. Substances that differ less, are merged if every sample contains either one
+or none of the respective compounds. Default is 0.05}
 
-\item{blanks}{Character vector of the names of blanks. If specified, all substance found in any of the blanks
+\item{blanks}{character vector of names of blanks. If specified, all substances found in any of the blanks
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 to a name given in the first line of the datafile.}
 
-\item{delete_single_sub}{logical, determines whether substances that occur in just one sample are
-removed or not.}
+\item{del_single_sub}{logical, determines whether substances that occur in just one sample are
+removed or not. By default single substances are retained in chromatograms}
+
+\item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
 }
 \value{
 Returns an object of class GCalign that is a a list with the following elements:
@@ -57,6 +60,7 @@ Returns an object of class GCalign that is a a list with the following elements:
 \item{rt_raw}{a data.frame with the retention times before alignment}
 \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 \item{rt_aligned}{a data.frame with the final aligned retention times}
+\item{parameter}{a data.frame}{containing the arguments of the function call}
 }
 \description{
 Aligning chromatograms based on retention times
@@ -67,8 +71,5 @@ Aligning chromatograms based on retention times
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

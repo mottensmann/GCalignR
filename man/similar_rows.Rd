@@ -2,23 +2,26 @@
 % Please edit documentation in R/merge_rows.R
 \name{similar_rows}
 \alias{similar_rows}
-\title{Estimate degree of similarity between subsequent rows by comparison of mean retention times of rows.}
+\title{Determine which currently distinct substances have similar retention times}
 \usage{
 similar_rows(average_rts, min_distance = 0.05)
 }
 \arguments{
-\item{average_rts}{average retention times per row across individuals}
+\item{average_rts}{\code{vector} of average retention times per row across individuals}
 
-\item{min_distance}{default 0.05,}
+\item{min_distance}{\code{numeric} value defining up to which difference in retention time,
+substances are classified as similar}
 }
 \value{
-position of a row, that is similar to the previous, i.e. row 5 is similar to 4
+\item{similar}{\code{vector} of indices pointing to the last index of a row-pair that is similar}
 }
 \description{
 Estimate degree of similarity between subsequent rows by comparison of mean retention times of rows.
 }
 \details{
-Similarity is evaluated at the level of min_distance, given in seconds
+Similarity is evaluated at the level of min_distance, given in seconds.
+         The output is a interger vector containing indices of rows. Indices refer to a row (i.e. substance)
+         that is similar to the previous row. For example index 5 indicates that the pair 4& 5 is similar.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

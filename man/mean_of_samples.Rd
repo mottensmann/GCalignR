@@ -2,14 +2,13 @@
 % Please edit documentation in R/evaluate_chroma.R
 \name{mean_of_samples}
 \alias{mean_of_samples}
-\title{calculates mean of retention times up to a certain sample (not including 0s)}
+\title{Calculates mean of retention times up to a certain sample (Zeros are ignored)}
 \usage{
 mean_of_samples(chromatograms, samples, retention_row, rt_col_name)
 }
 \arguments{
 \item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns. The first column for all individuals has to be the retention
-time, retention time has to be named RT.}
+one individual in adjacent columns.}
 
 \item{samples}{indices of samples up to sample of interest (1:sample-1)}
 
@@ -21,7 +20,7 @@ time, retention time has to be named RT.}
 mean of rts
 }
 \description{
-calculates mean of retention times up to a certain sample (not including 0s)
+Calculates mean of retention times up to a certain sample (Zeros are ignored)
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

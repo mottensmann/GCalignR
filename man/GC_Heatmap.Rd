@@ -9,8 +9,7 @@ GC_Heatmap(GcOut, algorithm_step = "rt_aligned", substance_subset = NULL,
   threshold = 0.02)
 }
 \arguments{
-\item{GcOut}{\code{data.frame} representing a matrix of retention times,
-where samples are ordered in rows}
+\item{GcOut}{\code{data.frame} output of align_chromatograms. Class \code{GCalign}}
 
 \item{algorithm_step}{\code{character} indicating which step of the algorithm is plotted. Either
 \code{rt_raw}, \code{rt_linear} or \code{rt_aligned}}
@@ -31,7 +30,7 @@ deviations is plotted}
 \item{threshold}{\code{numeric} indicates the maximum allowed deviation from means}
 }
 \value{
-
+\item{hm}{object of \code{class} ggplot}
 }
 \description{
 Visualises the deviation of single samples from the whole population by comparing
@@ -44,8 +43,5 @@ Visualises the deviation of single samples from the whole population by comparin
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

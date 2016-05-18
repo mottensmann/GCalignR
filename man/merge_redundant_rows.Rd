@@ -2,17 +2,16 @@
 % Please edit documentation in R/merge_rows.R
 \name{merge_redundant_rows}
 \alias{merge_redundant_rows}
-\title{merges redundant rows}
+\title{Merges redundant rows}
 \usage{
 merge_redundant_rows(chromatograms, average_rts, min_distance = 0.05,
   rt_col_name)
 }
 \arguments{
-\item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns. The first column for all individuals has to be the retention
-time, retention time has to be named RT.}
+\item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak height etc.) for
+one individual in adjacent columns.}
 
-\item{average_rts}{average retention times across samples per row}
+\item{average_rts}{\code{vector} of average retention times per row (i.e substance) among samples}
 
 \item{min_distance}{difference between the mean retention time of two rows of the chromatograms
 to be considered for merging if no individual has substances in both rows.}
@@ -20,10 +19,13 @@ to be considered for merging if no individual has substances in both rows.}
 \item{rt_col_name}{name of retention time column.}
 }
 \value{
-chromatograms with merged rows
+\item{chromatograms}{List of individual \code{data.frames} with merged rows}
 }
 \description{
-merges redundant rows
+merge_rows allows to combine neighbouring rows (i.e substances) of similiar retention time. All rows
+         that are similar in retention times (definded by \code{min_distance}) are combined, in case that
+         samples contain either one or none of two compared samples, but never both. An optional procedure
+         allows to merge close substances if only a small subset of samples contains both.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

@@ -9,7 +9,7 @@
 #' @param rt_col_name column name of retention time
 #'
 #' @return
-#' aligned chromatograms
+#' \item{aligned chromatograms}{List of aligned peaks}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -20,7 +20,11 @@
 align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1, rt_col_name) {
 
     for (R in 1:n_iter){
+<<<<<<< HEAD
 
+=======
+        cat(paste('Iteration',as.character(R),'out of',as.character(n_iter),'\n')) # Need to test whether it workds
+>>>>>>> bb770f499ba61946a01bf090a277cc633b5e37bc
 
         shuffle_order <- sample(1:length(chromatograms))
         chromatograms <- chromatograms[shuffle_order] # Shuffle

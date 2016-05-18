@@ -1,15 +1,22 @@
-#' merges redundant rows
+#' Merges redundant rows
 #'
-#' @param chromatograms \code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-#'   one individual in adjacent columns. The first column for all individuals has to be the retention
-#'   time, retention time has to be named RT.
-#' @param average_rts average retention times across samples per row
+#'@description merge_rows allows to combine neighbouring rows (i.e substances) of similiar retention time. All rows
+#'          that are similar in retention times (definded by \code{min_distance}) are combined, in case that
+#'          samples contain either one or none of two compared samples, but never both. An optional procedure
+#'          allows to merge close substances if only a small subset of samples contains both.
+#'
+#'
+#' @param chromatograms \code{data.frame} containing GC data (retention times, peak area, peak height etc.) for
+#'   one individual in adjacent columns.
+#'
+#' @param average_rts \code{vector} of average retention times per row (i.e substance) among samples
+#'
 #' @param min_distance difference between the mean retention time of two rows of the chromatograms
 #'        to be considered for merging if no individual has substances in both rows.
 #' @param rt_col_name name of retention time column.
 #'
 #' @return
-#' chromatograms with merged rows
+#' \item{chromatograms}{List of individual \code{data.frames} with merged rows}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -70,17 +77,21 @@ merge_redundant_rows <- function(chromatograms, average_rts, min_distance=0.05, 
         }
     }
 
-    chromatograms
+    return(chromatograms)
 }
 
-
-#' Estimate degree of similarity between subsequent rows by comparison of mean retention times of rows.
+#' Determine which currently distinct substances have similar retention times
 #'
-#' @param average_rts average retention times per row across individuals
-#' @param  min_distance default 0.05,
-#' @details Similarity is evaluated at the level of min_distance, given in seconds
+#' @description Estimate degree of similarity between subsequent rows by comparison of mean retention times of rows.
+#'
+#' @param average_rts \code{vector} of average retention times per row across individuals
+#' @param  min_distance \code{numeric} value defining up to which difference in retention time,
+#'          substances are classified as similar
+#' @details Similarity is evaluated at the level of min_distance, given in seconds.
+#'          The output is a interger vector containing indices of rows. Indices refer to a row (i.e. substance)
+#'          that is similar to the previous row. For example index 5 indicates that the pair 4& 5 is similar.
 #' @return
-#' position of a row, that is similar to the previous, i.e. row 5 is similar to 4
+#' \item{similar}{\code{vector} of indices pointing to the last index of a row-pair that is similar}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -95,17 +106,20 @@ similar_rows <- function(average_rts, min_distance=0.05){
         difference[i] <- average_rts[i]-average_rts[i-1]
     }
     similar <- which(difference <= min_distance) # Which rows differ less the MinDistance ?
-    similar
+    return(similar)
 }
 
-#' If only one of two neighbouring rows contain a substancethey are redundant, coded by a One
+#'Check whether similar rows are redundant or not
+#' @description This function evaluates if rows of similar retention times are redundant.
+#'              This is as long as any sample contains peaks in either one or none of the
+#'              row-pair, but never in both.
 #'
-#' @param chromatogram \code{data.frame} with gc data
-#' @param similar position of a row, that is similar to the previous, i.e. row 5 is similar to 4
-#' @param rt_col_name name of the retention time column.
+#' @param chromatogram \code{data.frame} containing GC data
+#' @param similar \code{integer}, position of a row, that is similar to the previous
+#' @param rt_col_name \code{character}, name of the retention time column.
 #'
 #' @return
-#' if similar rows are redundant, 1, else 0
+#' \item{redundant}{binary \code{vector} coding redundancy by 1}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -114,31 +128,33 @@ similar_rows <- function(average_rts, min_distance=0.05){
 check_redundancy <- function(chromatogram, similar, rt_col_name){
     # If only one of two neighbouring rows contain a substance
     # they are redundant, coded by a One
-    Row1 <- chromatogram[similar-1, rt_col_name] # Extract previous row
-    Row2 <- chromatogram[similar, rt_col_name] # Extract current row
-    Redundant <- 0
-    if (Row1==0 | Row2==0){
-        Redundant <- 1
+    row1 <- chromatogram[similar-1, rt_col_name] # Extract previous row
+    row2 <- chromatogram[similar, rt_col_name] # Extract current row
+    redundant <- 0
+    if (row1==0 | row2==0){
+        redundant <- 1
     }
-    Redundant
+    return(redundant)
 }
 
-#' Indicates by a binary output variable (1/0) if rows should be merged
+#' Checks if similar rows (i.e. substances) are redundant
 #'
-#' @param similar position of a row, that is similar to the previous, i.e. row 5 is similar to 4
-#' @param redundant ??
+#' @description Indicates by a binary output variable (1/0) which rows will be merged in the next step
+#'
+#' @param redundant \code{vector} of integers coding redundancy as 1=Yes & 0=No for every sample at a given
+#'          pair of similar rows.
+#'
+#' @param criterion \code{character} specifying by which method merging will be
 #'
 #' @details  Methods: "strict": A single sample with two peaks prevents merging
 #           "proportional": Merging is acceptabel if only 5 % of samples show two peaks
 #' @return
-#' if similar rows are redundant, 1, else 0
+#' \item{ToMerge}{\code{integer} indicating whether will be merge (1) or not (0)}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#'
-#'
-is_redundant <- function(similar, redundant, criterion="strict"){
+is_redundant <- function(redundant, criterion="strict"){
     # Indicates by a binary output variable (1/0) if rows should be merged
     # Methods: Strict: A single sample with two peaks prevents merging
     #           Proportional: Merging is acceptabel if only 5 % of samples show two peaks

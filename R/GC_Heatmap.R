@@ -48,9 +48,6 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
     # A. Select retention times to visualise
     ########################################
     rt_df <- GcOut[[algorithm_step]]
-#
-#     rt_df <- rt_df[,c(1,3:ncol(rt_df))] # JUst for now, bugfix for rt_extract_heatmap
-#     rt_df_org <-rt_df # JUst for now, bugfix for rt_extract_heatmap
 
     ##########################
     # B Formatting and sorting
@@ -65,7 +62,7 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
         rt_df <- rt_df[,c(1,substance_subset+1)] # always keep id !, therefore +1
     }
     #############################################
-    # D slect a subset of samples, by their names
+    # D select a subset of samples, by their names
     #############################################
 
         if(!is.null(samples_subset)){
@@ -88,10 +85,10 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
     ###########################################
 
     heat_matrix[,'diff'] <- (as.numeric(heat_matrix[,'rt']) - heat_matrix[,'substance'])
-    heat_matrix['diff'][heat_matrix['rt']==0] <- 0
+    heat_matrix['diff'][heat_matrix['rt']==0] <- 0 # zero mean no substance is present
 
     heat_matrix[,'id'] <- ordered( heat_matrix[,'id'], levels = as.factor(rt_df[,'id']))
-    heat_matrix[,'substance'] <- ordered( heat_matrix[,'substance'], levels = as.factor(colnames(rt_df)))
+    heat_matrix[,'substance'] <- ordered( heat_matrix[,'substance'], levels = as.factor(colnames(rt_df)[2:ncol(rt_df)]))
 
 
     ###################
@@ -99,6 +96,7 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
     ###################
 
     if(type=="binary"){
+
         heat_matrix['diff'][abs(heat_matrix['diff'])>threshold] <- 1 # Deviates
         heat_matrix['diff'][abs(heat_matrix['diff'])<threshold] <- 0 # Is okay
         heat_matrix['diff'][heat_matrix['rt']==0] <- NA

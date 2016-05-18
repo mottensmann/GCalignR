@@ -58,9 +58,13 @@
 #'
 #'@import magrittr
 #'
-#'@export
+#' @example
 #'
 #'
+#'
+#'
+#'
+#' @export
 
 align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
@@ -112,7 +116,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
     #####################
     # save for later use
     ####################
-    chroma_raw <- lapply(chromatograms,matrix_append,chromatograms)
+    chroma_raw <- lapply(chromatograms, matrix_append, chromatograms)
 
     ########################
     # Start of processing
@@ -162,7 +166,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
 
     cat(c('Start alignment of peaks...','This might take a while!','\n','\n'))
     Fun_Fact()
-    chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 2, rt_col_name = rt_name)
+    chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = 1, rt_col_name = rt_name)
 
     cat(paste('Peak alignment done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##########','\n','\n')
 

@@ -83,6 +83,20 @@ rows represent a single substance)
 
 ## input file
 
+After running samples through the GC or GC-MS, specific software allows to extract the retention times
+of the peaks and associated variables, such as the area under a peak (i.e. the concentration) or
+the height of a peak. \code{GCalignR} uses these peak data to align the peaks among individuals.
+
+The input file for GCalignR is a .txt file, whereby all elements should be separated by 
+tabs (with sep = "/t") or any other separator (see \code{?read.table} for a list of separators) :
+* The first row contains the individual IDs, whereby every
+ID must be unique. 
+* The second row contains the names of the data columns. For example, if you extracted both
+the retention time of a peak as well as the area under the peak you would write \code{RT area}
+into the second line. 
+* Starting with the third row chromatograms are included, whereby single samples are concatenated horizontally Each
+  chromatogram needs to consist of the same number of columns, at least two are required (the
+  retention time and the area).
 
 ## Literature
 

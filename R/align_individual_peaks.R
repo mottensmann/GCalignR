@@ -20,6 +20,8 @@
 align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1, rt_col_name) {
 
     for (R in 1:n_iter){
+
+
         shuffle_order <- sample(1:length(chromatograms))
         chromatograms <- chromatograms[shuffle_order] # Shuffle
         # Give initial values to some variables

@@ -48,10 +48,10 @@ or none of the respective compounds. Default is 0.05}
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 to a name given in the first line of the datafile.}
 
-\item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
-
-\item{delete_single_sub}{logical, determines whether substances that occur in just one sample are
+\item{del_single_sub}{logical, determines whether substances that occur in just one sample are
 removed or not. By default single substances are retained in chromatograms}
+
+\item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
 }
 \value{
 Returns an object of class GCalign that is a a list with the following elements:
@@ -68,8 +68,5 @@ Aligning chromatograms based on retention times
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

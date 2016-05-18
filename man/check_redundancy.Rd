@@ -2,22 +2,24 @@
 % Please edit documentation in R/merge_rows.R
 \name{check_redundancy}
 \alias{check_redundancy}
-\title{If only one of two neighbouring rows contain a substancethey are redundant, coded by a One}
+\title{Check whether similar rows are redundant or not}
 \usage{
 check_redundancy(chromatogram, similar, rt_col_name)
 }
 \arguments{
-\item{chromatogram}{\code{data.frame} with gc data}
+\item{chromatogram}{\code{data.frame} containing GC data}
 
-\item{similar}{position of a row, that is similar to the previous, i.e. row 5 is similar to 4}
+\item{similar}{\code{integer}, position of a row, that is similar to the previous}
 
-\item{rt_col_name}{name of the retention time column.}
+\item{rt_col_name}{\code{character}, name of the retention time column.}
 }
 \value{
-if similar rows are redundant, 1, else 0
+\item{redundant}{binary \code{vector} coding redundancy by 1}
 }
 \description{
-If only one of two neighbouring rows contain a substancethey are redundant, coded by a One
+This function evaluates if rows of similar retention times are redundant.
+             This is as long as any sample contains peaks in either one or none of the
+             row-pair, but never in both.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

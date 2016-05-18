@@ -13,9 +13,9 @@ time, retention time has to be named RT.}
 
 \item{samples}{indices of samples up to sample of interest (1:sample-1)}
 
-\item{retention_row}{current retention time row to be compared}
+\item{retention_row}{\code{integer} defining the current retention time row to be evaluated}
 
-\item{rt_col_name}{name of retention time column}
+\item{rt_col_name}{\code{character} name of retention time column}
 }
 \value{
 var of rts

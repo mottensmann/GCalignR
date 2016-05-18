@@ -29,10 +29,10 @@ Fun_Fact <- function(){
         "The Northern Hawk Owl (Surnia ulula) can detect primarily by sight a vole to eat up to a half a mile away.")
     trivia[[3]] <-
         c("Do you know in which great heights birds migrate?","",
-          "Bar-headed geese are the highest flying migratory birds,",
+          "Bar\u002Dheaded geese are the highest flying migratory birds,",
         "regularly reaching altitudes of up to five and a half miles above sea level",
         "while flying over the Himalayas in India.",
-        "But the bird with the record for the highest altitude ever is the Ruppels griffon vulture,",
+        "But the bird with the record for the highest altitude ever is the Ruppel\u0027s griffon vulture,",
           "which collided with a plane at 37,000 feet (that is seven miles!) in 1975",
         "and was unfortunately sucked into its jet engine." )
     trivia[[4]] <-
@@ -43,8 +43,8 @@ Fun_Fact <- function(){
             "the flights can add up to the equivalent of three trips to the moon and back")
     trivia[[5]] <-
         c("You know of longest non stop flight of a bird ever recorded?","",
-          "The bar-tailed godwit can fly for nearly 7,000 miles without stopping, making it the bird with the longest recorded non-stop flight.",
-          "During the eight-day journey, the bird doesn’t stop for food or rest, demonstrating jaw dropping endurance")
+          "The bar\u002Dtailed godwit can fly for nearly 7,000 miles without stopping, making it the bird with the longest recorded non\u002Dstop flight.",
+          "During the eight\u002Dday journey, the bird doesn’t stop for food or rest, demonstrating jaw dropping endurance")
     return(cat(trivia[[sample(x = 1:length(trivia),size = 1)]],sep = "\n"))
 }
 

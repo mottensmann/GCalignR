@@ -28,13 +28,10 @@
 #' @param threshold \code{numeric} indicates the maximum allowed deviation from means
 #'
 #' @return
-#'
-#'
-#' @references
+#' \item{hm}{object of \code{class} ggplot}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
 #'
 #' @import ggplot2 RColorBrewer
 #'
@@ -108,41 +105,41 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
 
     if(type=="binary"){
         if(max(heat_matrix['diff'],na.rm = T)==0){ # Zeros indicates no deviations of any substance
-        gg <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff),colour="Blue")
-        gg <- gg + geom_tile(color="transparent", size=0.001)
-        gg <- gg + scale_fill_gradientn(colours = 'blue',na.value = "white")
-        gg <- gg + labs(x=NULL, y=NULL, title=paste("No deviations exceeding a threshold of",as.character(threshold)))
-        gg <- gg + guides(fill=FALSE)
+        hm <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff),colour="Blue")
+        hm <- hm + geom_tile(color="transparent", size=0.001)
+        hm <- hm + scale_fill_gradientn(colours = 'blue',na.value = "white")
+        hm <- hm + labs(x=NULL, y=NULL, title=paste("No deviations exceeding a threshold of",as.character(threshold)))
+        hm <- hm + guides(fill=FALSE)
 
         }else if(min(heat_matrix['diff'],na.rm = T)==1){ # Really bad alignment
-            gg <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff),colour="red")
-            gg <- gg + geom_tile(color="transparent", size=0.001)
-            gg <- gg + scale_fill_gradientn(colours = 'red',na.value = "white")
-            gg <- gg + labs(x=NULL, y=NULL, title=paste("Alignment failed, all substances show deviation from threshold of",as.character(threshold)))
-            gg <- gg + guides(fill=FALSE)
+            hm <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff),colour="red")
+            hm <- hm + geom_tile(color="transparent", size=0.001)
+            hm <- hm + scale_fill_gradientn(colours = 'red',na.value = "white")
+            hm <- hm + labs(x=NULL, y=NULL, title=paste("Alignment failed, all substances show deviation from threshold of",as.character(threshold)))
+            hm <- hm + guides(fill=FALSE)
 
         }else{ # Should be the general outcome, some samples still deviate
-            gg <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff))
-            gg <- gg + geom_tile(color="transparent", size=0.001)
-            gg <- gg + scale_fill_continuous(low = "yellow",high = "black",breaks=c(0,1),na.value = "white",
+            hm <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff))
+            hm <- hm + geom_tile(color="transparent", size=0.001)
+            hm <- hm + scale_fill_continuous(low = "yellow",high = "black",breaks=c(0,1),na.value = "white",
                                              guide = 'legend',name=paste('Deviation\n','>',as.character(threshold)),labels=c('NO','YES'))
-            gg <- gg + labs(x=NULL, y=NULL, title=paste("Deviations of retention times at a threshold of",as.character(threshold)))
+            hm <- hm + labs(x=NULL, y=NULL, title=paste("Deviations of retention times at a threshold of",as.character(threshold)))
 
         }
     }else{
         myPalette <-  colorRampPalette(rev(RColorBrewer::brewer.pal(11, "BrBG"))) # take a colour
-        gg <- ggplot(heat_matrix, aes(x=substance, y=id, fill=diff))
-        gg <- gg + geom_tile(color="white", size=0.01)
-        gg <- gg + scale_fill_gradientn(colours = myPalette(10),guide = guide,name='Deviation')
-        gg <- gg + labs(x=NULL, y=NULL, title="Deviation of retention times")
+        hm <- ggplot(heat_matrix, aes(x=substance, y=id, fill=diff))
+        hm <- hm + geom_tile(color="white", size=0.01)
+        hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = guide,name='Deviation')
+        hm <- hm + labs(x=NULL, y=NULL, title="Deviation of retention times")
 
         }
-    gg <- gg + theme(plot.title=element_text(hjust=0,size = 16,face = 'bold'))
-        gg <- gg + theme(axis.title.x=element_blank(),
+    hm <- hm + theme(plot.title=element_text(hjust=0,size = 16,face = 'bold'))
+        hm <- hm + theme(axis.title.x=element_blank(),
                      axis.text.x=element_blank(),
                      axis.ticks=element_blank(),
-                     axis.text.y=element_text(size = 8))
-    gg <- gg + coord_equal(ncol(rt_df)/nrow(rt_df))
+                     axis.text.y=element_text(size = 5))
+    hm <- hm + coord_equal(ncol(rt_df)/nrow(rt_df))
 
-    gg
+    hm
 }

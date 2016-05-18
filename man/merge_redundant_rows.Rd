@@ -17,17 +17,15 @@ one individual in adjacent columns.}
 to be considered for merging if no individual has substances in both rows.}
 
 \item{rt_col_name}{name of retention time column.}
-
-\item{merge_rows}{allows to combine neighbouring rows (i.e substances) of similiar retention time. All rows
-that are similar in retention times (definded by \code{min_distance}) are combined, in case that
-samples contain either one or none of two compared samples, but never both. An optional procedure
-allows to merge close substances if only a small subset of samples contains both.}
 }
 \value{
-chromatograms with merged rows
+\item{chromatograms}{List of individual \code{data.frames} with merged rows}
 }
 \description{
-Merges redundant rows
+merge_rows allows to combine neighbouring rows (i.e substances) of similiar retention time. All rows
+         that are similar in retention times (definded by \code{min_distance}) are combined, in case that
+         samples contain either one or none of two compared samples, but never both. An optional procedure
+         allows to merge close substances if only a small subset of samples contains both.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

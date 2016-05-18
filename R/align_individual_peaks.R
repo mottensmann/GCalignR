@@ -9,7 +9,7 @@
 #' @param rt_col_name column name of retention time
 #'
 #' @return
-#' aligned chromatograms
+#' \item{aligned chromatograms}{List of aligned peaks}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)

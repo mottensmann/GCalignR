@@ -33,18 +33,16 @@
 #'  substances. Substances that differ less, are merged if every sample contains either one
 #'  or none of the respective compounds. Default is 0.05
 #'
-#'
 #'@param blanks character vector of names of blanks. If specified, all substances found in any of the blanks
 #'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 #'  to a name given in the first line of the datafile.
 #'
-#'@param delete_single_sub logical, determines whether substances that occur in just one sample are
+#'@param del_single_sub logical, determines whether substances that occur in just one sample are
 #'  removed or not. By default single substances are retained in chromatograms
 #'
 #'@param n_iter integer indicating the iterations of the core alignment algorithm.
 #'
-#'
-#' @return
+#'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
 #' \item{call}{function call}
 #' \item{chroma_aligned}{a list containing data.frames with the aligned variables}.
@@ -53,15 +51,10 @@
 #' \item{rt_aligned}{a data.frame with the final aligned retention times}
 #' \item{parameter}{a data.frame}{containing the arguments of the function call}
 #'
-#'
-#'@references
-#'
-#'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
 #'@import magrittr
-#'
 #'
 #'@export
 #'
@@ -161,8 +154,6 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
         cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted'))
     }
-
-
 
 
     # 2.) Linear Transformation of Retentiontimes

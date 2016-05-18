@@ -15,7 +15,7 @@ Imports: stringr,
         ggplot2,
         RColorBrewer,
         reshape2,
-        gridExtra
+        pracma
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1

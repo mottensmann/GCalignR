@@ -30,7 +30,7 @@ deviations is plotted}
 \item{threshold}{\code{numeric} indicates the maximum allowed deviation from means}
 }
 \value{
-
+\item{hm}{object of \code{class} ggplot}
 }
 \description{
 Visualises the deviation of single samples from the whole population by comparing
@@ -43,8 +43,5 @@ Visualises the deviation of single samples from the whole population by comparin
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

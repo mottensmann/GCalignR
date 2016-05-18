@@ -2,20 +2,21 @@
 % Please edit documentation in R/merge_rows.R
 \name{is_redundant}
 \alias{is_redundant}
-\title{Indicates by a binary output variable (1/0) if rows should be merged}
+\title{Checks if similar rows (i.e. substances) are redundant}
 \usage{
-is_redundant(similar, redundant, criterion = "strict")
+is_redundant(redundant, criterion = "strict")
 }
 \arguments{
-\item{similar}{position of a row, that is similar to the previous, i.e. row 5 is similar to 4}
+\item{redundant}{\code{vector} of integers coding redundancy as 1=Yes & 0=No for every sample at a given
+pair of similar rows.}
 
-\item{redundant}{??}
+\item{criterion}{\code{character} specifying by which method merging will be}
 }
 \value{
-if similar rows are redundant, 1, else 0
+\item{ToMerge}{\code{integer} indicating whether will be merge (1) or not (0)}
 }
 \description{
-Indicates by a binary output variable (1/0) if rows should be merged
+Indicates by a binary output variable (1/0) which rows will be merged in the next step
 }
 \details{
 Methods: "strict": A single sample with two peaks prevents merging

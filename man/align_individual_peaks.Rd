@@ -20,7 +20,7 @@ for large datasets more iteration might be better. Has to be evaluated properly.
 \item{rt_col_name}{column name of retention time}
 }
 \value{
-aligned chromatograms
+\item{aligned chromatograms}{List of aligned peaks}
 }
 \description{
 algorithm to adjust unreliability of chromatograms on an individual peak basis

@@ -7,27 +7,30 @@
 rt_cutoff(data, rt_col_name, low = NULL, high = NULL)
 }
 \arguments{
-\item{data}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns. The first column for all individuals has to be the retention
-time}
+\item{data}{\code{data.frame} containing GC data (e.g. retention time, peak are, peak height etc.) for
+one individual. Variables are stored in adjacent columns.}
 
-\item{rt_col_name}{character string for name of retention time in gc table}
+\item{rt_col_name}{\code{character} string with the name of the retention time column}
 
-\item{low}{Lower threshold for retention times. RTs higher than \code{low} will be kept}
+\item{low}{lower threshold for retention times. RTs higher than \code{low} will be kept}
 
-\item{high}{Upper threshold for retention times. RTs lower than \code{high} will be kept}
+\item{high}{upper threshold for retention times. RTs lower than \code{high} will be kept}
 }
 \value{
-gc table with retention times cut NAs cut
+\item{data_cutted}{\code{data.frame} containing subset of the input data falling within the interval
+defined by \code{low} and \code{high} respectively}
 }
 \description{
-cuts retention time below and above specified times
+By specifying cut-off thresholds retention times above (\code{highw}) or below (\code{high}) these values can
+             be removed from the data in order to retain a subset of substances belonging to
+             specific retention times. All cut-off values are given in minutes.
+}
+\details{
+In addition to cutting retention times, this function removes rows of \code{data} containing
+         purely NA. These are artefacts added by \code{\link[utils]{read.table}}
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

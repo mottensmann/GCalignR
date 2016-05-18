@@ -2,31 +2,33 @@
 % Please edit documentation in R/linear_transformation.R
 \name{peak_shift}
 \alias{peak_shift}
-\title{shifts retention times of a chromatogram and estimates the number of shared peaks with the
-reference.}
+\title{shifts peaks}
 \usage{
 peak_shift(sample_df, ref_df, shift = 0.05, step_size = 0.01, error = 0,
   rt_col_name)
 }
 \arguments{
-\item{sample_df}{\code{data.frame} with individual gc data}
+\item{sample_df}{data.frame containing individual GC data
 
-\item{ref_df}{\code{data.frame} with individual gc data of the reference chromatogram}
+ @param ref_df data.frame containing individual GC data of the reference chromatogram}
 
-\item{shift}{shift span to try for maximising shared peaks}
+\item{shift}{the maximum shift in retention times that will be considered in estimating the best transformation.}
 
-\item{step_size}{steps to take within the shift span}
+\item{step_size}{indicates the step size in which linear shifts are evaluated
+between \code{shift} and \code{-shift}.}
 
-\item{error}{allowed error}
+\item{error}{numeric value defining the allowed difference in retention times in
+derterming if two peaks are shared. The default \code{error=0} counts
+a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{RT time column name}
+\item{rt_col_name}{character string denoting the column containing retention times
+in data.frames of \code{chromatograms}}
 }
 \value{
 Numeric Value, indicating the best shift (e.g. -0.02 seconds)
 }
 \description{
-shifts retention times of a chromatogram and estimates the number of shared peaks with the
-reference.
+shifts peaks of individual chromatograms
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

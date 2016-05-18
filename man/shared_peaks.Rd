@@ -2,29 +2,34 @@
 % Please edit documentation in R/linear_transformation.R
 \name{shared_peaks}
 \alias{shared_peaks}
-\title{Calculate the Number of shared peaks between a Chromatogram and its reference}
+\title{Estimate number of shared peaks between a chromatogram and a reference}
 \usage{
 shared_peaks(sample_df, ref_df, shift_steps, error = 0, rt_col_name)
 }
 \arguments{
-\item{sample_df}{\code{data.frame} with individual gc data}
+\item{sample_df}{data.frame containing individual GC data}
 
-\item{ref_df}{\code{data.frame} with individual gc data of the reference chromatogram}
+\item{ref_df}{data.frame containing individual GC data of the reference chromatogram}
 
-\item{shift_steps}{steps to taken within the shift span}
+\item{shift_steps}{numeric vector containing steps to taken within the shift span}
 
-\item{error}{allowed error}
+\item{error}{numeric value defining the allowed difference in retention times in
+derterming if two peaks are shared. The default \code{error=0} counts
+a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{RT time column name}
+\item{rt_col_name}{character string denoting the column containing retention times
+in data.frames of \code{chromatograms}}
 }
 \value{
-list of number of peaks and shift steps
+a data.frame containing the number of shared peaks and corresponding shifts for
+all evaluated steps
 }
 \description{
-Calculate the Number of shared peaks between a Chromatogram and its reference
+Estimate the most suitable linear shift in seconds to maximize the number of
+shared peaks with the reference
 }
 \details{
-Shared peaks fall within the retention time of the reference and +- the Error [s]
+Shared peaks fall within the retention time of the reference and +- the Error (denoted in seconds)
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

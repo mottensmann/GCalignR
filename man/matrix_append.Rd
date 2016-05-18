@@ -2,16 +2,25 @@
 % Please edit documentation in R/matrix_append.R
 \name{matrix_append}
 \alias{matrix_append}
-\title{Adds zeros to matrices to make row numbers equal}
+\title{Append zeros to matrices}
 \usage{
-matrix_append(Matrix, Chromatograms)
+matrix_append(matrix, chromatograms)
 }
 \arguments{
-\item{Matrix}{A matrix to append}
+\item{matrix}{a matrix to append.}
 
-\item{Chromatograms}{List of all matrices}
+\item{chromatograms}{list of matrices.}
+}
+\value{
+a appended matrix.
 }
 \description{
-Adds zeros to matrices to make row numbers equal
+\code{matrix_append()} adds zeros to a matrix or a data.frames grouped within a list.
+If required rows containing just zeros are appended to match the dimensions of the
+largest matrix having the most rows of the list \code{chromatograms}.
+}
+\details{
+If the matrix has the same dimensions as the largest of \code{chromatograms}
+         the input matrix is returned.
 }
 

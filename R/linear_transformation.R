@@ -1,13 +1,29 @@
-#' maximisation of the number of shared peaks with reference chromatogram
+#' Shift peaks to eliminate systematic inaccuracies of peak detection by GC.
 #'
-#' @param chromatograms list of data.frames with each data.frame being an individuals gc data
-#' @param high Upper threshold for retention times. RTs lower than \code{high} will be kept
-#' @param rt_col_name character string for name of retention time in gc table
+#'@description
+#'\code{linear_transformation()} applies small linear shifts of all peaks of
+#'individual samples with respect to one reference. Thereby the number of shared
+#'compounds among samples is maximized. The interval in which linear transformations are evaluated
+#'is adjustable as well as the step size within this range.
+#'
+#' @param chromatograms list of data.frames with each being an individuals GC data.
+#'
+#' @param reference a character string indicating a sample included in \code{chromatograms}.
+#'
+#' @param shift the maximum shift in retention times that will be considered in estimating the best transformation.
+#'
+#' @param step_size indicates the step size in which linear shifts are evaluated
+#'          between \code{shift} and \code{-shift}.
+#'
+#' @param error numeric value defining the allowed difference in retention times in
+#'          derterming if two peaks are shared. The default \code{error=0} counts
+#'          a peak a shared if retention times match excatly.
+#'
+#' @param rt_col_name character string denoting the column containing retention times
+#'          in data.frames of \code{chromatograms}
 #'
 #' @return
-#' gc table with retention times cut
-#'
-#' @references
+#' A list of chromatograms with applied linear shifts
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -40,15 +56,25 @@ linear_transformation <- function(chromatograms,reference,
     chroma_aligned
 }
 
-#' shifts retention times of a chromatogram and estimates the number of shared peaks with the
-#' reference.
+#' shifts peaks
 #'
-#' @param sample_df \code{data.frame} with individual gc data
-#' @param ref_df \code{data.frame} with individual gc data of the reference chromatogram
-#' @param shift shift span to try for maximising shared peaks
-#' @param step_size steps to take within the shift span
-#' @param error allowed error
-#' @param rt_col_name RT time column name
+#' @description shifts peaks of individual chromatograms
+#'
+#' @param sample_df data.frame containing individual GC data
+#'
+#'  @param ref_df data.frame containing individual GC data of the reference chromatogram
+#'
+#' @param shift the maximum shift in retention times that will be considered in estimating the best transformation.
+#'
+#' @param step_size indicates the step size in which linear shifts are evaluated
+#'          between \code{shift} and \code{-shift}.
+#'
+#' @param error numeric value defining the allowed difference in retention times in
+#'          derterming if two peaks are shared. The default \code{error=0} counts
+#'          a peak a shared if retention times match excatly.
+#'
+#' @param rt_col_name character string denoting the column containing retention times
+#'          in data.frames of \code{chromatograms}
 #'
 #' @return Numeric Value, indicating the best shift (e.g. -0.02 seconds)
 #'
@@ -59,7 +85,6 @@ linear_transformation <- function(chromatograms,reference,
 #' @export
 
 
-#### doc missing
 peak_shift <- function(sample_df, ref_df, shift=0.05, step_size=0.01, error=0, rt_col_name){
     # This functions shifts retention times of a chromatogram and estimates
     # the number of shared peaks with the reference.
@@ -77,18 +102,29 @@ peak_shift <- function(sample_df, ref_df, shift=0.05, step_size=0.01, error=0, r
 }
 
 
-#' Calculate the Number of shared peaks between a Chromatogram and its reference
+#' Estimate number of shared peaks between a chromatogram and a reference
 #'
+#' @description Estimate the most suitable linear shift in seconds to maximize the number of
+#' shared peaks with the reference
 #'
-#' @param sample_df \code{data.frame} with individual gc data
-#' @param ref_df \code{data.frame} with individual gc data of the reference chromatogram
-#' @param shift_steps steps to taken within the shift span
-#' @param error allowed error
-#' @param rt_col_name RT time column name
+#' @param sample_df data.frame containing individual GC data
 #'
-#' @return list of number of peaks and shift steps
+#' @param ref_df data.frame containing individual GC data of the reference chromatogram
 #'
-#' @details Shared peaks fall within the retention time of the reference and +- the Error [s]
+#' @param shift_steps numeric vector containing steps to taken within the shift span
+#'
+#' @param error numeric value defining the allowed difference in retention times in
+#'          derterming if two peaks are shared. The default \code{error=0} counts
+#'          a peak a shared if retention times match excatly.
+#'
+#' @param rt_col_name character string denoting the column containing retention times
+#'          in data.frames of \code{chromatograms}
+#'
+#' @return
+#' a data.frame containing the number of shared peaks and corresponding shifts for
+#' all evaluated steps
+#'
+#' @details Shared peaks fall within the retention time of the reference and +- the Error (denoted in seconds)
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'   (meinolf.ottensmann@@web.de)
@@ -119,13 +155,15 @@ shared_peaks <- function(sample_df, ref_df, shift_steps, error=0, rt_col_name) {
 
     }
     output <- list(no_of_peaks ,shift_steps)
+    return(output)
 }
 
-#' Selects the optimal Shifting time leading to the maximum number of shared peaks
+#' Find the best linear shift
+#' @description Selects the optimal shifting time leading to the maximum number of shared peaks
 #'
-#' @param list, output from shared_peaks
+#' @param peak_list data.frame, the output from shared_peaks
 #'
-#' @return list of number of peaks and shift step for which this is maximised
+#' @return optimal shift in seconds to yield the maximum number of shared peaks
 #'
 #' @details If competing shifts exists (i.e. same number of peaks are shared),
 #'          selects the smallest absolute value of a shift
@@ -135,10 +173,10 @@ shared_peaks <- function(sample_df, ref_df, shift_steps, error=0, rt_col_name) {
 #'
 #' @export
 #'
-best_shift <- function(list){
+best_shift <- function(peak_list){
 
-    ShiftTime <- as.vector(list[[1]])
-    Peaks <- as.vector(list[[2]])
+    ShiftTime <- as.vector(peak_list[[1]])
+    Peaks <- as.vector(peak_list[[2]])
     Index <- which(ShiftTime==max(ShiftTime)) # find the best fit = maximum of shared peaks
     BestFit <- Peaks[Index]
     BestFit
@@ -154,19 +192,19 @@ best_shift <- function(list){
 
 #' Apply a linear shift to all retention times of a chromatogram
 #' @description Shifts retention times of a sample by an previously defined value to optimise the
-#'              similarity to the reference list by maximizing the number of shared  peaks
+#'              similarity to the reference list by maximizing the number of shared  peaks.
 #'
-#' @param chromatogram \code{data.frame} containing gc data of an individual sample
+#' @param chromatogram data.frame containing gc data of an individual sample.
 #'
-#' @param OptimalShift \code{numeric} value indicating the optimal shift to apply to
-#'          maximize the similarity to a reference
-#' @param ret_col_name name of the column containing retention times
+#' @param OptimalShift numeric value indicating the optimal shift to apply to
+#'          maximize the similarity to a reference.
+#' @param ret_col_name character string denoting the column containing retention times in \code{chromatogram}.
 #'
 #' @return
-#' \code{chromatogram}{\code{data.frame} cotaining linear adjusted chromatogram}
+#' \code{chromatogram}{data.frame cotaining linear adjusted chromatogram}
 #'
 #' @details If competing shifts exists (i.e. same number of peaks are shared),
-#'          selects the smallest absolute value of a shift
+#'          selects the smallest absolute value of a shift.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'   (meinolf.ottensmann@@web.de)

@@ -6,14 +6,15 @@
 #'          allows to merge close substances if only a small subset of samples contains both.
 #'
 #'
-#' @param chromatograms \code{data.frame} containing GC data (retention times, peak area, peak height etc.) for
+#' @param chromatograms data.frame containing GC data (retention times, peak area, peak height etc.) for
 #'   one individual in adjacent columns.
 #'
-#' @param average_rts \code{vector} of average retention times per row (i.e substance) among samples
+#' @param average_rts numeric vector of average retention times per row (i.e substance) among samples.
 #'
 #' @param min_distance difference between the mean retention time of two rows of the chromatograms
 #'        to be considered for merging if no individual has substances in both rows.
-#' @param rt_col_name name of retention time column.
+#'
+#' @param rt_col_name character string denoting the column of retention times in \code{chromatograms}
 #'
 #' @return
 #' \item{chromatograms}{List of individual \code{data.frames} with merged rows}

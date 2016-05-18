@@ -7,23 +7,23 @@
 adj_ret_time(chromatogram, OptimalShift, ret_col_name)
 }
 \arguments{
-\item{chromatogram}{\code{data.frame} containing gc data of an individual sample}
+\item{chromatogram}{data.frame containing gc data of an individual sample.}
 
-\item{OptimalShift}{\code{numeric} value indicating the optimal shift to apply to
-maximize the similarity to a reference}
+\item{OptimalShift}{numeric value indicating the optimal shift to apply to
+maximize the similarity to a reference.}
 
-\item{ret_col_name}{name of the column containing retention times}
+\item{ret_col_name}{character string denoting the column containing retention times in \code{chromatogram}.}
 }
 \value{
-\code{chromatogram}{\code{data.frame} cotaining linear adjusted chromatogram}
+\code{chromatogram}{data.frame cotaining linear adjusted chromatogram}
 }
 \description{
 Shifts retention times of a sample by an previously defined value to optimise the
-             similarity to the reference list by maximizing the number of shared  peaks
+             similarity to the reference list by maximizing the number of shared  peaks.
 }
 \details{
 If competing shifts exists (i.e. same number of peaks are shared),
-         selects the smallest absolute value of a shift
+         selects the smallest absolute value of a shift.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

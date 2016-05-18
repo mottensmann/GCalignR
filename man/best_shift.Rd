@@ -2,18 +2,18 @@
 % Please edit documentation in R/linear_transformation.R
 \name{best_shift}
 \alias{best_shift}
-\title{Selects the optimal Shifting time leading to the maximum number of shared peaks}
+\title{Find the best linear shift}
 \usage{
-best_shift(list)
+best_shift(peak_list)
 }
 \arguments{
-\item{list, }{output from shared_peaks}
+\item{peak_list}{data.frame, the output from shared_peaks}
 }
 \value{
-list of number of peaks and shift step for which this is maximised
+optimal shift in seconds to yield the maximum number of shared peaks
 }
 \description{
-Selects the optimal Shifting time leading to the maximum number of shared peaks
+Selects the optimal shifting time leading to the maximum number of shared peaks
 }
 \details{
 If competing shifts exists (i.e. same number of peaks are shared),

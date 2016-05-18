@@ -7,12 +7,14 @@
 mean_per_row(chromatograms, rt_col_name)
 }
 \arguments{
-\item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns. The first column for all individuals has to be the retention
-time, retention time has to be named RT.}
+\item{chromatograms}{data.frame containing GC data (retention times, peak area, peak hight etc) for
+  one individual in adjacent columns. The first column for all individuals has to be the retention
+  time, retention time has to be named RT.
+
+  @param rt_col_name character string denoting the column containing retention times in \code{chromatograms}}
 }
 \value{
-vector with mean retention times per row in chromatograms
+vector with mean retention times per row in \code{chromatograms}.
 }
 \description{
 calculates mean retention time per row

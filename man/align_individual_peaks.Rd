@@ -2,28 +2,28 @@
 % Please edit documentation in R/align_individual_peaks.R
 \name{align_individual_peaks}
 \alias{align_individual_peaks}
-\title{algorithm to adjust unreliability of chromatograms on an individual peak basis}
+\title{align peaks of chromatograms}
 \usage{
 align_individual_peaks(chromatograms, error_span = 0.02, n_iter = 1,
   rt_col_name)
 }
 \arguments{
-\item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns. The first column for all individuals has to be the retention
-time, retention time has to be named RT.}
+\item{chromatograms}{list of data.frames containing GC data (retention times, peak area, peak hight etc.) for
+individual samples in adjacent columns.}
 
-\item{error_span}{maximum error under which two retention times are still counted as the same peak}
+\item{error_span}{maximum error under which two retention times are still counted as the same peak.}
 
-\item{n_iter}{number of iterations for the algorithm. One iteration is usually optimal, but
+\item{n_iter}{number of iterations of the algorithm. One iteration is usually optimal, but
 for large datasets more iteration might be better. Has to be evaluated properly.}
 
-\item{rt_col_name}{column name of retention time}
+\item{rt_col_name}{character string denoting the column containing retention times.}
 }
 \value{
-\item{aligned chromatograms}{List of aligned peaks}
+\item{aligned chromatograms}{List of data.frames with aligned peaks}
 }
 \description{
-algorithm to adjust unreliability of chromatograms on an individual peak basis
+\code{align_individual_peaks()} allows to align peaks of a number of
+chromatograms belonging to the same substance (i.e retention time).
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

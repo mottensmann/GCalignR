@@ -2,29 +2,39 @@
 % Please edit documentation in R/linear_transformation.R
 \name{linear_transformation}
 \alias{linear_transformation}
-\title{maximisation of the number of shared peaks with reference chromatogram}
+\title{Shift peaks to eliminate systematic inaccuracies of peak detection by GC.}
 \usage{
 linear_transformation(chromatograms, reference, shift = 0.05,
   step_size = 0.01, error = 0, rt_col_name)
 }
 \arguments{
-\item{chromatograms}{list of data.frames with each data.frame being an individuals gc data}
+\item{chromatograms}{list of data.frames with each being an individuals GC data.}
 
-\item{rt_col_name}{character string for name of retention time in gc table}
+\item{reference}{a character string indicating a sample included in \code{chromatograms}.}
 
-\item{high}{Upper threshold for retention times. RTs lower than \code{high} will be kept}
+\item{shift}{the maximum shift in retention times that will be considered in estimating the best transformation.}
+
+\item{step_size}{indicates the step size in which linear shifts are evaluated
+between \code{shift} and \code{-shift}.}
+
+\item{error}{numeric value defining the allowed difference in retention times in
+derterming if two peaks are shared. The default \code{error=0} counts
+a peak a shared if retention times match excatly.}
+
+\item{rt_col_name}{character string denoting the column containing retention times
+in data.frames of \code{chromatograms}}
 }
 \value{
-gc table with retention times cut
+A list of chromatograms with applied linear shifts
 }
 \description{
-maximisation of the number of shared peaks with reference chromatogram
+\code{linear_transformation()} applies small linear shifts of all peaks of
+individual samples with respect to one reference. Thereby the number of shared
+compounds among samples is maximized. The interval in which linear transformations are evaluated
+is adjustable as well as the step size within this range.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
-}
-\references{
-
 }
 

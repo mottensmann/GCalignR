@@ -2,22 +2,22 @@
 % Please edit documentation in R/evaluate_chroma.R
 \name{mean_of_samples}
 \alias{mean_of_samples}
-\title{Calculates mean of retention times up to a certain sample (Zeros are ignored)}
+\title{Calculates mean retention times}
 \usage{
 mean_of_samples(chromatograms, samples, retention_row, rt_col_name)
 }
 \arguments{
-\item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns.}
+\item{chromatograms}{list of data.frames containing GC data (retention times, peak area, peak hight etc) for
+individual samples in adjacent columns.}
 
-\item{samples}{indices of samples up to sample of interest (1:sample-1)}
+\item{samples}{indices of samples up to sample of interest (1:sample-1).}
 
-\item{retention_row}{current retention time row to be compared}
+\item{retention_row}{current retention time row to be compared.}
 
-\item{rt_col_name}{name of retention time column}
+\item{rt_col_name}{name of retention time column.}
 }
 \value{
-mean of rts
+mean retention times
 }
 \description{
 Calculates mean of retention times up to a certain sample (Zeros are ignored)

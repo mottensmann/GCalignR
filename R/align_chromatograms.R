@@ -174,14 +174,11 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     ####################
     chroma_linear <- chromatograms
 
-    # source("R/evaluate_chroma.R")
-    # Length <- (max(unlist(lapply(chromatograms, function(x) out <- nrow(x))))) # To obtain Rows after run of the algorithm
-    # Variation <- mean(var_per_row(chromatograms),na.rm = T)
-
     # align peaks
 
     cat(c('Start alignment of peaks...','This might take a while!','\n','\n'))
     Fun_Fact()
+
     chromatograms_aligned <- align_individual_peaks(chromatograms, error_span = step2_maxshift, n_iter = n_iter, rt_col_name = rt_name)
 
     cat(paste('Peak alignment done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##########','\n','\n')

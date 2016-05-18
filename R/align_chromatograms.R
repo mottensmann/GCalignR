@@ -62,6 +62,7 @@
 #'
 #'@import magrittr
 #'
+#'
 #'@export
 #'
 #'
@@ -69,44 +70,68 @@
 align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,
                                 del_single_sub = FALSE,n_iter=1) {
-    start.time <- pracma::tic() # Start a clock
+
+    ##########################################################
+    # start a clock to estimate time the function takes to run
+    ##########################################################
+    start.time <- pracma::tic()
+
+    ###################################################################################
+    # Show the start of the alignment process and the corresponding time to the console
+    ###################################################################################
     cat(paste('Run GCalignR\n','Time:',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n##########','\n','\n'))
 
-    if (is.null(rt_name)) stop("specify name of retention time column")
-    if (is.null(reference)) stop("specify a reference chromatogram to align the others to")
+    ###############################################
+    # Check if all required arguments are specified
+    ################################################
+if (is.null(rt_name)) stop("Column containing retention times is not specifed. Define rt_name")
+if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
 
+    ###############
     # extract names
+    ###############
     ind_names <- readr::read_lines(datafile, n_max = 1) %>%
         stringr::str_split(pattern = sep) %>%
         unlist() %>%
         .[. != ""]
 
+    ######################
     # extract column names
+    ######################
     col_names <- readr::read_lines(datafile, n_max = 1, skip = 1) %>%
         stringr::str_split(pattern = sep) %>%
         unlist() %>%
         .[. != ""]
-
+    ########################################
     # remove leading and tailing whitespaces
+    ########################################
     col_names <- stringr::str_trim(col_names)
     ind_names <- stringr::str_trim(ind_names)
 
+    ##############
     # extract data
+    ##############
     chroma <- read.table(datafile, skip = 2, sep = sep, stringsAsFactors = F)
 
+    #####################
     # remove pure NA rows
+    #####################
     chroma <- chroma[!(rowSums(is.na(chroma)) == nrow(chroma)), ]
 
-    # for cara replace commas
-    # chroma <- apply(chroma, 2, function(x) x <- str_replace_all(x, ",", "."))
-
+    ######################
     # transform to numeric
+    ######################
     chroma <-  as.data.frame(apply(chroma, 2, as.numeric))
 
+    #########################################
+    # Check input for completeness and format
+    #########################################
     # check 1
     if (!((ncol(chroma) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
     # check 2
     if (!((ncol(chroma) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
+    # check 3
+   # if(!unique(ind_names))stop("Duplicated sample names exist. Use unique names for samples")
 
     # matrix to list
     chromatograms <- conv_gc_mat_to_list(chroma, ind_names, var_names = col_names)
@@ -290,7 +315,7 @@ align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_outp
                             step3_maxdiff=step3_maxdiff,
                             del_single_sub=del_single_sub,
                             initial_maximum_substances=ncol(rt_raw),
-                            number_of_substances_final=ncol(rt_aligned))
+                            number_of_substances_final=ncol(rt_aligned)-1)
     if(!is.null(rt_cutoff_high)){
         parameter['rt_cutoff_high'] <- rt_cutoff_high
     }

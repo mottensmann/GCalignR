@@ -247,9 +247,9 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
      #######################
 
 
-    rt_raw <- rt_extract_heatmap(chromatograms = chroma_raw,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
-    rt_linear <- rt_extract_heatmap(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
-    rt_aligned <- rt_extract_heatmap(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_raw <- rt_extract(chromatograms = chroma_raw,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_linear <- rt_extract(chromatograms = chroma_linear,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
+    rt_aligned <- rt_extract(chromatograms = chromatograms,blanks = blanks,rt_name =rt_name,del_single_sub=del_single_sub)
 
 
 

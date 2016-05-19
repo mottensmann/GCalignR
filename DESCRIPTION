@@ -15,7 +15,6 @@ Imports: stringr,
         ggplot2,
         RColorBrewer,
         reshape2,
-        gridExtra,
         pracma
 License: GPL (>= 2)
 LazyData: true

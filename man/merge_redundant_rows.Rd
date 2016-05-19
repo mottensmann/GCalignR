@@ -8,15 +8,15 @@ merge_redundant_rows(chromatograms, average_rts, min_distance = 0.05,
   rt_col_name)
 }
 \arguments{
-\item{chromatograms}{\code{data.frame} containing GC data (retention times, peak area, peak height etc.) for
+\item{chromatograms}{data.frame containing GC data (retention times, peak area, peak height etc.) for
 one individual in adjacent columns.}
 
-\item{average_rts}{\code{vector} of average retention times per row (i.e substance) among samples}
+\item{average_rts}{numeric vector of average retention times per row (i.e substance) among samples.}
 
 \item{min_distance}{difference between the mean retention time of two rows of the chromatograms
 to be considered for merging if no individual has substances in both rows.}
 
-\item{rt_col_name}{name of retention time column.}
+\item{rt_col_name}{character string denoting the column of retention times in \code{chromatograms}}
 }
 \value{
 \item{chromatograms}{List of individual \code{data.frames} with merged rows}

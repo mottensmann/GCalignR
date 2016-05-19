@@ -65,9 +65,6 @@ Returns an object of class GCalign that is a a list with the following elements:
 \description{
 Aligning chromatograms based on retention times
 }
-\examples{
-
-}
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)

@@ -56,13 +56,9 @@
 #'
 #'@import magrittr
 #'
-#' @example
-#'
-#'
-#'
-#'
 #'
 #' @export
+#'
 
 align_chromatograms <- function(datafile, sep = "\t", rt_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 step1_maxshift = 0.05, step2_maxshift = 0.02, step3_maxdiff = 0.05, blanks = NULL,

@@ -23,7 +23,7 @@ Fun_Fact <- function(){
         c("Do you know this?","",
               "The probably oldest bird nest has been discovered on a cliff in Greenland.",
               "The nesting site was already used 2500 years ago and is still used by gryfalcons,",
-              "the largest species of falcon in the world","Burnham et al. Ibis (2009) 151","")
+              "the largest species of falcon in the world","Burnham et al. Ibis (2009) 151.")
     trivia[[2]] <-
         c("Do you know how well birds can see?","",
         "The Northern Hawk Owl (Surnia ulula) can detect primarily by sight a vole to eat up to a half a mile away.")
@@ -42,10 +42,10 @@ Fun_Fact <- function(){
           " The lucky bird gets to see two summers a year! And over its lifespan of more than 30 years,",
             "the flights can add up to the equivalent of three trips to the moon and back")
     trivia[[5]] <-
-        c("You know of longest non stop flight of a bird ever recorded?","",
+        c("You know of the longest non stop flight of a bird ever recorded?","",
           "The bar\u002Dtailed godwit can fly for nearly 7,000 miles without stopping, making it the bird with the longest recorded non\u002Dstop flight.",
-          "During the eight\u002Dday journey, the bird doesn’t stop for food or rest, demonstrating jaw dropping endurance")
-    return(cat(trivia[[sample(x = 1:length(trivia),size = 1)]],sep = "\n"))
+          "During the eight\u002Dday journey, the bird does not stop for food or rest, demonstrating jaw dropping endurance")
+    x <- paste(trivia[[sample(x = 1:length(trivia),size = 1)]],collapse = " ")
+    cat(stringr::str_wrap(x,width=50,exdent=2,indent=2))
 }
-
 

@@ -1,20 +1,31 @@
 #' align peaks of chromatograms
 #'
-#' @description \code{align_individual_peaks()} allows to align peaks of a number of
-#' chromatograms belonging to the same substance (i.e retention time).
+#' @description
+#' \code{align_individual_peaks()} allows to align similar peaks across samples so that
+#' shared peaks are consistently located at the the same location (i.e. defined as the same substance).
+#'  The order of chromatograms (i.e. data.frames in \code{gc_peak_list}) is randomized before each run
+#'  of the alignment of algorithm. The main principle of this function is to reduce the variance in retention
+#'  times within rows, thereby peaks of similar retention time are grouped together. Peaks that deviate
+#'  signifantly from the mean retention times of the other samples are shifted to another row. At the begin
+#'  of a row the first two samples are compared and seperated if required, then all other samples are included
+#'  subsequently. If \code{n_iter>1} the whole alogorithm is repeated accordingly.
 #'
-#' @param chromatograms list of data.frames containing GC data (retention times, peak area, peak hight etc.) for
-#'   individual samples in adjacent columns.
+#'@details
+#'  For each row (i.e. peak) the algorithm compares the retention of every sample with those before. Starting
+#'  with the second sample a comparison is done between the first and the second sample, then between the third
+#'  and the two first ones etc. Whenever the current sample shows a deviation from the mean retention time of
+#'  the previous samples a shift will either move this sample to the next row (i.e. retention time above average)
+#'  or all other samples will be moved to the next row (i.e. retention time below average).
+#'  If the retention time of the sample in evaluation shows no deviation within \code{-max_diff_peak2mean}:
+#'  \code{max_diff_peak2mean} around the average retention time no shifting is done and the alogrithm takes the
+#'  next sample.
 #'
-#' @param error_span maximum error under which two retention times are still counted as the same peak.
+#' @inheritParams matrix_append
 #'
-#' @param n_iter number of iterations of the algorithm. One iteration is usually optimal, but
-#'               for large datasets more iteration might be better. Has to be evaluated properly.
-#'
-#' @param rt_col_name character string denoting the column containing retention times.
+#' @inheritParams align_chromatograms
 #'
 #' @return
-#' \item{aligned chromatograms}{List of data.frames with aligned peaks}
+#' a list of data.frames containing GC-data with aligned peaks.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -22,15 +33,14 @@
 #' @export
 #'
 
-align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1, rt_col_name) {
+align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name) {
 
     for (R in 1:n_iter){
 
-        cat(paste('Iteration',as.character(R),'out of',as.character(n_iter),'\n')) # Need to test whether it workds
-        shuffle_order <- sample(1:length(chromatograms))
-        chromatograms <- chromatograms[shuffle_order] # Shuffle
-        # Give initial values to some variables
-        # error_span <- 0.021 # allowed deviation around the mean of each row
+        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),'\n')) # Need to test whether it works
+        shuffle_order <- sample(1:length(gc_peak_list))
+        gc_peak_list <- gc_peak_list[shuffle_order] # Shuffle
+
         current_row <- 1
 
         while (current_row != 'Stop'){
@@ -41,9 +51,9 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1,
             # Shift all previous samples, if RT is below
             # Leave Samples with RT within error range at their positions
 
-            for (S in 2:length(chromatograms)){
-                current_RT <- chromatograms[[S]][current_row, rt_col_name]
-                av_rt <- mean_of_samples(chromatograms, samples =1:(S-1), retention_row = current_row, rt_col_name)
+            for (S in 2:length(gc_peak_list)){
+                current_RT <- gc_peak_list[[S]][current_row, rt_col_name]
+                av_rt <- mean_retention_time_row(gc_peak_list, samples =1:(S-1), retention_row = current_row, rt_col_name)
 
                 # if all rows are 0 ?
                 if(is.na(av_rt)){
@@ -56,42 +66,40 @@ align_individual_peaks <- function(chromatograms, error_span = 0.02, n_iter = 1,
                     current_RT <- av_rt
                 }
 
-                if (current_RT > av_rt + error_span) {
-                    chromatograms <- shift_rows(chromatograms,S,current_row)
+                if (current_RT > av_rt + max_diff_peak2mean) {
+                    gc_peak_list <- shift_rows(gc_peak_list,S,current_row)
 
-                } else if (current_RT < (av_rt - error_span)) {
+                } else if (current_RT < (av_rt - max_diff_peak2mean)) {
                     for(J in 1:(S-1)){
-                        if(chromatograms[[J]][current_row, rt_col_name] <= (current_RT + error_span)){
+                        if(gc_peak_list[[J]][current_row, rt_col_name] <= (current_RT + max_diff_peak2mean)){
                             # Do nothing, substance?position is valid
                         } else {
-                            chromatograms <- shift_rows(chromatograms,J,current_row)
+                            gc_peak_list <- shift_rows(gc_peak_list,J,current_row)
                         }
                     }
                 }
 
             }
             current_row <- current_row+1
-            chromatograms <- lapply(chromatograms, matrix_append, chromatograms)# Make all equal in length
-            last_substance_index <- max(which(mean_per_row(chromatograms, rt_col_name)==max(mean_per_row(chromatograms, rt_col_name),na.rm=T)))
+            gc_peak_list <- lapply(gc_peak_list, matrix_append, gc_peak_list)# Make all equal in length
+            last_substance_index <- max(which(mean_retention_times(gc_peak_list, rt_col_name)==max(mean_retention_times(gc_peak_list, rt_col_name),na.rm=T)))
 
-            # rt_mat <- do.call(cbind, lapply(chromatograms, function(x) x[, rt_col_name]))
+            # rt_mat <- do.call(cbind, lapply(gc_peak_list, function(x) x[, rt_col_name]))
             # max_rt_row <- max(rt_mat)
             #
-            # last_substance_index <- lapply(chromatograms, function(x))
+            # last_substance_index <- lapply(gc_peak_list, function(x))
             # Remove tail of all-zero rows
-            chromatograms <- lapply(chromatograms, function(x) x[c(1:last_substance_index), ]) # Remove appended zeros
+            gc_peak_list <- lapply(gc_peak_list, function(x) x[c(1:last_substance_index), ]) # Remove appended zeros
 
-            if (current_row>dim(chromatograms[[S]])[1]){
+            if (current_row>dim(gc_peak_list[[S]])[1]){
                 current_row <- 'Stop' # Signal the end of the iteration
             }
 
         }
 
-        # for evaluation of number of iteration, maybe create new function for this.
-        # Length[R+1] <- max(unlist(lapply(chromatograms,function(x) out <- nrow(x))))
-        # Variation[R+1] <- mean(var_per_row(chromatograms),na.rm = T)
+
     }
 
-return(chromatograms)
+return(gc_peak_list)
 }
 

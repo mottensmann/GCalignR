@@ -4,8 +4,13 @@
 \name{GCalignR}
 \alias{GCalignR}
 \alias{GCalignR-package}
-\title{GCalignR: A package to align gas-chromatograms based on retetion times}
+\title{GCalignR: A package to align gas-chromatograms based on retention times}
 \description{
+\code{GCalignR} contains the following functions:
+\code{\link{align_chromatograms}}
+\code{\link{GC_Heatmap}}
+}
+\details{
 The GCalignR package provides a three step alogrithm to align GC data
 }
 \section{GCalignR main function}{

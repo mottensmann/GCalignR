@@ -68,7 +68,18 @@ Returns an object of class GCalign that is a a list with the following elements:
 \item{parameter}{a data.frame}{containing the arguments of the function call}
 }
 \description{
-Aligning chromatograms based on retention times
+\code{align_chromatograms()} is the core function of \link{GcalignR}.
+}
+\details{
+Alignment is archieved by running three major algorithms always considering the complete
+set of samples submitted to the function. In brief: All chromatograms are linearly shifted to
+maximise similarity with a common reference to account for systematic shifts in retention times
+caused by the gas-chromatography setup. Second peaks of similar retention times are step-wise
+moved to the same location (i.e row) to group substances. In a third step peaks (i.e.) substances
+that show smaller differences in mean retention times than expected by the achievable resolution
+of gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
+removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
+one sample.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

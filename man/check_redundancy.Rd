@@ -12,7 +12,7 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{similar_peaks}{integer indexing the position of a peaks that is similar to the one before. Output from \code{similar_peaks}.}
 
-\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
+\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
 }
 \value{
 a binary vector of ones and zeros. One indicates redundancy.

@@ -16,7 +16,7 @@ the corresponding row. Default is 0.02.}
 
 \item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
 
-\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
+\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
 
 \item{R}{integer indicating the current iteration of the alignment step. Created by \link{align_chromatograms}.}
 }

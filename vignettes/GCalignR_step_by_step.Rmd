@@ -21,8 +21,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
 
 GCalignR provides a simple means of aligning chromatograms from gas-chromatography (GC)
 and gas-chromatography mass-spectrometry (GC-MS). Chromatograms of multiple samples are not
-directly comparable as the retention times vary across samples due to sublte, random and often
-unavoidable variation the GC-MS machine parameters [@pierce2005classification]. For studies
+directly comparable as the retention times vary across samples due to subtle, random and often
+unavoidable variation of the GC-MS machine parameters [@pierce2005classification]. For studies
 interested in broad patterns within chemical samples it is crucial that the same substances
 will have the same retention times to compare them across samples. Suprisingly, within the
 relatively young field of mammalian olfactory communication, most researchers seem to align
@@ -60,18 +60,17 @@ the user can visually inspect the quality of the alignment and if necessary adju
 
 ## Step by step guide to aligning chromatograms with GCalignR
 
-GC and GC-MS machines are coupled to specific software to look at the chromatograms and mass-spectra (i.e. Xcalibur).
+GC and GC-MS machines are coupled to specific software to inspect the chromatograms and mass-spectra (i.e. Xcalibur).
 These programs usually allow to extract the peaks of the chromatograms along with the areas under the peaks
 and additional variables such as the peak height. The aim of GCalignR is to align these extracted peaks across individuals
-using just their retention times (and not the mass-spectra). The simple underlying assumption is
+using just their retention times (and not the mass-spectra, which is not available when using gas-chromatography coupled to a flame ionization detector (FID)). The simple underlying assumption is
 that peaks with similar retention times represent the same substances. However, it is highly recommended
 to verify this assumption by comparing also the mass-spectra (if available) of the substances of interest.
 
 The alignment algorithm follows the following steps:
 
 1. Given a reference chromatogram within the sample, all chromatograms are aligned to this reference
-by means of shifting them to maximise shared peaks with the reference. This step corrects overall
-differences in the retention times of chromatograms.
+by means of shifting them to maximise shared peaks with the reference. This step corrects systematic shifts in the retention times of chromatograms.
 
 2. This step corrects unreliability of chromatograms on an individual peak basis and essentially
 tries to minimise variation  within a retention time row. 

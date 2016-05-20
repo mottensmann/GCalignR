@@ -13,10 +13,10 @@
 #' integer vector indicating the index of the last row of a pair to merge.
 #'
 #' @param criterion
-#' character string either "zero" or "area". "zero" is used to delete the row containing zeros,
-#' "area" provokes the selection of the larger of two peaks, defined by the concentration of the peaks.
-#' "area" is only useful when \code{criterion} is "proportional".
-#'
+#' character string either "strict" or "proportional". "strict" is used to delete the row containing zeros,
+#' "proportional" provokes the selection of the larger of two peaks, defined by the concentration of the peaks.
+#' \code{criterion="proportional"} will only affect pairs of peaks where less than 5% of the samples containg
+#' two conflicting peaks.
 #'
 #' @return
 #' aligned chromatograms
@@ -26,14 +26,14 @@
 #'
 #'
 #'
-merge_rows <- function(gc_peak_df, to_merge, criterion="zero", rt_col_name){
+merge_rows <- function(gc_peak_df, to_merge, criterion="strict", rt_col_name,conc_col_name){
     # Check always the row containing just zeros, in case of zeros in both, just delete one of them
     # To Merge == Last row of a similar pair
     Row1 <- to_merge-1 # Previous Row
     Row2 <- to_merge # Current Row
     R1 <- gc_peak_df[Row1, rt_col_name]
     R2 <- gc_peak_df[Row2, rt_col_name]
-    if (criterion=="zero"){
+    if (criterion=="strict"){
        if (Row1 > 1 & Row2 < nrow(gc_peak_df)){ # Avoid taking first and last rows
             if (R1 == 0){
                 #  Delete Row1
@@ -53,10 +53,10 @@ merge_rows <- function(gc_peak_df, to_merge, criterion="zero", rt_col_name){
       }
     }
 
-    if(criterion=="area"){ # Take the larger of two peaks, defined by the are of the peaks
-        if (gc_peak_df$Area[Row1] >= gc_peak_df$Area[Row2]){
-            gc_peak_df <- rbind(gc_peak_df[1:Row1,] ,gc_peak_dfs[(Row2+1):nrow(gc_peak_df), ])
-        } else if (gc_peak_df$Area[Row1] < gc_peak_df$Area[Row2]) {
+    if(criterion=="proportional"){ # Take the larger of two peaks, defined by the are of the peaks
+        if (gc_peak_df[Row1,conc_col_name] >= gc_peak_df[Row2,conc_col_name]){
+            gc_peak_df <- rbind(gc_peak_df[1:Row1,],gc_peak_df[(Row2+1):nrow(gc_peak_df),])
+        } else if (gc_peak_df[Row1,conc_col_name] < gc_peak_df[Row2,conc_col_name]) {
             gc_peak_df <- rbind(gc_peak_df[1:(Row1-1),],gc_peak_df[Row2:nrow(gc_peak_df), ])
 
         }

@@ -4,11 +4,11 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, sep = "\\t", rt_col_name = NULL,
-  write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
-  reference = NULL, max_linear_shift = 0.05, max_diff_peak2mean = 0.02,
-  min_diff_peak2peak = 0.05, blanks = NULL, delete_single_peak = FALSE,
-  n_iter = 1)
+align_chromatograms(datafile, sep = "\\t", conc_col_name = NULL,
+  rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
+  rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
+  max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
+  delete_single_peak = FALSE, n_iter = 1)
 }
 \arguments{
 \item{datafile}{path to a datafile. It has to be a .txt file. The first row needs to contain
@@ -20,7 +20,10 @@ retention time and a measure of concentration (e.g. peak area or height).}
 \item{sep}{the field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.}
 
-\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
+\item{conc_col_name}{character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+The designated variable needs to be numeric.}
+
+\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
 
 \item{write_output}{character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.}
@@ -42,7 +45,9 @@ the corresponding row. Default is 0.02.}
 
 \item{min_diff_peak2peak}{defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
-or none of the respective compounds. Default is 0.05.}
+or none of the respective compounds. This parameter is a major determinant in the classification
+of distinct peaks. Therefore careful consideration is required to adjust this setting to
+your needs (i.e. the resolution of your gas-chromatography pipeline). Default is 0.02.}
 
 \item{blanks}{character vector of names of blanks. If specified, all substances found in any of the blanks
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond

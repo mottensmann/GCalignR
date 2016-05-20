@@ -4,7 +4,8 @@
 \alias{merge_rows}
 \title{Merge two rows into one}
 \usage{
-merge_rows(gc_peak_df, to_merge, criterion = "zero", rt_col_name)
+merge_rows(gc_peak_df, to_merge, criterion = "strict", rt_col_name,
+  conc_col_name)
 }
 \arguments{
 \item{gc_peak_df}{data.frame containing GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
@@ -12,11 +13,15 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{to_merge}{integer vector indicating the index of the last row of a pair to merge.}
 
-\item{criterion}{character string either "zero" or "area". "zero" is used to delete the row containing zeros,
-"area" provokes the selection of the larger of two peaks, defined by the concentration of the peaks.
-"area" is only useful when \code{criterion} is "proportional".}
+\item{criterion}{character string either "strict" or "proportional". "strict" is used to delete the row containing zeros,
+"proportional" provokes the selection of the larger of two peaks, defined by the concentration of the peaks.
+\code{criterion="proportional"} will only affect pairs of peaks where less than 5% of the samples containg
+two conflicting peaks.}
 
-\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
+\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
+
+\item{conc_col_name}{character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+The designated variable needs to be numeric.}
 }
 \value{
 aligned chromatograms

@@ -5,7 +5,7 @@
 \title{align peaks of chromatograms}
 \usage{
 align_individual_peaks(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1,
-  rt_col_name)
+  rt_col_name, R = 1)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
@@ -17,6 +17,8 @@ the corresponding row. Default is 0.02.}
 \item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
 
 \item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
+
+\item{R}{integer indicating the current iteration of the alignment step. Created by \link{align_chromatograms}.}
 }
 \value{
 a list of data.frames containing GC-data with aligned peaks.

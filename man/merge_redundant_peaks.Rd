@@ -12,7 +12,7 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{min_diff_peak2peak}{defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
-or none of the respective compounds. Default is 0.05}
+or none of the respective compounds. Default is 0.05.}
 
 \item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 }

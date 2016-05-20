@@ -11,7 +11,7 @@ similar_peaks(average_rts, min_diff_peak2peak = 0.05)
 
 \item{min_diff_peak2peak}{defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
-or none of the respective compounds. Default is 0.05}
+or none of the respective compounds. Default is 0.05.}
 }
 \value{
 integer vector of indices pointing to the last index of a row-pair that is similar

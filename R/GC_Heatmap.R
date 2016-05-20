@@ -105,21 +105,21 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
 
     if(type=="binary"){
         if(max(heat_matrix['diff'],na.rm = T)==0){ # Zeros indicates no deviations of any substance
-        hm <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff),colour="Blue")
+        hm <- ggplot(heat_matrix, aes_string(x='substance', y='id',fill='diff'),colour="Blue")
         hm <- hm + geom_tile(color="transparent", size=0.001)
         hm <- hm + scale_fill_gradientn(colours = 'blue',na.value = "white")
         hm <- hm + labs(x=NULL, y=NULL, title=paste("No deviations exceeding a threshold of",as.character(threshold)))
         hm <- hm + guides(fill=FALSE)
 
         }else if(min(heat_matrix['diff'],na.rm = T)==1){ # Really bad alignment
-            hm <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff),colour="red")
+            hm <- ggplot(heat_matrix, aes_string(x='substance', y='id',fill=diff),colour="red")
             hm <- hm + geom_tile(color="transparent", size=0.001)
             hm <- hm + scale_fill_gradientn(colours = 'red',na.value = "white")
             hm <- hm + labs(x=NULL, y=NULL, title=paste("Alignment failed, all substances show deviation from threshold of",as.character(threshold)))
             hm <- hm + guides(fill=FALSE)
 
         }else{ # Should be the general outcome, some samples still deviate
-            hm <- ggplot(heat_matrix, aes(x=substance, y=id,fill=diff))
+            hm <- ggplot(heat_matrix, aes_string(x='substance', y='id',fill='diff'))
             hm <- hm + geom_tile(color="transparent", size=0.001)
             hm <- hm + scale_fill_continuous(low = "yellow",high = "black",breaks=c(0,1),na.value = "white",
                                              guide = 'legend',name=paste('Deviation\n','>',as.character(threshold)),labels=c('NO','YES'))
@@ -128,7 +128,7 @@ GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
         }
     }else{
         myPalette <-  colorRampPalette(rev(RColorBrewer::brewer.pal(11, "BrBG"))) # take a colour
-        hm <- ggplot(heat_matrix, aes(x=substance, y=id, fill=diff))
+        hm <- ggplot(heat_matrix, aes_string(x='substance', y='id', fill='diff'))
         hm <- hm + geom_tile(color="white", size=0.01)
         hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = guide,name='Deviation')
         hm <- hm + labs(x=NULL, y=NULL, title="Deviation of retention times")

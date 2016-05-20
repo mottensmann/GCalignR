@@ -4,10 +4,11 @@
 \alias{delete_space_colnames}
 \title{Remove spaces in column names}
 \usage{
-delete_space_colnames(data)
+delete_space_colnames(gc_data)
 }
 \arguments{
-\item{data}{data.frame containing GC data.}
+\item{gc_data}{data.frame containing GC-data for all individuals in adjacent columns. Samples need to have the same
+number of columns (i.e variables) in the same the order.}
 }
 \value{
 data.frame containing GC data with removed spaces in column names

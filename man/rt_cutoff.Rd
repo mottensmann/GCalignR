@@ -7,6 +7,9 @@
 rt_cutoff(gc_peak_df, rt_col_name, low = NULL, high = NULL)
 }
 \arguments{
+\item{gc_peak_df}{data.frame containing GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
+
 \item{rt_col_name}{character string with the name of the retention time column in \code{gc_peak_df}}
 
 \item{low}{lower threshold for retention times. RTs higher than \code{low} will be kept}

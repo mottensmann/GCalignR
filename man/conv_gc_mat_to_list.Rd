@@ -7,7 +7,8 @@
 conv_gc_mat_to_list(gc_data, ind_names, var_names)
 }
 \arguments{
-\item{gc_data}{data.frame containing GC-data for all individuals in adjacent columns.}
+\item{gc_data}{data.frame containing GC-data for all individuals in adjacent columns. Samples need to have the same
+number of columns (i.e variables) in the same the order.}
 
 \item{ind_names}{character vector with names of individuals following the same order as in \code{gc_data}.}
 

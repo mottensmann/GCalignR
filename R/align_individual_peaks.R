@@ -24,6 +24,9 @@
 #'
 #' @inheritParams align_chromatograms
 #'
+#' @param R
+#' integer indicating the current iteration of the alignment step. Created by \link{align_chromatograms}.
+#'
 #' @return
 #' a list of data.frames containing GC-data with aligned peaks.
 #'
@@ -33,11 +36,15 @@
 #' @export
 #'
 
-align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name) {
+align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name,R=1) {
 
-    for (R in 1:n_iter){
+    #for (R in 1:n_iter){
 
-        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),'\n')) # Need to test whether it works
+        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),' ... ',
+                  'range of CV: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
+                  '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average CV: ",
+                  as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
+                  '\n')) # Need to test whether it works
         shuffle_order <- sample(1:length(gc_peak_list))
         gc_peak_list <- gc_peak_list[shuffle_order] # Shuffle
 
@@ -98,7 +105,7 @@ align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_it
         }
 
 
-    }
+    #}
 
 return(gc_peak_list)
 }

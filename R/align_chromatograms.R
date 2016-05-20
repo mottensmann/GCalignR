@@ -129,8 +129,11 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     # matrix to list
     gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
 
-    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded','\n##############################','\n','\n'))
-
+    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ... ',
+               'range of CV: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
+               '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average CV: ",
+               as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
+               '\n################################################################################','\n','\n'))
     #####################
     # save for later use
     ####################
@@ -144,11 +147,11 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
 
     if(!is.null(rt_cutoff_low)){
-    cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n##########','\n','\n'))
+    cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),'minutes deleted','\n##########','\n','\n'))
     }
 
     if(!is.null(rt_cutoff_high)){
-        cat(paste0('Retention time cut-off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted'))
+        cat(paste0('Retention time cut-off applied:\n', 'Everything above ',as.character(rt_cutoff_high),'minutes deleted'))
     }
 
     if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
@@ -158,30 +161,32 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
     # 2.) Linear Transformation of Retentiontimes
 
-    cat('Linear Transformation...\n')
+    cat('Linear Transformation ... ')
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_col_name)
-    cat(paste('Linear Transformation done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##############################','\n','\n')
-
+    cat(paste('Done ... ','Range of CV: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
+              '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... average CV: ",
+              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2)),
+              '\n'),'######################################################################################','\n')
+# floor(pracma::toc(echo = F)[[1]]/60),'minutes since start',
     # Make List equal in length
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
-    ######################
-    # save for later use
-    ####################
-    gc_peak_list_linear <- gc_peak_list_linear
-
+    #############
     # align peaks
+    #############
 
-    cat(c('Start alignment of peaks...','This might take a while!','\n','\n'))
+    cat(c('Start alignment of peaks ... ','This might take a while!\n',
+          '=========================================================','\n'))
 
-    Fun_Fact()
+    # Fun_Fact() #Maybe within each iteration
+    gc_peak_list_aligned <- gc_peak_list_linear
+    for (R in 1:n_iter){ # several iteration of algorithm
 
-    gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_linear, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name)
+        gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
 
-    cat(paste('\n','Peak alignment done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##############################','\n','\n')
 
     # see whether zero rows are present
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
@@ -198,46 +203,51 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     # merging step
     # min distance here is crucial --> depends on sample size
 
-    cat('Merge redundant peaks...','\n')
-    gc_peak_list_merged <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name)
-    cat(paste('Merge redundant peaks done\n'),floor(pracma::toc(echo = F)[[1]]/60),'minutes since start','\n##############################','\n','\n')
+    cat('Merge redundant peaks ... ')
+    gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name)
+    cat(paste(' Done ... '),'Elapsed time:',floor(pracma::toc(echo = F)[[1]]/60),' minutes',
+        '\n##########################################################################################','\n') #floor(pracma::toc(echo = F)[[1]]/60),'minutes since start',
 
 
-    average_rts <- mean_retention_times(gc_peak_list_merged, rt_col_name = rt_col_name)
+    average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
     # delete empty rows again
 
-    gc_peak_list_merged <- lapply(gc_peak_list_merged, delete_empty_rows, average_rts)
+    gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)
 
+    } # Endo of iterative alignment and merging
+
+    cat(paste('\n','Peak alignment Done ... '),
+                '\n##################################################','\n','\n')
 
     # delete blanks
     if (!is.null(blanks)) {
         # delete one blank
-        delete_blank <- function(blank, gc_peak_list_merged) {
-            del_substances <- which(gc_peak_list_merged[[blank]]$RT > 0)
-            chroma_out <- lapply(gc_peak_list_merged, function(x) x[-del_substances, ])
+        delete_blank <- function(blank, gc_peak_list_aligned) {
+            del_substances <- which(gc_peak_list_aligned[[blank]]$RT > 0)
+            chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances, ])
         }
         # delete all blanks
         for (i in blanks) {
-            gc_peak_list_merged <- delete_blank(i, gc_peak_list_merged)
+            gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)
         }
     }
 
 
     # delete single substances
     # create matrix with all retention times
-    rt_mat <- do.call(cbind, lapply(gc_peak_list_merged, function(x) x[[rt_col_name]]))
+    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
 
     if (delete_single_peak) {
         # find single retention times in rows
         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
         # delete substances occuring in just one individual
-        gc_peak_list_merged <- lapply(gc_peak_list_merged, function(x) x[-single_subs_ind, ])
+        gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
     }
 
 
     # calculate final retention times
-    rt_mat <- do.call(cbind, lapply(gc_peak_list_merged, function(x) x[[rt_col_name]]))
+    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
 
      #######################
      # Outputs for Heatmaps
@@ -246,7 +256,7 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
     rt_raw <- rt_extract(gc_peak_list = gc_peak_list_raw,rt_col_name =rt_col_name)
     rt_linear <- rt_extract(gc_peak_list = gc_peak_list_linear,rt_col_name =rt_col_name)
-    rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_merged,rt_col_name =rt_col_name)
+    rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name =rt_col_name)
 
 
 
@@ -260,7 +270,7 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
 
     # create output matrices for all variables
-    output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_merged, function(x) x[y]))))
+    output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[y]))))
     output <- lapply(output, function(x){
                         names(x) <- ind_names
                         x

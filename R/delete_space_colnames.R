@@ -2,7 +2,8 @@
 #' @description
 #' If present, spaces within column names are eliminated
 #'
-#' @param data data.frame containing GC data.
+#' @inheritParams conv_gc_mat_to_list
+#'
 #' @return
 #' data.frame containing GC data with removed spaces in column names
 #' @references
@@ -12,8 +13,8 @@
 #'
 #' @export
 #'
-delete_space_colnames <- function(data) {
-    names(data) <- stringr::str_replace_all(names(data), " ", "")
-    data
+delete_space_colnames <- function(gc_data) {
+    names(gc_data) <- stringr::str_replace_all(names(gc_data), " ", "")
+    gc_data
 }
 

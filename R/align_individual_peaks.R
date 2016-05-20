@@ -40,12 +40,9 @@ align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_it
 
     #for (R in 1:n_iter){
 
-        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),' ... ',
-                  'range of CV: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
-                  '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average CV: ",
-                  as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
-                  '\n')) # Need to test whether it works
-        shuffle_order <- sample(1:length(gc_peak_list))
+        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),' ... ')) # Need to test whether it works
+    set.seed(999) # Remove this after testing the algorithm !!!!!!!!!!!!!!
+    shuffle_order <- sample(1:length(gc_peak_list))
         gc_peak_list <- gc_peak_list[shuffle_order] # Shuffle
 
         current_row <- 1
@@ -106,7 +103,6 @@ align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_it
 
 
     #}
-
 return(gc_peak_list)
 }
 

@@ -1,24 +1,26 @@
-#' cuts retention time below and above specified times
+#' cuts peaks below and above specified retention times
 #'
-#' @description By specifying cut-off thresholds retention times above (\code{highw}) or below (\code{high}) these values can
-#'              be removed from the data in order to retain a subset of substances belonging to
+#' @description By specifying cut-off thresholds retention times above (\code{highw}) or below (\code{high}) these peaks can
+#'              be removed from the data in order to retain a subset of peaks belonging to
 #'              specific retention times. All cut-off values are given in minutes.
 #'
-#' @param data \code{data.frame} containing GC data (e.g. retention time, peak are, peak height etc.) for
-#'   one individual. Variables are stored in adjacent columns.
 #'
-#' @param rt_col_name \code{character} string with the name of the retention time column
+#' @param rt_col_name
+#' character string with the name of the retention time column in \code{gc_peak_df}
 #'
-#' @param low lower threshold for retention times. RTs higher than \code{low} will be kept
+#' @param low
+#' lower threshold for retention times. RTs higher than \code{low} will be kept
 #'
-#' @param high upper threshold for retention times. RTs lower than \code{high} will be kept
+#' @param high
+#' upper threshold for retention times. RTs lower than \code{high} will be kept
+#'
+#' @inheritParams GCalignR::matrix_append
 #'
 #' @return
-#' \item{data_cutted}{\code{data.frame} containing subset of the input data falling within the interval
-#' defined by \code{low} and \code{high} respectively}
+#' data.frame without retention times inside \code{low}:\code{high}
 #'
-#' @details In addition to cutting retention times, this function removes rows of \code{data} containing
-#'          purely NA. These are artefacts added by \code{\link[utils]{read.table}}
+#' @details In addition to cutting retention times, this function removes rows of \code{gc_peak_df} containing
+#'          purely NA. These are artefacts added by \code{\link[utils]{read.table}} when importing the data.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -28,20 +30,20 @@
 
 
 
-rt_cutoff <- function(data, rt_col_name, low=NULL, high=NULL){
+rt_cutoff <- function(gc_peak_df, rt_col_name, low=NULL, high=NULL){
   # RetentionCutoff removes all Retention Times below the Threshold specified by Low (default 8s).
   # In addition Retention Times above a time defined by the Value of High (Default is Null)
   # can be applied.
-    highrow <- nrow(data)
+    highrow <- nrow(gc_peak_df)
     lowrow <- 1
     if (!is.null(low)){
-        lowrow <- min(which(data[[rt_col_name]] > low))
+        lowrow <- min(which(gc_peak_df[[rt_col_name]] > low))
     }
     if (!is.null(high)){
-        highrow <- max(which(data[[rt_col_name]] < high))
+        highrow <- max(which(gc_peak_df[[rt_col_name]] < high))
     }
 
-    data <- data[lowrow:highrow, ]
-    out <- data[!is.na(data[, rt_col_name]), ]
+    gc_peak_df <- gc_peak_df[lowrow:highrow, ]
+    out <- gc_peak_df[!is.na(gc_peak_df[, rt_col_name]), ]
     return(out)
 }

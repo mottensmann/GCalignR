@@ -7,8 +7,7 @@
 #' redundant \code{vector} of integers coding redundancy as 1=Yes & 0=No for every sample at a given
 #'          pair of similar rows.
 #'
-#' @param
-#' criterion \code{character} specifying by which method merging will be
+#' @inheritParams merge_rows
 #'
 #' @details
 #'  Methods: "strict": A single sample with two peaks prevents merging

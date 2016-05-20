@@ -10,7 +10,10 @@ is_redundant(redundant, criterion = "strict")
 \item{redundant}{\code{vector} of integers coding redundancy as 1=Yes & 0=No for every sample at a given
 pair of similar rows.}
 
-\item{criterion}{\code{character} specifying by which method merging will be}
+\item{criterion}{character string either "strict" or "proportional". "strict" is used to delete the row containing zeros,
+"proportional" provokes the selection of the larger of two peaks, defined by the concentration of the peaks.
+\code{criterion="proportional"} will only affect pairs of peaks where less than 5% of the samples containg
+two conflicting peaks.}
 }
 \value{
 \item{ToMerge}{\code{integer} indicating whether will be merge (1) or not (0)}

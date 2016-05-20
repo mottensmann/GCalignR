@@ -23,7 +23,7 @@ align_var <- function(gc_peak_list,rt_col_name){
 variance_in_peaks <- function(gc_peak_list, sample_indices, peak, rt_col_name){
     rt <- unlist(lapply(gc_peak_list[sample_indices], function(x) x[peak, rt_col_name]))
     var_rt <- sd(rt[!(rt == 0)], na.rm = TRUE)
-    rel_var_rt <- var_rt/mean(rt)
+    rel_var_rt <- var_rt/mean(rt,na.rm = TRUE)
     rel_var_rt
 }
     peak <- nrow(gc_peak_list[[1]])

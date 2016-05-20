@@ -14,7 +14,7 @@
 #' @param high
 #' upper threshold for retention times. RTs lower than \code{high} will be kept
 #'
-#' @inheritParams GCalignR::matrix_append
+#' @inheritParams matrix_append
 #'
 #' @return
 #' data.frame without retention times inside \code{low}:\code{high}

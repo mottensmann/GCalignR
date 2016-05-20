@@ -2,25 +2,26 @@
 % Please edit documentation in R/conv_gc_mat_to_list.R
 \name{conv_gc_mat_to_list}
 \alias{conv_gc_mat_to_list}
-\title{Transform large \code{data.frame} containing multiple chromatograms to a list of individual chromatograms}
+\title{Transforms GC-data to list}
 \usage{
-conv_gc_mat_to_list(all_gc_mat, ind_names, var_names)
+conv_gc_mat_to_list(gc_data, ind_names, var_names)
 }
 \arguments{
-\item{all_gc_mat}{\code{matrix} or \code{data.frame} containing GC data (retention times, peak area, peak hight etc) for all individuals
-in adjacent columns. The first column for all individuals has to be the retention time}
+\item{gc_data}{data.frame containing GC-data for all individuals in adjacent columns.}
 
-\item{ind_names}{character vector with names of individuals}
+\item{ind_names}{character vector with names of individuals following the same order as in \code{gc_data}.}
 
-\item{var_names}{character vector with names of columns from all_gc_mat,
-such as c("RT", "Area", "Height"). The first name has to specify the retention time}
+\item{var_names}{character vector with names of columns from gc_data. For example:
+\code{var_names =c("RT", "Area", "Height")}.}
 }
 \value{
-\item{chromatograms}{List of data.frames. Each list element contains the GC data for one individual}
+A list of data.frames containing GC-data of individual samples
 }
 \description{
-Transforms a Matrix containing GC data (retention times, peak area, peak hight etc) in adjacent
-columns.
+Transforms a data.frame containing GC-data (e.g. retention times, peak area, peak height etc.) to a list.
+Data belonging to individual samples are concatenated horizontally in \code{gc_data}. Every samples needs to
+have the same number of columns in consistent order. This means for example columns 1:3 belong to \code{Ind A}
+and columns 4.6 to \code{Ind B} and so forth.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

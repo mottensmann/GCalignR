@@ -4,15 +4,16 @@
 \alias{rt_extract}
 \title{Extract retention times to plot a heatmap}
 \usage{
-rt_extract(chromatograms, rt_name)
+rt_extract(gc_peak_list, rt_col_name)
 }
 \arguments{
-\item{chromatograms}{list of data.frames containing GC data for individual samples.}
+\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{rt_name}{chracter string specifies column holding retention times}
+\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 }
 \value{
-data.frame containing retention times of all samples in \code{chromatograms}.
+data.frame containing retention times of all samples in \code{gc_peak_list}.
          Samples are sorted in rows, columns represent substances. Columns are named
          by the mean retention time based on all samples containing a retention time
          > 0 at this location.

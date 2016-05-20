@@ -2,28 +2,29 @@
 % Please edit documentation in R/merge_rows.R
 \name{merge_rows}
 \alias{merge_rows}
-\title{algorithm to adjust unreliability of chromatograms on an individual peak basis}
+\title{Merge two rows into one}
 \usage{
-merge_rows(chromatogram, to_merge, criterion = "zero", rt_col_name)
+merge_rows(gc_peak_df, to_merge, criterion = "zero", rt_col_name)
 }
 \arguments{
-\item{chromatogram}{\code{data.frame} containing GC data (retention times, peak area, peak hight etc) for
-one individual in adjacent columns. The first column for all individuals has to be the retention
-time, retention time has to be named RT.}
+\item{gc_peak_df}{data.frame containing GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{to_merge}{Last row of a similar pair}
+\item{to_merge}{integer vector indicating the index of the last row of a pair to merge.}
 
-\item{criterion}{"Zero" - delete a row containing zeros, or
-"area": take the larger of two peaks, defined by the are of the peaks. "area" is just
-useful when redundancy criterion was "proportional" instead of the default "strict".}
+\item{criterion}{character string either "zero" or "area". "zero" is used to delete the row containing zeros,
+"area" provokes the selection of the larger of two peaks, defined by the concentration of the peaks.
+"area" is only useful when \code{criterion} is "proportional".}
 
-\item{rt_col_name}{name of the retention time column.}
+\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 }
 \value{
 aligned chromatograms
 }
 \description{
-algorithm to adjust unreliability of chromatograms on an individual peak basis
+Merges the content of two rows in such a way that content is retained. This means that either the row
+is selected that contains in case that the second is empty (i.e just zeros). If both rows have a content
+the row with the larger concentration (i.e peak area or peak height) is retained in \code{gc_peak_df}
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

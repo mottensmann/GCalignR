@@ -4,26 +4,42 @@
 \alias{align_individual_peaks}
 \title{align peaks of chromatograms}
 \usage{
-align_individual_peaks(chromatograms, error_span = 0.02, n_iter = 1,
+align_individual_peaks(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1,
   rt_col_name)
 }
 \arguments{
-\item{chromatograms}{list of data.frames containing GC data (retention times, peak area, peak hight etc.) for
-individual samples in adjacent columns.}
+\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{error_span}{maximum error under which two retention times are still counted as the same peak.}
+\item{max_diff_peak2mean}{defines the allowed deviation of retention times around the mean of
+the corresponding row. Default is 0.02.}
 
-\item{n_iter}{number of iterations of the algorithm. One iteration is usually optimal, but
-for large datasets more iteration might be better. Has to be evaluated properly.}
+\item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
 
-\item{rt_col_name}{character string denoting the column containing retention times.}
+\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 }
 \value{
-\item{aligned chromatograms}{List of data.frames with aligned peaks}
+a list of data.frames containing GC-data with aligned peaks.
 }
 \description{
-\code{align_individual_peaks()} allows to align peaks of a number of
-chromatograms belonging to the same substance (i.e retention time).
+\code{align_individual_peaks()} allows to align similar peaks across samples so that
+shared peaks are consistently located at the the same location (i.e. defined as the same substance).
+ The order of chromatograms (i.e. data.frames in \code{gc_peak_list}) is randomized before each run
+ of the alignment of algorithm. The main principle of this function is to reduce the variance in retention
+ times within rows, thereby peaks of similar retention time are grouped together. Peaks that deviate
+ signifantly from the mean retention times of the other samples are shifted to another row. At the begin
+ of a row the first two samples are compared and seperated if required, then all other samples are included
+ subsequently. If \code{n_iter>1} the whole alogorithm is repeated accordingly.
+}
+\details{
+For each row (i.e. peak) the algorithm compares the retention of every sample with those before. Starting
+ with the second sample a comparison is done between the first and the second sample, then between the third
+ and the two first ones etc. Whenever the current sample shows a deviation from the mean retention time of
+ the previous samples a shift will either move this sample to the next row (i.e. retention time above average)
+ or all other samples will be moved to the next row (i.e. retention time below average).
+ If the retention time of the sample in evaluation shows no deviation within \code{-max_diff_peak2mean}:
+ \code{max_diff_peak2mean} around the average retention time no shifting is done and the alogrithm takes the
+ next sample.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

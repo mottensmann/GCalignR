@@ -4,10 +4,10 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, sep = "\\t", rt_name = NULL,
+align_chromatograms(datafile, sep = "\\t", rt_col_name = NULL,
   write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
-  reference = NULL, step1_maxshift = 0.05, step2_maxshift = 0.02,
-  step3_maxdiff = 0.05, blanks = NULL, del_single_sub = FALSE,
+  reference = NULL, max_linear_shift = 0.05, max_diff_peak2mean = 0.02,
+  min_diff_peak2peak = 0.05, blanks = NULL, delete_single_peak = FALSE,
   n_iter = 1)
 }
 \arguments{
@@ -20,7 +20,7 @@ retention time and a measure of concentration (e.g. peak area or height).}
 \item{sep}{the field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.}
 
-\item{rt_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
+\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 
 \item{write_output}{character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.}
@@ -33,14 +33,14 @@ The default is \code{NULL}.Names of the text files are concatenations of \code{d
 linear shift (i.e. "individual3") The name has to correspond to an individual name given
 in the first line of \code{datafile}.}
 
-\item{step1_maxshift}{defines a window to search for an optimal linear shift of samples
-with respect to the reference. Shifts are evaluated within - step1_maxshift to + step1_maxshift.
+\item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
+with respect to the reference. Shifts are evaluated within - max_linear_shift to + max_linear_shift.
 Default is 0.05.}
 
-\item{step2_maxshift}{defines the allowed deviation of retention times around the mean of
+\item{max_diff_peak2mean}{defines the allowed deviation of retention times around the mean of
 the corresponding row. Default is 0.02.}
 
-\item{step3_maxdiff}{defines the minimum difference in retention times among distinct
+\item{min_diff_peak2peak}{defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. Default is 0.05}
 
@@ -48,7 +48,7 @@ or none of the respective compounds. Default is 0.05}
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 to a name given in the first line of the datafile.}
 
-\item{del_single_sub}{logical, determines whether substances that occur in just one sample are
+\item{delete_single_peak}{logical, determines whether substances that occur in just one sample are
 removed or not. By default single substances are retained in chromatograms}
 
 \item{n_iter}{integer indicating the iterations of the core alignment algorithm.}

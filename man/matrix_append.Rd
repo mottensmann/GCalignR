@@ -4,23 +4,25 @@
 \alias{matrix_append}
 \title{Append zeros to matrices}
 \usage{
-matrix_append(matrix, chromatograms)
+matrix_append(gc_peak_df, gc_peak_list)
 }
 \arguments{
-\item{matrix}{a matrix to append.}
+\item{gc_peak_df}{data.frame containing GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{chromatograms}{list of matrices.}
+\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
 }
 \value{
 a appended matrix.
 }
 \description{
-\code{matrix_append()} adds zeros to a matrix or a data.frames grouped within a list.
+\code{matrix_append()} adds zeros to a a data.frames grouped within a list.
 If required rows containing just zeros are appended to match the dimensions of the
-largest matrix having the most rows of the list \code{chromatograms}.
+largest matrix having the most rows of the list \code{gc_peak_list}.
 }
 \details{
-If the matrix has the same dimensions as the largest of \code{chromatograms}
+If the matrix has the same dimensions as the largest of \code{gc_peak_list}
          the input matrix is returned.
 }
 

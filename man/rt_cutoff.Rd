@@ -2,32 +2,28 @@
 % Please edit documentation in R/rt_cutoff.R
 \name{rt_cutoff}
 \alias{rt_cutoff}
-\title{cuts retention time below and above specified times}
+\title{cuts peaks below and above specified retention times}
 \usage{
-rt_cutoff(data, rt_col_name, low = NULL, high = NULL)
+rt_cutoff(gc_peak_df, rt_col_name, low = NULL, high = NULL)
 }
 \arguments{
-\item{data}{\code{data.frame} containing GC data (e.g. retention time, peak are, peak height etc.) for
-one individual. Variables are stored in adjacent columns.}
-
-\item{rt_col_name}{\code{character} string with the name of the retention time column}
+\item{rt_col_name}{character string with the name of the retention time column in \code{gc_peak_df}}
 
 \item{low}{lower threshold for retention times. RTs higher than \code{low} will be kept}
 
 \item{high}{upper threshold for retention times. RTs lower than \code{high} will be kept}
 }
 \value{
-\item{data_cutted}{\code{data.frame} containing subset of the input data falling within the interval
-defined by \code{low} and \code{high} respectively}
+data.frame without retention times inside \code{low}:\code{high}
 }
 \description{
-By specifying cut-off thresholds retention times above (\code{highw}) or below (\code{high}) these values can
-             be removed from the data in order to retain a subset of substances belonging to
+By specifying cut-off thresholds retention times above (\code{highw}) or below (\code{high}) these peaks can
+             be removed from the data in order to retain a subset of peaks belonging to
              specific retention times. All cut-off values are given in minutes.
 }
 \details{
-In addition to cutting retention times, this function removes rows of \code{data} containing
-         purely NA. These are artefacts added by \code{\link[utils]{read.table}}
+In addition to cutting retention times, this function removes rows of \code{gc_peak_df} containing
+         purely NA. These are artefacts added by \code{\link[utils]{read.table}} when importing the data.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

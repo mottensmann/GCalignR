@@ -4,28 +4,30 @@
 \alias{linear_transformation}
 \title{Shift peaks to eliminate systematic inaccuracies of peak detection by GC.}
 \usage{
-linear_transformation(chromatograms, reference, shift = 0.05,
+linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
   step_size = 0.01, error = 0, rt_col_name)
 }
 \arguments{
-\item{chromatograms}{list of data.frames with each being an individuals GC data.}
+\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{reference}{a character string indicating a sample included in \code{chromatograms}.}
+\item{reference}{a character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
 
-\item{shift}{the maximum shift in retention times that will be considered in estimating the best transformation.}
+\item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
+with respect to the reference. Shifts are evaluated within - max_linear_shift to + max_linear_shift.
+Default is 0.05.}
 
 \item{step_size}{indicates the step size in which linear shifts are evaluated
-between \code{shift} and \code{-shift}.}
+between \code{max_linear_shift} and \code{-max_linear_shift}.}
 
 \item{error}{numeric value defining the allowed difference in retention times in
 derterming if two peaks are shared. The default \code{error=0} counts
 a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{character string denoting the column containing retention times
-in data.frames of \code{chromatograms}}
+\item{rt_col_name}{\code{character}, name of the column holding retention times (i.e. "RT")}
 }
 \value{
-A list of chromatograms with applied linear shifts
+A list of data.frames containing chromatograms with applied linear shifts
 }
 \description{
 \code{linear_transformation()} applies small linear shifts of all peaks of

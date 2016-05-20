@@ -31,14 +31,14 @@
 #'
 #'@param min_diff_peak2peak defines the minimum difference in retention times among distinct
 #'  substances. Substances that differ less, are merged if every sample contains either one
-#'  or none of the respective compounds. Default is 0.05
+#'  or none of the respective compounds. Default is 0.05.
 #'
 #'@param blanks character vector of names of blanks. If specified, all substances found in any of the blanks
 #'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 #'  to a name given in the first line of the datafile.
 #'
 #'@param delete_single_peak logical, determines whether substances that occur in just one sample are
-#'  removed or not. By default single substances are retained in chromatograms
+#'  removed or not. By default single substances are retained in chromatograms.
 #'
 #'@param n_iter integer indicating the iterations of the core alignment algorithm.
 #'
@@ -322,7 +322,6 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     end.time <- pracma::toc(echo = F)
     cat(paste('Alignment was successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\nElapsed time:',as.character(floor(end.time[[1]]/60)),'minutes','\n')
     return(output_algorithm)
-
 }
 
 

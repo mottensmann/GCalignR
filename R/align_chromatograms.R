@@ -260,7 +260,7 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     if (!is.null(blanks)) {
         # delete one blank
         delete_blank <- function(blank, gc_peak_list_aligned) {
-            del_substances <- which(gc_peak_list_aligned[[blank]]$RT > 0)
+            del_substances <- which(gc_peak_list_aligned[[blank]][[rt_col_name]] > 0)
             chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances, ])
         }
         # delete all blanks
@@ -276,9 +276,9 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
     if (delete_single_peak) {
         # find single retention times in rows
-        single_subs_ind <- which(colSums(rt_mat > 0) == 1)
+        single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
 
-        if (length(single_subs_ind) > 0)) {
+        if (length(single_subs_ind) > 0) {
             # delete substances occuring in just one individual
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }

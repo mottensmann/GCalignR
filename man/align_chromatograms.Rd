@@ -51,7 +51,7 @@ your needs (i.e. the resolution of your gas-chromatography pipeline). Default is
 
 \item{blanks}{character vector of names of blanks. If specified, all substances found in any of the blanks
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
-to a name given in the first line of the datafile.}
+to a name given in the first line of \code{datafile}.}
 
 \item{delete_single_peak}{logical, determines whether substances that occur in just one sample are
 removed or not. By default single substances are retained in chromatograms.}

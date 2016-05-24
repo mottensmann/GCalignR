@@ -35,33 +35,8 @@ rt_extract <- function(gc_peak_list,rt_col_name){
     # optional, depends on arguments regarding blanks and del_single_sub
     ####################################################################
 
-    # delete blanks
-#     if (!is.null(blanks)) {
-#         # delete one blank
-#         delete_blank <- function(blank, gc_peak_list) {
-#             del_substances <- which(gc_peak_list[[blank]]$RT > 0)
-#             chroma_out <- lapply(gc_peak_list, function(x) x[-del_substances, ])
-#         }
-#         # delete all blanks
-#         for (i in blanks) {
-#             gc_peak_list <- delete_blank(i, gc_peak_list)
-#         }
-#     }
-
-    # delete single substances
-    # create matrix with all retention times
     rt_mat <- do.call(cbind, lapply(gc_peak_list, function(x) x[[rt_col_name]]))
 
-#     if (del_single_sub) {
-#         # find single retention times in rows
-#         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
-#         # delete substances occuring in just one individual
-#         gc_peak_list <- lapply(gc_peak_list, function(x) x[-single_subs_ind, ])
-#     }
-
-    #############################################################################
-    #############################################################################
-    #############################################################################
 
     #################################
     # calculate final retention times

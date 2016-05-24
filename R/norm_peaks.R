@@ -5,10 +5,10 @@
 #' with regard to the cumulative abundance of all peaks that are present within an
 #' individual chromatogram. The desired measure of peak abundance needs to be a column
 #' within the original gas-chromatography data \code{datafile} submitted to
-#' \link\code{align_chromatograms}.
+#' \link{align_chromatograms}.
 #'
 #' @param GCout
-#' object of class GCaling created with \link\code{align_chromatograms}. Contains a list
+#' object of class GCaling created with \link{align_chromatograms}. Contains a list
 #' of data.frames including the retention time and other variables, of which one needs
 #' to be named as specified by \code{conc_var_name}.
 #'

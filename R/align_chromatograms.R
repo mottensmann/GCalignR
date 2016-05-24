@@ -261,7 +261,8 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
         # delete one blank
         delete_blank <- function(blank, gc_peak_list_aligned) {
             del_substances <- which(gc_peak_list_aligned[[blank]][[rt_col_name]] > 0)
-            chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances, ])
+            chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances,])
+            chroma_out
         }
         # delete all blanks
         for (i in blanks) {

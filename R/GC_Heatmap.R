@@ -23,9 +23,10 @@
 #'          of sample names
 #'
 #' @param  type \code{character} specifying whether a binary heatmap or a heatmap of continous
-#'          deviations is plotted
+#'          deviations is plotted.
 #'
-#' @param threshold \code{numeric} indicates the maximum allowed deviation from means
+#' @param threshold \code{numeric} indicates the acceptable deviation of individual peak retention times
+#'  from the mean retention time of the respective peak across all samples.
 #'
 #' @return
 #' \item{hm}{object of \code{class} ggplot}
@@ -39,7 +40,7 @@
 #'
 
 GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,guide='legend',
-                      samples_subset=NULL,type="binary",threshold=0.02){
+                      samples_subset=NULL,type="binary",threshold=0.05){
 
     #########################################
     # A. Select retention times to visualise

@@ -14,7 +14,10 @@ Rows represent distinct peaks. Retention time is a required variable.}
 \item{max_diff_peak2mean}{defines the allowed deviation of retention times around the mean of
 the corresponding row. Default is 0.02.}
 
-\item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
+\item{n_iter}{integer indicating the iterations of the core alignment algorithm. Additional replications of
+the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
+some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
+with a Heatmap \code{\link{GC_Heatmap}}.}
 
 \item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
 

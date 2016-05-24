@@ -7,21 +7,23 @@
 #'Alignment is archieved by running three major algorithms always considering the complete
 #'set of samples submitted to the function. In brief: All chromatograms are linearly shifted to
 #'maximise similarity with a common reference to account for systematic shifts in retention times
-#'caused by the gas-chromatography setup. Second peaks of similar retention times are step-wise
-#'moved to the same location (i.e row) to group substances. In a third step peaks (i.e.) substances
+#'caused by gas-chromatography processing. Second, peaks of similar retention times are step-wise
+#'transfered to the same location (i.e row) in order to group substances. In a third step peaks (i.e.substances)
 #'that show smaller differences in mean retention times than expected by the achievable resolution
-#'of gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
+#'of the gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
 #'removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
 #'one sample.
 #'
-#'@param datafile path to a datafile. It has to be a .txt file. The first row needs to contain
+#'@param datafile
+#' path to a datafile. It has to be a .txt file. The first row needs to contain
 #'  sample names, the second row column names of the corresponding chromatograms. Starting with the
 #'  third row chromatograms are included, whereby single samples are concatenated horizontally. Each
 #'  chromatogram needs to consist of the same number of columns, at least two are required:The
 #'  retention time and a measure of concentration (e.g. peak area or height).
 #'
-#'@param sep the field separator character. Values on each line of the file are separated by this
-#'  character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.
+#'@param sep
+#'the field separator character. Values on each line of the file are separated by this
+#'  character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.
 #'
 #'@param conc_col_name
 #'character string naming a column used for quantification of peaks (e.g. peak area or peak height).
@@ -30,38 +32,53 @@
 #'@param rt_col_name
 #'character string naming the column holding retention times.The designated variable needs to be numeric.
 #'
-#'@param write_output character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
+#'@param write_output
+#' character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 #' The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.
 #'
-#'@param rt_cutoff_low lower threshold under which retention times are cutted (i.e. 5)
+#'@param rt_cutoff_low
+#'lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
 #'
-#'@param rt_cutoff_high upper threshold above which retention times are cutted (i.e. 35)
+#'@param rt_cutoff_high
+#'upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.
 #'
-#'@param reference \code{character}, a sample(name) to which all other samples are aligned to by means of a
-#'  linear shift (i.e. "individual3") The name has to correspond to an individual name given
+#'@param reference
+#'character string of a sample to which all other samples are aligned to by means of a
+#'  linear shift (i.e. "individual3"). The name has to correspond to an individual name given
 #'  in the first line of \code{datafile}.
 #'
-#'@param max_linear_shift defines a window to search for an optimal linear shift of samples
-#'  with respect to the reference. Shifts are evaluated within - max_linear_shift to + max_linear_shift.
+#'@param max_linear_shift
+#' defines a window to search for an optimal linear shift of samples
+#'  with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 #'  Default is 0.05.
 #'
-#'@param max_diff_peak2mean defines the allowed deviation of retention times around the mean of
+#'@param max_diff_peak2mean
+#' defines the allowed deviation of retention times around the mean of
 #'  the corresponding row. Default is 0.02.
 #'
-#'@param min_diff_peak2peak defines the minimum difference in retention times among distinct
+#'@param min_diff_peak2peak
+#'defines the desired minimum difference in retention times among distinct
 #'  substances. Substances that differ less, are merged if every sample contains either one
 #'  or none of the respective compounds. This parameter is a major determinant in the classification
 #'  of distinct peaks. Therefore careful consideration is required to adjust this setting to
-#'  your needs (i.e. the resolution of your gas-chromatography pipeline). Default is 0.02.
+#'  your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
+#'  merge of true peaks, if those are not occuring within one individual, which is might happen by chance
+#'  with a low sample size. Small values can be considered as conservative. Default is 0.02.
 #'
-#'@param blanks character vector of names of blanks. If specified, all substances found in any of the blanks
+#'@param blanks
+#' character vector of names of blanks. If specified, all substances found in any of the blanks
 #'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 #'  to a name given in the first line of \code{datafile}.
 #'
-#'@param delete_single_peak logical, determines whether substances that occur in just one sample are
+#'@param delete_single_peak
+#' logical, determines whether substances that occur in just one sample are
 #'  removed or not. By default single substances are retained in chromatograms.
 #'
-#'@param n_iter integer indicating the iterations of the core alignment algorithm.
+#'@param n_iter
+#' integer indicating the iterations of the core alignment algorithm. Additional replications of
+#' the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
+#' some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
+#' with a Heatmap \code{\link{GC_Heatmap}}.
 #'
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
@@ -285,9 +302,13 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
         }
 
     }
+    ###############################################
+    # Sort chromatograms back to the initial order
+    ###############################################
 
+    gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw[names(gc_peak_list_aligned)]),names(gc_peak_list_aligned))]
 
-    # calculate final retention times
+        # calculate final retention times
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
 
      #######################

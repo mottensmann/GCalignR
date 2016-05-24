@@ -14,7 +14,7 @@ Rows represent distinct peaks. Retention time is a required variable.}
 \item{reference}{a character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
 
 \item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
-with respect to the reference. Shifts are evaluated within - max_linear_shift to + max_linear_shift.
+with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 Default is 0.05.}
 
 \item{step_size}{indicates the step size in which linear shifts are evaluated

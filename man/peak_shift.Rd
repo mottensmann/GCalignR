@@ -11,7 +11,7 @@ peak_shift(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.01,
 \item{ref_df}{data.frame of form \code{gc_peak_df} serving as a reference.}
 
 \item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
-with respect to the reference. Shifts are evaluated within - max_linear_shift to + max_linear_shift.
+with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 Default is 0.05.}
 
 \item{step_size}{defines the increments between \code{-max_linear_shift}:\code{max_linear_shift}

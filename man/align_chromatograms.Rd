@@ -18,7 +18,7 @@ chromatogram needs to consist of the same number of columns, at least two are re
 retention time and a measure of concentration (e.g. peak area or height).}
 
 \item{sep}{the field separator character. Values on each line of the file are separated by this
-character. The default is tab seperated (sep = '\\t'). See sep argument in read.table for details.}
+character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.}
 
 \item{conc_col_name}{character string naming a column used for quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
@@ -28,26 +28,28 @@ The designated variable needs to be numeric.}
 \item{write_output}{character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.}
 
-\item{rt_cutoff_low}{lower threshold under which retention times are cutted (i.e. 5)}
+\item{rt_cutoff_low}{lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.}
 
-\item{rt_cutoff_high}{upper threshold above which retention times are cutted (i.e. 35)}
+\item{rt_cutoff_high}{upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.}
 
-\item{reference}{\code{character}, a sample(name) to which all other samples are aligned to by means of a
-linear shift (i.e. "individual3") The name has to correspond to an individual name given
+\item{reference}{character string of a sample to which all other samples are aligned to by means of a
+linear shift (i.e. "individual3"). The name has to correspond to an individual name given
 in the first line of \code{datafile}.}
 
 \item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
-with respect to the reference. Shifts are evaluated within - max_linear_shift to + max_linear_shift.
+with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 Default is 0.05.}
 
 \item{max_diff_peak2mean}{defines the allowed deviation of retention times around the mean of
 the corresponding row. Default is 0.02.}
 
-\item{min_diff_peak2peak}{defines the minimum difference in retention times among distinct
+\item{min_diff_peak2peak}{defines the desired minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. This parameter is a major determinant in the classification
 of distinct peaks. Therefore careful consideration is required to adjust this setting to
-your needs (i.e. the resolution of your gas-chromatography pipeline). Default is 0.02.}
+your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
+merge of true peaks, if those are not occuring within one individual, which is might happen by chance
+with a low sample size. Small values can be considered as conservative. Default is 0.02.}
 
 \item{blanks}{character vector of names of blanks. If specified, all substances found in any of the blanks
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
@@ -56,7 +58,10 @@ to a name given in the first line of \code{datafile}.}
 \item{delete_single_peak}{logical, determines whether substances that occur in just one sample are
 removed or not. By default single substances are retained in chromatograms.}
 
-\item{n_iter}{integer indicating the iterations of the core alignment algorithm.}
+\item{n_iter}{integer indicating the iterations of the core alignment algorithm. Additional replications of
+the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
+some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
+with a Heatmap \code{\link{GC_Heatmap}}.}
 }
 \value{
 Returns an object of class GCalign that is a a list with the following elements:
@@ -74,10 +79,10 @@ Returns an object of class GCalign that is a a list with the following elements:
 Alignment is archieved by running three major algorithms always considering the complete
 set of samples submitted to the function. In brief: All chromatograms are linearly shifted to
 maximise similarity with a common reference to account for systematic shifts in retention times
-caused by the gas-chromatography setup. Second peaks of similar retention times are step-wise
-moved to the same location (i.e row) to group substances. In a third step peaks (i.e.) substances
+caused by gas-chromatography processing. Second, peaks of similar retention times are step-wise
+transfered to the same location (i.e row) in order to group substances. In a third step peaks (i.e.substances)
 that show smaller differences in mean retention times than expected by the achievable resolution
-of gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
+of the gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
 removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
 one sample.
 }

@@ -6,7 +6,7 @@
 \usage{
 GC_Heatmap(GcOut, algorithm_step = "rt_aligned", substance_subset = NULL,
   guide = "legend", samples_subset = NULL, type = "binary",
-  threshold = 0.02)
+  threshold = 0.05)
 }
 \arguments{
 \item{GcOut}{\code{data.frame} output of align_chromatograms. Class \code{GCalign}}
@@ -25,9 +25,10 @@ Either a \code{numeric} \code{vector} of indices or a \code{character} \code{vec
 of sample names}
 
 \item{type}{\code{character} specifying whether a binary heatmap or a heatmap of continous
-deviations is plotted}
+deviations is plotted.}
 
-\item{threshold}{\code{numeric} indicates the maximum allowed deviation from means}
+\item{threshold}{\code{numeric} indicates the acceptable deviation of individual peak retention times
+from the mean retention time of the respective peak across all samples.}
 }
 \value{
 \item{hm}{object of \code{class} ggplot}

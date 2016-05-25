@@ -81,7 +81,7 @@
 #' integer indicating the iterations of the core alignment algorithm. Additional replications of
 #' the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
 #' some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
-#' with a Heatmap \code{\link{GC_Heatmap}}.
+#' with a Heatmap \code{\link{gc_heatmap}}.
 #'
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:

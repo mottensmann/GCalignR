@@ -1,4 +1,4 @@
-#' GC_Heatmap visualises the goodness of the chromatogram alignment
+#' gc_heatmap visualises the goodness of the chromatogram alignment
 #'
 #' @description Visualises the deviation of single samples from the whole population by comparing
 #'          the actual retention time against the mean of all other samples containing the same
@@ -39,7 +39,7 @@
 #' @export
 #'
 
-GC_Heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,guide='legend',
+gc_heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,guide='legend',
                       samples_subset=NULL,type="binary",threshold=0.05){
 
     #########################################

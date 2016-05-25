@@ -1,7 +1,7 @@
 #' Aligning chromatograms based on retention times
 #'
 #'@description
-#'\code{align_chromatograms()} is the core function of \code{\link{GcalignR}}.
+#'\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}.
 #'
 #'@details
 #'Alignment is archieved by running three major algorithms always considering the complete
@@ -24,7 +24,7 @@
 #'
 #'@param sep
 #'The field separator character. Values on each line of the file are separated by this
-#'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.
+#'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param conc_col_name
 #'Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
@@ -86,7 +86,7 @@
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
 #' \item{call}{function call}
-#' \item{chroma_aligned}{a list containing data.frames with the aligned variables}.
+#' \item{chroma_aligned}{a list containing data.frames with the aligned variables}
 #' \item{rt_raw}{a data.frame with the retention times before alignment}
 #' \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 #' \item{rt_aligned}{a data.frame with the final aligned retention times}
@@ -190,16 +190,16 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
-    if(!is.null(rt_cutoff_low)){
-    cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),'minutes deleted','\n##########','\n','\n'))
+    if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
+    cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n##############################','\n'))
     }
 
-    if(!is.null(rt_cutoff_high)){
-        cat(paste0('Retention time cut-off applied:\n', 'Everything above ',as.character(rt_cutoff_high),'minutes deleted'))
+    if(!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
+        cat(paste0('Retention time cut-off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n##############################','\n'))
     }
 
     if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
-        cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted'))
+        cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n##############################','\n'))
     }
 
 
@@ -210,10 +210,10 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_col_name)
-    cat(paste('Done ... ','Range of relative variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
+    cat(paste('Done ... ','\n','Range of relative variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
               '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... average relative variation: ",
               as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2)),
-              '\n'),'######################################################################################','\n')
+              '\n'),'######################################################################################','\n','\n')
 gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
     #############
@@ -250,14 +250,14 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
 
     }
-    cat('range of relative variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
+    cat('\n','range of relative variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
         '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... average relative variation: ",
         as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
         '\n')
     cat('Merged redundant peaks ... ')
 
     cat(paste('Elapsed time:',floor(pracma::toc(echo = F)[[1]]/60),'minutes',
-        '\n##########################################################################################','\n')) #floor(pracma::toc(echo = F)[[1]]/60),'minutes since start',
+        '\n##########################################################################################','\n'))
 
 
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)

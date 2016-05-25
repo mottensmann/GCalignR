@@ -6,6 +6,8 @@
 #'
 #' @inheritParams align_chromatograms
 #'
+#' @inheritParams matrix_append
+#'
 #' @param step_size
 #' defines the increments between \code{-max_linear_shift}:\code{max_linear_shift}
 #' to consider in the search for an optimal linear transformation of peaks.

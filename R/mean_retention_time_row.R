@@ -5,14 +5,17 @@
 #' lacking a peak (i.e retention time = 0) are not considered.
 #'
 #' @inheritParams matrix_append
+#' @inheritParams align_chromatograms
 #'
-#' @param samples indices of samples to consider in the calculation of the mean retention time.
+#' @param samples
+#' indices of samples to consider in the calculation of the mean retention time.
 #'
-#' @param retention_row current retention time row to be compared.
+#' @param retention_row
+#' index of the current retention time to be evaluate.
 #'
 #'
 #' @return
-#' mean retention time for peaks at position \code{retention_row}.
+#' mean retention time for peaks at index \code{retention_row}.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)

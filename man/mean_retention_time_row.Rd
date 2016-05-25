@@ -12,10 +12,12 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{samples}{indices of samples to consider in the calculation of the mean retention time.}
 
-\item{retention_row}{current retention time row to be compared.}
+\item{retention_row}{index of the current retention time to be evaluate.}
+
+\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 }
 \value{
-mean retention time for peaks at position \code{retention_row}.
+mean retention time for peaks at index \code{retention_row}.
 }
 \description{
 \code{mean_retention_time_row} calculates the average retention time of a row. Samples in \code{gc_peak_list}

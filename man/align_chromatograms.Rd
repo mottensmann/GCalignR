@@ -19,7 +19,7 @@ retention time and a measure of concentration (e.g. peak area or height).
 The file name is relative to the current working directory.}
 
 \item{sep}{The field separator character. Values on each line of the file are separated by this
-character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.}
+character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}
 
 \item{conc_col_name}{Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
@@ -69,14 +69,14 @@ with a Heatmap \code{\link{GC_Heatmap}}.}
 \value{
 Returns an object of class GCalign that is a a list with the following elements:
 \item{call}{function call}
-\item{chroma_aligned}{a list containing data.frames with the aligned variables}.
+\item{chroma_aligned}{a list containing data.frames with the aligned variables}
 \item{rt_raw}{a data.frame with the retention times before alignment}
 \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 \item{rt_aligned}{a data.frame with the final aligned retention times}
 \item{align_summary}{a data.frame}{A basic summary of the alignment process}
 }
 \description{
-\code{align_chromatograms()} is the core function of \code{\link{GcalignR}}.
+\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}.
 }
 \details{
 Alignment is archieved by running three major algorithms always considering the complete

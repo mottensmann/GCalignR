@@ -7,6 +7,9 @@
 mean_retention_times(gc_peak_list, rt_col_name)
 }
 \arguments{
+\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
+
 \item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 }
 \value{

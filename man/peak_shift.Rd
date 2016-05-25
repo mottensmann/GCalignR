@@ -8,6 +8,9 @@ peak_shift(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.01,
   error = 0, rt_col_name)
 }
 \arguments{
+\item{gc_peak_df}{data.frame containing GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
+Rows represent distinct peaks. Retention time is a required variable.}
+
 \item{ref_df}{data.frame of form \code{gc_peak_df} serving as a reference.}
 
 \item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks

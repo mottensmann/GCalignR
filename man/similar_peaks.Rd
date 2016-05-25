@@ -9,12 +9,12 @@ similar_peaks(average_rts, min_diff_peak2peak = 0.05)
 \arguments{
 \item{average_rts}{vector of average retention times per peak across individuals.}
 
-\item{min_diff_peak2peak}{defines the desired minimum difference in retention times among distinct
+\item{min_diff_peak2peak}{Defines the desired minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. This parameter is a major determinant in the classification
 of distinct peaks. Therefore careful consideration is required to adjust this setting to
 your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
-merge of true peaks, if those are not occuring within one individual, which is might happen by chance
+merge of true peaks, if those are not occuring within one individual, which might happen by chance
 with a low sample size. Small values can be considered as conservative. Default is 0.02.}
 }
 \value{

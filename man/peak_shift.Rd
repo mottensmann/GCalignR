@@ -10,7 +10,7 @@ peak_shift(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.01,
 \arguments{
 \item{ref_df}{data.frame of form \code{gc_peak_df} serving as a reference.}
 
-\item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
+\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks
 with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 Default is 0.05.}
 
@@ -21,7 +21,7 @@ to consider in the search for an optimal linear transformation of peaks.}
 derterming if two peaks are shared. The default \code{error=0} counts
 a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 }
 \value{
 Numeric Value, indicating the best shift (e.g. -0.02 seconds)

@@ -1,7 +1,7 @@
 #' Aligning chromatograms based on retention times
 #'
 #'@description
-#'\code{align_chromatograms()} is the core function of \link{GcalignR}.
+#'\code{align_chromatograms()} is the core function of \code{\link{GcalignR}}.
 #'
 #'@details
 #'Alignment is archieved by running three major algorithms always considering the complete
@@ -15,64 +15,67 @@
 #'one sample.
 #'
 #'@param datafile
-#' path to a datafile. It has to be a .txt file. The first row needs to contain
-#'  sample names, the second row column names of the corresponding chromatograms. Starting with the
-#'  third row chromatograms are included, whereby single samples are concatenated horizontally. Each
-#'  chromatogram needs to consist of the same number of columns, at least two are required:The
-#'  retention time and a measure of concentration (e.g. peak area or height).
+#' the name of a file  with extension \code{.txt} to load data from.
+#' The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
+#' third row chromatograms are included, whereby single samples are concatenated horizontally. Each
+#' chromatogram needs to consist of the same number of columns, at least two are required:The
+#' retention time and a measure of concentration (e.g. peak area or height).
+#' The file name is relative to the current working directory.
 #'
 #'@param sep
-#'the field separator character. Values on each line of the file are separated by this
-#'  character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.
+#'The field separator character. Values on each line of the file are separated by this
+#'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.
 #'
 #'@param conc_col_name
-#'character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+#'Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
 #'The designated variable needs to be numeric.
 #'
 #'@param rt_col_name
-#'character string naming the column holding retention times.The designated variable needs to be numeric.
+#'Character string naming the column holding retention times.The designated variable needs to be numeric.
 #'
 #'@param write_output
-#' character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
+#' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 #' The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.
+#' Strings need to correspond to column name of the \code{datafile}.
 #'
 #'@param rt_cutoff_low
-#'lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
+#'Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
 #'
 #'@param rt_cutoff_high
-#'upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.
+#'Upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.
 #'
 #'@param reference
-#'character string of a sample to which all other samples are aligned to by means of a
-#'  linear shift (i.e. "individual3"). The name has to correspond to an individual name given
+#'Character string of a sample to which all other samples are aligned to by means of a
+#'  linear shift (e.g. "individual3"). The name has to correspond to an individual name given
 #'  in the first line of \code{datafile}.
 #'
 #'@param max_linear_shift
-#' defines a window to search for an optimal linear shift of samples
-#'  with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
-#'  Default is 0.05.
+#' Defines a window to search for an optimal linear shift of chromatogram peaks
+#' with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
+#' Default is 0.05.
 #'
 #'@param max_diff_peak2mean
-#' defines the allowed deviation of retention times around the mean of
-#'  the corresponding row. Default is 0.02.
+#' Defines the allowed deviation of retention times around the mean of
+#' the corresponding row. Peaks with differing retention times are moved
+#' to the appropriate mean retention time. Default is 0.02.
 #'
 #'@param min_diff_peak2peak
-#'defines the desired minimum difference in retention times among distinct
-#'  substances. Substances that differ less, are merged if every sample contains either one
-#'  or none of the respective compounds. This parameter is a major determinant in the classification
-#'  of distinct peaks. Therefore careful consideration is required to adjust this setting to
-#'  your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
-#'  merge of true peaks, if those are not occuring within one individual, which is might happen by chance
-#'  with a low sample size. Small values can be considered as conservative. Default is 0.02.
+#'Defines the desired minimum difference in retention times among distinct
+#'substances. Substances that differ less, are merged if every sample contains either one
+#'or none of the respective compounds. This parameter is a major determinant in the classification
+#'of distinct peaks. Therefore careful consideration is required to adjust this setting to
+#'your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
+#'merge of true peaks, if those are not occuring within one individual, which might happen by chance
+#'with a low sample size. Small values can be considered as conservative. Default is 0.02.
 #'
 #'@param blanks
-#' character vector of names of blanks. If specified, all substances found in any of the blanks
-#'  will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
-#'  to a name given in the first line of \code{datafile}.
+#'Character vector of names of blanks. If specified, all substances found in any of the blanks
+#'will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
+#'to a name given in the first line of \code{datafile}.
 #'
 #'@param delete_single_peak
-#' logical, determines whether substances that occur in just one sample are
-#'  removed or not. By default single substances are retained in chromatograms.
+#'logical, determines whether substances that occur in just one sample are
+#' removed or not. By default single substances are retained in chromatograms.
 #'
 #'@param n_iter
 #' integer indicating the iterations of the core alignment algorithm. Additional replications of
@@ -87,7 +90,7 @@
 #' \item{rt_raw}{a data.frame with the retention times before alignment}
 #' \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 #' \item{rt_aligned}{a data.frame with the final aligned retention times}
-#' \item{parameter}{a data.frame}{containing the arguments of the function call}
+#' \item{align_summary}{a data.frame}{A basic summary of the alignment process}
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
@@ -163,14 +166,14 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     # check 2
     if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
     # check 3
-   # if(any(duplicated(ind_names)))stop("Duplicated sample names exist. Use unique names for samples")
+    if(any(duplicated(ind_names)))warning("Avoid duplications in sample names")
 
     # matrix to list
     gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
 
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ... ',
-               'range of CV: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
-               '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average CV: ",
+               'range of relative variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
+               '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average relative variation: ",
                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
                '\n################################################################################','\n','\n'))
 
@@ -207,13 +210,11 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_col_name)
-    cat(paste('Done ... ','Range of CV: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
-              '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... average CV: ",
+    cat(paste('Done ... ','Range of relative variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
+              '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... average relative variation: ",
               as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2)),
               '\n'),'######################################################################################','\n')
-# floor(pracma::toc(echo = F)[[1]]/60),'minutes since start',
-    # Make List equal in length
-    gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
+gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
     #############
     # align peaks
@@ -222,7 +223,7 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     cat(c('Start alignment of peaks ... ','This might take a while!\n',
           '=====================================================','\n'))
 
-    # Fun_Fact() #Maybe within each iteration
+    Fun_Fact()
     gc_peak_list_aligned <- gc_peak_list_linear
     for (R in 1:n_iter){ # several iteration of algorithm
 
@@ -241,9 +242,6 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     # calculate average rts again for merging
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
-    # merging step
-    # min distance here is crucial --> depends on sample size
-
 
     gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name)
     if(R==n_iter){
@@ -252,8 +250,8 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
         gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
 
     }
-    cat('range of CV: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
-        '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... average CV: ",
+    cat('range of relative variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
+        '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... average relative variation: ",
         as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
         '\n')
     cat('Merged redundant peaks ... ')
@@ -268,7 +266,7 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
     gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)
 
-    } # Endo of iterative alignment and merging
+    } # End of iterative alignment and merging
 
     cat(paste('\n','Peak alignment Done ... '),
                 '\n##################################################','\n','\n')
@@ -349,14 +347,15 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
     })
     names(output) <- col_names
 
-    # Extract the name of the data source to write for example plover_area.txt instead
-    # of just an unprecise area.txt
-
-    prefix <- strsplit(datafile,split = "/")
-    prefix <- as.character(prefix[[1]][length(prefix[[1]])])
-    prefix <- as.character(strsplit(prefix,split = ".txt"))
 
     if (!is.null(write_output)){
+
+        ####################################################################
+        # Extract the name of the datafile for proper naming of output files
+        ####################################################################
+        prefix <- strsplit(datafile,split = "/")
+        prefix <- as.character(prefix[[1]][length(prefix[[1]])])
+        prefix <- as.character(strsplit(prefix,split = ".txt"))
         write_files <- function(x) {
             write.table(output[[x]], file = paste0(prefix,"_", x, ".txt"), sep = "\t", row.names = FALSE)
         }
@@ -365,29 +364,31 @@ if (is.null(reference)) stop("Reference is missing. Specify a reference to align
 
     ### Write paramters choosen for the algorithm to a file for documentation
 
-    parameter <- data.frame(datafile=datafile,
+    align_summary <- list(datafile=datafile,
                             reference=reference,
                             max_linear_shift=max_linear_shift,
                             max_diff_peak2mean=max_diff_peak2mean,
                             min_diff_peak2peak=min_diff_peak2peak,
                             delete_single_peak=delete_single_peak,
-                            initial_maximum_substances=ncol(rt_raw),
-                            number_of_substances_final=ncol(rt_aligned)-1)
+                            No_Peaks_start=ncol(rt_raw),
+                            No_Peaks_aligned=ncol(rt_aligned)-1,
+                          variance_before<-align_var(gc_peak_list_raw,rt_col_name),
+                          variance_aligned<-align_var(gc_peak_list_aligned,rt_col_name))
     if(!is.null(rt_cutoff_high)){
-        parameter['rt_cutoff_high'] <- rt_cutoff_high
+        align_summary['rt_cutoff_high'] <- rt_cutoff_high
     }
     if(!is.null(rt_cutoff_low)){
-        parameter['rt_cutoff_low'] <- rt_cutoff_low
+        align_summary['rt_cutoff_low'] <- rt_cutoff_low
     }
     if(!is.null(blanks)){
-        parameter['blanks'] <- paste(blanks, collapse = '; ')
+        align_summary['blanks'] <- paste(blanks, collapse = '; ')
     }
 
 
     #output
     output_algorithm <- list(call=match.call(),
                 chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
-                rt_aligned = rt_aligned,parameter=parameter)
+                rt_aligned = rt_aligned,align_summary=align_summary)
 
     class(output_algorithm) <- "GCalign" # name of list
 

@@ -11,47 +11,50 @@ align_chromatograms(datafile, sep = "\\t", conc_col_name = NULL,
   delete_single_peak = FALSE, n_iter = 1)
 }
 \arguments{
-\item{datafile}{path to a datafile. It has to be a .txt file. The first row needs to contain
-sample names, the second row column names of the corresponding chromatograms. Starting with the
+\item{datafile}{the name of a file  with extension \code{.txt} to load data from.
+The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
 third row chromatograms are included, whereby single samples are concatenated horizontally. Each
 chromatogram needs to consist of the same number of columns, at least two are required:The
-retention time and a measure of concentration (e.g. peak area or height).}
+retention time and a measure of concentration (e.g. peak area or height).
+The file name is relative to the current working directory.}
 
-\item{sep}{the field separator character. Values on each line of the file are separated by this
+\item{sep}{The field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[MASS]{read.table}} for details.}
 
-\item{conc_col_name}{character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+\item{conc_col_name}{Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
 
-\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 
-\item{write_output}{character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
-The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.}
+\item{write_output}{Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
+The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.
+Strings need to correspond to column name of the \code{datafile}.}
 
-\item{rt_cutoff_low}{lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.}
+\item{rt_cutoff_low}{Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.}
 
-\item{rt_cutoff_high}{upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.}
+\item{rt_cutoff_high}{Upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.}
 
-\item{reference}{character string of a sample to which all other samples are aligned to by means of a
-linear shift (i.e. "individual3"). The name has to correspond to an individual name given
+\item{reference}{Character string of a sample to which all other samples are aligned to by means of a
+linear shift (e.g. "individual3"). The name has to correspond to an individual name given
 in the first line of \code{datafile}.}
 
-\item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
+\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks
 with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 Default is 0.05.}
 
-\item{max_diff_peak2mean}{defines the allowed deviation of retention times around the mean of
-the corresponding row. Default is 0.02.}
+\item{max_diff_peak2mean}{Defines the allowed deviation of retention times around the mean of
+the corresponding row. Peaks with differing retention times are moved
+to the appropriate mean retention time. Default is 0.02.}
 
-\item{min_diff_peak2peak}{defines the desired minimum difference in retention times among distinct
+\item{min_diff_peak2peak}{Defines the desired minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. This parameter is a major determinant in the classification
 of distinct peaks. Therefore careful consideration is required to adjust this setting to
 your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
-merge of true peaks, if those are not occuring within one individual, which is might happen by chance
+merge of true peaks, if those are not occuring within one individual, which might happen by chance
 with a low sample size. Small values can be considered as conservative. Default is 0.02.}
 
-\item{blanks}{character vector of names of blanks. If specified, all substances found in any of the blanks
+\item{blanks}{Character vector of names of blanks. If specified, all substances found in any of the blanks
 will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
 to a name given in the first line of \code{datafile}.}
 
@@ -70,10 +73,10 @@ Returns an object of class GCalign that is a a list with the following elements:
 \item{rt_raw}{a data.frame with the retention times before alignment}
 \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 \item{rt_aligned}{a data.frame with the final aligned retention times}
-\item{parameter}{a data.frame}{containing the arguments of the function call}
+\item{align_summary}{a data.frame}{A basic summary of the alignment process}
 }
 \description{
-\code{align_chromatograms()} is the core function of \link{GcalignR}.
+\code{align_chromatograms()} is the core function of \code{\link{GcalignR}}.
 }
 \details{
 Alignment is archieved by running three major algorithms always considering the complete

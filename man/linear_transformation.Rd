@@ -13,7 +13,7 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{reference}{a character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
 
-\item{max_linear_shift}{defines a window to search for an optimal linear shift of samples
+\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks
 with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
 Default is 0.05.}
 
@@ -24,7 +24,7 @@ between \code{max_linear_shift} and \code{-max_linear_shift}.}
 derterming if two peaks are shared. The default \code{error=0} counts
 a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 }
 \value{
 A list of data.frames containing chromatograms with applied linear shifts

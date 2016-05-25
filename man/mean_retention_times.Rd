@@ -7,7 +7,7 @@
 mean_retention_times(gc_peak_list, rt_col_name)
 }
 \arguments{
-\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 }
 \value{
 vector with mean retention times per peak in \code{gc_peak_list}.

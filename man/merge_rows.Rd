@@ -18,9 +18,9 @@ Rows represent distinct peaks. Retention time is a required variable.}
 \code{criterion="proportional"} will only affect pairs of peaks where less than 5% of the samples containg
 two conflicting peaks.}
 
-\item{rt_col_name}{character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
 
-\item{conc_col_name}{character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+\item{conc_col_name}{Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
 }
 \value{

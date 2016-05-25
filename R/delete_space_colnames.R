@@ -6,7 +6,6 @@
 #'
 #' @return
 #' data.frame containing GC data with removed spaces in column names
-#' @references
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)

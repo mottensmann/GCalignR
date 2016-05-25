@@ -20,9 +20,6 @@
 #' chromatograms based on objective and reproducible parameters.
 #' ....
 #'
-#' @section GCalignR main function
-#'
-#'
 #' @docType package
 #' @name GCalignR
 #'

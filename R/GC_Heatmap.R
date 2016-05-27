@@ -38,7 +38,6 @@
 #'
 #' @export
 #'
-members = c("CORE", "ALL")
 
 gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','initial_rt'),substance_subset=NULL,guide=c('legend','colourbar'),
                       samples_subset=NULL,type=c("binary","continous"),threshold=0.05){

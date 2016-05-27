@@ -4,10 +4,12 @@
 \alias{print.GCalign}
 \title{print.GCalign: Gives an overview about an executed alignment}
 \usage{
-\method{print}{GCalign}(object)
+\method{print}{GCalign}(x, ...)
 }
 \arguments{
-\item{object}{Object of class \code{GCalign}}
+\item{x}{Object of class \code{GCalign}}
+
+\item{...}{actually not useful here, but required to pass the check (S3 method of print)}
 }
 \description{
 print.GCalign: Gives an overview about an executed alignment

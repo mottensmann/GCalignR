@@ -21,7 +21,7 @@ cat("Data\n")
         cat("\t","Blanks: ")
         cat(temp,sep = ",")
     }
-cat("Arguments\n")
+cat("\nArguments\n")
 if(!is.null(object$call$max_linear_shift)){ #check if defined
     cat(paste("\t","Window for linear shifts:",object$summary$maobject_diff_peak2mean,"\n"))
 }else{

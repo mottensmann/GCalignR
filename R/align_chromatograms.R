@@ -116,12 +116,8 @@
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
-# merge proportional added
 
-    ##########################################################
-    # start a clock to estimate time the function takes to run
-    ##########################################################
-    start.time <- pracma::tic()
+
 
     ###################################################################################
     # Show the start of the alignment process and the corresponding time to the console
@@ -305,10 +301,6 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         '\n')
     cat('Merged redundant peaks ... ')
 
-    cat(paste('Elapsed time:',floor(pracma::toc(echo = F)[[1]]/60),'minutes',
-        '\n##########################################################################################','\n'))
-
-
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
     # delete empty rows again
@@ -347,7 +339,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     # create matrix with all retention times
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
 
-    deleted_peaks <- ncol(rt_mat) # To determine number of deleted peaks
+    singular_peaks <- nrow(rt_mat) # To determine number of deleted peaks
     if (delete_single_peak) {
         # find single retention times in rows
         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
@@ -361,7 +353,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     # calculate final retention times
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
-    deleted_peaks <- deleted_peaks - ncol(rt_mat) # how many were deleted, if any
+    singular_peaks <- singular_peaks - nrow(rt_mat) # how many were deleted, if any
      #######################
      # Outputs for Heatmaps
      #######################
@@ -421,25 +413,30 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     ### Write paramters choosen for the algorithm to a file for documentation
 
-    align_summary <- list(datafile=data,
-                            reference=reference,
-                            max_linear_shift=max_linear_shift,
-                            max_diff_peak2mean=max_diff_peak2mean,
-                            min_diff_peak2peak=min_diff_peak2peak,
-                            delete_single_peak=delete_single_peak,
-                            deleted_peaks=deleted_peaks,
-                            No_Peaks_start=ncol(rt_raw),
-                            No_Peaks_aligned=ncol(rt_aligned)-1,
-                            variance_before=align_var(gc_peak_list_raw,rt_col_name),
-                            variance_aligned=align_var(gc_peak_list_aligned,rt_col_name),
-                            No_of_samples = length(gc_peak_list_raw),
-                            merged_peaks =merged_peaks[R],
-                            rare_peak_pairs=rare_peak_pairs,
-                            gc_peak_list_raw=gc_peak_list_raw,
-                            gc_peak_list_linear=gc_peak_list_linear,
-                            gc_peak_list_aligned=gc_peak_list_aligned,
-                            merge_rare_peaks=merge_rare_peaks)
+#     align_summary <- list(datafile=data,
+#                             reference=reference,
+#                             max_linear_shift=max_linear_shift,
+#                             max_diff_peak2mean=max_diff_peak2mean,
+#                             min_diff_peak2peak=min_diff_peak2peak,
+#                             delete_single_peak=delete_single_peak,
+#                             singular_peaks=singular_peaks,
+#                             No_Peaks_start=ncol(rt_raw),
+#                             No_Peaks_aligned=ncol(rt_aligned)-1,
+#                             variance_before=align_var(gc_peak_list_raw,rt_col_name),
+#                             variance_aligned=align_var(gc_peak_list_aligned,rt_col_name),
+#                             No_of_samples = length(gc_peak_list_raw),
+#                             merged_peaks =merged_peaks[R],
+#                             rare_peak_pairs=rare_peak_pairs,
+#                             gc_peak_list_raw=gc_peak_list_raw,
+#                             gc_peak_list_linear=gc_peak_list_linear,
+#                             gc_peak_list_aligned=gc_peak_list_aligned,
+#                             merge_rare_peaks=merge_rare_peaks)
 
+    align_summary <- list(No_of_samples = length(gc_peak_list_raw),
+                          No_Peaks_aligned=ncol(rt_aligned)-1,
+                          variance_before=align_var(gc_peak_list_raw,rt_col_name),
+                          variance_aligned=align_var(gc_peak_list_aligned,rt_col_name),
+                          singular_peaks=singular_peaks)
     # peaks which woulde be merged with criterion proportional
     # vignette, message for changes in retention time due to linear shift
     # gc_peak_lists as outputs
@@ -456,21 +453,20 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
 
     #output
-    output_algorithm <- list(call=match.call(),
-                chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
-                rt_aligned = rt_aligned,align_summary=align_summary)
+#     output_algorithm <- list(call=match.call(),
+#                 chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
+#                 rt_aligned = rt_aligned,align_summary=align_summary)
+
+    output_algorithm <- list(aligned=output,summary=align_summary,
+                             heatmap_input=list(initial_rt=rt_raw,
+                                                linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
+                             call=match.call())
+
+
 
     class(output_algorithm) <- "GCalign" # name of list
 
-    end.time <- pracma::toc(echo = F)
-    cat(paste('Alignment was successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\nElapsed time:',as.character(floor(end.time[[1]]/60)),'minutes','\n')
+
+    cat(paste('Alignment was successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
     return(output_algorithm)
 }
-
-
-
-# class(b$chroma_aligned$RT$ind3)
-
-# 1. list of aligned variables --> aligned
-# 2. summary
-# 3. list of retention times per step, 3 dataframe --> heatmap input

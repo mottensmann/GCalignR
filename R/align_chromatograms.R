@@ -138,16 +138,16 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
             ###############
             ind_names <- readr::read_lines(data, n_max = 1) %>%
                 stringr::str_split(pattern = sep) %>%
-                unlist() %>%
-                .[. != ""]
+                unlist()
+            ind_names <- ind_names[ind_names != ""]    #.[. != ""]
 
             ######################
             # extract column names
             ######################
             col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
                 stringr::str_split(pattern = sep) %>%
-                unlist() %>%
-                .[. != ""]
+                unlist()
+            col_names <- col_names[col_names != ""]    #.[. != ""]
             ########################################
             # remove leading and tailing whitespaces
             ########################################

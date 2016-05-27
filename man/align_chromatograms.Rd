@@ -4,14 +4,14 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, sep = "\\t", conc_col_name = NULL,
+align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
   delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE)
 }
 \arguments{
-\item{datafile}{the name of a file  with extension \code{.txt} to load data from.
+\item{data}{the name of a file  with extension \code{.txt} to load data from.
 The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
 third row chromatograms are included, whereby single samples are concatenated horizontally. Each
 chromatogram needs to consist of the same number of columns, at least two are required:The
@@ -96,4 +96,20 @@ of the gas-chromatography or the chemistry of the compounds are merged. Optional
 removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
 one sample.
 }
+<<<<<<< HEAD
+=======
+\examples{
+data(gc_peak_data)
+out <- align_chromatograms(gc_peak_data[1:4], conc_col_name = "area", rt_col_name = "RT",
+       rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
+         max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
+         blanks = NULL, delete_single_peak = TRUE)
+
+
+}
+\author{
+Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
+ (meinolf.ottensmann@web.de)
+}
+>>>>>>> b24bdcd6c376e9e16a16829dcd0bcae430dc777a
 

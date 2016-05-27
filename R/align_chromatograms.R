@@ -14,7 +14,7 @@
 #'removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
 #'one sample.
 #'
-#'@param datafile
+#'@param data
 #' the name of a file  with extension \code{.txt} to load data from.
 #' The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
 #' third row chromatograms are included, whereby single samples are concatenated horizontally. Each
@@ -101,7 +101,7 @@
 #' @export
 #'
 
-align_chromatograms <- function(datafile, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
+align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1) {
 
@@ -115,61 +115,65 @@ align_chromatograms <- function(datafile, sep = "\t",conc_col_name=NULL, rt_col_
     ###################################################################################
     cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n####################','\n','\n'))
 
-    ###############################################
-    # Check if all required arguments are specified
-    ################################################
-if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
-if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
-if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
+    if (is.character(data)) {
+            ###############################################
+            # Check if all required arguments are specified
+            ################################################
+        if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
+        if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
+        if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
 
-    ###############
-    # extract names
-    ###############
-    ind_names <- readr::read_lines(datafile, n_max = 1) %>%
-        stringr::str_split(pattern = sep) %>%
-        unlist() %>%
-        .[. != ""]
+            ###############
+            # extract names
+            ###############
+            ind_names <- readr::read_lines(datafile, n_max = 1) %>%
+                stringr::str_split(pattern = sep) %>%
+                unlist() %>%
+                .[. != ""]
 
-    ######################
-    # extract column names
-    ######################
-    col_names <- readr::read_lines(datafile, n_max = 1, skip = 1) %>%
-        stringr::str_split(pattern = sep) %>%
-        unlist() %>%
-        .[. != ""]
-    ########################################
-    # remove leading and tailing whitespaces
-    ########################################
-    col_names <- stringr::str_trim(col_names)
-    ind_names <- stringr::str_trim(ind_names)
+            ######################
+            # extract column names
+            ######################
+            col_names <- readr::read_lines(datafile, n_max = 1, skip = 1) %>%
+                stringr::str_split(pattern = sep) %>%
+                unlist() %>%
+                .[. != ""]
+            ########################################
+            # remove leading and tailing whitespaces
+            ########################################
+            col_names <- stringr::str_trim(col_names)
+            ind_names <- stringr::str_trim(ind_names)
 
-    ##############
-    # extract data
-    ##############
-    gc_data <- read.table(datafile, skip = 2, sep = sep, stringsAsFactors = F)
+            ##############
+            # extract data
+            ##############
+            gc_data <- read.table(datafile, skip = 2, sep = sep, stringsAsFactors = F)
 
-    #####################
-    # remove pure NA rows
-    #####################
-    gc_data <- gc_data[!(rowSums(is.na(gc_data)) == nrow(gc_data)), ]
+            #####################
+            # remove pure NA rows
+            #####################
+            gc_data <- gc_data[!(rowSums(is.na(gc_data)) == nrow(gc_data)), ]
 
-    ######################
-    # transform to numeric
-    ######################
-    gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
+            ######################
+            # transform to numeric
+            ######################
+            gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
 
-    #########################################
-    # Check input for completeness and format
-    #########################################
-    # check 1
-    if (!((ncol(gc_data) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
-    # check 2
-    if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
-    # check 3
-    if(any(duplicated(ind_names)))warning("Avoid duplications in sample names")
+            #########################################
+            # Check input for completeness and format
+            #########################################
+            # check 1
+            if (!((ncol(gc_data) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
+            # check 2
+            if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
+            # check 3
+            if(any(duplicated(ind_names)))warning("Avoid duplications in sample names")
 
-    # matrix to list
-    gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
+            # matrix to list
+            gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
+
+    }
+
 
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ... ',
                'range of relative variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),

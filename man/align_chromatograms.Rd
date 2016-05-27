@@ -4,14 +4,14 @@
 \alias{align_chromatograms}
 \title{Aligning chromatograms based on retention times}
 \usage{
-align_chromatograms(datafile, sep = "\\t", conc_col_name = NULL,
+align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
   delete_single_peak = FALSE, n_iter = 1)
 }
 \arguments{
-\item{datafile}{the name of a file  with extension \code{.txt} to load data from.
+\item{data}{the name of a file  with extension \code{.txt} to load data from.
 The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
 third row chromatograms are included, whereby single samples are concatenated horizontally. Each
 chromatogram needs to consist of the same number of columns, at least two are required:The

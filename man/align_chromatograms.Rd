@@ -8,7 +8,7 @@ align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
-  delete_single_peak = FALSE, n_iter = 1)
+  delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE)
 }
 \arguments{
 \item{data}{the name of a file  with extension \code{.txt} to load data from.
@@ -65,6 +65,10 @@ removed or not. By default single substances are retained in chromatograms.}
 the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
 some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
 with a Heatmap \code{\link{gc_heatmap}}.}
+
+\item{merge_rare_peaks}{logical determining whether peaks that are redundant by means of a similar retention times
+are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
+Always the peak with the higher abundance (i.e. peak area or peak height) is retained.}
 }
 \value{
 Returns an object of class GCalign that is a a list with the following elements:
@@ -74,6 +78,9 @@ Returns an object of class GCalign that is a a list with the following elements:
 \item{rt_linear}{a data.frame with the retention times after the linear transformation}
 \item{rt_aligned}{a data.frame with the final aligned retention times}
 \item{align_summary}{a data.frame}{A basic summary of the alignment process}
+
+ @author Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
+ (meinolf.ottensmann@web.de)
 }
 \description{
 \code{align_chromatograms()} is the core function of \code{\link{GCalignR}}.
@@ -97,9 +104,5 @@ out <- align_chromatograms(gc_peak_data[1:4], conc_col_name = "area", rt_col_nam
          blanks = NULL, delete_single_peak = TRUE)
 
 
-}
-\author{
-Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
- (meinolf.ottensmann@web.de)
 }
 

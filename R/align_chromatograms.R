@@ -83,6 +83,11 @@
 #' some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
 #' with a Heatmap \code{\link{gc_heatmap}}.
 #'
+#' @param merge_rare_peaks
+#' logical determining whether peaks that are redundant by means of a similar retention times
+#' are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
+#' Always the peak with the higher abundance (i.e. peak area or peak height) is retained.
+#'
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
 #' \item{call}{function call}
@@ -92,7 +97,7 @@
 #' \item{rt_aligned}{a data.frame with the final aligned retention times}
 #' \item{align_summary}{a data.frame}{A basic summary of the alignment process}
 #'
-#'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
+#'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
 #'@import magrittr
@@ -110,7 +115,8 @@
 
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
-                                delete_single_peak = FALSE,n_iter=1) {
+                                delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+# merge proportional added
 
     ##########################################################
     # start a clock to estimate time the function takes to run
@@ -257,10 +263,12 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     Fun_Fact()
     gc_peak_list_aligned <- gc_peak_list_linear
+    no_peaks <- matrix(NA,nrow = n_iter,ncol = 1)
+    merged_peaks <- matrix(NA, nrow = n_iter,ncol = 1)
     for (R in 1:n_iter){ # several iteration of algorithm
 
-        gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
 
+        gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
 
     # see whether zero rows are present
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
@@ -274,14 +282,23 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     # calculate average rts again for merging
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
-
+    no_peaks[R] <- nrow(gc_peak_list_aligned[[1]]) # No before merging
     gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name)
-    if(R==n_iter){
+    merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
+    no_peaks[R] <- nrow(gc_peak_list_aligned[[1]]) # No after merging
+
+    if(R==n_iter & merge_rare_peaks==TRUE){
         average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
         gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
-
+        merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
+        rare_peak_pairs <- 0 # cause they were eliminated
+    }else if(R==n_iter){
+        average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name)
+        similar <- similar_peaks(average_rts, min_diff_peak2peak)    # remaining similarities
+        rare_peak_pairs <- length(similar) # WARNING: These are not definitive redundant, needs some thinking
     }
+
     cat('\n','range of relative variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
         '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... average relative variation: ",
         as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
@@ -303,6 +320,14 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     cat(paste('\n','Peak alignment Done ... '),
                 '\n##################################################','\n','\n')
 
+    ###############################################
+    # Sort chromatograms back to the initial order
+    ###############################################
+
+    gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw),names(gc_peak_list_aligned))]
+
+
+
     # delete blanks
     if (!is.null(blanks)) {
         # delete one blank
@@ -322,6 +347,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     # create matrix with all retention times
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
 
+    deleted_peaks <- ncol(rt_mat) # To determine number of deleted peaks
     if (delete_single_peak) {
         # find single retention times in rows
         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
@@ -332,15 +358,10 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         }
 
     }
-    ###############################################
-    # Sort chromatograms back to the initial order
-    ###############################################
 
-    gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw[names(gc_peak_list_aligned)]),names(gc_peak_list_aligned))]
-
-        # calculate final retention times
+    # calculate final retention times
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
-
+    deleted_peaks <- deleted_peaks - ncol(rt_mat) # how many were deleted, if any
      #######################
      # Outputs for Heatmaps
      #######################
@@ -406,10 +427,23 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
                             max_diff_peak2mean=max_diff_peak2mean,
                             min_diff_peak2peak=min_diff_peak2peak,
                             delete_single_peak=delete_single_peak,
+                            deleted_peaks=deleted_peaks,
                             No_Peaks_start=ncol(rt_raw),
                             No_Peaks_aligned=ncol(rt_aligned)-1,
-                          variance_before<-align_var(gc_peak_list_raw,rt_col_name),
-                          variance_aligned<-align_var(gc_peak_list_aligned,rt_col_name))
+                            variance_before=align_var(gc_peak_list_raw,rt_col_name),
+                            variance_aligned=align_var(gc_peak_list_aligned,rt_col_name),
+                            No_of_samples = length(gc_peak_list_raw),
+                            merged_peaks =merged_peaks[R],
+                            rare_peak_pairs=rare_peak_pairs,
+                            gc_peak_list_raw=gc_peak_list_raw,
+                            gc_peak_list_linear=gc_peak_list_linear,
+                            gc_peak_list_aligned=gc_peak_list_aligned,
+                            merge_rare_peaks=merge_rare_peaks)
+
+    # peaks which woulde be merged with criterion proportional
+    # vignette, message for changes in retention time due to linear shift
+    # gc_peak_lists as outputs
+
     if(!is.null(rt_cutoff_high)){
         align_summary['rt_cutoff_high'] <- rt_cutoff_high
     }
@@ -435,4 +469,8 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
 
 
+# class(b$chroma_aligned$RT$ind3)
 
+# 1. list of aligned variables --> aligned
+# 2. summary
+# 3. list of retention times per step, 3 dataframe --> heatmap input

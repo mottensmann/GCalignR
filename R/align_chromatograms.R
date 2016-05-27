@@ -469,7 +469,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
 
 
-class(b$chroma_aligned$RT$ind3)
+# class(b$chroma_aligned$RT$ind3)
 
 # 1. list of aligned variables --> aligned
 # 2. summary

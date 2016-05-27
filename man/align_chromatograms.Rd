@@ -89,6 +89,15 @@ of the gas-chromatography or the chemistry of the compounds are merged. Optional
 removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
 one sample.
 }
+\examples{
+data(gc_peak_data)
+out <- align_chromatograms(gc_peak_data[1:4], conc_col_name = "area", rt_col_name = "RT",
+       rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
+         max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
+         blanks = NULL, delete_single_peak = TRUE)
+
+
+}
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)

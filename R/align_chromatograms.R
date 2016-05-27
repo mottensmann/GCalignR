@@ -97,6 +97,13 @@
 #'
 #'@import magrittr
 #'
+#' @examples
+#' data(gc_peak_data)
+#' out <- align_chromatograms(gc_peak_data[1:4], conc_col_name = "area", rt_col_name = "RT",
+#'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
+#'          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
+#'          blanks = NULL, delete_single_peak = TRUE)
+#'
 #'
 #' @export
 #'
@@ -115,18 +122,21 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
     ###################################################################################
     cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n####################','\n','\n'))
 
-    if (is.character(data)) {
-            ###############################################
-            # Check if all required arguments are specified
-            ################################################
-        if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
-        if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
-        if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
 
+    ###############################################
+    # Check if all required arguments are specified
+    ################################################
+    if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
+    if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
+    if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
+
+    # check if data is a .txt file to load
+    if (is.character(data)) {
+        if (stringr::str_detect(data, ".txt")) {
             ###############
             # extract names
             ###############
-            ind_names <- readr::read_lines(datafile, n_max = 1) %>%
+            ind_names <- readr::read_lines(data, n_max = 1) %>%
                 stringr::str_split(pattern = sep) %>%
                 unlist() %>%
                 .[. != ""]
@@ -134,7 +144,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
             ######################
             # extract column names
             ######################
-            col_names <- readr::read_lines(datafile, n_max = 1, skip = 1) %>%
+            col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
                 stringr::str_split(pattern = sep) %>%
                 unlist() %>%
                 .[. != ""]
@@ -147,7 +157,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
             ##############
             # extract data
             ##############
-            gc_data <- read.table(datafile, skip = 2, sep = sep, stringsAsFactors = F)
+            gc_data <- read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
 
             #####################
             # remove pure NA rows
@@ -171,8 +181,26 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
             # matrix to list
             gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
+        }
+
+    } else if (is.list(data)) {
+        # check if data is list of data.frames
+        # check for data.frames
+        if (!(all(unlist(lapply(data, is.data.frame))))) stop("data object has to be a list, whereby each element is a data.frame with the GC peak data for an individual")
+        # check whether all data.frames have a name
+        if ((is.null(names(data)))) stop("data object has to be a list, whereby each element has to be named with the ID of the respective individual")
+        # check whether all data.frames contain the same column names
+        col_names <- unlist(lapply(data, function(x) out <- names(x)))
+        if(any(table(col_names) != length(data))) stop("each data.frame in the list has to have the same variable names (i.e. 'RT' 'area')")
+
+        ind_names <- names(data)
+        col_names <- names(data[[1]])
+        gc_peak_list <- data
 
     }
+
+
+
 
 
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ... ',
@@ -357,9 +385,13 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         ####################################################################
         # Extract the name of the datafile for proper naming of output files
         ####################################################################
-        prefix <- strsplit(datafile,split = "/")
+        if(is.character(data)){
+        prefix <- strsplit(data,split = "/")
         prefix <- as.character(prefix[[1]][length(prefix[[1]])])
         prefix <- as.character(strsplit(prefix,split = ".txt"))
+        } else {
+            prefix <- "Aligned"
+        }
         write_files <- function(x) {
             write.table(output[[x]], file = paste0(prefix,"_", x, ".txt"), sep = "\t", row.names = FALSE)
         }
@@ -368,7 +400,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     ### Write paramters choosen for the algorithm to a file for documentation
 
-    align_summary <- list(datafile=datafile,
+    align_summary <- list(datafile=data,
                             reference=reference,
                             max_linear_shift=max_linear_shift,
                             max_diff_peak2mean=max_diff_peak2mean,

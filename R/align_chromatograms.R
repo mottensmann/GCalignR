@@ -201,11 +201,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
     }
 
-
-
-
-
-    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ... ',
+cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ...\n ',
                'range of relative variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
                '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average relative variation: ",
                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
@@ -254,15 +250,13 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     # align peaks
     #############
 
-    cat(c('Start alignment of peaks ... ','This might take a while!\n',
-          '=====================================================','\n'))
+    cat(c('Start alignment of peaks ... ','This might take a while!\n','\n'))
 
     Fun_Fact()
     gc_peak_list_aligned <- gc_peak_list_linear
     no_peaks <- matrix(NA,nrow = n_iter,ncol = 1)
     merged_peaks <- matrix(NA, nrow = n_iter,ncol = 1)
-    for (R in 1:n_iter){ # several iteration of algorithm
-
+    for (R in 1:n_iter){ # Allows iteratively execute the algorithm
 
         gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
 
@@ -289,10 +283,10 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
         merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
         rare_peak_pairs <- 0 # cause they were eliminated
-    }else if(R==n_iter){
-        average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name)
-        similar <- similar_peaks(average_rts, min_diff_peak2peak)    # remaining similarities
-        rare_peak_pairs <- length(similar) # WARNING: These are not definitive redundant, needs some thinking
+#     }else if(R==n_iter){
+#         average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name)
+#         similar <- similar_peaks(average_rts, min_diff_peak2peak)    # remaining similarities
+#         rare_peak_pairs <- length(similar) # WARNING: These are not definitive redundant, needs some thinking
     }
 
     cat('\n','range of relative variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
@@ -357,14 +351,9 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
      #######################
      # Outputs for Heatmaps
      #######################
-
-
     rt_raw <- rt_extract(gc_peak_list = gc_peak_list_raw,rt_col_name =rt_col_name)
     rt_linear <- rt_extract(gc_peak_list = gc_peak_list_linear,rt_col_name =rt_col_name)
     rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name =rt_col_name)
-
-
-
 
     # ============================
     # mean per row without 0
@@ -372,7 +361,6 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         if (all(x==0)) 0 else mean(x[x!=0])
     }
     mean_per_row <- apply(rt_mat,1, row_mean)
-
 
     # create output matrices for all variables
     output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[y]))))
@@ -413,49 +401,11 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     ### Write paramters choosen for the algorithm to a file for documentation
 
-#     align_summary <- list(datafile=data,
-#                             reference=reference,
-#                             max_linear_shift=max_linear_shift,
-#                             max_diff_peak2mean=max_diff_peak2mean,
-#                             min_diff_peak2peak=min_diff_peak2peak,
-#                             delete_single_peak=delete_single_peak,
-#                             singular_peaks=singular_peaks,
-#                             No_Peaks_start=ncol(rt_raw),
-#                             No_Peaks_aligned=ncol(rt_aligned)-1,
-#                             variance_before=align_var(gc_peak_list_raw,rt_col_name),
-#                             variance_aligned=align_var(gc_peak_list_aligned,rt_col_name),
-#                             No_of_samples = length(gc_peak_list_raw),
-#                             merged_peaks =merged_peaks[R],
-#                             rare_peak_pairs=rare_peak_pairs,
-#                             gc_peak_list_raw=gc_peak_list_raw,
-#                             gc_peak_list_linear=gc_peak_list_linear,
-#                             gc_peak_list_aligned=gc_peak_list_aligned,
-#                             merge_rare_peaks=merge_rare_peaks)
-
     align_summary <- list(No_of_samples = length(gc_peak_list_raw),
                           No_Peaks_aligned=ncol(rt_aligned)-1,
                           variance_before=align_var(gc_peak_list_raw,rt_col_name),
                           variance_aligned=align_var(gc_peak_list_aligned,rt_col_name),
                           singular_peaks=singular_peaks)
-    # peaks which woulde be merged with criterion proportional
-    # vignette, message for changes in retention time due to linear shift
-    # gc_peak_lists as outputs
-
-    if(!is.null(rt_cutoff_high)){
-        align_summary['rt_cutoff_high'] <- rt_cutoff_high
-    }
-    if(!is.null(rt_cutoff_low)){
-        align_summary['rt_cutoff_low'] <- rt_cutoff_low
-    }
-    if(!is.null(blanks)){
-        align_summary['blanks'] <- paste(blanks, collapse = '; ')
-    }
-
-
-    #output
-#     output_algorithm <- list(call=match.call(),
-#                 chroma_aligned = output, rt_raw = rt_raw, rt_linear = rt_linear,
-#                 rt_aligned = rt_aligned,align_summary=align_summary)
 
     output_algorithm <- list(aligned=output,summary=align_summary,
                              heatmap_input=list(initial_rt=rt_raw,

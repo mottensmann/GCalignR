@@ -31,7 +31,7 @@ norm_peaks <- function(GCout,conc_var_name=NULL){
     # extract concentration measure & convert to a data.frame
     #########################################################
 
-    conc_list <- GCout[["chroma_aligned"]][[conc_var_name]]
+    conc_list <- GCout[["aligned"]][[conc_var_name]]
 
     #################################
     # Function to do the calculations
@@ -40,9 +40,6 @@ norm_peaks <- function(GCout,conc_var_name=NULL){
     rel_abund <- function(conc_df){
         total_con <- sum(conc_df)
         conc_df <- (conc_df/total_con)*100
-        if(sum(conc_df)!=100){
-            print('error')
-        }
         conc_df
     }
     #############################

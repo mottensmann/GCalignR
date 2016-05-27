@@ -16,87 +16,127 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
     fig.width = 5, fig.height = 4) # warning = FALSE
 ```
 
-
 ## GCalignR
 
-GCalignR provides a simple means of aligning chromatograms from gas-chromatography (GC)
-and gas-chromatography mass-spectrometry (GC-MS). Chromatograms of multiple samples are not
-directly comparable as the retention times vary across samples due to subtle, random and often
-unavoidable variation of the GC-MS machine parameters [@pierce2005classification]. For studies
-interested in broad patterns within chemical samples it is crucial that the same substances
-will have the same retention times to compare them across samples. Suprisingly, within the
-relatively young field of mammalian olfactory communication, most researchers seem to align
-chromatograms manually (some citations) rather than using automated alignment algorithms, 
-which are used by chemists or chemical plant biologists for a while (i am not sure about this,
-needs citations). This might be due to (to what might it be due? No idea, but we also didn´t use
-them obviously).
+GCalignR provides a simple means of aligning chromatograms from gas-chromatography (GC) and
+gas-chromatography mass-spectrometry (GC-MS). Chromatograms of multiple samples are not directly
+comparable as the retention times vary across samples due to subtle, random and often unavoidable
+variation of the GC-MS machine parameters [@pierce2005classification]. For studies interested in
+broad patterns within chemical samples it is crucial that the same substances will have the same
+retention times to compare them across samples. Suprisingly, within the relatively young field of
+mammalian olfactory communication, most researchers seem to align chromatograms manually (some
+citations) rather than using automated alignment algorithms, which are used by chemists or chemical
+plant biologists for a while (i am not sure about this, needs citations). This might be due to (to
+what might it be due? No idea, but we also didn´t use them obviously).
 
 ## The alignment algorithm
 
 ## Installation
 
-The development version can be downloaded from [GitHub](https://github.com/mastoffel/GCalignR) with the following code:
+The development version can be downloaded from [GitHub](https://github.com/mastoffel/GCalignR) with
+the following code:
 
-```{r, eval = FALSE}
-install.packages("devtools")
-devtools::install_github("mastoffel/inbreedR", build_vignettes = TRUE)
+```{r, eval = FALSE} 
+install.packages("devtools") devtools::install_github("mastoffel/inbreedR",
+build_vignettes = TRUE) 
 ```
 
 The package provides a comprehensive documentation, check out the `GCalignR` help file.
 
-```{r}
-library("GCalignR")
+```{r} 
+library("GCalignR") 
 ```
 
-```{r, eval = FALSE}
-?GCalignR
+```{r, eval = FALSE} 
+?GCalignR 
 ```
 
-## GCalignR contains the following functions: 
+## GCalignR contains the following functions:
 
-* `align_chromatograms`: Aligns gas-chromatography data by retention times. 
-* `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap,
-the user can visually inspect the quality of the alignment and if necessary adjust the parameters.
+* `align_chromatograms`: Aligns gas-chromatography peak data by retention times. 
+* `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap, the user can visually
+inspect the quality of the alignment and if necessary adjust the parameters.
 
 ## Step by step guide to aligning chromatograms with GCalignR
 
-GC and GC-MS machines are coupled to specific software to inspect the chromatograms and mass-spectra (i.e. Xcalibur).
-These programs usually allow to extract the peaks of the chromatograms along with the areas under the peaks
-and additional variables such as the peak height. The aim of GCalignR is to align these extracted peaks across individuals
-using just their retention times (and not the mass-spectra, which is not available when using gas-chromatography coupled to a flame ionization detector (FID)). The simple underlying assumption is
-that peaks with similar retention times represent the same substances. However, it is highly recommended
-to verify this assumption by comparing also the mass-spectra (if available) of the substances of interest.
+GC and GC-MS machines are coupled to specific software to inspect the chromatograms and mass-spectra
+(i.e. Xcalibur). These programs usually allow to extract the peaks of the chromatograms along with
+the areas under the peaks and additional variables such as the peak height. The aim of GCalignR is
+to align these extracted peaks across individuals using just their retention times (and not the
+mass-spectra, which is not available when using gas-chromatography coupled to a flame ionization
+detector (FID)). The simple underlying assumption is that peaks with similar retention times
+represent the same substances. However, it is highly recommended to verify this assumption by
+comparing also the mass-spectra (if available) of the substances of interest.
 
 The alignment algorithm follows the following steps:
 
 1. Given a reference chromatogram within the sample, all chromatograms are aligned to this reference
-by means of shifting them to maximise shared peaks with the reference. This step corrects systematic shifts in the retention times of chromatograms.
+by means of shifting them to maximise shared peaks with the reference. This step corrects systematic
+shifts in the retention times of chromatograms. The maximum shift can be specified with the
+`max_linear_shift` argument.
 
-2. This step corrects unreliability of chromatograms on an individual peak basis and essentially
-tries to minimise variation  within a retention time row. 
+2. This step corrects unreliability of chromatograms on an individual peak basis and essentially 
+tries to minimise variation within a retention time row. The maximum shift per peak can be specified with the
+`max_diff_peak2mean` argument.
 
-3. In a third step, retention time rows are merged if they have similar retention time means 
-and non of the samples shows peaks in both or the rows (with the assumption that these two
-rows represent a single substance)
+3. In a third step, retention time rows are merged if they have similar retention time means and non
+of the samples shows peaks in both or the rows (with the assumption that these two rows represent a
+single substance). The maximum mean difference between two retention time rows can be specified with the
+`min_diff_peak2peak` argument.
 
 
 ## input file
 
-After running samples through the GC or GC-MS, specific software allows to extract the retention times
-of the peaks and associated variables, such as the area under a peak (i.e. the concentration) or
-the height of a peak. \code{GCalignR} uses these peak data to align the peaks among individuals.
+After running samples through the GC or GC-MS, specific software allows to extract the retention
+times of the peaks and associated variables, such as the area under a peak (i.e. the concentration)
+or the height of a peak. `GCalignR` uses these peak data to align the peaks among individuals.
 
-The input file for GCalignR is a .txt file, whereby all elements should be separated by 
-tabs (with sep = "/t") or any other separator (see \code{?read.table} for a list of separators) :
-* The first row contains the individual IDs, whereby every
-ID must be unique. 
-* The second row contains the names of the data columns. For example, if you extracted both
-the retention time of a peak as well as the area under the peak you would write \code{RT area}
-into the second line. 
-* Starting with the third row chromatograms are included, whereby single samples are concatenated horizontally Each
-  chromatogram needs to consist of the same number of columns, at least two are required (the
-  retention time and the area).
+The input file for GCalignR is a .txt file, whereby all elements should be separated by tabs (with
+sep = "/t") or any other separator, which has to be specified with the `sep` argument (see
+`?read.table` for a list of separators) :
+
+* The first row contains the individual IDs, whereby every ID must be unique. Optimally, IDs don't
+contain whitespaces and use the underscore _ as the only special character. 
+
+* The second row
+contains the names of the data columns. For example, if you extracted both the retention time of a
+peak as well as the area under the peak you would write `RT area` into the second line. 
+
+* Starting with the third row peak data is included, whereby single samples are concatenated
+horizontally. Each chromatogram needs to consist of the same number of columns, at least two are
+required (e.g. the retention time and the area).
+
+```{r, out.width = 500, fig.retina = NULL, echo = FALSE}
+knitr::include_graphics("example.jpg") 
+```
+
+Naturally, not all chromatograms contain the same number of peaks.
+
+```{r, out.width = 500, fig.retina = NULL, echo = FALSE} 
+knitr::include_graphics("example2.jpg") 
+```
+
+### alternative input from R
+
+Alternative to reading a .txt file, GCalignR also takes input directly from R. Here, `data`
+has to be a `list` of `data.frames`. Each `list` element (`data.frame`) has the ID of an individual
+and the `data.frame` itself contains the gc-peak data for this individual (again, the minimum
+number of columns is one column for the retention time and one column for another variable such as the area under the peak
+or it's height). All column names within `data.frames` have to be the same.
+
+```{r} 
+data("gc_peak_data")
+length(gc_peak_data) # number of individuals
+names(gc_peak_data) # names of individuals
+head(gc_peak_data[[1]]) # column names and data
+```
+
+
+## Using align_chromatograms()
+
+The main function in `GCalignR` is `align_chromatograms`. 
+
+
+
 
 ## Literature
-
-

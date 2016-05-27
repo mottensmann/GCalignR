@@ -17,8 +17,9 @@ cat("Data\n")
     cat(paste("\t",object$summary$No_of_samples,"samples\n"))
     cat(paste("\t","Reference:",object$call$reference,"\n"))
     if(!is.null(object$call$blanks)){
-        cat("\t","Blanks:\n")
-        cat(paste("\t\t",object$call$blanks,"\n"))
+        temp <- object$call$blanks
+        cat("\t","Blanks: ")
+        cat(temp,sep = ",")
     }
 cat("Arguments\n")
 if(!is.null(object$call$max_linear_shift)){ #check if defined

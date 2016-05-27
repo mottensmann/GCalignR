@@ -4,6 +4,7 @@
 #' data.frames of \code{gc_peak_list}. Calculations are performed by \code{\link{mean_retention_time_row}}
 #'
 #' @inheritParams align_chromatograms
+#' @inheritParams matrix_append
 #'
 #' @return
 #' vector with mean retention times per peak in \code{gc_peak_list}.

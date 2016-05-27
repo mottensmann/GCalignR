@@ -24,7 +24,4 @@ This package provides a three step alogrithm for a automated alignment of
 chromatograms based on objective and reproducible parameters.
 ....
 }
-\section{GCalignR main function}{
-
-}
 

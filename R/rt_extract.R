@@ -48,6 +48,8 @@ rt_extract <- function(gc_peak_list,rt_col_name){
     rt_mat2[rt_mat2==0] <- NA
     colnames(rt_mat) <-
         as.character(colMeans(rt_mat2,na.rm = T)) # No rounding, are not plotted as labels anyway
+    # colnames(rt_mat) <- as.character(1:ncol(rt_mat)) # does not work cause gc_heatmap needs numbers!
+
     rt_mat <- cbind(id,rt_mat)
 
 

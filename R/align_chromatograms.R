@@ -122,7 +122,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
     ###################################################################################
     # Show the start of the alignment process and the corresponding time to the console
     ###################################################################################
-    cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n####################','\n','\n'))
+    cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n'))
 
 
     ###############################################
@@ -205,7 +205,7 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ...\n
                'range of relative variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
                '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average relative variation: ",
                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
-               '\n################################################################################','\n','\n'))
+               '\n','\n'))
 
     ########################
     # Start of processing
@@ -242,8 +242,7 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ...\n
                                             error=0, reference = reference, rt_col_name = rt_col_name)
     cat(paste('Done ... ','\n','Range of relative variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
               '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... average relative variation: ",
-              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2)),
-              '\n'),'######################################################################################','\n','\n')
+              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n################################################################################','\n','\n')
 gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
     #############
@@ -303,8 +302,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     } # End of iterative alignment and merging
 
-    cat(paste('\n','Peak alignment Done ... '),
-                '\n##################################################','\n','\n')
+    cat(paste('\n','Peak alignment Done ... '),'\n')
 
     ###############################################
     # Sort chromatograms back to the initial order

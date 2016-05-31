@@ -55,6 +55,7 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
     rt_df[,'id'] <- as.character(rt_df[,'id'])
     rt_df <- rt_df[match(as.character(GcOut[["heatmap_input"]][["initial_rt"]][,1]),as.character(rt_df[,1])),]
 
+
     ##################################################
     # C select a subset of substances, by their position
     ##################################################
@@ -94,6 +95,9 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
     ###################
     # G Binary coding
     ###################
+
+    ldw <- getOption("warn")
+    options(warn = -1)
 
     if(type=="binary"){
 
@@ -144,7 +148,11 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
                      axis.text.y=element_text(size = 5))
     hm <- hm + coord_equal(ncol(rt_df)/nrow(rt_df))
 
-    hm
+    return(suppressWarnings(hm))
+    options(warn = oldw)
+
 }
+
+
 
 

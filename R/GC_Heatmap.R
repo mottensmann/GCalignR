@@ -137,7 +137,7 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
         hm <- hm + labs(x=NULL, y=NULL, title="Deviation of retention times")
 
     }
-    hm <- hm + theme(plot.title=element_text(hjust=0,size = 16,face = 'bold'))
+    hm <- hm + theme(plot.title=element_text(hjust=0,size = 12,face = 'bold'))
     hm <- hm + theme(axis.title.x=element_blank(),
                      axis.text.x=element_blank(),
                      axis.ticks=element_blank(),

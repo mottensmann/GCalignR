@@ -135,6 +135,7 @@ has to be a `list` of `data.frames`. Each `list` element (`data.frame`) has the 
 and the `data.frame` itself contains the gc-peak data for this individual (again, the minimum
 number of columns is one column for the retention time and one column for another variable such as the area under the peak
 or it's height). All column names within `data.frames` have to be the same.
+The attached dataset `gc_peak_data` contains data from preen secretions of plovers. 
 
 ```{r} 
 data("gc_peak_data")
@@ -146,7 +147,25 @@ head(gc_peak_data[[1]]) # column names and data
 
 ## Using align_chromatograms()
 
-The main function in `GCalignR` is `align_chromatograms`. 
+The main function in `GCalignR` is `align_chromatograms()` and this is how it works. 
+See `align_chromatograms` for a detailled description of the arguments.
+
+```{r, results= "hide"} 
+gc_peak_data_test <- gc_peak_data[1:4] # subset 4 individuals for speed reasons
+out <- align_chromatograms(data = gc_peak_data_test, # usually path to a .txt file
+                           conc_col_name = "area", # column name of area under peak variable
+                           rt_col_name = "RT", # column name of retention time 
+                           rt_cutoff_low = 5, # cut peaks with retention times under 5s
+                           rt_cutoff_high = 45, # cut peaks with retention times above 45 s
+                           reference = "ind3", # name of reference chromatogram
+                           max_linear_shift = 0.05, # maximum shift of chromatograms
+                           max_diff_peak2mean = 0.02, # maximum distance of a peak to the mean
+                           min_diff_peak2peak = 0.03, # maximum distance between two (mean) peaks
+                           blanks = NULL, # no blanks. Specify blanks by name (e.g. c("blank1", "blank2"))
+                           delete_single_peak = TRUE) # delete substances that are present in just one
+                                                      # individual
+```
+
 
 
 

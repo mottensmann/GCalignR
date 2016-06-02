@@ -37,8 +37,6 @@ for further statistical packages such as `vegan`. We specifically developed and 
 as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. 
 
 
-## The alignment algorithm
-
 ## Installation
 
 The development version can be downloaded from [GitHub](https://github.com/mastoffel/GCalignR) with
@@ -66,7 +64,7 @@ library("GCalignR")
 inspect the quality of the alignment and if necessary adjust the parameters.
 
 
-### Core steps of the alignment algorithm:
+## The alignment algorithm
 
 The alignment algorithm implemented in the `align_chromatograms` function follows the following steps:
 

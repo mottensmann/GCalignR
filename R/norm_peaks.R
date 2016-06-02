@@ -17,6 +17,10 @@
 #' containing a variable describing the abundance of peaks (e.g. peak area or peak height).
 #' @return
 #' a list of data.frames containing normalised peak abundances
+#'
+#'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
+#'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
+#'
 #' @export
 #'
 #'

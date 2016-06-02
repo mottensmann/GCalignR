@@ -88,7 +88,7 @@ single substance). The minimum mean difference between two retention time rows c
 `min_diff_peak2peak` argument.
 
 
-## input file
+## Input file
 
 After running samples through the GC or GC-MS, specific software allows to extract the retention
 times of the peaks and associated variables, such as the area under a peak (i.e. the concentration)
@@ -135,12 +135,38 @@ head(gc_peak_data[[1]]) # column names and data
 ```
 
 
-## Using align_chromatograms()
+## Using align_chromatograms
 
 The main function in `GCalignR` is `align_chromatograms`. 
-```{r, eval = FALSE} 
-alignment <- align_chromatograms(data="data/gc_peak_data.RData", sep = "\t",conc_col_name="area", rt_col_name = "RT", write_output = NULL,rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = "ind1", max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL, delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE)
+Run the alignment process with default parameters using peaks from `ind1` as a 
+reference.
+
+```{r, message=FALSE} 
+alignment <- align_chromatograms(data=gc_peak_data,conc_col_name="area", rt_col_name = "RT", reference = "ind1")
+```
+
+## Using gc_heatmap
+
+To visualise the conducted alignment use `gc_heatmap` to quickly inspect the
+aligned peak profiles. By changing function arguments the heatmap can be customized according to your needs.
+A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. 
+
+```{r,message=FALSE,fig.width=6,fig.height=6}
+gc_heatmap(alignment) # By default a threshold of 0.05 is used to mark deviations
+gc_heatmap(alignment,threshold = 0.03,substance_subset =1:10,samples_subset = 1:10) # Inspect the first ten samples and substances 
+```
+
+## Using norm_peaks
+
+`norm_peaks` is used to normalize the desired measure of concentration on the individual level in order
+to compensate for differences in the baseline concentration of samples. Note that this step is required,
+even if the data already contained a measure of relative abundance, in case that any of retention time cutoffs, single peak deletion or blank peak removal was applied. 
+
+```{r,eval=FALSE}
+rel_area <- norm_peaks(aligned)
 ```
 
 
 ## Literature
+
+

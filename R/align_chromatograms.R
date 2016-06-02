@@ -252,7 +252,7 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n ',
     if(reference=="reference"){ # New option
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_col_name)
-    #gc_peak_list_linear <- gc_peak_list_linear[-] remove reference
+    gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # without elements reference
     }else{
         gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                                      error=0, reference = reference, rt_col_name = rt_col_name)
@@ -325,6 +325,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     ###############################################
     # Sort chromatograms back to the initial order
     ###############################################
+    gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw)==reference)]; # remove the reference
 
     gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw),names(gc_peak_list_aligned))]
 
@@ -369,6 +370,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
      #######################
      # Outputs for Heatmaps
      #######################
+
     rt_raw <- rt_extract(gc_peak_list = gc_peak_list_raw,rt_col_name =rt_col_name)
     rt_linear <- rt_extract(gc_peak_list = gc_peak_list_linear,rt_col_name =rt_col_name)
     rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name =rt_col_name)

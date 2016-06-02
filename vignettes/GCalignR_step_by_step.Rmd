@@ -1,6 +1,6 @@
 ---
 title: "GCalignR step by step"
-author: "Martin A. Stoffel & Meinolf Ottensmann"
+author: "Martin A. Stoffel, Meinolf Ottensmann, Joseph Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -18,8 +18,9 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
 
 ## GCalignR
 
-GCalignR provides a simple means of aligning chromatograms from gas-chromatography (GC) and
-gas-chromatography mass-spectrometry (GC-MS). Chromatograms of multiple samples are not directly
+GCalignR provides a simple means of aligning peaks based of gas chromatography data for chemometric analysis. 
+We specifically developed and tested GCalignR as a preprocessing tool prior to the statistical 
+analysis of chemicals from animal skin and preen glands. Chromatograms of multiple samples are not directly
 comparable as the retention times vary across samples due to subtle, random and often unavoidable
 variation of the GC-MS machine parameters [@pierce2005classification]. For studies interested in
 broad patterns within chemical samples it is crucial that the same substances will have the same
@@ -56,6 +57,7 @@ library("GCalignR")
 * `align_chromatograms`: Aligns gas-chromatography peak data by retention times. 
 * `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap, the user can visually
 inspect the quality of the alignment and if necessary adjust the parameters.
+* `summary.GCalign`
 
 ## Step by step guide to aligning chromatograms with GCalignR
 

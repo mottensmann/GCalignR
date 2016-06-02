@@ -39,19 +39,22 @@
 #' @export
 #'
 
-gc_heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,guide='legend',
-                      samples_subset=NULL,type="binary",threshold=0.05){
+gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','initial_rt'),substance_subset=NULL,guide=c('legend','colourbar'),
+                      samples_subset=NULL,type=c("binary","continous"),threshold=0.05){
 
+    algorithm_step <- match.arg(algorithm_step)
+    type <- match.arg(type)
     #########################################
     # A. Select retention times to visualise
     ########################################
-    rt_df <- GcOut[[algorithm_step]]
+    rt_df <- GcOut[['heatmap_input']][[algorithm_step]]
 
     ##########################
     # B Formatting and sorting
     ##########################
     rt_df[,'id'] <- as.character(rt_df[,'id'])
-    rt_df <- rt_df[match(as.character(GcOut[["rt_raw"]][,1]),as.character(rt_df[,1])),]
+    rt_df <- rt_df[match(as.character(GcOut[["heatmap_input"]][["initial_rt"]][,1]),as.character(rt_df[,1])),]
+
 
     ##################################################
     # C select a subset of substances, by their position
@@ -63,9 +66,9 @@ gc_heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
     # D select a subset of samples, by their names
     #############################################
 
-        if(!is.null(samples_subset)){
-            if(is.character(samples_subset)){
-        rt_df <- rt_df[rt_df[,1]%in%samples_subset,]
+    if(!is.null(samples_subset)){
+        if(is.character(samples_subset)){
+            rt_df <- rt_df[rt_df[,1]%in%samples_subset,]
         }else if(is.numeric(samples_subset)){
             rt_df <- rt_df[samples_subset,]
         }
@@ -93,12 +96,15 @@ gc_heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
     # G Binary coding
     ###################
 
+    ldw <- getOption("warn")
+    options(warn = -1)
+
     if(type=="binary"){
 
         heat_matrix['diff'][abs(heat_matrix['diff'])>threshold] <- 1 # Deviates
         heat_matrix['diff'][abs(heat_matrix['diff'])<threshold] <- 0 # Is okay
         heat_matrix['diff'][heat_matrix['rt']==0] <- NA
-        }
+    }
 
     ###################
     # Plot the Heatmap
@@ -106,11 +112,11 @@ gc_heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
 
     if(type=="binary"){
         if(max(heat_matrix['diff'],na.rm = T)==0){ # Zeros indicates no deviations of any substance
-        hm <- ggplot(heat_matrix, aes_string(x='substance', y='id',fill='diff'),colour="Blue")
-        hm <- hm + geom_tile(color="transparent", size=0.001)
-        hm <- hm + scale_fill_gradientn(colours = 'blue',na.value = "white")
-        hm <- hm + labs(x=NULL, y=NULL, title=paste("No deviations exceeding a threshold of",as.character(threshold)))
-        hm <- hm + guides(fill=FALSE)
+            hm <- ggplot(heat_matrix, aes_string(x='substance', y='id',fill='diff'),colour="Blue")
+            hm <- hm + geom_tile(color="transparent", size=0.001)
+            hm <- hm + scale_fill_gradientn(colours = 'blue',na.value = "white")
+            hm <- hm + labs(x=NULL, y=NULL, title=paste("No deviations exceeding a threshold of",as.character(threshold)))
+            hm <- hm + guides(fill=FALSE)
 
         }else if(min(heat_matrix['diff'],na.rm = T)==1){ # Really bad alignment
             hm <- ggplot(heat_matrix, aes_string(x='substance', y='id',fill=diff),colour="red")
@@ -134,13 +140,19 @@ gc_heatmap <-function(GcOut,algorithm_step='rt_aligned',substance_subset=NULL,gu
         hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = guide,name='Deviation')
         hm <- hm + labs(x=NULL, y=NULL, title="Deviation of retention times")
 
-        }
-    hm <- hm + theme(plot.title=element_text(hjust=0,size = 16,face = 'bold'))
-        hm <- hm + theme(axis.title.x=element_blank(),
+    }
+    hm <- hm + theme(plot.title=element_text(hjust=0,size = 12,face = 'bold'))
+    hm <- hm + theme(axis.title.x=element_blank(),
                      axis.text.x=element_blank(),
                      axis.ticks=element_blank(),
                      axis.text.y=element_text(size = 5))
     hm <- hm + coord_equal(ncol(rt_df)/nrow(rt_df))
 
-    hm
+    return(suppressWarnings(hm))
+    options(warn = oldw)
+
 }
+
+
+
+

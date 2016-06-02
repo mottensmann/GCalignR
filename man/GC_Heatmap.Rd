@@ -4,8 +4,9 @@
 \alias{gc_heatmap}
 \title{gc_heatmap visualises the goodness of the chromatogram alignment}
 \usage{
-gc_heatmap(GcOut, algorithm_step = "rt_aligned", substance_subset = NULL,
-  guide = "legend", samples_subset = NULL, type = "binary",
+gc_heatmap(GcOut, algorithm_step = c("aligned_rt", "linear_shifted_rt",
+  "initial_rt"), substance_subset = NULL, guide = c("legend", "colourbar"),
+  samples_subset = NULL, type = c("binary", "continous"),
   threshold = 0.05)
 }
 \arguments{

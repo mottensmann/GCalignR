@@ -117,7 +117,13 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
 
-
+###
+    ### Allow the usage of another type of reference (i.e a standard that is not a sample)
+    ### Possibility:
+    ### One reference is called "reference", used for shifting and then eliminated
+    ### Consider to allow a small deviation (e.g 0.01) for shared peaks
+    ### Allow this case in form of an if-else statement
+###
 
     ###################################################################################
     # Show the start of the alignment process and the corresponding time to the console
@@ -188,12 +194,12 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
     } else if (is.list(data)) {
         # check if data is list of data.frames
         # check for data.frames
-        if (!(all(unlist(lapply(data, is.data.frame))))) stop("data object has to be a list, whereby each element is a data.frame with the GC peak data for an individual")
+        if (!(all(unlist(lapply(data, is.data.frame))))) stop("Data object has to be a list, whereby each element is a data.frame with the GC peak data for an individual")
         # check whether all data.frames have a name
-        if ((is.null(names(data)))) stop("data object has to be a list, whereby each element has to be named with the ID of the respective individual")
+        if ((is.null(names(data)))) stop("Data object has to be a list, whereby each element has to be named with the ID of the respective individual")
         # check whether all data.frames contain the same column names
         col_names <- unlist(lapply(data, function(x) out <- names(x)))
-        if(any(table(col_names) != length(data))) stop("each data.frame in the list has to have the same variable names (i.e. 'RT' 'area')")
+        if(any(table(col_names) != length(data))) stop("Each data.frame in the list has to have the same variable names (i.e. 'RT' 'area')")
 
         ind_names <- names(data)
         col_names <- names(data[[1]])
@@ -201,9 +207,9 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
     }
 
-cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ...\n ',
-               'range of relative variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
-               '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... average relative variation: ",
+cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n ',
+               'Range of Relative Variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
+               '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
                '\n','\n'))
 
@@ -221,45 +227,52 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded ...\n
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
     if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
-    cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n##############################','\n'))
+    cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
     }
 
     if(!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
-        cat(paste0('Retention time cut-off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n##############################','\n'))
+        cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
     }
 
     if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
-        cat(paste0('Retention time cut-off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n##############################','\n'))
+        cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
     }
 
 
     # 2.) Linear Transformation of Retentiontimes
 
-    cat('Linear Transformation ... ')
+    cat('\nLinear Transformation ... ')
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
+    if(reference=="reference"){ # New option
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=0, reference = reference, rt_col_name = rt_col_name)
-    cat(paste('Done ... ','\n','Range of relative variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
-              '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... average relative variation: ",
-              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n################################################################################','\n','\n')
+    #gc_peak_list_linear <- gc_peak_list_linear[-] remove reference
+    }else{
+        gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
+                                                     error=0, reference = reference, rt_col_name = rt_col_name)
+        }
+
+     cat(paste('Done ... ','\n','Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
+              '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
+              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n','\n')
 gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
     #############
     # align peaks
     #############
 
-    cat(c('Start alignment of peaks ... ','This might take a while!\n','\n'))
+    cat(c('Start Alignment of Peaks ... ','This might take a while!\n','\n'))
 
     Fun_Fact()
     gc_peak_list_aligned <- gc_peak_list_linear
     no_peaks <- matrix(NA,nrow = n_iter,ncol = 1)
     merged_peaks <- matrix(NA, nrow = n_iter,ncol = 1)
-    for (R in 1:n_iter){ # Allows iteratively execute the algorithm
+    for (R in 1:n_iter){ # Allows to iteratively execute the algorithm
 
         gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
 
-    # see whether zero rows are present
+    # Check whether zero rows are present
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
     # delete empty rows (if existing)
@@ -288,11 +301,11 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 #         rare_peak_pairs <- length(similar) # WARNING: These are not definitive redundant, needs some thinking
     }
 
-    cat('\n','range of relative variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
-        '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... average relative variation: ",
+    cat('\n','Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
+        '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
         as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
-        '\n')
-    cat('Merged redundant peaks ... ')
+        '\n\n')
+    cat('Merged Redundant Peaks')
 
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
@@ -302,7 +315,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     } # End of iterative alignment and merging
 
-    cat(paste('\n','Peak alignment Done ... '),'\n')
+    cat(paste('\n','Peak Alignment Done'),'\n\n')
 
     ###############################################
     # Sort chromatograms back to the initial order
@@ -324,6 +337,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         for (i in blanks) {
             gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)
         }
+        cat('Blank Peaks deleted & Blanks removed\n\n')
     }
 
 
@@ -340,6 +354,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
             # delete substances occuring in just one individual
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }
+        cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'were removed'))
 
     }
 
@@ -415,6 +430,6 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     class(output_algorithm) <- "GCalign" # name of list
 
 
-    cat(paste('Alignment was successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
+    cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
     return(output_algorithm)
 }

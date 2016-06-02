@@ -33,15 +33,15 @@ if(!is.null(x$call$max_linear_shift)){ #check if defined
 }
 
 if(!is.null(x$call$diff_peak2mean)){ #check if defined
-    cat(paste("\t","Favoured peak-to-mean distance:",x$call$diff_peak2mean,"\n"))
+    cat(paste("\t","Maximum peak-to-mean distance:",x$call$diff_peak2mean,"\n"))
 }else{
-    cat(paste("\t","Favoured peak-to-mean distance:",0.02,"\n"))
+    cat(paste("\t","Maximum peak-to-mean distance:",0.02,"\n"))
 }
 
 if(!is.null(x$call$diff_peak2peak)){ #check if defined
-    cat(paste("\t","Favoured peak-peak distance:",x$summary$diff_peak2peak,"\n"))
+    cat(paste("\t","Maximum peak-peak distance:",x$summary$diff_peak2peak,"\n"))
 }else{
-    cat(paste("\t","Favoured peak-peak distance:",0.03,"\n"))
+    cat(paste("\t","Maximum peak-peak distance:",0.03,"\n"))
 }
 
 

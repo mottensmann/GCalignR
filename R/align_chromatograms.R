@@ -360,7 +360,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
             # delete substances occuring in just one individual
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }
-        cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'were removed'))
+        cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
 
     }
 

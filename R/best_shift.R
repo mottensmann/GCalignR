@@ -20,11 +20,12 @@
 #'
 best_shift <- function(peaks){
 
-    ShiftTime <- as.vector(peaks[[1]])
-    Peaks <- as.vector(peaks[[2]])
-    Index <- which(ShiftTime==max(ShiftTime)) # find the best fit = maximum of shared peaks
-    BestFit <- Peaks[Index]
+    shared <- as.vector(peaks[[1]]) # Name was confusing, these are the shared peaks
+    shifts <- as.vector(peaks[[2]]) # these are the shifts
+    Index <- which(shared==max(shared)) # find the best fit = maximum of shared peaks
+    BestFit <- shifts[Index]
     BestFit
+
     if (length(BestFit)>1){
         temp <- min(abs(BestFit)) # If equal shifts were found, take the smallest shift applied
         BestFit <- BestFit[BestFit==temp | BestFit==temp*-1]
@@ -32,6 +33,8 @@ best_shift <- function(peaks){
     } else{
         BestFit
     }
+    cat(paste('Shift = ',as.character(BestFit),', Shared Peaks = ',as.character(Index[1]),'\n')) # Delete later
+
 return(BestFit)
 }
 

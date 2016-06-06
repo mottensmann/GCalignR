@@ -47,6 +47,7 @@ linear_transformation <- function(gc_peak_list,reference,
     # Chroma_aligned <- list()
 
     shift_rts <- function(gc_peak_df, ref_df, max_linear_shift, step_size, error) {
+        cat("\n")
         optimal_shift <- peak_shift(gc_peak_df, ref_df, max_linear_shift, step_size, error, rt_col_name)
         shifted <- adjust_retention_time(gc_peak_df, optimal_shift, rt_col_name)
     }

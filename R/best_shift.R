@@ -33,7 +33,7 @@ best_shift <- function(peaks){
     } else{
         BestFit
     }
-    cat(paste('Shift = ',as.character(BestFit),', Shared Peaks = ',as.character(Index[1]),'\n')) # Delete later
+    #cat(paste('Shift = ',as.character(BestFit),', Shared Peaks = ',as.character(shared[Index[1]]),'\n')) # Delete later
 
 return(BestFit)
 }

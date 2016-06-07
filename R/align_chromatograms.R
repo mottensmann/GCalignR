@@ -92,6 +92,8 @@
 #' are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
 #' Always the peak with the higher abundance (i.e. peak area or peak height) is retained.
 #'
+#' @inheritParams shared_peaks
+#'
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
 #' \item{call}{function call}
@@ -120,7 +122,7 @@
 
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
-                                delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+                                delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE,error=error) {
 
 ###
     ### Allow the usage of another type of reference (i.e a standard that is not a sample)
@@ -251,11 +253,11 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n ',
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     if(reference=="reference"){ # New option
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
-                                            error=0, reference = reference, rt_col_name = rt_col_name)
+                                            error=error, reference = reference, rt_col_name = rt_col_name)
     gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # without elements reference
     }else{
         gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
-                                                     error=0, reference = reference, rt_col_name = rt_col_name)
+                                                     error=error, reference = reference, rt_col_name = rt_col_name)
         }
 
      cat(paste('Done ... ','\n','Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
@@ -325,8 +327,9 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     ###############################################
     # Sort chromatograms back to the initial order
     ###############################################
+    if(reference=="reference"){
     gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw)==reference)]; # remove the reference
-
+}
     gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw),names(gc_peak_list_aligned))]
 
 

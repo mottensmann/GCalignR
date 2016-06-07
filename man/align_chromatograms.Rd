@@ -8,7 +8,8 @@ align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
-  delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE)
+  delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE,
+  error = error)
 }
 \arguments{
 \item{data}{Two options. (1) The most common input is the path of a file with extension \code{.txt} to load data from.
@@ -73,6 +74,10 @@ with a Heatmap \code{\link{gc_heatmap}}.}
 \item{merge_rare_peaks}{logical determining whether peaks that are redundant by means of a similar retention times
 are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
 Always the peak with the higher abundance (i.e. peak area or peak height) is retained.}
+
+\item{error}{numeric value defining the allowed difference in retention times in
+of two shared peaks. The default \code{error=0} counts
+a peak as shared if retention times match excatly.}
 }
 \value{
 Returns an object of class GCalign that is a a list with the following elements:

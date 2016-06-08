@@ -9,7 +9,7 @@ align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
   delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE,
-  error = error)
+  error = 0.005)
 }
 \arguments{
 \item{data}{Two options. (1) The most common input is the path of a file with extension \code{.txt} to load data from.

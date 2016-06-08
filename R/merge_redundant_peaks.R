@@ -39,6 +39,8 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
         similar <- similar_peaks(average_rts, min_diff_peak2peak)    # remaining similarities
 
         counter <- 1
+
+        cat(length(similar),counter,"\n")
         while (counter!='Stop'){ # allows to update after each merge
 
             if (length(similar) == 0){ # break loop if no similar peaks are remaining
@@ -56,6 +58,7 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
 
                 # check2 <- similar[counter]
                 counter <- 'Stop'
+
 
                 # check <- do.call(cbind, lapply(gc_peak_list, function(x) x$RT))
 

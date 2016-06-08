@@ -34,32 +34,23 @@ merge_rows <- function(gc_peak_df, to_merge, criterion="strict", rt_col_name,con
     R1 <- gc_peak_df[Row1, rt_col_name]
     R2 <- gc_peak_df[Row2, rt_col_name]
     if (criterion=="strict"){
-       if (Row1 > 1 & Row2 < nrow(gc_peak_df)){ # Avoid taking first and last rows
+
             if (R1 == 0){
-                #  Delete Row1
-                gc_peak_df <- rbind(gc_peak_df[1:(Row1-1), ], gc_peak_df[Row2:nrow(gc_peak_df), ])
+                #  Delete Row1, if no peak exists
+                gc_peak_df <- gc_peak_df[-Row1,]
             } else if (R2 == 0){
                 # Delete Row2
-                gc_peak_df <- rbind(gc_peak_df[1:Row1,],gc_peak_df[(Row2+1):nrow(gc_peak_df), ])
+                gc_peak_df <- gc_peak_df[-Row2,]
             }
-       }
-
-      if (Row2 == nrow(gc_peak_df)){
-          if (R1 == 0) {
-            gc_peak_df <- rbind(gc_peak_df[1:(Row1-1), ], gc_peak_df[Row2:nrow(gc_peak_df), ])
-        } else if (R2 == 0){
-            gc_peak_df <- gc_peak_df[1:Row1, ]
-        }
       }
-    }
 
     if(criterion=="proportional"){ # Take the larger of two peaks, defined by the are of the peaks
-        if (gc_peak_df[Row1,conc_col_name] >= gc_peak_df[Row2,conc_col_name]){
-            gc_peak_df <- rbind(gc_peak_df[1:Row1,],gc_peak_df[(Row2+1):nrow(gc_peak_df),])
-        } else if (gc_peak_df[Row1,conc_col_name] < gc_peak_df[Row2,conc_col_name]) {
-            gc_peak_df <- rbind(gc_peak_df[1:(Row1-1),],gc_peak_df[Row2:nrow(gc_peak_df), ])
 
-        }
+        if (gc_peak_df[Row1,conc_col_name] >= gc_peak_df[Row2,conc_col_name]){ # Keep Peak1, skip Peak2
+            gc_peak_df <- gc_peak_df[-Row2,]
+        } else if (gc_peak_df[Row1,conc_col_name] < gc_peak_df[Row2,conc_col_name]) {
+            gc_peak_df <- gc_peak_df[-Row1,]
+            }
     }
-    gc_peak_df
+    return(gc_peak_df)
 }

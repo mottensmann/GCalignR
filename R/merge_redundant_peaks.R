@@ -40,7 +40,7 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
 
         counter <- 1
 
-        cat(length(similar),counter,"\n")
+        # cat(length(similar),counter,"\n")
         while (counter!='Stop'){ # allows to update after each merge
 
             if (length(similar) == 0){ # break loop if no similar peaks are remaining

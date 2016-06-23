@@ -40,4 +40,5 @@ peak_shift <- function(gc_peak_df, ref_df, max_linear_shift=0.05, step_size=0.01
     output <- shared_peaks(gc_peak_df, ref_df, shift_steps, error, rt_col_name) # List containg shared Peaks and their shifts
     output <- best_shift(output) # Which is the best setting
     output # Numeric Value, indicating the best shift (e.g. -0.02 seconds)
+
 }

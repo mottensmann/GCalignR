@@ -42,6 +42,16 @@ linear_transformation <- function(gc_peak_list,reference,
 
     # Include a vector of column names "ColNames" or specifiy the column which holds the
     # Apex of Retention Times "ColumnRT"
+    logFile <- TRUE
+    if(logFile==TRUE){
+        sink('GCalignR_LinShift.txt')
+        cat("This file shows the linear shifts applied during the run of GCalignR...\n")
+        cat("Samples and order of comparisons with the reference:\n")
+        print(names(gc_peak_list))
+        sink()
+    }
+
+    # Round to two digits, error = 0
 
     ref <- gc_peak_list[[reference]]
     # Chroma_aligned <- list()

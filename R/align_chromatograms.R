@@ -248,7 +248,18 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n ',
 
     # 2.) Linear Transformation of Retentiontimes
 
+    round_rt <- function(gc_peak_df,rt_col_name=rt_col_name){
+    gc_peak_df[rt_col_name] <- round(gc_peak_df[rt_col_name],digits = 2)
+    return(gc_peak_df)
+    }
+
+    gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
+
     cat('\nLinear Transformation ... ')
+
+    # Round retention times to decimals
+
+
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     if(reference=="reference"){ # New option
@@ -417,7 +428,10 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
             prefix <- "Aligned"
         }
         write_files <- function(x) {
-            write.table(output[[x]], file = paste0(prefix,"_", x, ".txt"), sep = "\t", row.names = FALSE)
+            write.table(output[[x]],
+                        file = paste0(prefix,"_param_",as.character(max_linear_shift),"_",
+                                      as.character(max_diff_peak2mean),"_",
+                                      as.character(min_diff_peak2peak),"_",delete_single_peak,"_",x, ".txt"), sep = "\t", row.names = FALSE)
         }
         lapply(write_output, write_files)
     }

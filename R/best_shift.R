@@ -22,10 +22,9 @@ best_shift <- function(peaks){
 
     shared <- as.vector(peaks[[1]]) # Name was confusing, these are the shared peaks
     shifts <- as.vector(peaks[[2]]) # these are the shifts
-    Index <- which(shared==max(shared)) # find the best fit = maximum of shared peaks
-    BestFit <- shifts[Index]
+    index <- which(shared==max(shared)) # find the best fit = maximum of shared peaks
+    BestFit <- shifts[index]
     BestFit
-
     if (length(BestFit)>1){
         temp <- min(abs(BestFit)) # If equal shifts were found, take the smallest shift applied
         BestFit <- BestFit[BestFit==temp | BestFit==temp*-1]
@@ -33,8 +32,11 @@ best_shift <- function(peaks){
     } else{
         BestFit
     }
-    #cat(paste('Shift = ',as.character(BestFit),', Shared Peaks = ',as.character(shared[Index[1]]),'\n')) # Delete later
-
+    if(file.exists("GCalignR_LinShift.txt")){
+    sink("GCalignR_LinShift.txt",append = TRUE)
+    cat(paste('\nShift = ',as.character(format(round(BestFit,2),nsmall=2)),'\t\tShared Peaks = ',as.character(shared[index[1]]))) # Delete later
+    sink()
+    }
 return(BestFit)
 }
 

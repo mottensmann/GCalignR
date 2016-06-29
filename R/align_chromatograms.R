@@ -123,7 +123,6 @@
 #'          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'
-#'
 #' @export
 #'
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
@@ -132,18 +131,13 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 # error is just a function argument for testing purposes,
     # will be deleted later on. Error will than be specified in linear transformation. Default 0.005
 
-    # Prepare a LogFile in the format of a sink-txt-file, if LogFile=TRUE
-    # Thereby the amount of information can be reduced to give only a brief explanation,
-    # about the current status of the alignment process
-
-    if(LogFile==TRUE){
-        sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = FALSE)
+        if(LogFile==TRUE){
+        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = FALSE)
         cat("Run GCalignR with samples from:",as.character(match.call()["data"]),"\n")
         cat("Start:",as.character(strftime(Sys.time())),'\n\n')
         sink()
     }
     cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n'))
-
 
     ###############################################
     # Check if all required arguments are specified
@@ -184,7 +178,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
             #####################
             # remove pure NA rows
             #####################
-            gc_data <- gc_data[!(rowSums(is.na(gc_data)) == nrow(gc_data)), ]
+            gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
 
             ############################################################
             # remove pure NA columns
@@ -235,12 +229,12 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
 #                '\n','\n'))
 
 if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-    sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+    sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n',
                'Range of Relative Variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
                '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
-               '\n','\n'))
+               '\n'))
         sink()
 }
 
@@ -250,10 +244,6 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
 
     # 1.) cut retention times
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
-
-    #####################
-    # save for later use
-    ####################
 
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
@@ -314,9 +304,10 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
 
         if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
             sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+            cat('Peaks have been aligned:')
             cat(paste0('\n\nRange of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
               '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n','\n')
+              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n')
             sink()
         }
     cat("Done\n\n")
@@ -331,11 +322,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     #############
 
     cat(c('Start Alignment of Peaks ... ','This might take a while!\n','\n'))
-if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-    sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
-    cat(c('Peaks have been aligned:'))
-    sink()
-}
+
     Fun_Fact()
     gc_peak_list_aligned <- gc_peak_list_linear
     no_peaks <- matrix(NA,nrow = n_iter,ncol = 1)
@@ -374,7 +361,7 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
     }
 
     if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-        sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
         cat('Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
             '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
             as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
@@ -406,8 +393,6 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
 }
     gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw),names(gc_peak_list_aligned))]
 
-
-
     # delete blanks
     if (!is.null(blanks)) {
         # delete one blank
@@ -421,13 +406,12 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
             gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)
         }
         if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-            sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat('Blank Peaks deleted & Blanks removed\n\n')
             sink()
         }
             cat('Blank Peaks deleted & Blanks removed\n\n')
     }
-
 
     # delete single substances
     # create matrix with all retention times
@@ -443,7 +427,7 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }
         if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-            sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
             sink()
         }
@@ -522,14 +506,11 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
                             linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
                              call=match.call())
 
-
-
     class(output_algorithm) <- "GCalign" # name of list
-
 
     cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
     if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-        sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
         cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time()),'\n')
         sink()
     }

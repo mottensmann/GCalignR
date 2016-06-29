@@ -9,7 +9,7 @@ align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
   delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE,
-  error = 0.005)
+  error = 0.005, LogFile = FALSE)
 }
 \arguments{
 \item{data}{Two options. (1) The most common input is the path of a file with extension \code{.txt} to load data from.
@@ -41,7 +41,9 @@ Strings need to correspond to column name of the \code{datafile}.}
 
 \item{reference}{Character string of a sample to which all other samples are aligned to by means of a
 linear shift (e.g. "individual3"). The name has to correspond to an individual name given
-in the first line of \code{datafile}.}
+in the first line of \code{datafile}. Alternatively a sample called \code{reference} can be included
+in data containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear
+transformation \code{reference} will be removed from the data.}
 
 \item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks
 with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
@@ -78,6 +80,11 @@ Always the peak with the higher abundance (i.e. peak area or peak height) is ret
 \item{error}{numeric value defining the allowed difference in retention times in
 of two shared peaks. The default \code{error=0} counts
 a peak as shared if retention times match excatly.}
+
+\item{LogFile}{logical determining if a protocoll of the alignment procedure is written to a file (e.g gc_data_LogFile.txt)
+  where the prefix is given by the name of \code{data}.
+The file can be accessed during the function is excetued and will updated in real-time.
+By default no file is generated.}
 }
 \value{
 Returns an object of class GCalign that is a a list with the following elements:
@@ -112,7 +119,6 @@ out <- align_chromatograms(gc_peak_data, conc_col_name = "area", rt_col_name = "
        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
          blanks = NULL, delete_single_peak = TRUE)
-
 
 }
 

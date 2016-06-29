@@ -15,8 +15,8 @@
 print.GCalign: Gives an overview about an executed alignment
 }
 \details{
-for function arguments that have not  been entered the default are printer, but
-these are update automatically, if these are changed in the main funtion !
+for function arguments that have not been entered the default are printer, but
+these are update automatically, if these are changed in the main funtion!
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

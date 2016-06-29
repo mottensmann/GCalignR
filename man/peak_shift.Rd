@@ -4,7 +4,7 @@
 \alias{peak_shift}
 \title{shifts peaks}
 \usage{
-peak_shift(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.01,
+peak_shift(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.005,
   error = 0, rt_col_name)
 }
 \arguments{

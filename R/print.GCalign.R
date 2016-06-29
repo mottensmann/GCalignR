@@ -1,8 +1,8 @@
 #' print.GCalign: Gives an overview about an executed alignment
 #'
 #' @details
-#' for function arguments that have not  been entered the default are printer, but
-#' these are update automatically, if these are changed in the main funtion !
+#' for function arguments that have not been entered the default are printer, but
+#' these are update automatically, if these are changed in the main funtion!
 #'
 #' @param x
 #' Object of class \code{GCalign}
@@ -57,5 +57,4 @@ cat("\nOutput")
 
     cat(paste("\t","Mean relative Variance in retention time per peak before alignment:",round(x$summary$variance_before$average,4),"\n"))
     cat(paste("\t","Mean relative Variance in retention time per peak after alignment:",round(x$summary$variance_aligned$average,4),"\n"))
-
 }

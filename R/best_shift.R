@@ -33,7 +33,7 @@ best_shift <- function(peaks){
         BestFit
     }
     if(file.exists(paste0(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),"_LogFile.txt"))){
-    sink(paste0(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),"_LogFile.txt"),append = TRUE)
+    sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
     cat(paste('\nShift = ',as.character(format(round(BestFit,3),nsmall=2)),'\tShared Peaks = ',as.character(shared[index[1]]))) # Delete later
     sink()
     }

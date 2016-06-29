@@ -44,8 +44,8 @@ linear_transformation <- function(gc_peak_list,reference,
     # Apex of Retention Times "ColumnRT"
 
     if(file.exists(paste0(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),"_LogFile.txt"))){
-        sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
-        cat("Samples in order of comparisons with the reference:\n")
+        sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split=".txt"),"_LogFile.txt"),append = TRUE)
+        cat("\nSamples in order of comparisons with the reference:\n")
         print(names(gc_peak_list))
         sink()
     }

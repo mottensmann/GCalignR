@@ -39,9 +39,14 @@
 align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name,R=1) {
 
     #for (R in 1:n_iter){
+   if(file.exists(paste0(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),"_LogFile.txt"))){
+        sink(paste0(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),"_LogFile.txt"),append = TRUE)
+        cat(paste('Iteration',as.character(R),'out of',as.character(n_iter),"\n"))
+        sink()
+    }
 
-        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),' ... ')) # Need to test whether it works
-    set.seed(999) # Remove this after testing the algorithm !!!!!!!!!!!!!!
+        cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),' ... '))
+    # set.seed(999) # Remove this after testing the algorithm !!!!!!!!!!!!!!
     shuffle_order <- sample(1:length(gc_peak_list))
         gc_peak_list <- gc_peak_list[shuffle_order] # Shuffle
 

@@ -29,12 +29,12 @@ best_shift <- function(peaks){
         temp <- min(abs(BestFit)) # If equal shifts were found, take the smallest shift applied
         BestFit <- BestFit[BestFit==temp | BestFit==temp*-1]
         if (length(BestFit > 1)) BestFit <- BestFit[1]
-    } else{
+    }else{
         BestFit
     }
-    if(file.exists("GCalignR_LinShift.txt")){
-    sink("GCalignR_LinShift.txt",append = TRUE)
-    cat(paste('\nShift = ',as.character(format(round(BestFit,2),nsmall=2)),'\t\tShared Peaks = ',as.character(shared[index[1]]))) # Delete later
+    if(file.exists(paste0(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),"_LogFile.txt"))){
+    sink(paste0(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),"_LogFile.txt"),append = TRUE)
+    cat(paste('\nShift = ',as.character(format(round(BestFit,3),nsmall=2)),'\tShared Peaks = ',as.character(shared[index[1]]))) # Delete later
     sink()
     }
 return(BestFit)

@@ -26,7 +26,7 @@
 #' @export
 
 
-peak_shift <- function(gc_peak_df, ref_df, max_linear_shift=0.05, step_size=0.01, error=0, rt_col_name){
+peak_shift <- function(gc_peak_df, ref_df, max_linear_shift=0.05, step_size=0.005, error=0, rt_col_name){
     # This functions shifts retention times of a chromatogram and estimates
     # the number of shared peaks with the reference.
     # Calling 'SharedPeaks' to count the number of shared peaks for a given shift

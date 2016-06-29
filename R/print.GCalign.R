@@ -44,8 +44,6 @@ if(!is.null(x$call$diff_peak2peak)){ #check if defined
     cat(paste("\t","Maximum peak-peak distance:",0.03,"\n"))
 }
 
-
-
 cat("\nOutput")
     cat(paste("\t", "Number of distinct peaks:",x$summary$No_Peaks_aligned),"\n")
     if(!is.null(x$call$delete_single_peak)){ #check if defined
@@ -60,6 +58,4 @@ cat("\nOutput")
     cat(paste("\t","Mean relative Variance in retention time per peak before alignment:",round(x$summary$variance_before$average,4),"\n"))
     cat(paste("\t","Mean relative Variance in retention time per peak after alignment:",round(x$summary$variance_aligned$average,4),"\n"))
 
-    }
-
-
+}

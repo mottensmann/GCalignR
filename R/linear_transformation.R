@@ -32,7 +32,7 @@
 #'
 
 linear_transformation <- function(gc_peak_list,reference,
-    max_linear_shift=0.05, step_size=0.01, error=0, rt_col_name){
+    max_linear_shift=0.05, step_size=0.005, error=0, rt_col_name){
     # This is the master function which calls all sub-functions in order to
     # utilize a maximisation of the number of shared peaks
     # Mandatory arguments of this function are:
@@ -42,16 +42,13 @@ linear_transformation <- function(gc_peak_list,reference,
 
     # Include a vector of column names "ColNames" or specifiy the column which holds the
     # Apex of Retention Times "ColumnRT"
-    logFile <- TRUE
-    if(logFile==TRUE){
-        sink('GCalignR_LinShift.txt')
-        cat("This file shows the linear shifts applied during the run of GCalignR...\n")
-        cat("Samples and order of comparisons with the reference:\n")
+
+    if(file.exists(paste0(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),"_LogFile.txt"))){
+        sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+        cat("Samples in order of comparisons with the reference:\n")
         print(names(gc_peak_list))
         sink()
     }
-
-    # Round to two digits, error = 0
 
     ref <- gc_peak_list[[reference]]
     # Chroma_aligned <- list()

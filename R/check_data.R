@@ -67,7 +67,7 @@ check_data <- function(data, sep = "\t") {
             ##############
             # extract data
             ##############
-            gc_data <- read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+            gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
 
             #####################
             # remove pure NA rows

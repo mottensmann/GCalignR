@@ -173,7 +173,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
             ##############
             # extract data
             ##############
-            gc_data <- read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+            gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
 
             #####################
             # remove pure NA rows
@@ -485,7 +485,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
             prefix <- "Aligned"
         }
         write_files <- function(x) {
-            write.table(output[[x]],
+            utils::write.table(output[[x]],
                         file = paste0(prefix,"_param_",as.character(max_linear_shift),"_",
                                       as.character(max_diff_peak2mean),"_",
                                       as.character(min_diff_peak2peak),"_",delete_single_peak,"_",x, ".txt"), sep = "\t", row.names = FALSE)

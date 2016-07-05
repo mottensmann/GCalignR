@@ -11,8 +11,9 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
 #' @export
+#'
 
 mean_retention_times = function(gc_peak_list, rt_col_name){
     n_substance <- nrow(gc_peak_list[[1]]) # all_chromatograms have equal number of rows

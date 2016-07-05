@@ -23,4 +23,5 @@ data.frames of \code{gc_peak_list}. Calculations are performed by \code{\link{me
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

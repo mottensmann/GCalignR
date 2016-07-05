@@ -12,7 +12,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#'
+#' @keywords internal
 #'@export
 
 shift_rows = function(chromatograms, current_sample_index, retention_row){

@@ -18,8 +18,9 @@
 #' Rows represent distinct peaks. Retention time is a required variable.
 #'
 #' @return a appended matrix.
-#'
+#' @keywords internal
 #' @export
+#'
 #'
 
 matrix_append <- function(gc_peak_df, gc_peak_list){

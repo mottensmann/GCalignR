@@ -39,4 +39,5 @@ is adjustable as well as the step size within this range.
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

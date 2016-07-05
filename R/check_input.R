@@ -1,4 +1,4 @@
-#' Check data input
+#' Check correct formatting of data input
 #'
 #'@description
 #' Checks whether the data is formatted correctly. The data can either be a .txt file
@@ -28,7 +28,7 @@
 #' @export
 #'
 
-check_data <- function(data, sep = "\t") {
+check_input <- function(data, sep = "\t") {
 
     if (is.character(data)) {
         if (stringr::str_detect(data, ".txt")) {

@@ -27,8 +27,9 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
 #' @export
+#'
 #'
 merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_name,conc_col_name,criterion="strict"){
 

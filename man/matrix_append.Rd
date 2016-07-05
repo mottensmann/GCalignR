@@ -25,4 +25,5 @@ largest matrix having the most rows of the list \code{gc_peak_list}.
 If the matrix has the same dimensions as the largest of \code{gc_peak_list}
          the input matrix is returned.
 }
+\keyword{internal}
 

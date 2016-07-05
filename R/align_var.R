@@ -14,7 +14,7 @@
 #' \item{range}{the minimum and maximum relative variation of peak retention times}
 #' \item{average}{the mean relative variation of peak retention times}
 #'
-#'
+#' @keywords internal
 #' @export
 #'
 

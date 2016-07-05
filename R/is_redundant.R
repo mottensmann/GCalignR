@@ -17,7 +17,9 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
+
+
 is_redundant <- function(redundant, criterion="strict"){
     # Indicates by a binary output variable (1/0) if rows should be merged
     # Methods: Strict: A single sample with two peaks prevents merging

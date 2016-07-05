@@ -17,7 +17,9 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'   (meinolf.ottensmann@@web.de)
 #'
+#' @keywords internal
 #' @export
+#'
 
 adjust_retention_time <- function(chromatogram, OptimalShift, ret_col_name){
     # Apply the estimated shift of the retention time to the

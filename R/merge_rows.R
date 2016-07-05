@@ -24,7 +24,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#'
+#' @keywords internal
 #'
 merge_rows <- function(gc_peak_df, to_merge, criterion="strict", rt_col_name,conc_col_name){
     # Check always the row containing just zeros, in case of zeros in both, just delete one of them

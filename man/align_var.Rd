@@ -22,4 +22,5 @@ a list of two numeric vectors
 times of peaks that are currently within the same row in data.frames of \code{gc_peak_list}
 (i.e. classified as same substance).
 }
+\keyword{internal}
 

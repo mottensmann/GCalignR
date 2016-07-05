@@ -9,7 +9,9 @@
 #' @inheritParams similar_peaks
 #'
 #' @param average_rts numeric
+#' @keywords internal
 #'@export
+#'
 
 delete_empty_rows <- function(gc_peak_df, average_rts){
 gc_peak_df <- gc_peak_df[!is.na(average_rts), ]

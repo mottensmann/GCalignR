@@ -17,4 +17,5 @@ Rows represent distinct peaks. Retention time is a required variable.}
 with an average retention time of value NA (i.e. no peak is present in any data.frame) at this
 location.
 }
+\keyword{internal}
 

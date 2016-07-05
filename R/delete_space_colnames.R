@@ -9,9 +9,10 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
 #' @export
 #'
+
 delete_space_colnames <- function(gc_data) {
     names(gc_data) <- stringr::str_replace_all(names(gc_data), " ", "")
     gc_data

@@ -32,7 +32,7 @@
 #'
 
 linear_transformation <- function(gc_peak_list,reference,
-    max_linear_shift=0.05, step_size=0.005, error=0, rt_col_name){
+    max_linear_shift=0.05, step_size=0.01, error=0, rt_col_name){
     # This is the master function which calls all sub-functions in order to
     # utilize a maximisation of the number of shared peaks
     # Mandatory arguments of this function are:

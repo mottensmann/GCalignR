@@ -23,7 +23,7 @@
 #' @examples
 #' data(gc_peak_data)
 #' gc_peak_data <- gc_peak_data[1:4]
-#' check_data(gc_peak_data)
+#' check_input(gc_peak_data)
 #'
 #' @export
 #'

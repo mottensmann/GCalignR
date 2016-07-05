@@ -26,7 +26,7 @@ or a list of data.frames. See \code{\link{align_chromatograms}}
 \examples{
 data(gc_peak_data)
 gc_peak_data <- gc_peak_data[1:4]
-check_data(gc_peak_data)
+check_input(gc_peak_data)
 
 }
 

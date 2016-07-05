@@ -5,10 +5,10 @@
 #'
 #'@details
 #'Alignment is archieved by running three major algorithms always considering the complete
-#'set of samples submitted to the function. In brief: All chromatograms are linearly shifted to
-#'maximise similarity with a common reference to account for systematic shifts in retention times
-#'caused by gas-chromatography processing. Second, peaks of similar retention times are step-wise
-#'transfered to the same location (i.e row) in order to group substances. In a third step peaks (i.e.substances)
+#'set of samples submitted to the function. In brief: All chromatogram peaks are linearly shifted to
+#'maximise similarity with a reference to account for systematic shifts in retention times
+#'caused by gas-chromatography processing. Second, peaks of similar retention times are
+#'transfered step-wise to the same location (i.e row) in order to group substances. In a third step peaks (i.e.substances)
 #'that show smaller differences in mean retention times than expected by the achievable resolution
 #'of the gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
 #'removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just

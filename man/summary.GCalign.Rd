@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{Object of class \code{GCalign}}
+
+\item{...}{additional input to summary.GCalign}
 }
 \description{
 print.GCalign: Prints a the protocol of an alignment process exectuted via align_chromatogtams

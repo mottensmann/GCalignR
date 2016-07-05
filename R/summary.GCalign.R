@@ -5,6 +5,7 @@
 #'
 #' @param object
 #' Object of class \code{GCalign}
+#' @param ... additional input to summary.GCalign
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)

@@ -294,11 +294,11 @@ if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     if(reference=="reference"){ # New option
-    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.005,
+    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=error, reference = reference, rt_col_name = rt_col_name)
     gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # without elements reference
     }else{
-        gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.005,
+        gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                                      error=error, reference = reference, rt_col_name = rt_col_name)
         }
 

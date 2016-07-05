@@ -228,7 +228,7 @@ cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
 #                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
 #                '\n','\n'))
 
-if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
+if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
     sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n',
                'Range of Relative Variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
@@ -249,8 +249,8 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
 
     if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
     # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
-        if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-            sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat(paste0('Retention Time Cut-Off applied:', ' Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
             sink()
         }
@@ -258,8 +258,8 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
 
     if(!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
         # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
-        if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-            sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
             sink()
         }
@@ -267,8 +267,8 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
 
     if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
         # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
-        if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-            sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
             sink()
         }
@@ -286,25 +286,25 @@ if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
     gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
     cat(paste0('\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
-    if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-        sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
+    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
         cat(paste0('\nLinear Transformation with ',"\"",as.character(reference),"\"",' as a reference'))
         sink()
     }
 
     ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
     if(reference=="reference"){ # New option
-    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.005,
+    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                             error=error, reference = reference, rt_col_name = rt_col_name)
     gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # without elements reference
     }else{
-        gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.005,
+        gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                                      error=error, reference = reference, rt_col_name = rt_col_name)
         }
 
-        if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
-            sink(paste0(as.character(match.call()["data"]),"_LogFile.txt"),append = TRUE)
-            cat('Peaks have been aligned:')
+    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+        cat('\nPeaks have been aligned:')
             cat(paste0('\n\nRange of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
               '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
               as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n')
@@ -360,7 +360,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 #         rare_peak_pairs <- length(similar) # WARNING: These are not definitive redundant, needs some thinking
     }
 
-    if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
+    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
         sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
         cat('Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
             '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
@@ -405,7 +405,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
         for (i in blanks) {
             gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)
         }
-        if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat('Blank Peaks deleted & Blanks removed\n\n')
             sink()
@@ -426,7 +426,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
             # delete substances occuring in just one individual
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }
-        if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
             sink()
@@ -509,7 +509,7 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     class(output_algorithm) <- "GCalign" # name of list
 
     cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
-    if(file.exists(paste0(as.character(match.call()["data"]),"_LogFile.txt"))){
+    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
         sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
         cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time()),'\n')
         sink()

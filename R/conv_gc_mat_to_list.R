@@ -4,7 +4,7 @@
 #' Transforms a data.frame containing GC-data (e.g. retention times, peak area, peak height etc.) to a list.
 #' Data belonging to individual samples are concatenated horizontally in \code{gc_data}. Every samples needs to
 #' have the same number of columns in consistent order. This means for example columns 1:3 belong to \code{Ind A}
-#' and columns 4.6 to \code{Ind B} and so forth.
+#' and columns 4:6 to \code{Ind B} and so forth.
 #'
 #' @param gc_data
 #' data.frame containing GC-data for all individuals in adjacent columns. Samples need to have the same

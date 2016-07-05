@@ -39,7 +39,7 @@
 align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name,R=1) {
 
     #for (R in 1:n_iter){
-   if(file.exists(paste0(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),"_LogFile.txt"))){
+   if(file.exists(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split = ".txt"),"_LogFile.txt"))){
         sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
         cat(paste('\nIteration',as.character(R),'out of',as.character(n_iter),"\n"))
         sink()

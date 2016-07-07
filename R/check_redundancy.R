@@ -18,7 +18,7 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
 
 check_redundancy <- function(gc_peak_df, similar_peaks, rt_col_name){
     # If only one of two neighbouring rows contain a substance

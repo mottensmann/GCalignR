@@ -19,7 +19,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#'
+#' @keywords internal
 #'
 similar_peaks <- function(average_rts, min_diff_peak2peak=0.05){
 

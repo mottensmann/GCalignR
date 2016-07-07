@@ -26,6 +26,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'   (meinolf.ottensmann@@web.de)
 #'
+#' @keywords internal
 #' @export
 shared_peaks <- function(gc_peak_df, ref_df, shift_steps, error=0, rt_col_name) {
     # Calculate the Number of shared peaks between a Chromatogram and its reference

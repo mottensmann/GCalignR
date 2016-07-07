@@ -15,7 +15,7 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
 #' @export
 #'
 rt_extract <- function(gc_peak_list,rt_col_name){

@@ -22,10 +22,11 @@ A list of data.frames containing GC-data of individual samples
 Transforms a data.frame containing GC-data (e.g. retention times, peak area, peak height etc.) to a list.
 Data belonging to individual samples are concatenated horizontally in \code{gc_data}. Every samples needs to
 have the same number of columns in consistent order. This means for example columns 1:3 belong to \code{Ind A}
-and columns 4.6 to \code{Ind B} and so forth.
+and columns 4:6 to \code{Ind B} and so forth.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

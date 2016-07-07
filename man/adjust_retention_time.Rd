@@ -29,4 +29,5 @@ If competing shifts exists (i.e. same number of peaks are shared),
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
   (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

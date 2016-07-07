@@ -32,4 +32,5 @@ In addition to cutting retention times, this function removes rows of \code{gc_p
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

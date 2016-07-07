@@ -26,4 +26,5 @@ data.frame containing retention times of all samples in \code{gc_peak_list}.
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

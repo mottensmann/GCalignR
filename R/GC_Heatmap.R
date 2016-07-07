@@ -34,7 +34,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#' @import ggplot2 RColorBrewer
+#' @import ggplot2 RColorBrewer grDevices
 #'
 #' @export
 #'
@@ -148,8 +148,8 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
                      axis.text.y=element_text(size = 5))
     hm <- hm + coord_equal(ncol(rt_df)/nrow(rt_df))
 
-    return(suppressWarnings(hm))
-    options(warn = oldw)
+    # return(suppressWarnings(hm))
+    # options(warn = oldw)
 
 }
 

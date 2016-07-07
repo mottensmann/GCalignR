@@ -27,4 +27,5 @@ individual chromatogram. The desired measure of peak abundance needs to be a col
 within the original gas-chromatography data \code{datafile} submitted to
 \link{align_chromatograms}.
 }
+\keyword{internal}
 

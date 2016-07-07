@@ -5,7 +5,7 @@
 \title{Shift peaks to eliminate systematic inaccuracies of peak detection by GC.}
 \usage{
 linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
-  step_size = 0.005, error = 0, rt_col_name)
+  step_size = 0.01, error = 0, rt_col_name)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
@@ -39,4 +39,5 @@ is adjustable as well as the step size within this range.
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+\keyword{internal}
 

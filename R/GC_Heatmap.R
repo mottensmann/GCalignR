@@ -150,7 +150,7 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
 
     # return(suppressWarnings(hm))
     # options(warn = oldw)
-
+    return(hm)
 }
 
 

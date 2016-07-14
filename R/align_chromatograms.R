@@ -1,46 +1,46 @@
-#' Aligning chromatograms based on retention times
+#' Aligning Peaks based on retention times
 #'
 #'@description
 #'\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}.
 #'
 #'@details
-#'Alignment is archieved by running three major algorithms always considering the complete
-#'set of samples submitted to the function. In brief: All chromatogram peaks are linearly shifted to
+#'The Alignment of Peaks is archieved by running three major algorithms always considering the complete
+#'set of samples submitted to the function. In brief: All peaks are linearly shifted to
 #'maximise similarity with a reference to account for systematic shifts in retention times
 #'caused by gas-chromatography processing. Second, peaks of similar retention times are
 #'transfered step-wise to the same location (i.e row) in order to group substances. In a third step peaks (i.e.substances)
 #'that show smaller differences in mean retention times than expected by the achievable resolution
-#'of the gas-chromatography or the chemistry of the compounds are merged. Optional processing includes the
-#'removal of peaks present in blanks (i.e. contaminations) and peaks that a uniquely found within just
-#'one sample.
+#'of the gas-chromatography or the chemistry of the compounds are merged. Several optional processing steps are available
+#'ranging from the removal of peaks representing contaminations (requires to include blanks as a control) to the removal
+#'of uninformative peaks that are present in just one sample.
 #'
 #'@param data
-#' Two options. (1) The most common input is the path of a file with extension \code{.txt} to load data from.
+#' Two options. (1) The most common input is the path to a file with extension \code{.txt} to load data.
 #' The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
 #' third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The
 #' matrix for each sample needs to consist of the same number of columns, at least two are required:The
 #' retention time and a measure of concentration (e.g. peak area or height). See the package
 #' vignette for an example. (2) The alternative input is a list of data.frames. Each data.frame
 #' contains the peak data for a single individual with at least two variables, the retention time of
-#' the peak and the area under the peak. The variables have to have the name name across all samples
+#' the peak and the area under the peak. The variables have to have the same name across all samples
 #' (data.frames). Also, each list element (i.e. each data.frame) has to be named with the ID of
 #' the individual. See the vignette for an example.
 #'
 #'@param sep
 #'The field separator character. Values on each line of the file are separated by this
-#'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
+#'character. The default is tab seperated (sep = '\\t'). See the \code{sep} argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param conc_col_name
-#'Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+#'Character string naming a column used for the quantification of peaks (e.g. peak area or peak height).
 #'The designated variable needs to be numeric.
 #'
 #'@param rt_col_name
-#'Character string naming the column holding retention times.The designated variable needs to be numeric.
+#'Character string naming the column containing retention times.The designated variable needs to be numeric.
 #'
 #'@param write_output
 #' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 #' The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.
-#' Strings need to correspond to column name of the \code{datafile}.
+#' Strings need to correspond to column names of the \code{datafile}.
 #'
 #'@param rt_cutoff_low
 #'Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
@@ -50,9 +50,9 @@
 #'
 #'@param reference
 #'Character string of a sample to which all other samples are aligned to by means of a
-#'  linear shift (e.g. "individual3"). The name has to correspond to an individual name given
-#'  in the first line of \code{datafile}. Alternatively a sample called \code{reference} can be included
-#'  in data containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear
+#'  linear shift (e.g. \code{"individual3"}. The name has to correspond to an individual name given
+#'  in the first line of \code{data}. Alternatively a sample called \code{reference} can be included
+#'  in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear
 #'  transformation \code{reference} will be removed from the data.
 #'
 #'@param max_linear_shift
@@ -63,10 +63,10 @@
 #'@param max_diff_peak2mean
 #' Defines the allowed deviation of retention times around the mean of
 #' the corresponding row. Peaks with differing retention times are moved
-#' to the appropriate mean retention time. Default is 0.02.
+#' to a more appropriate mean retention time. Default is 0.02.
 #'
 #'@param min_diff_peak2peak
-#'Defines the desired minimum difference in retention times among distinct
+#'Defines the minimum difference in retention times among distinct
 #'substances. Substances that differ less, are merged if every sample contains either one
 #'or none of the respective compounds. This parameter is a major determinant in the classification
 #'of distinct peaks. Therefore careful consideration is required to adjust this setting to
@@ -77,14 +77,14 @@
 #'@param blanks
 #'Character vector of names of blanks. If specified, all substances found in any of the blanks
 #'will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
-#'to a name given in the first line of \code{datafile}.
+#'to a name given in the first line of \code{data}.
 #'
 #'@param delete_single_peak
 #'logical, determines whether substances that occur in just one sample are
 #' removed or not. By default single substances are retained in chromatograms.
 #'
 #'@param n_iter
-#' integer indicating the iterations of the core alignment algorithm. Additional replications of
+#' integer indicating the number of iterations of the core alignment algorithm. Additional replications of
 #' the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
 #' some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
 #' with a Heatmap \code{\link{gc_heatmap}}.
@@ -96,10 +96,9 @@
 #'
 #' @inheritParams shared_peaks
 #'
-#' @param LogFile logical determining if a protocoll of the alignment procedure is written to a file (e.g gc_data_LogFile.txt)
-#'          where the prefix is given by the name of \code{data}.
-#'        The file can be accessed during the function is excetued and will updated in real-time.
-#'        By default no file is generated.
+#' @param LogFile
+#' logical determining if a protocoll of the alignment procedure is written to a file (e.g gc_data_LogFile.txt)
+#' where the prefix is given by the name of \code{data}.
 #'
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
@@ -126,107 +125,80 @@
 #' @export
 #'
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
-                                max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03, blanks = NULL,
+                                max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE,error=0.005,LogFile=FALSE) {
-# error is just a function argument for testing purposes,
-    # will be deleted later on. Error will than be specified in linear transformation. Default 0.005
 
-        if(LogFile==TRUE){
-        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = FALSE)
-        cat("Run GCalignR with samples from:",as.character(match.call()["data"]),"\n")
-        cat("Start:",as.character(strftime(Sys.time())),'\n\n')
-        sink()
+cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n')) # print time of GCaligner Start
+
+# if(LogFile==TRUE){
+#         sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = FALSE)
+#         cat("Run GCalignR with samples from:",as.character(match.call()["data"]),"\n")
+#         cat("Start:",as.character(strftime(Sys.time())),'\n\n')
+#         sink()
+# }
+
+
+# Check valid specification of paramters in the function call
+#############################################################
+if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
+if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
+if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
+
+
+#####################################################
+# Check if Data is a correctly formatted Text File; #
+# Extract ind_names; col_names & data               #
+#####################################################
+if (is.character(data)) {
+    if (stringr::str_detect(data, ".txt")) {
+    }else{
+        stop("Data is not of the expected format. Specify a valid path to a .txt-file")
+
+        ind_names <- readr::read_lines(data, n_max = 1) %>% # Sample Names
+        stringr::str_split(pattern = sep) %>%
+        unlist()
+        ind_names <- ind_names[ind_names != ""]
+
+        col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>% # Variable Names
+        stringr::str_split(pattern = sep) %>%
+        unlist()
+        col_names <- col_names[col_names != ""]
+        col_names <- stringr::str_trim(col_names)
+        ind_names <- stringr::str_trim(ind_names)
+
+        gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F) # Peak Data
+        gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ] # Remove just NA-rows
+        gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))] # Remove empty rows
+        gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))# Transform variables to numeric
+
+###########################################
+# Check input for completeness and format #
+###########################################
+if (!((ncol(gc_data) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
+if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
+if(any(duplicated(ind_names)))warning("Avoid duplicates in sample names")
+gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names) # convert to list
     }
-    cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n'))
 
-    ###############################################
-    # Check if all required arguments are specified
-    ################################################
-    if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
-    if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
-    if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
-
-    # check if data is a .txt file to load
-    if (is.character(data)) {
-        if (stringr::str_detect(data, ".txt")) {
-            ###############
-            # extract names
-            ###############
-            ind_names <- readr::read_lines(data, n_max = 1) %>%
-                stringr::str_split(pattern = sep) %>%
-                unlist()
-            ind_names <- ind_names[ind_names != ""]    #.[. != ""]
-
-            ######################
-            # extract column names
-            ######################
-            col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
-                stringr::str_split(pattern = sep) %>%
-                unlist()
-            col_names <- col_names[col_names != ""]    #.[. != ""]
-            ########################################
-            # remove leading and tailing whitespaces
-            ########################################
-            col_names <- stringr::str_trim(col_names)
-            ind_names <- stringr::str_trim(ind_names)
-
-            ##############
-            # extract data
-            ##############
-            gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
-
-            #####################
-            # remove pure NA rows
-            #####################
-            gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
-
-            ############################################################
-            # remove pure NA columns
-            # Note: Putatively created when wrangling the data in excel
-            # It is not visible, that empty columns are in the data!
-            ############################################################
-
-            gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]
-            ######################
-            # transform to numeric
-            ######################
-            gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
-
-            #########################################
-            # Check input for completeness and format
-            #########################################
-            # check 1
-            if (!((ncol(gc_data) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
-            # check 2
-            if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
-            # check 3
-            if(any(duplicated(ind_names)))warning("Avoid duplicate sample names")
-
-            # matrix to list
-            gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
-        }
-
-    } else if (is.list(data)) {
-        # check if data is list of data.frames
-        # check for data.frames
-        if (!(all(unlist(lapply(data, is.data.frame))))) stop("Data object has to be a list, whereby each element is a data.frame with the GC peak data for an individual")
-        # check whether all data.frames have a name
-        if ((is.null(names(data)))) stop("Data object has to be a list, whereby each element has to be named with the ID of the respective individual")
-        # check whether all data.frames contain the same column names
-        col_names <- unlist(lapply(data, function(x) out <- names(x)))
-        if(any(table(col_names) != length(data))) stop("Each data.frame in the list has to have the same variable names (i.e. 'RT' 'area')")
-
-        ind_names <- names(data)
-        col_names <- names(data[[1]])
-        gc_peak_list <- data
-
-    }
+} else if (is.list(data)) {
+    if (!(all(unlist(lapply(data, is.data.frame))))) stop("Every Sample has to be a data.frame") # check that every element in the list is a data.frame
+    if ((is.null(names(data)))) stop("Every data.frame needs to be named with the sample id")     # check all data.frames are named
+    col_names <- unlist(lapply(data, function(x) out <- names(x)))
+    if(any(table(col_names) != length(data))) stop("Every sample needs to have the same number of columns")
+    ind_names <- names(data)
+    if(any(duplicated(ind_names)))warning("Avoid duplicates in sample names")
+    col_names <- names(data[[1]])
+    gc_peak_list <- data
+}
 
 cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
-#                'Range of Relative Variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
-#                '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-#                as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
-#                '\n','\n'))
+
+###############
+# Some checks #
+###############
+if(is.null(write_output)){
+    if(any(!(write_output%in%col_names))) stop("Strings in write_output need to indicate a variable contained in data!")
+}
 
 if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
     sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)

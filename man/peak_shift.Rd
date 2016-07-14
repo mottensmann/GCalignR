@@ -24,7 +24,7 @@ to consider in the search for an optimal linear transformation of peaks.}
 derterming if two peaks are shared. The default \code{error=0} counts
 a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 }
 \value{
 Numeric Value, indicating the best shift (e.g. -0.02 seconds)

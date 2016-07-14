@@ -24,7 +24,7 @@ between \code{max_linear_shift} and \code{-max_linear_shift}.}
 derterming if two peaks are shared. The default \code{error=0} counts
 a peak a shared if retention times match excatly.}
 
-\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 }
 \value{
 A list of data.frames containing chromatograms with applied linear shifts

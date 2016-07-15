@@ -4,29 +4,31 @@
 \alias{check_input}
 \title{Check correct formatting of data input}
 \usage{
-check_input(data, sep = "\\t")
+check_input(data, sep = "\\t", ...)
 }
 \arguments{
-\item{data}{path to data file or list of data.frames}
+\item{data}{path to a data file or the name of a list in the Global Environment.}
 
 \item{sep}{The field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}
+
+\item{...}{optional arguments used internally in GCalignR. See source code for details.}
 }
 \value{
 TRUE if data is formatted correctly, warning and explanation if not.
-
-
- @author Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
- (meinolf.ottensmann@web.de)
 }
 \description{
-Checks whether the data is formatted correctly. The data can either be a .txt file
-or a list of data.frames. See \code{\link{align_chromatograms}}
+Checks conformity between the input format and the requirements of GCalignR. Supported are
+a \code{.txt} files or lists of data.frames. See \code{\link{align_chromatograms}} for details.
 }
 \examples{
 data(gc_peak_data)
 gc_peak_data <- gc_peak_data[1:4]
 check_input(gc_peak_data)
 
+}
+\author{
+Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
+ (meinolf.ottensmann@web.de)
 }
 

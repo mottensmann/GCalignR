@@ -128,40 +128,33 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE,error=0.005,LogFile=FALSE) {
 
-cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n')) # print time of GCaligner Start
+    check_input(data = data,sep = sep,write_output = write_output) # Checks input format
+    cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n')) # print time of GCaligner Start
 
-# if(LogFile==TRUE){
-#         sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = FALSE)
-#         cat("Run GCalignR with samples from:",as.character(match.call()["data"]),"\n")
-#         cat("Start:",as.character(strftime(Sys.time())),'\n\n')
-#         sink()
-# }
+    if(LogFile==TRUE){
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = FALSE)
+            cat("Run GCalignR with samples from:",as.character(match.call()["data"]),"\n")
+            cat("Start:",as.character(strftime(Sys.time())),'\n\n')
+            sink()
+    }
 
+    # 1: Check function call #
+    ##########################
+    if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
+    if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
+    if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
 
-# Check valid specification of paramters in the function call
-#############################################################
-if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
-if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
-if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
-
-
-#####################################################
-# Check if Data is a correctly formatted Text File; #
-# Extract ind_names; col_names & data               #
-#####################################################
-if (is.character(data)) {
-    if (stringr::str_detect(data, ".txt")) {
-    }else{
-        stop("Data is not of the expected format. Specify a valid path to a .txt-file")
-
+    # 2: Load Data #
+    ################
+    if (is.character(data)) {
         ind_names <- readr::read_lines(data, n_max = 1) %>% # Sample Names
-        stringr::str_split(pattern = sep) %>%
-        unlist()
+            stringr::str_split(pattern = sep) %>%
+            unlist()
         ind_names <- ind_names[ind_names != ""]
 
         col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>% # Variable Names
-        stringr::str_split(pattern = sep) %>%
-        unlist()
+            stringr::str_split(pattern = sep) %>%
+            unlist()
         col_names <- col_names[col_names != ""]
         col_names <- stringr::str_trim(col_names)
         ind_names <- stringr::str_trim(ind_names)
@@ -170,266 +163,214 @@ if (is.character(data)) {
         gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ] # Remove just NA-rows
         gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))] # Remove empty rows
         gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))# Transform variables to numeric
+        gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names) # convert to list
 
-###########################################
-# Check input for completeness and format #
-###########################################
-if (!((ncol(gc_data) / length(col_names)) %% 1) == 0) stop("Number of data columns is not a multiple of the column names provided")
-if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) stop("Number of sample names provided does not fit to the number of columns in the data")
-if(any(duplicated(ind_names)))warning("Avoid duplicates in sample names")
-gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names) # convert to list
+    } else if (is.list(data)) {
+        col_names <- unlist(lapply(data, function(x) out <- names(x)))
+        col_names <- names(data[[1]])
+        ind_names <- names(data)
+        gc_peak_list <- data
     }
 
-} else if (is.list(data)) {
-    if (!(all(unlist(lapply(data, is.data.frame))))) stop("Every Sample has to be a data.frame") # check that every element in the list is a data.frame
-    if ((is.null(names(data)))) stop("Every data.frame needs to be named with the sample id")     # check all data.frames are named
-    col_names <- unlist(lapply(data, function(x) out <- names(x)))
-    if(any(table(col_names) != length(data))) stop("Every sample needs to have the same number of columns")
-    ind_names <- names(data)
-    if(any(duplicated(ind_names)))warning("Avoid duplicates in sample names")
-    col_names <- names(data[[1]])
-    gc_peak_list <- data
-}
+    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
 
-cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
 
-###############
-# Some checks #
-###############
-if(is.null(write_output)){
-    if(any(!(write_output%in%col_names))) stop("Strings in write_output need to indicate a variable contained in data!")
-}
+    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+        cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n',
+                   'Range of Relative Variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
+                   '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
+                   as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
+                   '\n'))
+            sink()
+    }
 
-if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-    sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n',
-               'Range of Relative Variation: ',as.character(round(align_var(gc_peak_list,rt_col_name)$range[1],2)),
-               '\u002d',as.character(round(align_var(gc_peak_list,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-               as.character(round(align_var(gc_peak_list,rt_col_name)$average,2)),
-               '\n'))
-        sink()
-}
+    # 3: Processing #
+    #################
 
-    ########################
-    # Start of processing
-    ########################
-
-    # 1.) cut retention times
+    # 3.1: Cut retention times#
+    ###########################
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
-
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
-    if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
-    # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
-        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-            cat(paste0('Retention Time Cut-Off applied:', ' Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
-            sink()
-        }
-    }
+    # if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
+    # # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
+    #     if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+    #             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+    #             cat(paste0('Retention Time Cut-Off applied:', ' Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
+    #             sink()
+    #         }
+    #     }
 
-    if(!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
-        # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
-        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-            cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
-            sink()
-        }
-    }
+    # if(!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
+    #         # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
+    #         if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+    #             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+    #             cat(paste0('Retention Time Cut-Off applied:\n', 'Everything above ',as.character(rt_cutoff_high),' minutes deleted','\n'))
+    #             sink()
+    #         }
+    #     }
 
-    if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
-        # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
-        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-            cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
-            sink()
-        }
-    }
+    #     if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
+    #         # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
+    #         if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+    #             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+    #             cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' and above ',as.character(rt_cutoff_high) ,' minutes deleted','\n'))
+    #             sink()
+    #         }
+    #     }
 
 
-    # 2.) Linear Transformation of Retentiontimes
+    # 3.2: Linear Transformation #
+    ##############################
 
     # Round retention times to decimals
     round_rt <- function(gc_peak_df,rt_col_name=rt_col_name){
-    gc_peak_df[rt_col_name] <- round(gc_peak_df[rt_col_name],digits = 2)
-    return(gc_peak_df)
+        gc_peak_df[rt_col_name] <- round(gc_peak_df[rt_col_name],digits = 2)
+        return(gc_peak_df)
     }
 
     gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
     cat(paste0('\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
-    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-        cat(paste0('\nLinear Transformation with ',"\"",as.character(reference),"\"",' as a reference'))
-        sink()
-    }
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+            cat(paste0('\nLinear Transformation with ',"\"",as.character(reference),"\"",' as a reference'))
+            sink()
+        }
 
-    ## thinking about reference: default is chromatogram with most peaks - optional: manual  !Currently it is manual
-    if(reference=="reference"){ # New option
-    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
-                                            error=error, reference = reference, rt_col_name = rt_col_name)
-    gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # without elements reference
+
+    if(reference=="reference"){ # reference is not a true sample and is used exclusevely for linear alignment
+        gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
+                                                     error=error, reference = reference, rt_col_name = rt_col_name)
+        gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # remove reference
+        gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw)==reference)]; # remove the reference
+
     }else{
         gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
                                                      error=error, reference = reference, rt_col_name = rt_col_name)
-        }
+    }
 
-    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-        cat('\nPeaks have been aligned:')
-            cat(paste0('\n\nRange of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
-              '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-              as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n')
-            sink()
-        }
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+            cat('\nPeaks have been aligned:')
+                cat(paste0('\n\nRange of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
+                  '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
+                  as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n')
+                sink()
+            }
     cat("Done\n\n")
-#            cat(paste('Done ... ','\n','Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
-#                   '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-#                   as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n','\n')
 
-gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
+    gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear) # equalise chromatograms sizes
 
-    #############
-    # align peaks
-    #############
+
+    # 3.3 Align peaks & Merge Rows #
+    ################################
 
     cat(c('Start Alignment of Peaks ... ','This might take a while!\n','\n'))
 
-    Fun_Fact()
-    gc_peak_list_aligned <- gc_peak_list_linear
+    Fun_Fact()# Random trivia
+    gc_peak_list_aligned <- gc_peak_list_linear # avoid to overwrite the list of linear transformed peaks
     no_peaks <- matrix(NA,nrow = n_iter,ncol = 1)
     merged_peaks <- matrix(NA, nrow = n_iter,ncol = 1)
+
     for (R in 1:n_iter){ # Allows to iteratively execute the algorithm
-
         gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
+        average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)# mean rt per row
 
-    # Check whether zero rows are present
-    average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
+        gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) { # remove empty rows
+            keep_rows <- which(!is.na(average_rts))
+            out <- x[keep_rows, ]
+        })
 
-    # delete empty rows (if existing)
-    gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) {
-        keep_rows <- which(!is.na(average_rts))
-        out <- x[keep_rows, ]
-    })
+        average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name) # mean rt per row
+        no_peaks[R] <- nrow(gc_peak_list_aligned[[1]]) # N before merging
+        gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name)# merge rows
+        merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])#estimate N of merged peaks
+        no_peaks[R] <- nrow(gc_peak_list_aligned[[1]]) # N after merging
 
-    # calculate average rts again for merging
-    average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
+        if(R==n_iter & merge_rare_peaks==TRUE){ # allows to merge rows where a few individuals carry two peaks (<5%)
+            average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
+            gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
+            merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
+            rare_peak_pairs <- 0 # cause they were eliminated
+        }
 
-    no_peaks[R] <- nrow(gc_peak_list_aligned[[1]]) # No before merging
-    gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name)
-    merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
-    no_peaks[R] <- nrow(gc_peak_list_aligned[[1]]) # No after merging
+        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+                sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+                cat('Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
+                    '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
+                    as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
+                    '\n\n')
+                cat('Merged Redundant Peaks\n\n')
+                sink()
+            }
+        cat('\n\nMerged Redundant Peaks')
 
-    if(R==n_iter & merge_rare_peaks==TRUE){
         average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
 
-        gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak=min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
-        merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
-        rare_peak_pairs <- 0 # cause they were eliminated
-#     }else if(R==n_iter){
-#         average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name)
-#         similar <- similar_peaks(average_rts, min_diff_peak2peak)    # remaining similarities
-#         rare_peak_pairs <- length(similar) # WARNING: These are not definitive redundant, needs some thinking
-    }
+        gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)     # delete empty rows again
 
-    if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-        cat('Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
-            '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-            as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
-            '\n\n')
-        cat('Merged Redundant Peaks\n\n')
-        sink()
-    }
-#     cat('\n','Range of Relative Variation: ',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[1],2)),
-#         '\u002d',as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
-#         as.character(round(align_var(gc_peak_list_aligned,rt_col_name)$average,2)),
-#         '\n\n')
-    cat('\n\nMerged Redundant Peaks')
-
-    average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
-
-    # delete empty rows again
-
-    gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)
 
     } # End of iterative alignment and merging
 
     cat(paste0('\n\n','Peak Alignment Done'),'\n\n')
 
-    ###############################################
-    # Sort chromatograms back to the initial order
-    ###############################################
-    if(reference=="reference"){
-    gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw)==reference)]; # remove the reference
-}
+    #############################
+    # 4. Clean Up Chromatograms #
+    #############################
     gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw),names(gc_peak_list_aligned))]
 
-    # delete blanks
-    if (!is.null(blanks)) {
-        # delete one blank
-        delete_blank <- function(blank, gc_peak_list_aligned) {
+
+    if (!is.null(blanks)) { # delete peaks present in blanks, then remove the blanks
+        delete_blank <- function(blank, gc_peak_list_aligned) { # delete peaks present in blanks
             del_substances <- which(gc_peak_list_aligned[[blank]][[rt_col_name]] > 0)
             chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances,])
             chroma_out
         }
-        # delete all blanks
-        for (i in blanks) {
-            gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)
-        }
-        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-            cat('Blank Peaks deleted & Blanks removed\n\n')
-            sink()
-        }
-            cat('Blank Peaks deleted & Blanks removed\n\n')
+
+        for (i in blanks) {gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)} # delete all blanks
+        #         if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+        #             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+        #             cat('Blank Peaks deleted & Blanks removed\n\n')
+        #             sink()
+        #         }
+        cat('Blank Peaks deleted & Blanks removed\n\n')
     }
 
-    # delete single substances
-    # create matrix with all retention times
-    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
+    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]])) # RT2Matrix
 
-    singular_peaks <- nrow(rt_mat) # To determine number of deleted peaks
-    if (delete_single_peak) {
-        # find single retention times in rows
+    singular_peaks <- nrow(rt_mat) # To estimate the number of deleted peaks
+    if (delete_single_peak) { # find single retention times in rows
         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
-
-        if (length(single_subs_ind) > 0) {
-            # delete substances occuring in just one individual
+        if (length(single_subs_ind) > 0) {             # delete substances occuring in just one individual
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }
-        if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-            cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
-            sink()
-        }
+        #         if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
+        #             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+        #             cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
+        #             sink()
+        #         }
         cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
-
     }
-
-    # calculate final retention times
-    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
+    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]])) # final RT2Matrix
     singular_peaks <- singular_peaks - nrow(rt_mat) # how many were deleted, if any
-     #######################
-     # Outputs for Heatmaps
-     #######################
 
-    rt_raw <- rt_extract(gc_peak_list = gc_peak_list_raw,rt_col_name =rt_col_name)
-    rt_linear <- rt_extract(gc_peak_list = gc_peak_list_linear,rt_col_name =rt_col_name)
-    rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name =rt_col_name)
+    # 5: Create Output for Heatmaps #
+    #################################
+    rt_raw <- rt_extract(gc_peak_list = gc_peak_list_raw,rt_col_name =rt_col_name) # Initial input
+    rt_linear <- rt_extract(gc_peak_list = gc_peak_list_linear,rt_col_name =rt_col_name) # after linear shifts
+    rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name =rt_col_name) # final output
 
-    # ============================
-    # mean per row without 0
-    row_mean <- function(x) {
-        if (all(x==0)) 0 else mean(x[x!=0])
-    }
+    row_mean <- function(x) {if (all(x==0)) 0 else mean(x[x!=0])} # mean per row without 0
     mean_per_row <- apply(rt_mat,1, row_mean)
 
-    # create output matrices for all variables
+    # 6: Create output matrices for Variables#
+    ##########################################
     output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[y]))))
     output <- lapply(output, function(x){
-                        names(x) <- names(gc_peak_list_aligned)
-                        x
+        names(x) <- names(gc_peak_list_aligned)
+        x
     })
 
     output <- lapply(output, function(x){
@@ -438,35 +379,34 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
     })
 
     output <- lapply(output, function(x){
-                        names(x)[1] <- "mean_RT"
-                        x
+        names(x)[1] <- "mean_RT"
+        x
     })
     names(output) <- col_names
 
+    # 7: Write to txt files #
+    #########################
 
     if (!is.null(write_output)){
 
-        ####################################################################
-        # Extract the name of the datafile for proper naming of output files
-        ####################################################################
-        if(is.character(data)){
-        prefix <- strsplit(data,split = "/")
-        prefix <- as.character(prefix[[1]][length(prefix[[1]])])
-        prefix <- as.character(strsplit(prefix,split = ".txt"))
+        if(is.character(data)){ # Take the text-file name as a prefix for each output file
+            prefix <- strsplit(data,split = "/")
+            prefix <- as.character(prefix[[1]][length(prefix[[1]])])
+            prefix <- as.character(strsplit(prefix,split = ".txt"))
         } else {
-            prefix <- "Aligned"
+            prefix <- "Aligned" # For a List take "Aligned" as prefix
         }
         write_files <- function(x) {
             utils::write.table(output[[x]],
-                        file = paste0(prefix,"_param_",as.character(max_linear_shift),"_",
-                                      as.character(max_diff_peak2mean),"_",
-                                      as.character(min_diff_peak2peak),"_",delete_single_peak,"_",x, ".txt"), sep = "\t", row.names = FALSE)
+                               file = paste0(prefix,"_param_",as.character(max_linear_shift),"_",
+                                             as.character(max_diff_peak2mean),"_",
+                                             as.character(min_diff_peak2peak),"_",delete_single_peak,"_",x, ".txt"), sep = "\t", row.names = FALSE)
         }
         lapply(write_output, write_files)
     }
 
-    ### Write paramters choosen for the algorithm to a file for documentation
-
+    # 8: Documentation #
+    ####################
     align_summary <- list(No_of_samples = length(gc_peak_list_raw),
                           No_Peaks_aligned=ncol(rt_aligned)-1,
                           variance_before=align_var(gc_peak_list_raw,rt_col_name),
@@ -475,16 +415,16 @@ gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_l
 
     output_algorithm <- list(aligned=output,summary=align_summary,
                              heatmap_input=list(initial_rt=rt_raw,
-                            linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
+                                                linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
                              call=match.call())
 
     class(output_algorithm) <- "GCalign" # name of list
 
     cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
     if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
-        sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-        cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time()),'\n')
-        sink()
-    }
+            sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+            cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time()),'\n')
+            sink()
+        }
     return(output_algorithm)
 }

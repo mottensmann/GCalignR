@@ -127,16 +127,20 @@
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE,error=0.005,LogFile=FALSE) {
+Logbook <- list() # List saving the main workflow
+Logbook["Check"] <- check_input(data = data,sep = sep,write_output = write_output) # Checks input format
+Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
+Logbook[["Input"]]["File"] <- as.character(as.character(match.call()["data"]))
+Logbook[["Input"]]["Reference"] <- reference
+# Logbook$Warnings
+cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n')) # print time of GCaligner Start
 
-    check_input(data = data,sep = sep,write_output = write_output) # Checks input format
-    cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n')) # print time of GCaligner Start
-
-    if(LogFile==TRUE){
+if(LogFile==TRUE){
             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = FALSE)
             cat("Run GCalignR with samples from:",as.character(match.call()["data"]),"\n")
             cat("Start:",as.character(strftime(Sys.time())),'\n\n')
             sink()
-    }
+}#LogFile
 
     # 1: Check function call #
     ##########################
@@ -146,7 +150,7 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
     # 2: Load Data #
     ################
-    if (is.character(data)) {
+    if (is.character(data)) {# TextFile
         ind_names <- readr::read_lines(data, n_max = 1) %>% # Sample Names
             stringr::str_split(pattern = sep) %>%
             unlist()
@@ -165,15 +169,20 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
         gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))# Transform variables to numeric
         gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names) # convert to list
 
-    } else if (is.list(data)) {
+    } else if (is.list(data)) {#List
         col_names <- unlist(lapply(data, function(x) out <- names(x)))
         col_names <- names(data[[1]])
         ind_names <- names(data)
         gc_peak_list <- data
-    }
+}#EndLoadData
 
+if(reference=="reference"){
+    cat(paste0('GC-data for ',as.character(length(ind_names)-1),' samples loaded\n'))
+Logbook[["Input"]]["Samples"] <-(length(ind_names)-1)
+} else {
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
-
+    Logbook[["Input"]]["Samples"] <- as.character(length(ind_names))
+}
 
     if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
         sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
@@ -193,6 +202,19 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
+    if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){ #Low
+        Logbook[["Filtering"]]["RT_Cutoff_Low"] <- as.character(rt_cutoff_low)
+        Logbook[["Filtering"]]["RT_Cutoff_High"] <- "None"
+    } else if(!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){#High
+        Logbook[["Filtering"]]["RT_Cutoff_Low"] <- "None"
+        Logbook[["Filtering"]]["RT_Cutoff_High"] <- as.character(rt_cutoff_high)
+    } else if(!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){#Low+High
+        Logbook[["Filtering"]]["RT_Cutoff_Low"] <- as.character(rt_cutoff_low)
+        Logbook[["Filtering"]]["RT_Cutoff_High"] <- as.character(rt_cutoff_high)
+    } else {#None
+        Logbook[["Filtering"]]["RT_Cutoff_Low"] <- "None"
+        Logbook[["Filtering"]]["RT_Cutoff_High"] <- "None"
+    }#End Logbook$RetentionCutoff
     # if(!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
     # # cat(paste0('Retention Time Cut-Off applied:\n', 'Everything below ',as.character(rt_cutoff_low),' minutes deleted','\n'))
     #     if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
@@ -242,20 +264,30 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
     if(reference=="reference"){ # reference is not a true sample and is used exclusevely for linear alignment
         gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
-                                                     error=error, reference = reference, rt_col_name = rt_col_name)
-        gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)]; # remove reference
-        gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw)==reference)]; # remove the reference
+                                                     error=error, reference = reference, rt_col_name = rt_col_name,
+                                                     Logbook = Logbook)
+        Logbook <- gc_peak_list_linear[["Logbook"]]
+        gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
+        gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
+        gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
+        gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear)==reference)] # remove reference
+        gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw)==reference)] # remove the reference
 
     }else{
         gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01,
-                                                     error=error, reference = reference, rt_col_name = rt_col_name)
+                                                     error=error, reference = reference, rt_col_name = rt_col_name,
+                                                     Logbook = Logbook)
+        Logbook <- gc_peak_list_linear[["Logbook"]]
+        gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
+        gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
+        gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
     }
 
         if(file.exists(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"))){
             sink(paste0(strsplit(as.character(match.call()["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
             cat('\nPeaks have been aligned:')
-                cat(paste0('\n\nRange of Relative Variation: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
-                  '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Average Relative Variation: ",
+                cat(paste0('\n\nVariation of Retention Times. Range: ',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[1],2)),
+                  '\u002d',as.character(round(align_var(gc_peak_list_linear,rt_col_name)$range[2],2))," ... Mean: ",
                   as.character(round(align_var(gc_peak_list_linear,rt_col_name)$average,2))),'\n')
                 sink()
             }
@@ -407,6 +439,14 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
     # 8: Documentation #
     ####################
+    Logbook[["Variation"]][["Input"]] <-
+        unlist(align_var(gc_peak_list_raw,rt_col_name))
+    Logbook[["Variation"]][["LinShift"]] <-
+        unlist(align_var(gc_peak_list_linear,rt_col_name))
+    Logbook[["Variation"]][["Aligned"]] <-
+        unlist(align_var(gc_peak_list_aligned,rt_col_name))
+    Logbook[["Date"]]["End"] <- as.character(strftime(Sys.time()))
+
     align_summary <- list(No_of_samples = length(gc_peak_list_raw),
                           No_Peaks_aligned=ncol(rt_aligned)-1,
                           variance_before=align_var(gc_peak_list_raw,rt_col_name),
@@ -415,8 +455,8 @@ align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name
 
     output_algorithm <- list(aligned=output,summary=align_summary,
                              heatmap_input=list(initial_rt=rt_raw,
-                                                linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
-                             call=match.call())
+                             linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
+                             Logfile=Logbook,call=match.call())
 
     class(output_algorithm) <- "GCalign" # name of list
 

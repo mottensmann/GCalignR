@@ -32,7 +32,7 @@
 #'
 
 linear_transformation <- function(gc_peak_list,reference,
-                                  max_linear_shift=0.05, step_size=0.01, error=0, rt_col_name){
+                                  max_linear_shift=0.05, step_size=0.01, error=0, rt_col_name,Logbook){
 
     # Defining internal functions #
     ###############################
@@ -73,7 +73,7 @@ linear_transformation <- function(gc_peak_list,reference,
     }
 
     best_shift <- function(peaks){
-
+# Which is the appropriate shift to select?
         shared <- as.vector(peaks[[1]])
         shifts <- as.vector(peaks[[2]])
         index <- which(shared==max(shared)) # index of the best fit
@@ -93,11 +93,11 @@ linear_transformation <- function(gc_peak_list,reference,
         }
         return(BestFit)
     }
-    adjust_retention_time <- function(chromatogram, OptimalShift, ret_col_name){ # Apply the best shift
+    adjust_retention_time <- function(chromatogram, OptimalShift, ret_col_name){
+        # Apply the best shift
         chromatogram[, ret_col_name] <- chromatogram[, ret_col_name] + OptimalShift
         return(chromatogram)
     }
-
 
     ###############################
 
@@ -109,15 +109,38 @@ linear_transformation <- function(gc_peak_list,reference,
     }
 
     ref <- gc_peak_list[[reference]]
-    # Chroma_aligned <- list()
 
     shift_rts <- function(gc_peak_df, ref_df, max_linear_shift, step_size, error) {
-        #cat("\n")
-        optimal_shift <- peak_shift(gc_peak_df, ref_df, max_linear_shift, step_size, error, rt_col_name)
-        shifted <- adjust_retention_time(gc_peak_df, optimal_shift, rt_col_name)
+    # Main Function doing the linear transformation.
+    id <- gc_peak_df[["id"]][1]
+    gc_peak_df <- gc_peak_df[-length(gc_peak_df)] # drop the id column
+    optimal_shift <- peak_shift(gc_peak_df, ref_df, max_linear_shift, step_size, error, rt_col_name)
+    shifted <- adjust_retention_time(gc_peak_df, optimal_shift, rt_col_name)
+    # Logbook[["LinearShift"]][id] <- as.character(optimal_shift)
+    output <- list(shifted=shifted,optimal_shift=optimal_shift) # two lists per sample are created
+    return(output)
     }
 
-    chroma_aligned <- lapply(gc_peak_list, shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
+    temp <- gc_peak_list # temp list that allow to submit the name of the data.frames in lapply
+    id <- names(temp)
+    for(j in 1:length(temp)){
+        temp[[j]][["id"]] <- id[j]
+    }
+    Logbooker <- function(chrom_shift){# to extract optimal shifts applied
+        shift <- unlist(lapply(chrom_shift, function(x) x[-1]))
+        sample <- strsplit(names(shift),split = ".optimal_shift")
+        sample <- unlist(sample)
+        shift <- as.vector(shift)
+        out <- data.frame(shift,sample)
+        return(out)
+    }
+    chrom_shift <- lapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
+    Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
+    chroma_aligned <- lapply(chrom_shift,function(x) x[-2])
+    return(list(chroma_aligned=chroma_aligned,Logbook=Logbook))
+}#end linear transform
 
-    return(chroma_aligned)
+correct_colnames <- function(gc_peak_df,col_names){
+    colnames(gc_peak_df) <- col_names
+    return(gc_peak_df)
 }

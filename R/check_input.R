@@ -100,6 +100,7 @@ check_input <- function(data, sep = "\t",...) {
 
     format_error(gc_peak_list) # Checks that every sample has the same number of values per column
     cat("All checks passed!\nReady for processing with align_chromatograms")
+    return("Passed")
 }
 
 

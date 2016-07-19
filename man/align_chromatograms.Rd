@@ -77,6 +77,10 @@ with a Heatmap \code{\link{gc_heatmap}}.}
 are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
 Always the peak with the higher abundance (i.e. peak area or peak height) is retained.}
 
+\item{error}{numeric value defining the allowed difference in retention times in
+of two shared peaks. The default \code{error=0} counts
+a peak as shared if retention times match excatly.}
+
 \item{LogFile}{logical determining if a protocoll of the alignment procedure is written to a file (e.g gc_data_LogFile.txt)
 where the prefix is given by the name of \code{data}.}
 }

@@ -55,4 +55,21 @@ output <- list(range=round(range(out,na.rm = T),2),average=round(mean(out,na.rm=
 return(output)
 }
 
+peak_counter <- function(gc_peak_list,rt_col_name){
+    rt <- numeric(0)
+    for(i in 1:length(gc_peak_list)){
+        rt <- c(rt,gc_peak_list[[i]][[rt_col_name]])
+    }
+    rt <- unique(rt[!(is.na(rt))&rt!=0])
+    return(length(rt))
+}
+
+peak_lister <- function(gc_peak_list,rt_col_name){
+    rt <- numeric(0)
+    for(i in 1:length(gc_peak_list)){
+        rt <- c(rt,gc_peak_list[[i]][[rt_col_name]])
+    }
+    rt <- unique(rt[!(is.na(rt))&rt!=0])
+    return(rt)
+}
 

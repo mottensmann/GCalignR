@@ -5,7 +5,7 @@
 \title{Shift peaks to eliminate systematic inaccuracies of peak detection by GC.}
 \usage{
 linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
-  step_size = 0.01, error = 0, rt_col_name)
+  step_size = 0.01, rt_col_name, Logbook)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
@@ -20,11 +20,11 @@ Default is 0.05.}
 \item{step_size}{indicates the step size in which linear shifts are evaluated
 between \code{max_linear_shift} and \code{-max_linear_shift}.}
 
+\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
+
 \item{error}{numeric value defining the allowed difference in retention times in
 derterming if two peaks are shared. The default \code{error=0} counts
 a peak a shared if retention times match excatly.}
-
-\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 }
 \value{
 A list of data.frames containing chromatograms with applied linear shifts

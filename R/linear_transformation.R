@@ -32,7 +32,7 @@
 #'
 
 linear_transformation <- function(gc_peak_list,reference,
-                                  max_linear_shift=0.05, step_size=0.01, error=0, rt_col_name,Logbook){
+                                  max_linear_shift=0.05, step_size=0.01, rt_col_name,Logbook){
 
     # Defining internal functions #
     ###############################
@@ -86,11 +86,11 @@ linear_transformation <- function(gc_peak_list,reference,
         }else{
             # BestFit
         }
-        if(file.exists(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),split = ".txt"),"_LogFile.txt"))){
-            sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
-            cat(paste('\nShift = ',as.character(format(round(BestFit,3),nsmall=2)),'\tShared Peaks = ',as.character(shared[index[1]]))) # Delete later
-            sink()
-        }
+#         if(file.exists(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),split = ".txt"),"_LogFile.txt"))){
+#             sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(5)), call = sys.call(sys.parent(5)))["data"]),split = ".txt"),"_LogFile.txt"),append = TRUE)
+#             cat(paste('\nShift = ',as.character(format(round(BestFit,3),nsmall=2)),'\tShared Peaks = ',as.character(shared[index[1]]))) # Delete later
+#             sink()
+#         }
         return(BestFit)
     }
     adjust_retention_time <- function(chromatogram, OptimalShift, ret_col_name){
@@ -100,13 +100,13 @@ linear_transformation <- function(gc_peak_list,reference,
     }
 
     ###############################
-
-    if(file.exists(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split=".txt"),"_LogFile.txt"))){
-        sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split=".txt"),"_LogFile.txt"),append = TRUE)
-        cat("\nSamples in order of comparisons with the reference:\n")
-        print(names(gc_peak_list))
-        sink()
-    }
+#
+#     if(file.exists(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split=".txt"),"_LogFile.txt"))){
+#         sink(paste0(strsplit(as.character(match.call(definition = sys.function(sys.parent(1)), call = sys.call(sys.parent(1)))["data"]),split=".txt"),"_LogFile.txt"),append = TRUE)
+#         cat("\nSamples in order of comparisons with the reference:\n")
+#         print(names(gc_peak_list))
+#         sink()
+#     }
 
     ref <- gc_peak_list[[reference]]
 
@@ -134,7 +134,7 @@ linear_transformation <- function(gc_peak_list,reference,
         out <- data.frame(shift,sample)
         return(out)
     }
-    chrom_shift <- lapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
+    chrom_shift <- lapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = 0)
     Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
     chroma_aligned <- lapply(chrom_shift,function(x) x[-2])
     return(list(chroma_aligned=chroma_aligned,Logbook=Logbook))

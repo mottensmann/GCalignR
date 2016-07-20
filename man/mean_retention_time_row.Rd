@@ -14,7 +14,7 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{retention_row}{index of the current retention time to be evaluate.}
 
-\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 }
 \value{
 mean retention time for peaks at index \code{retention_row}.

@@ -9,7 +9,7 @@ similar_peaks(average_rts, min_diff_peak2peak = 0.05)
 \arguments{
 \item{average_rts}{vector of average retention times per peak across individuals.}
 
-\item{min_diff_peak2peak}{Defines the desired minimum difference in retention times among distinct
+\item{min_diff_peak2peak}{Defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. This parameter is a major determinant in the classification
 of distinct peaks. Therefore careful consideration is required to adjust this setting to

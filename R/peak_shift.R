@@ -36,8 +36,7 @@ peak_shift <- function(gc_peak_df, ref_df, max_linear_shift=0.05, step_size=0.00
     right_shift <- max_linear_shift
     left_shift <- max_linear_shift*-1
     shift_steps <- seq(from=left_shift ,to=right_shift,by=step_size)
-    #     PeaksShared <- rep(0,length(ShiftSteps))
-    #     PeaksLag <- rep(0,length(ShiftSteps))
+
     output <- shared_peaks(gc_peak_df, ref_df, shift_steps, error, rt_col_name) # List containg shared Peaks and their shifts
     output <- best_shift(output) # Which is the best setting
     output # Numeric Value, indicating the best shift (e.g. -0.02 seconds)

@@ -11,7 +11,7 @@ merge_redundant_peaks(gc_peak_list, min_diff_peak2peak = 0.05, rt_col_name,
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
 Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{min_diff_peak2peak}{Defines the desired minimum difference in retention times among distinct
+\item{min_diff_peak2peak}{Defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. This parameter is a major determinant in the classification
 of distinct peaks. Therefore careful consideration is required to adjust this setting to
@@ -19,9 +19,9 @@ your needs (i.e. the resolution of your gas-chromatography pipeline). Large valu
 merge of true peaks, if those are not occuring within one individual, which might happen by chance
 with a low sample size. Small values can be considered as conservative. Default is 0.02.}
 
-\item{rt_col_name}{Character string naming the column holding retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 
-\item{conc_col_name}{Character string naming a column used for quantification of peaks (e.g. peak area or peak height).
+\item{conc_col_name}{Character string naming a column used for the quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
 
 \item{criterion}{character string either "strict" or "proportional". "strict" is used to delete the row containing zeros,

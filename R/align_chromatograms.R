@@ -12,23 +12,23 @@
 #'that show smaller differences in mean retention times than expected by the achievable resolution
 #'of the gas-chromatography or the chemistry of the compounds are merged. Several optional processing steps are available
 #'ranging from the removal of peaks representing contaminations (requires to include blanks as a control) to the removal
-#'of uninformative peaks that are present in just one sample.
+#'of uninformative peaks that are present in just one sample. Further Details can be found in
 #'
 #'@param data
-#' Two options. (1) The most common input is the path to a file with extension \code{.txt} to load data.
-#' The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
-#' third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The
+#' Two options. (1) Path to a file with extension \code{.txt} containing the gc-data. It is expected that the
+#' file is formatted following this principle: The first row contains sample names, the second row column names of the corresponding chromatograms.
+#' Starting with the third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The
 #' matrix for each sample needs to consist of the same number of columns, at least two are required:The
 #' retention time and a measure of concentration (e.g. peak area or height). See the package
 #' vignette for an example. (2) The alternative input is a list of data.frames. Each data.frame
 #' contains the peak data for a single individual with at least two variables, the retention time of
 #' the peak and the area under the peak. The variables have to have the same name across all samples
 #' (data.frames). Also, each list element (i.e. each data.frame) has to be named with the ID of
-#' the individual. See the vignette for an example.
+#' the individual. See the vignette for an example. The data can be checked by running \code{\link{check_input}}
 #'
 #'@param sep
 #'The field separator character. Values on each line of the file are separated by this
-#'character. The default is tab seperated (sep = '\\t'). See the \code{sep} argument in \code{\link[utils]{read.table}} for details.
+#'character. The default is tab seperated (\code{sep = '\\t'}). See the \code{sep} argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param conc_col_name
 #'Character string naming a column used for the quantification of peaks (e.g. peak area or peak height).
@@ -40,7 +40,7 @@
 #'@param write_output
 #' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 #' The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.
-#' Strings need to correspond to column names of the \code{datafile}.
+#' Strings need to correspond to column names of \code{data}.
 #'
 #'@param rt_cutoff_low
 #'Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
@@ -50,10 +50,10 @@
 #'
 #'@param reference
 #'Character string of a sample to which all other samples are aligned to by means of a
-#'  linear shift (e.g. \code{"individual3"}. The name has to correspond to an individual name given
-#'  in the first line of \code{data}. Alternatively a sample called \code{reference} can be included
-#'  in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear
-#'  transformation \code{reference} will be removed from the data.
+#' linear shift (e.g. \code{"individual3"}. The name has to correspond to an individual name given
+#' in the first line of \code{data}. Alternatively a sample called \code{reference} can be included
+#' in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear
+#' transformation \code{reference} will be removed from the data.
 #'
 #'@param max_linear_shift
 #' Defines a window to search for an optimal linear shift of chromatogram peaks
@@ -62,7 +62,7 @@
 #'
 #'@param max_diff_peak2mean
 #' Defines the allowed deviation of retention times around the mean of
-#' the corresponding row. Peaks with differing retention times are moved
+#' the corresponding row (i.e. substance). Peaks with differing retention times are moved
 #' to a more appropriate mean retention time. Default is 0.02.
 #'
 #'@param min_diff_peak2peak
@@ -70,22 +70,23 @@
 #'substances. Substances that differ less, are merged if every sample contains either one
 #'or none of the respective compounds. This parameter is a major determinant in the classification
 #'of distinct peaks. Therefore careful consideration is required to adjust this setting to
-#'your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
-#'merge of true peaks, if those are not occuring within one individual, which might happen by chance
-#'with a low sample size. Small values can be considered as conservative. Default is 0.02.
+#'your needs (i.e. the resolution of your gas-chromatography pipeline). Large values may cause the
+#'merge of true peaks with similar retention times, if those are not simultaneously occuring within at least
+#'one individual. Especially for small sample sizes this could be the case just by chance
+#'Small values can be considered as conservative. Default is 0.02.
 #'
 #'@param blanks
 #'Character vector of names of blanks. If specified, all substances found in any of the blanks
-#'will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
-#'to a name given in the first line of \code{data}.
+#'will be removed from all samples, before the blanks are deleted from the aligned data.
+#'The names have to correspond to a name given in the first line of \code{data}.
 #'
 #'@param delete_single_peak
-#'logical, determines whether substances that occur in just one sample are
-#' removed or not. By default single substances are retained in chromatograms.
+#'logical, determining whether substances that occur in just one sample are
+#'removed or not. By default single substances are retained in chromatograms.
 #'
 #'@param n_iter
 #' integer indicating the number of iterations of the core alignment algorithm. Additional replications of
-#' the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
+#' the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show
 #' some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
 #' with a Heatmap \code{\link{gc_heatmap}}.
 #'

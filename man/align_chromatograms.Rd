@@ -11,16 +11,16 @@ align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE)
 }
 \arguments{
-\item{data}{Two options. (1) The most common input is the path to a file with extension \code{.txt} to load data.
-The first row needs to contain sample names, the second row column names of the corresponding chromatograms. Starting with the
-third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The
+\item{data}{Two options. (1) Path to a file with extension \code{.txt} containing the gc-data. It is expected that the
+file is formatted following this principle: The first row contains sample names, the second row column names of the corresponding chromatograms.
+Starting with the third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The
 matrix for each sample needs to consist of the same number of columns, at least two are required:The
 retention time and a measure of concentration (e.g. peak area or height). See the package
 vignette for an example. (2) The alternative input is a list of data.frames. Each data.frame
 contains the peak data for a single individual with at least two variables, the retention time of
 the peak and the area under the peak. The variables have to have the same name across all samples
 (data.frames). Also, each list element (i.e. each data.frame) has to be named with the ID of
-the individual. See the vignette for an example.}
+the individual. See the vignette for an example. The data can be checked by running \code{\link{check_input}}}
 
 \item{sep}{The field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See the \code{sep} argument in \code{\link[utils]{read.table}} for details.}

@@ -2,25 +2,23 @@
 % Please edit documentation in R/summary.GCalign.R
 \name{summary.GCalign}
 \alias{summary.GCalign}
-\title{print.GCalign: Prints a the protocol of an alignment process exectuted via align_chromatogtams}
+\title{Summarizing Peak Alignments with GCalignR}
 \usage{
-\method{summary}{GCalign}(object, ...)
+summary(object,write_txt_file=FALSE)
 }
 \arguments{
-\item{object}{Object of class \code{GCalign}}
+\item{object}{an object of class \code{GCalign}, a result of a call to \code{\link{align_chromatograms}}}
 
-\item{...}{additional input to summary.GCalign}
+\item{write_txt_file}{logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
+to the console in this case.}
+
+\item{...}{optional arguments affecting the summary produced.}
 }
 \description{
-print.GCalign: Prints a the protocol of an alignment process exectuted via align_chromatogtams
-}
-\details{
-Prints the LogFile written during the alignment-process, if one was created.
+summary method for class "GCalign"
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
-
- @export
 }
 

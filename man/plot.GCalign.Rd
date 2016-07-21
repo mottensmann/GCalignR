@@ -2,18 +2,22 @@
 % Please edit documentation in R/plot.GCalign.R
 \name{plot.GCalign}
 \alias{plot.GCalign}
-\title{plot.GCalign}
+\title{Plot Diagonstics for an Gcalign Object}
 \usage{
-\method{plot}{GCalign}(GcOut)
+## S3 method for class "GCalign"
+plot(object)
+}
+\arguments{
+\item{object}{\code{GCalign} object, result of \code{\link{align_chromatograms}}}
 }
 \description{
-plot.GCalign creates basic plots visualising the alignment accuracy of chromatograms that
-have been processed by \code{\link{align_chromatograms}}
+Two plots are currently available: One plot visualises the distribution of linear shifts
+that were applied to align chromatograms to a reference before aligning individual peaks.
+A second plot illustrates the remaining variation of retention times on the level of individual
+peaks by plotting the distribution of retention time ranges.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
-
- @export
 }
 

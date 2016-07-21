@@ -1,7 +1,8 @@
 #' Aligning Peaks based on retention times
 #'
 #'@description
-#'\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}.
+#'\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}. Check out the vignette
+#'to get started (link[=doc/GCalignR_step_by_step]{Vignette})
 #'
 #'@details
 #'The Alignment of Peaks is archieved by running three major algorithms always considering the complete
@@ -95,7 +96,6 @@
 #' are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
 #' Always the peak with the higher abundance (i.e. peak area or peak height) is retained.
 #'
-#' @inheritParams shared_peaks
 #'
 #'@return
 #' Returns an object of class GCalign that is a a list with the following elements:
@@ -124,6 +124,7 @@
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+check_input(data,sep)
 
 Logbook <- list() # List saving the main workflow
 Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))

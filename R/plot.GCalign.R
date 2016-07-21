@@ -10,15 +10,18 @@
 #' ## S3 method for class "GCalign"
 #' plot(object)
 #'
-#' @param object
+#' @param x
 #' \code{GCalign} object, result of \code{\link{align_chromatograms}}
+#'
+#' @param ...
+#' optional arguments
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
 #' @export
 #'
-plot.GCalign <- function(object){
+plot.GCalign <- function(x,...){
 
     # Define  internal function
     # -----------------------------------------------------------------------------------------

@@ -8,7 +8,9 @@
 plot(object)
 }
 \arguments{
-\item{object}{\code{GCalign} object, result of \code{\link{align_chromatograms}}}
+\item{x}{\code{GCalign} object, result of \code{\link{align_chromatograms}}}
+
+\item{...}{optional arguments}
 }
 \description{
 Two plots are currently available: One plot visualises the distribution of linear shifts

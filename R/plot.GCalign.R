@@ -159,7 +159,7 @@ labs(title ="Posterior Distribution of Peaks",
     geom_text(aes(label=Peaks),size=3,colour="gray5", position=position_dodge(width=0.5), vjust=-0.25)
 
 
-return(gridExtra::grid.arrange(arrangeGrob(LinShift, RT_Range,nrow = 1),peaks_final, nrow = 2))
+return(gridExtra::grid.arrange(gridExtra::arrangeGrob(LinShift, RT_Range,nrow = 1),peaks_final, nrow = 2))
 
 }
 

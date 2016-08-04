@@ -5,18 +5,22 @@
 \title{Plot Diagonstics for an Gcalign Object}
 \usage{
 ## S3 method for class "GCalign"
-plot(object)
+plot(x,...)
 }
 \arguments{
 \item{x}{\code{GCalign} object, result of \code{\link{align_chromatograms}}}
 
 \item{...}{optional arguments}
 }
+\value{
+a ggplot2 figure including three subplots
+}
 \description{
-Two plots are currently available: One plot visualises the distribution of linear shifts
+Three plots are currently available: One plot visualises the distribution of linear shifts
 that were applied to align chromatograms to a reference before aligning individual peaks.
 A second plot illustrates the remaining variation of retention times on the level of individual
-peaks by plotting the distribution of retention time ranges.
+peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
+of peak numbers after aligning the chromatograms.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

@@ -38,14 +38,14 @@ if(write_txt_file==TRUE){
     cat("by means of small linear adjustments\n in order to control for systematic temporal shifts in the gas-chromatography run:\n\n")
     cat("Overview of applied shifts\n")
     print(object[["Logfile"]][["LinearShift"]])
-    cat("\nVariation of Retention Times. Minium and Maximum values refer to the smalles and the largest variation\n")
+    cat("\nVariation of Retention Times. Minimum and Maximum values refer to the smallest and the largest variation\n")
     cat("within individual peaks respectively.")
-    cat("Median, Mean & std summarise the population of peaks.\nNote that are reduction in the variation is expected only for the aligned data!\n\n")
+    cat("Median, Mean & Standard Deviation summarise the population of peaks.\nNote that a reduction in the variation is expected only for the aligned data!\n\n")
     print(object[["Logfile"]][["Variation"]])
 
 if(write_txt_file==TRUE) {
     sink() # Close the connection
-    cat("Summary is saved in",paste0(x,"_summary.txt"))
+    cat("Summary is saved as",paste0(x,"_summary.txt"))
 }
 }
 

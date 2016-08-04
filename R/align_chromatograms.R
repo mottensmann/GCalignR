@@ -124,7 +124,7 @@
 align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
                                 max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
                                 delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
-check_input(data,sep)
+check_input(data,sep,write_output=write_output,blank=blanks)
 
 Logbook <- list() # List saving the main workflow
 Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
@@ -172,14 +172,13 @@ if(reference=="reference"){
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)
 }
-
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
     Logbook[["Input"]]["File"] <- as.character(as.character(match.call()["data"]))
     Logbook[["Input"]]["Reference"] <- reference
     Logbook[["Input"]]["Retention_Time"] <- rt_col_name
     Logbook[["Input"]]["Concentration"] <- conc_col_name
     Logbook[["Input"]]["Peaks"] <- peak_counter(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name)
-if(!is.null(blanks))Logbook[["Input"]]["Blanks"] <- blanks # Only created if blanks!=NULL
+if(!is.null(blanks)) Logbook[["Input"]][["Blanks"]] <- paste(blanks,collapse = "; ") # Only created if blanks!=NULL
 
 # 3: Processing
 #---------------
@@ -298,7 +297,7 @@ if (!is.null(blanks)) { # delete peaks present in blanks, then remove the blanks
 for (i in blanks) {gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)} # delete all blanks
     N <- N -  nrow(gc_peak_list_aligned[[1]])
     Logbook[["Filtering"]]["Blank_Peaks"] <- N
-    Logbook[["Aligned"]]["Blanks"] <- N
+    Logbook[["Aligned"]]["In_Blanks"] <- N
     cat('Blank Peaks deleted & Blanks removed\n\n')
 }
 

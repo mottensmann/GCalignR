@@ -10,9 +10,9 @@
 #' @param GCout
 #' object of class GCaling created with \link{align_chromatograms}. Contains a list
 #' of data.frames including the retention time and other variables, of which one needs
-#' to be named as specified by \code{conc_var_name}.
+#' to be named as specified by \code{conc_col_name}.
 #'
-#' @param conc_var_name
+#' @param conc_col_name
 #' character string denoting a column in data.frames of \code{GCout}
 #' containing a variable describing the abundance of peaks (e.g. peak area or peak height).
 #' @return
@@ -25,17 +25,18 @@
 #'
 #'
 
-norm_peaks <- function(GCout,conc_var_name=NULL){
+norm_peaks <- function(GCout,conc_col_name=NULL,rt_col_name=NULL,out=c("list","data.frame")){
+out <- match.arg(out)
 
     if(class(GCout)!="GCalign"){
         warning("Input is not a output of align_chromatograms, assure the format is correct")
     }
-    if(is.null(conc_var_name)){stop("List containing peak concentration is not specified. Define conc_var_name")}
+    if(is.null(conc_col_name)){stop("List containing peak concentration is not specified. Define conc_col_name")}
     #########################################################
     # extract concentration measure & convert to a data.frame
     #########################################################
 
-    conc_list <- GCout[["aligned"]][[conc_var_name]]
+    conc_list <- GCout[["aligned"]][[conc_col_name]]
 
     #################################
     # Function to do the calculations
@@ -50,8 +51,15 @@ norm_peaks <- function(GCout,conc_var_name=NULL){
     # Lapply over all data.frames
     #############################
     rel_con_list <- lapply(conc_list, rel_abund)
-    return(rel_con_list)
-}
 
+    if(out=="data.frame"){
+        x <- rel_con_list[-1]
+        x<-as.data.frame(t(do.call(cbind,x)))
+        colnames(x) <- GCout[["aligned"]][[rt_col_name]]["mean_RT"][[1]]
+        rel_con_list <- x
+    }
+
+return(rel_con_list)
+}
 
 

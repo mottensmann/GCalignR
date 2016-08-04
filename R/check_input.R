@@ -6,6 +6,8 @@
 #'
 #'@param data
 #'       path to a data file or the name of a list in the Global Environment.
+#'@param plot_peak_distribution
+#'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE
 #'@param sep
 #'The field separator character. Values on each line of the file are separated by this
 #'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
@@ -28,7 +30,7 @@
 #' @export
 #'
 
-check_input <- function(data, sep = "\t",...) {
+check_input <- function(data,plot_peak_distribution=FALSE, sep = "\t",...) {
 
     opt <- list(...) # optional parameters
 
@@ -77,13 +79,19 @@ check_input <- function(data, sep = "\t",...) {
     # Some checks further checks #
     ##############################
     if(any(names(opt)=="write_output")){
-        if(any(!(opt[["write_output"]]%in%col_names))) stop("Strings in write_output need to indicate a variable contained in data!")
+        if(any(!(opt[["write_output"]]%in%col_names))) stop("Names in write_output have to be included as a variable in the data!")
     }
     if(any(stringr::str_detect(string = ind_names, pattern = " "))) warning("Avoid whitespaces in Sample Names!")
     if(any(stringr::str_detect(string = ind_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Sample Names should only contain Letters, Numbers and '_' ")
     if(any(stringr::str_detect(string = col_names, pattern = " "))) warning("Avoid whitespaces in Variable Names!")
     if(any(stringr::str_detect(string = col_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Variable Names should only contain Letters, Numbers and '_' ")
 
+    if(any(names(opt)=="blank")){
+        if(any(!(opt[["blank"]]%in%ind_names))) stop("blanks have to refer to samples in the data!")
+    }
+    if(any(names(opt)=="reference")){
+        if(any(!(opt[["reference"]]%in%ind_names))) stop("reference has to be included as a sample in the data!")
+    }
     format_error <- function(x){
         check_var_count <- function(x){
             mat <- as.matrix(x)
@@ -100,8 +108,34 @@ check_input <- function(data, sep = "\t",...) {
 
     format_error(gc_peak_list) # Checks that every sample has the same number of values per column
     cat("All checks passed!\nReady for processing with align_chromatograms")
-    # return("Passed")
+
+    if(plot_peak_distribution==TRUE){
+        counter <- function(gc_peak_list){
+            number <- lapply(gc_peak_list, function(x){
+                temp <- x[,1] # vectorize the first column
+                length(temp[!is.na(temp)]) # number of peaks
+            } )
+            out <- t(as.data.frame((number)))
+            out <- reshape2::melt(out)
+            out <- out[,c("Var1","value")]
+            out <- as.data.frame(out)
+            colnames(out) <- c("ID","Peaks")
+            return(out)
+        }
+
+        out <- counter(gc_peak_list)
+        plot <- ggplot2::ggplot(out,aes(x=ID,y=Peaks)) +
+            ggplot2::geom_bar(stat = "identity",fill="darkblue") +
+            theme_minimal() +
+            theme(axis.text.x=element_text(angle=90,vjust = +0.5),
+                  axis.ticks.x = element_line(size = 1,colour = "black"),
+                  panel.grid.major = element_blank())+
+            labs(title ="Input Peak Distribution",
+                 x = "",
+                 y = "Number of Peaks")+
+            geom_text(aes(label=Peaks),size=3,colour="black", position=position_dodge(width=0.5), vjust=-0.25)
+        return(plot)
+    }
+
 }
-
-
 

@@ -4,10 +4,12 @@
 \alias{check_input}
 \title{Check correct formatting of data input}
 \usage{
-check_input(data, sep = "\\t", ...)
+check_input(data, plot_peak_distribution = FALSE, sep = "\\t", ...)
 }
 \arguments{
 \item{data}{path to a data file or the name of a list in the Global Environment.}
+
+\item{plot_peak_distribution}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE}
 
 \item{sep}{The field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}

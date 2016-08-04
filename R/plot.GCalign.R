@@ -1,14 +1,18 @@
 #' Plot Diagonstics for an Gcalign Object
 #'
 #' @description
-#' Two plots are currently available: One plot visualises the distribution of linear shifts
+#' Three plots are currently available: One plot visualises the distribution of linear shifts
 #' that were applied to align chromatograms to a reference before aligning individual peaks.
 #' A second plot illustrates the remaining variation of retention times on the level of individual
-#' peaks by plotting the distribution of retention time ranges.
+#' peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
+#' of peak numbers after aligning the chromatograms.
 #'
 #' @usage
 #' ## S3 method for class "GCalign"
-#' plot(object)
+#' plot(x,...)
+#'
+#' @return
+#' a ggplot2 figure including three subplots
 #'
 #' @param x
 #' \code{GCalign} object, result of \code{\link{align_chromatograms}}
@@ -25,13 +29,13 @@ plot.GCalign <- function(x,...){
 
     # Define  internal function
     # -----------------------------------------------------------------------------------------
-    lin_shift_table <- function(x){
+    lin_shift_table <- function(object){
         # 1.) Get the search window used in the function call and setup a table with all steps
         # 2.) Count the applied steps in the Alignment process
         # 3.) calculate a frequency table
         x <- as.data.frame(object[["Logfile"]][["Call"]]) # function call
         x <- as.numeric(as.character(x[["max_linear_shift"]])) # get the xdow for linear shifts
-        x <- seq(-x,x,0.01) # all linear steps investigated
+        x <- seq(-x[[1]],x[[1]],0.01) # all linear steps investigated
 
         df <- matrix(0,nrow = length(x),ncol = 2) # matrix of steps and counts
         df <- as.data.frame(df,row.names = F)
@@ -72,51 +76,31 @@ plot.GCalign <- function(x,...){
 
     }
 
-    object_to_matrix <- function(object,step="aligned",rt_col="RT"){
-        L <- length(object[[step]][[rt_col]])-1
-        rt_mat <- matrix(data = NA,nrow = L,ncol = length(object[["aligned"]][[rt_col]][[1]]))
+    object_to_matrix <- function(x,step="aligned",rt_col="RT"){
+        L <- length(x[[step]][[rt_col]])-1
+        rt_mat <- matrix(data = NA,nrow = L,ncol = length(x[["aligned"]][[rt_col]][[1]]))
         for(i in 1:L){
-            rt_mat[i,] <- object[[step]][[rt_col]][[i+1]]
+            rt_mat[i,] <- x[[step]][[rt_col]][[i+1]]
         }
         return(rt_mat)
     }
 
     bw <- function(b,x){b/bw.nrd0(x)} # used as a helper to smooth the gaussian fit
 
-     multiplot <- function(..., plotlist=NULL, cols) { # cookbook.R
-        require(grid)
-        # Make a list from the ... arguments and plotlist
-        plots <- c(list(...), plotlist)
-        numPlots = length(plots)
-        # Make the panel
-        plotCols = cols # Number of columns of plots
-        plotRows = ceiling(numPlots/plotCols) # Number of rows needed, calculated from # of cols
-        # Set up the page
-        grid.newpage()
-        pushViewport(viewport(layout = grid.layout(plotRows, plotCols)))
-        vplayout <- function(x, y)
-            viewport(layout.pos.row = x, layout.pos.col = y)
-        # Make each plot, in the correct location
-        for (i in 1:numPlots) {
-            curRow = ceiling(i/plotCols)
-            curCol = (i-1) %% plotCols + 1
-            print(plots[[i]], vp = vplayout(curRow, curCol ))
-        }
-    }
-    # -----------------------------------------------------------------------------------------
-df <- lin_shift_table(object) # steps of linear shifts and their frequency
+         # -----------------------------------------------------------------------------------------
+df <- lin_shift_table(x) # steps of linear shifts and their frequency
 long <- nrow(df) # x pos. for annotation in ggplot
 lat <- max(df["count"]) # y pos.
 
 LinShift <- ggplot2::ggplot(data = df,aes(shift,count)) +
-    geom_bar(stat = "identity",fill="blue") +
+    geom_bar(stat = "identity",fill="navyblue") +
     labs(title ="Linear Adjustments",
                 x = "Shift Size",
                 y = "Frequency") +
     theme_bw()+theme(
     plot.title=element_text(face = "bold"),
     axis.title.x = element_text(size = 16),
-    axis.text.x  = element_text(size = 16),
+    axis.text.x  = element_text(size = 16,angle=45,hjust = 1),
     axis.title.y = element_text(size = 16),
     axis.text.y  = element_text(size = 16),
     axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
@@ -126,27 +110,57 @@ LinShift <- ggplot2::ggplot(data = df,aes(shift,count)) +
     geom_segment(aes(x=long,y=lat+0.01,xend=1,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
     annotate("text",y=lat+0.02,x=round(nrow(df)/2),label=paste0("Window"),size=5)
 #**********************************************************************************
-aligned <- MinMax(object[["heatmap_input"]][["aligned_rt"]][,-1]) # Range of RTs aligned
+aligned <- MinMax(x[["heatmap_input"]][["aligned_rt"]][,-1]) # Range of RTs aligned
 aligned <- as.data.frame(aligned["range"]) # Formatting
 
 RT_Range <-    ggplot() +
-    geom_histogram(aes(x=range,y=..density..),data = aligned,binwidth = 0.01,colour="black",fill="white")+
-    geom_density(aes(x=range),data = aligned,adjust=bw(0.006,aligned[["range"]]),alpha=0.6,fill="Blue")+
+    #geom_histogram(aes(x=range,y=..density..),data = aligned,binwidth = 0.01,colour="black",fill="gray85")+
+    geom_density(aes(x=range),data = aligned,adjust=bw(0.006,aligned[["range"]]),alpha=1,fill="limegreen")+
     labs(title ="Variation of Retention Times per Peak",
          x = "Range",
          y = "Frequency")+
     theme_bw()+theme(
         plot.title=element_text(face = "bold"),
         axis.title.x = element_text(size = 16),
-        axis.text.x  = element_text(size = 16),
+        axis.text.x  = element_text(size = 16,angle = 45,hjust = 1),
         axis.title.y = element_text(size = 16),
         axis.text.y  = element_text(size = 16),
         axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
         axis.ticks.x = element_line(size = 0.5, colour = "grey40"),
         panel.grid.major = element_blank())
+rt_var_name <- x[["Logfile"]][["Input"]][["Retention_Time"]]
+conc_var_name <- x[["Logfile"]][["Input"]][["Concentration"]]
+
+data <- (x[["aligned"]][[rt_var_name]]) # Peaks of All Samples
+data <- data[,2:ncol(data)] # get rid of mean retention time column
+
+peak_df <- matrix(NA,ncol = 2,nrow = length(data))
+peak_df[,1] <- names(data)
+peak_df[,2] <- unlist(lapply(1:ncol(data), function(y) temp <- length(data[,y][data[,y]>0])))
+peak_df <- data.frame(peak_df)
+names(peak_df) <- c("ID","Peaks")
+peak_df$Peaks <- as.numeric(as.character(peak_df$Peaks))
+
+peaks_final <- ggplot2::ggplot(peak_df,aes(x=ID,y=Peaks)) +
+    ggplot2::geom_bar(stat = "identity",fill="navyblue") +
+    theme_bw()+theme(
+        plot.title=element_text(face = "bold"),
+        axis.title.x = element_text(size = 16),
+        axis.text.x=element_text(angle=90,vjust = +0.5),
+        axis.ticks.x = element_line(size = 1,colour = "black"),
+        axis.title.y = element_text(size = 16),
+        axis.text.y  = element_text(size = 16),
+        axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
+        axis.ticks.x = element_line(size = 0.5, colour = "grey40"),
+        panel.grid.major = element_blank())+
+labs(title ="Posterior Distribution of Peaks",
+         x = "",
+         y = "Number of Peaks")+
+    geom_text(aes(label=Peaks),size=3,colour="gray5", position=position_dodge(width=0.5), vjust=-0.25)
 
 
-multiplot(LinShift,RT_Range,cols = 2)
+return(gridExtra::grid.arrange(arrangeGrob(LinShift, RT_Range,nrow = 1),peaks_final, nrow = 2))
+
 }
 
 

@@ -94,8 +94,8 @@ lat <- max(df["count"]) # y pos.
 
 LinShift <- ggplot2::ggplot(data = df,aes(shift,count)) +
     geom_bar(stat = "identity",fill="navyblue") +
-    labs(title ="Linear Adjustments",
-                x = "Shift Size",
+    labs(title ="Linear Transformation of Retention Times",
+                x = "Shift",
                 y = "Frequency") +
     theme_bw()+theme(
     plot.title=element_text(face = "bold"),
@@ -105,10 +105,10 @@ LinShift <- ggplot2::ggplot(data = df,aes(shift,count)) +
     axis.text.y  = element_text(size = 16),
     axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
     axis.ticks.x = element_line(size = 0.5, colour = "grey40"),
-    panel.grid.major = element_blank()) +
-    geom_segment(aes(x=1,y=lat+0.01,xend=long,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
-    geom_segment(aes(x=long,y=lat+0.01,xend=1,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
-    annotate("text",y=lat+0.02,x=round(nrow(df)/2),label=paste0("Window"),size=5)
+    panel.grid.major = element_blank())
+    # geom_segment(aes(x=1,y=lat+0.01,xend=long,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
+    # geom_segment(aes(x=long,y=lat+0.01,xend=1,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
+    # annotate("text",y=lat+0.02,x=round(nrow(df)/2),label=paste0("Window"),size=5)
 #**********************************************************************************
 aligned <- MinMax(x[["heatmap_input"]][["aligned_rt"]][,-1]) # Range of RTs aligned
 aligned <- as.data.frame(aligned["range"]) # Formatting

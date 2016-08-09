@@ -1,7 +1,7 @@
 #' align peaks individually among chromatograms
 #'
 #' @description
-#' \code{align_individual_peaks()} allows to align similar peaks across samples so that
+#' \code{align_peaks} allows to align similar peaks across samples so that
 #' shared peaks are consistently located at the the same location (i.e. defined as the same substance).
 #'  The order of chromatograms (i.e. data.frames in \code{gc_peak_list}) is randomized before each run
 #'  of the alignment of algorithm. The main principle of this function is to reduce the variance in retention
@@ -38,12 +38,13 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
+#'
 #' @keywords internal
 #'
 #' @export
 #'
 
-align_individual_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name,R=1) {
+align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_col_name,R=1) {
 
     cat(paste('\n','\n','Iteration',as.character(R),'out of',as.character(n_iter),' ... '))
     shuffle_order <- sample(1:length(gc_peak_list)) # Generate random order

@@ -2,7 +2,7 @@
 #'
 #'@description
 #'\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}. Check out the vignette
-#'to get started (link[=doc/GCalignR_step_by_step]{Vignette})
+#'to get started \link[=doc/GCalignR_step_by_step.html]{Vignette})
 #'
 #'@details
 #'The Alignment of Peaks is archieved by running three major algorithms always considering the complete
@@ -109,12 +109,12 @@
 #'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
-#'@import magrittr
+#' @import magrittr
 #'
 #' @examples
-#' data(gc_peak_data)
-#' gc_peak_data <- gc_peak_data[1:4]
-#' out <- align_chromatograms(gc_peak_data, conc_col_name = "area", rt_col_name = "RT",
+#' data(gc_peaks)
+#' gc_peaks <- gc_peaks[1:4]
+#' out <- align_chromatograms(gc_peaks, conc_col_name = "area", rt_col_name = "time",
 #'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
 #'          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
 #'          blanks = NULL, delete_single_peak = TRUE)
@@ -253,7 +253,7 @@ if(reference=="reference"){ # reference is not a true sample and is used excluse
     merged_peaks <- matrix(NA, nrow = n_iter,ncol = 1)
 
 for (R in 1:n_iter){ # Allows to iteratively execute the algorithm
-    gc_peak_list_aligned <- align_individual_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
+    gc_peak_list_aligned <- align_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)# mean rt per row
     gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) { # remove empty rows
     keep_rows <- which(!is.na(average_rts))
@@ -373,8 +373,8 @@ if (!is.null(write_output)){
     call <- function_call(call = call,FUN = align_chromatograms) # Defaults added
     Logbook[["Call"]] <- call
     output_algorithm <- list(aligned=output, #summary=align_summary,
-                             heatmap_input=list(initial_rt=rt_raw,
-                             linear_shifted_rt=rt_linear,aligned_rt=rt_aligned),
+                             heatmap_input=list(input_rts=rt_raw,
+                             linear_transformed_rts=rt_linear,aligned_rts=rt_aligned),
                              Logfile=Logbook)
 
     class(output_algorithm) <- "GCalign" # name of list

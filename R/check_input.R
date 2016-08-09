@@ -2,21 +2,21 @@
 #'
 #'@description
 #' Checks conformity between the input format and the requirements of GCalignR. Supported are
-#' a \code{.txt} files or lists of data.frames. See \code{\link{align_chromatograms}} for details.
+#' \code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
 #'
 #'@param data
 #'       path to a data file or the name of a list in the Global Environment.
-#'@param plot_peak_distribution
-#'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE
+#'
+#'@param show_peaks
+#'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.
+#'
 #'@param sep
 #'The field separator character. Values on each line of the file are separated by this
 #'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param ...
 #'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
-#'\code{plot_peak_distribution==TRUE}.
-#'
-#'@return TRUE if data is formatted correctly, warning and explanation if not.
+#'\code{show_peaks==TRUE}.
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
@@ -24,14 +24,14 @@
 #'@import magrittr stringr
 #'
 #' @examples
-#' data(gc_peak_data)
-#' gc_peak_data <- gc_peak_data[1:4]
-#' check_input(gc_peak_data)
+#'
+#' check_input(gc_peaks) ## Checks format
+#' check_input(gc_peaks, show_peaks=T) ## Includes a barplot of peaks
 #'
 #' @export
 #'
 
-check_input <- function(data,plot_peak_distribution=FALSE, sep = "\t",...) {
+check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
 
     mcall = as.list(match.call())[-1L]
     opt <- list(...) # optional parameters
@@ -111,7 +111,7 @@ check_input <- function(data,plot_peak_distribution=FALSE, sep = "\t",...) {
     format_error(gc_peak_list) # Checks that every sample has the same number of values per column
     cat("All checks passed!\nReady for processing with align_chromatograms")
 
-    if(plot_peak_distribution==TRUE){
+    if(show_peaks==TRUE){
         counter <- function(gc_peak_list){
             number <- lapply(gc_peak_list, function(x){
                 temp <- x[,1] # vectorize the first column
@@ -143,7 +143,7 @@ check_input <- function(data,plot_peak_distribution=FALSE, sep = "\t",...) {
         if(!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim=c(0,ymax+5)))
 
         bars <- do.call(graphics::barplot,args=c(list(height=peaks),arg_list,...))
-        text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
+        graphics::text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
 
     }
 

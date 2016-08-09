@@ -7,19 +7,21 @@
 #' peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
 #' of peak numbers after aligning the chromatograms.
 #'
-#' @usage
-#' ## S3 method for class "GCalign"
-#' plot(x,...)
+#' @examples
+#' ## All three plots
+#' plot(gc_peaks_aligned)
 #'
+#' ## Distribution of Peaks
+#' plot(gc_peaks_aligned,which_plot="Peak_Counts")
 #'
 #' @param x \code{GCalign} object, created by \code{\link{align_chromatograms}}
 #'
-#' @param which
+#' @param which_plot
 #' character string indicating which plot is returned. Available are
-#' \code{"Linear_Shifts} a histogram of linear adjustments undertaken in aligning chromatograms,
-#' \code{"Peak_Range} a histogram summarising the range of retention times for every peak defined
+#' \strong{"Linear_Shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
+#' \strong{"Peak_Range"} a histogram summarising the range of retention times for every peak defined
 #' by the difference between minimum and maximum retention times respectively. The third option
-#' is \code{Peak_Counts} plotting a barchart of the number of peaks per sample. By default all
+#' is \strong{"Peak_Counts"} plotting a barchart of the number of peaks per sample. By default all
 #' three plots are returned as subplots of one figure.
 #'
 #' @param ...
@@ -32,11 +34,11 @@
 #'
 #' @export
 #'
-plot.GCalign <- function(x,which=c("All","Linear_Shifts","Peak_Range","Peak_Counts"),...){
+plot.GCalign <- function(x,which_plot=c("All","Linear_Shifts","Peak_Range","Peak_Counts"),...){
 
     # initialising by picking arguments from the function call
     mcall = as.list(match.call())[-1L]
-    which <- match.arg(which) # allow partial matching
+    which_plot <- match.arg(which_plot) # allow partial matching
 
 
     # Define internal functions
@@ -69,17 +71,17 @@ plot.GCalign <- function(x,which=c("All","Linear_Shifts","Peak_Range","Peak_Coun
     }#end hist_linshift
 
     hist_peakvar <- function(x,mcall,...){
-    MinMax <- function(rt_mat = aligned){ # Estimate the range of retention times per substance, they should be no overlapp
+    MinMax <- function(x){ # Estimate the range of retention times per substance, they should be no overlapp
         temp <- matrix(NA,1,2)
         colnames(temp) <- c("range","row")
         data <- temp[0,]
-        for(i in 1:ncol(rt_mat)){
-            data<-rbind(data,cbind(abs(diff(range(rt_mat[,i][rt_mat[,i]>0],na.rm = TRUE))),i))
+        for(i in 1:ncol(x)){
+            data<-rbind(data,cbind(abs(diff(range(x[,i][x[,i]>0],na.rm = TRUE))),i))
         }
         return(as.data.frame(data))
     }
 
-        df <- MinMax(x[["heatmap_input"]][["aligned_rt"]][,-1]) # Range of RTs aligned
+        df <- MinMax(x[["heatmap_input"]][["aligned_rts"]][,-1]) # Range of RTs aligned
         df <- unlist(df["range"]) # Formatting
 
         xmax <- max(df)
@@ -138,26 +140,26 @@ plot.GCalign <- function(x,which=c("All","Linear_Shifts","Peak_Range","Peak_Coun
         if(!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim=c(0,ymax+5)))
 
         bars <- do.call(graphics::barplot,args=c(list(height=peaks),arg_list,...))
-        text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
+        graphics::text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
 
     }
 # --------------------------------------------------------------------
 
-if(which=="Linear_Shifts"){
+if(which_plot=="Linear_Shifts"){
 hist_linshift(object = x,mcall = mcall,...)
 
-}else if (which=="Peak_Range"){
+}else if (which_plot=="Peak_Range"){
     hist_peakvar(x = x,mcall = mcall,...)
 
-} else if(which=="Peak_Counts"){
+} else if(which_plot=="Peak_Counts"){
     bar_peakdistr(x = x,mcall = mcall,...)
 
 } else{
-    layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+    graphics::layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
     bar_peakdistr(x = x,mcall = mcall)
     hist_linshift(object = x,mcall = mcall)
     hist_peakvar(x = x,mcall = mcall)
-    layout(mat = 1,widths = 1,heights = 1)#back to normal screen partition
+    graphics::layout(mat = 1,widths = 1,heights = 1)#back to normal screen partition
 
 }
 }

@@ -4,17 +4,17 @@
 \alias{plot.GCalign}
 \title{Plot Diagonstics for an Gcalign Object}
 \usage{
-## S3 method for class "GCalign"
-plot(x,...)
+\method{plot}{GCalign}(x, which_plot = c("All", "Linear_Shifts", "Peak_Range",
+  "Peak_Counts"), ...)
 }
 \arguments{
 \item{x}{\code{GCalign} object, created by \code{\link{align_chromatograms}}}
 
-\item{which}{character string indicating which plot is returned. Available are
-\code{"Linear_Shifts} a histogram of linear adjustments undertaken in aligning chromatograms,
-\code{"Peak_Range} a histogram summarising the range of retention times for every peak defined
+\item{which_plot}{character string indicating which plot is returned. Available are
+\strong{"Linear_Shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
+\strong{"Peak_Range"} a histogram summarising the range of retention times for every peak defined
 by the difference between minimum and maximum retention times respectively. The third option
-is \code{Peak_Counts} plotting a barchart of the number of peaks per sample. By default all
+is \strong{"Peak_Counts"} plotting a barchart of the number of peaks per sample. By default all
 three plots are returned as subplots of one figure.}
 
 \item{...}{optional arguments passed on to methods. See
@@ -27,6 +27,14 @@ that were applied to align chromatograms to a reference before aligning individu
 A second plot illustrates the remaining variation of retention times on the level of individual
 peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
 of peak numbers after aligning the chromatograms.
+}
+\examples{
+## All three plots
+plot(gc_peaks_aligned)
+
+## Distribution of Peaks
+plot(gc_peaks_aligned,which_plot="Peak_Counts")
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

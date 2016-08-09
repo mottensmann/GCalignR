@@ -4,7 +4,7 @@
 \alias{summary.GCalign}
 \title{Summarizing Peak Alignments with GCalignR}
 \usage{
-summary(object,write_txt_file=FALSE)
+\method{summary}{GCalign}(object, write_txt_file = FALSE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{GCalign}, a result of a call to \code{\link{align_chromatograms}}}
@@ -16,6 +16,10 @@ to the console in this case.}
 }
 \description{
 summary method for class "GCalign"
+}
+\examples{
+summary(gc_peaks_aligned) # prints summary to the Console
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

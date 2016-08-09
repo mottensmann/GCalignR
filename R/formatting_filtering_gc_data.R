@@ -111,7 +111,9 @@ align_var <- function(gc_peak_list,rt_col_name){
     peak <- nrow(gc_peak_list[[1]]) # number of peaks
     out <- unlist(lapply(1:peak,
                          function(x) width_of_peaks(gc_peak_list, 1:length(gc_peak_list), x, rt_col_name)))
-    output <- list(range=round(range(out,na.rm = T),2),average=round(mean(out,na.rm=T),2),std=round(sd(out,na.rm = T),2))
+    output <- list(range=round(range(out,na.rm = T),2),Average=round(mean(out,na.rm=T),2),Std=round(stats::sd(out,na.rm = T),2))
+    output <- unlist(output)
+    names(output)[1:2] <- c("Min","Max")
     return(output)
 }
 

@@ -10,8 +10,8 @@
 #' logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
 #' to the console in this case.
 #'
-#' @usage
-#' summary(object,write_txt_file=FALSE)
+#' @examples
+#' summary(gc_peaks_aligned) # prints summary to the Console
 #'
 #' @param ...
 #' optional arguments affecting the summary produced.
@@ -34,8 +34,8 @@ if(write_txt_file==TRUE){
     cat("Number of identified substances among all substances:\n")
     print(object[["Logfile"]][["Aligned"]])
     cat("\n")
-    cat(object[["Logfile"]][["Input"]]["Samples"],"Samples were aligned to the reference peak list",paste0("'",object[["Logfile"]][["Input"]]["Reference"],"'"))
-    cat("by means of small linear adjustments\n in order to control for systematic temporal shifts in the gas-chromatography run:\n\n")
+    cat(object[["Logfile"]][["Input"]]["Samples"],"Samples were aligned to the reference",paste0("'",object[["Logfile"]][["Input"]]["Reference"],"'"))
+    cat(" by means of small linear adjustments\n in order to control for systematic temporal shifts in the gas-chromatography run:\n\n")
     cat("Overview of applied shifts\n")
     print(object[["Logfile"]][["LinearShift"]])
     cat("\nVariation of Retention Times. Minimum and Maximum values refer to the smallest and the largest variation\n")

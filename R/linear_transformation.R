@@ -16,7 +16,7 @@
 #'
 #' @inheritParams align_chromatograms
 #'
-#' @inheritParams align_individual_peaks
+#' @inheritParams align_peaks
 #'
 #' @return
 #' A list of data.frames containing chromatograms with applied linear shifts

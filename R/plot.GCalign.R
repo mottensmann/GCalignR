@@ -11,45 +11,64 @@
 #' ## S3 method for class "GCalign"
 #' plot(x,...)
 #'
-#' @return
-#' a ggplot2 figure including three subplots
 #'
-#' @param x
-#' \code{GCalign} object, result of \code{\link{align_chromatograms}}
+#' @param x \code{GCalign} object, created by \code{\link{align_chromatograms}}
+#'
+#' @param which
+#' character string indicating which plot is returned. Available are
+#' \code{"Linear_Shifts} a histogram of linear adjustments undertaken in aligning chromatograms,
+#' \code{"Peak_Range} a histogram summarising the range of retention times for every peak defined
+#' by the difference between minimum and maximum retention times respectively. The third option
+#' is \code{Peak_Counts} plotting a barchart of the number of peaks per sample. By default all
+#' three plots are returned as subplots of one figure.
 #'
 #' @param ...
-#' optional arguments
+#' optional arguments passed on to methods. See
+#' \code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
+#' Please Note that optional arguments are currently not passed on when plotting all figures.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
 #' @export
 #'
-plot.GCalign <- function(x,...){
+plot.GCalign <- function(x,which=c("All","Linear_Shifts","Peak_Range","Peak_Counts"),...){
 
-    # Define  internal function
-    # -----------------------------------------------------------------------------------------
-    lin_shift_table <- function(object){
-        # 1.) Get the search window used in the function call and setup a table with all steps
-        # 2.) Count the applied steps in the Alignment process
-        # 3.) calculate a frequency table
-        x <- as.data.frame(object[["Logfile"]][["Call"]]) # function call
-        x <- as.numeric(as.character(x[["max_linear_shift"]])) # get the xdow for linear shifts
-        x <- seq(-x[[1]],x[[1]],0.01) # all linear steps investigated
+    # initialising by picking arguments from the function call
+    mcall = as.list(match.call())[-1L]
+    which <- match.arg(which) # allow partial matching
 
-        df <- matrix(0,nrow = length(x),ncol = 2) # matrix of steps and counts
-        df <- as.data.frame(df,row.names = F)
-        names(df) <- c("shift","count")
-        df["shift"] <- as.factor(x) # template to be filled up with applied shifts
 
-        x <- as.data.frame(table(object[["Logfile"]][["LinearShift"]]["shift"])) # x Linshift data.frame
-        names(x) <- c("shift","count")
-        x["count"] <- x["count"] / sum(x["count"])
-        index <- which((df[,1] %in% x[,1])) # which steps in df to overwrite
-        df[index,"count"] <- x["count"] # combined tables
-        df["shift"] <- as.factor(round(as.numeric(as.character(df[["shift"]])),2))
-        return(df)
-    }
+    # Define internal functions
+# -------------------------------------------------------------------
+
+    hist_linshift <- function(object,mcall,...){
+
+        xl <- as.data.frame(object[["Logfile"]][["Call"]]) # function call
+        xl <- as.numeric(as.character(xl[["max_linear_shift"]])) # get the xdow for linear shifts
+        xl <- seq(-xl[[1]],xl[[1]],0.01) # all linear steps investigated
+        xl <- object[["Logfile"]][["LinearShift"]]["shift"]
+
+        df <- as.vector(unlist(as.vector(xl))) # steps of linear shifts and their frequency
+        xmax <- as.numeric(as.character(as.data.frame(object[["Logfile"]][["Call"]])[["max_linear_shift"]][[1]]))
+        xmin <- -xmax
+
+        # check for optional arguments in the function call, take defaults, if missing
+        arg_list <- list()
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Linear Transformation"))
+        if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Shift"))
+        if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Frequency [%]"))
+        if(!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(from=xmin,to=xmax,by=0.01)))
+        if(!("freq") %in% names(mcall)||!("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = FALSE))
+        if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))
+        if(!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab=1.5))
+        if(!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#ffffbf"))
+
+
+        do.call(graphics::hist,args=c(list(x=df),arg_list,...))
+    }#end hist_linshift
+
+    hist_peakvar <- function(x,mcall,...){
     MinMax <- function(rt_mat = aligned){ # Estimate the range of retention times per substance, they should be no overlapp
         temp <- matrix(NA,1,2)
         colnames(temp) <- c("range","row")
@@ -60,107 +79,87 @@ plot.GCalign <- function(x,...){
         return(as.data.frame(data))
     }
 
-    PeakOverlap <- function(rt_min_max,threshold=0.02){
-        rt_min_max["width"] <- rt_min_max["max"] - rt_min_max["min"]
-        rt_min_max["distance"] <- 0
-        for(n in 2:nrow(rt_min_max)){
-            rt_min_max[n,"distance"] <- rt_min_max[n,"min"] - rt_min_max[n-1,"max"]
-        }
-        rt_min_max["distance"][ rt_min_max["distance"]>threshold] <- threshold
-        rt_min_max["offset"] <- 0
-        for(n in 2:nrow(rt_min_max) ){
-            rt_min_max[n,"offset"] <- rt_min_max[n,"distance"] + rt_min_max[n-1,"width"]
-        }
-        rt_min_max["cumul"] <- cumsum(rt_min_max["distance"]+rt_min_max["offset"])
-        return(rt_min_max)
+        df <- MinMax(x[["heatmap_input"]][["aligned_rt"]][,-1]) # Range of RTs aligned
+        df <- unlist(df["range"]) # Formatting
+
+        xmax <- max(df)
+        xmin <- min(df)
+
+        arg_list <- list()
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Retention Time Range\nper Peak"))
+        if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Range [max - min]"))
+        if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Frequency [%]"))
+        if(!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks =seq(xmin,xmax,by=0.01)))
+        if(!("freq") %in% names(mcall)||!("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = FALSE))
+        if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))
+        if(!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab=1.5))
+        if(!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#91bfdb"))
+
+        do.call(graphics::hist,args=c(list(x=df),arg_list,...))
+
+        # xfit <- seq(xmin,xmax,by=0.01)
+        # yfit <- dnorm(xfit,mean=mean(df),sd=sd(df))
+        # #yfit <- yfit*diff(hist[["mids"]][1:2]*length(df))
+        # lines(xfit,yfit,col="black",lwd=2)
+
 
     }
 
-    object_to_matrix <- function(x,step="aligned",rt_col="RT"){
-        L <- length(x[[step]][[rt_col]])-1
-        rt_mat <- matrix(data = NA,nrow = L,ncol = length(x[["aligned"]][[rt_col]][[1]]))
-        for(i in 1:L){
-            rt_mat[i,] <- x[[step]][[rt_col]][[i+1]]
-        }
-        return(rt_mat)
+    bar_peakdistr <- function(x,mcall,...){
+        rt_var_name <- x[["Logfile"]][["Input"]][["Retention_Time"]]
+        conc_var_name <- x[["Logfile"]][["Input"]][["Concentration"]]
+
+        data <- (x[["aligned"]][[rt_var_name]]) # Peaks of All Samples
+        data <- data[,2:ncol(data)] # get rid of mean retention time column
+
+        peak_df <- matrix(NA,ncol = 2,nrow = length(data))
+        peak_df[,1] <- names(data)
+        peak_df[,2] <- unlist(lapply(1:ncol(data), function(y) temp <- length(data[,y][data[,y]>0])))
+        peak_df <- data.frame(peak_df)
+        names(peak_df) <- c("ID","Peaks")
+        peak_df$Peaks <- as.numeric(as.character(peak_df$Peaks))
+
+        peaks <- peak_df[["Peaks"]]
+        names(peaks) <- peak_df[["ID"]]
+
+        ymax <- max(peaks)
+        ymin <- min(peaks)
+
+        arg_list <- list()
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Peak Counts\n after running GCalignR"))
+        if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
+        if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
+        if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))
+        if(!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab=1.5))
+        if(!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#fc8d59"))
+        if(!"srt"%in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
+        if(!"las"%in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
+        if(!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg=names(peaks)))
+        if(!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim=c(0,ymax+5)))
+
+        bars <- do.call(graphics::barplot,args=c(list(height=peaks),arg_list,...))
+        text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
+
     }
+# --------------------------------------------------------------------
 
-    bw <- function(b,x){b/bw.nrd0(x)} # used as a helper to smooth the gaussian fit
+if(which=="Linear_Shifts"){
+hist_linshift(object = x,mcall = mcall,...)
 
-         # -----------------------------------------------------------------------------------------
-df <- lin_shift_table(x) # steps of linear shifts and their frequency
-long <- nrow(df) # x pos. for annotation in ggplot
-lat <- max(df["count"]) # y pos.
+}else if (which=="Peak_Range"){
+    hist_peakvar(x = x,mcall = mcall,...)
 
-LinShift <- ggplot2::ggplot(data = df,aes(shift,count)) +
-    geom_bar(stat = "identity",fill="navyblue") +
-    labs(title ="Linear Transformation of Retention Times",
-                x = "Shift",
-                y = "Frequency") +
-    theme_bw()+theme(
-    plot.title=element_text(face = "bold"),
-    axis.title.x = element_text(size = 16),
-    axis.text.x  = element_text(size = 16,angle=45,hjust = 1),
-    axis.title.y = element_text(size = 16),
-    axis.text.y  = element_text(size = 16),
-    axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
-    axis.ticks.x = element_line(size = 0.5, colour = "grey40"),
-    panel.grid.major = element_blank())
-    # geom_segment(aes(x=1,y=lat+0.01,xend=long,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
-    # geom_segment(aes(x=long,y=lat+0.01,xend=1,yend=lat+0.01),arrow = arrow(length = unit(0.02,"npc")),color="red",size=0.8)+
-    # annotate("text",y=lat+0.02,x=round(nrow(df)/2),label=paste0("Window"),size=5)
-#**********************************************************************************
-aligned <- MinMax(x[["heatmap_input"]][["aligned_rt"]][,-1]) # Range of RTs aligned
-aligned <- as.data.frame(aligned["range"]) # Formatting
+} else if(which=="Peak_Counts"){
+    bar_peakdistr(x = x,mcall = mcall,...)
 
-RT_Range <-    ggplot() +
-    #geom_histogram(aes(x=range,y=..density..),data = aligned,binwidth = 0.01,colour="black",fill="gray85")+
-    geom_density(aes(x=range),data = aligned,adjust=bw(0.006,aligned[["range"]]),alpha=1,fill="limegreen")+
-    labs(title ="Variation of Retention Times per Peak",
-         x = "Range",
-         y = "Frequency")+
-    theme_bw()+theme(
-        plot.title=element_text(face = "bold"),
-        axis.title.x = element_text(size = 16),
-        axis.text.x  = element_text(size = 16,angle = 45,hjust = 1),
-        axis.title.y = element_text(size = 16),
-        axis.text.y  = element_text(size = 16),
-        axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
-        axis.ticks.x = element_line(size = 0.5, colour = "grey40"),
-        panel.grid.major = element_blank())
-rt_var_name <- x[["Logfile"]][["Input"]][["Retention_Time"]]
-conc_var_name <- x[["Logfile"]][["Input"]][["Concentration"]]
+} else{
+    layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+    bar_peakdistr(x = x,mcall = mcall)
+    hist_linshift(object = x,mcall = mcall)
+    hist_peakvar(x = x,mcall = mcall)
+    layout(mat = 1,widths = 1,heights = 1)#back to normal screen partition
 
-data <- (x[["aligned"]][[rt_var_name]]) # Peaks of All Samples
-data <- data[,2:ncol(data)] # get rid of mean retention time column
-
-peak_df <- matrix(NA,ncol = 2,nrow = length(data))
-peak_df[,1] <- names(data)
-peak_df[,2] <- unlist(lapply(1:ncol(data), function(y) temp <- length(data[,y][data[,y]>0])))
-peak_df <- data.frame(peak_df)
-names(peak_df) <- c("ID","Peaks")
-peak_df$Peaks <- as.numeric(as.character(peak_df$Peaks))
-
-peaks_final <- ggplot2::ggplot(peak_df,aes(x=ID,y=Peaks)) +
-    ggplot2::geom_bar(stat = "identity",fill="navyblue") +
-    theme_bw()+theme(
-        plot.title=element_text(face = "bold"),
-        axis.title.x = element_text(size = 16),
-        axis.text.x=element_text(angle=90,vjust = +0.5),
-        axis.ticks.x = element_line(size = 1,colour = "black"),
-        axis.title.y = element_text(size = 16),
-        axis.text.y  = element_text(size = 16),
-        axis.ticks.y = element_line(size = 0.5, colour = "grey40"),
-        axis.ticks.x = element_line(size = 0.5, colour = "grey40"),
-        panel.grid.major = element_blank())+
-labs(title ="Posterior Distribution of Peaks",
-         x = "",
-         y = "Number of Peaks")+
-    geom_text(aes(label=Peaks),size=3,colour="gray5", position=position_dodge(width=0.5), vjust=-0.25)
-
-
-return(gridExtra::grid.arrange(gridExtra::arrangeGrob(LinShift, RT_Range,nrow = 1),peaks_final, nrow = 2))
-
+}
 }
 
 

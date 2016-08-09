@@ -13,7 +13,8 @@
 #'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param ...
-#'optional arguments used internally in GCalignR. See source code for details.
+#'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
+#'\code{plot_peak_distribution==TRUE}.
 #'
 #'@return TRUE if data is formatted correctly, warning and explanation if not.
 #'
@@ -32,6 +33,7 @@
 
 check_input <- function(data,plot_peak_distribution=FALSE, sep = "\t",...) {
 
+    mcall = as.list(match.call())[-1L]
     opt <- list(...) # optional parameters
 
     if (is.character(data)) { # Check if data is the path to a txt.file
@@ -124,18 +126,27 @@ check_input <- function(data,plot_peak_distribution=FALSE, sep = "\t",...) {
         }
 
         out <- counter(gc_peak_list)
-        plot <- ggplot2::ggplot(out,aes(x=ID,y=Peaks)) +
-            ggplot2::geom_bar(stat = "identity",fill="darkblue") +
-            theme_minimal() +
-            theme(axis.text.x=element_text(angle=90,vjust = +0.5),
-                  axis.ticks.x = element_line(size = 1,colour = "black"),
-                  panel.grid.major = element_blank())+
-            labs(title ="Input Peak Distribution",
-                 x = "",
-                 y = "Number of Peaks")+
-            geom_text(aes(label=Peaks),size=3,colour="black", position=position_dodge(width=0.5), vjust=-0.25)
-        return(plot)
+        peaks <- as.vector(unlist(out["Peaks"]))
+        names(peaks) <- unlist(out["ID"])
+        ymax <- max(peaks)
+
+        arg_list <- list()
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Peak Counts in the raw data\n befire running GCalignR"))
+        if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
+        if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
+        if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))
+        if(!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab=1.5))
+        if(!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "blue"))
+        if(!"srt"%in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
+        if(!"las"%in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
+        if(!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg=names(peaks)))
+        if(!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim=c(0,ymax+5)))
+
+        bars <- do.call(graphics::barplot,args=c(list(height=peaks),arg_list,...))
+        text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
+
     }
 
 }
+
 

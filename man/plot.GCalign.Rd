@@ -8,12 +8,18 @@
 plot(x,...)
 }
 \arguments{
-\item{x}{\code{GCalign} object, result of \code{\link{align_chromatograms}}}
+\item{x}{\code{GCalign} object, created by \code{\link{align_chromatograms}}}
 
-\item{...}{optional arguments}
-}
-\value{
-a ggplot2 figure including three subplots
+\item{which}{character string indicating which plot is returned. Available are
+\code{"Linear_Shifts} a histogram of linear adjustments undertaken in aligning chromatograms,
+\code{"Peak_Range} a histogram summarising the range of retention times for every peak defined
+by the difference between minimum and maximum retention times respectively. The third option
+is \code{Peak_Counts} plotting a barchart of the number of peaks per sample. By default all
+three plots are returned as subplots of one figure.}
+
+\item{...}{optional arguments passed on to methods. See
+\code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
+Please Note that optional arguments are currently not passed on when plotting all figures.}
 }
 \description{
 Three plots are currently available: One plot visualises the distribution of linear shifts

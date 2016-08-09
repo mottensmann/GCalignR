@@ -14,7 +14,8 @@ check_input(data, plot_peak_distribution = FALSE, sep = "\\t", ...)
 \item{sep}{The field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}
 
-\item{...}{optional arguments used internally in GCalignR. See source code for details.}
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
+\code{plot_peak_distribution==TRUE}.}
 }
 \value{
 TRUE if data is formatted correctly, warning and explanation if not.

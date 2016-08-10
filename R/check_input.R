@@ -24,9 +24,8 @@
 #'@import magrittr stringr
 #'
 #' @examples
-#'
-#' check_input(gc_peaks) ## Checks format
-#' check_input(gc_peaks, show_peaks=T) ## Includes a barplot of peaks
+#' check_input(seal_peaks) ## Checks format
+#' check_input(seal_peaks, show_peaks=TRUE) ## Includes a barplot of peaks
 #'
 #' @export
 #'

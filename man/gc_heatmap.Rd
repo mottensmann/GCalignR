@@ -44,16 +44,16 @@ heatmap allows to check the deviations quantitatively.
 \examples{
 
  ## with defaults
- gc_heatmap(gc_peaks_aligned, algorithm_step="aligned_rts")
+ gc_heatmap(seal_peaks_aligned, algorithm_step="aligned_rts")
 
  ## input data
- gc_heatmap(gc_peaks_aligned,algorithm_step="input_rts")
+ gc_heatmap(seal_peaks_aligned,algorithm_step="input_rts")
 
  ## subset of the first 50 Peaks
- gc_heatmap(gc_peaks_aligned,algorithm_step="aligned_rts",substance_subset = 1:50)
+ gc_heatmap(seal_peaks_aligned,algorithm_step="aligned_rts",substance_subset = 1:50)
 
  ## subset of individuals, stricter threshold
- gc_heatmap(gc_peaks_aligned,samples_subset = c("ind1","ind2","ind9","ind14"),threshold=0.02)
+ gc_heatmap(seal_peaks_aligned,samples_subset = c("ind1","ind2","ind9","ind14"),threshold=0.02)
 
 }
 \author{

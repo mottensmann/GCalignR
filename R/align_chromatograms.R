@@ -2,7 +2,7 @@
 #'
 #'@description
 #'\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}. Check out the vignette
-#'to get started \link[=doc/GCalignR_step_by_step.html]{Vignette})
+#'to get started: utils::browseVignettes(package = "GCalignR")
 #'
 #'@details
 #'The Alignment of Peaks is archieved by running three major algorithms always considering the complete
@@ -112,18 +112,17 @@
 #' @import magrittr
 #'
 #' @examples
-#' data(gc_peaks)
-#' gc_peaks <- gc_peaks[1:4]
-#' out <- align_chromatograms(gc_peaks, conc_col_name = "area", rt_col_name = "time",
-#'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
+#' data(seal_peaks)
+#' seal_peaks <- seal_peaks[1:4]
+#' out <- align_chromatograms(seal_peaks, conc_col_name = "area", rt_col_name = "time",
+#'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
 #'          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'
 #' @export
 #'
-align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
-                                max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
-                                delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+
 check_input(data,sep,write_output=write_output,blank=blanks)
 
 Logbook <- list() # List saving the main workflow
@@ -165,9 +164,9 @@ if (is.character(data)) {# TextFile
     gc_peak_list <- data
 }#End LoadData
 
-if(reference=="reference"){
-    cat(paste0('GC-data for ',as.character(length(ind_names)-1),' samples loaded\n'))
-    Logbook[["Input"]]["Samples"] <- length(ind_names)-1
+if(reference == "reference"){
+    cat(paste0('GC-data for ',as.character(length(ind_names) - 1),' samples loaded\n'))
+    Logbook[["Input"]]["Samples"] <- length(ind_names) - 1
 } else {
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)

@@ -22,9 +22,8 @@ Checks conformity between the input format and the requirements of GCalignR. Sup
 \code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
 }
 \examples{
-
-check_input(gc_peaks) ## Checks format
-check_input(gc_peaks, show_peaks=T) ## Includes a barplot of peaks
+check_input(seal_peaks) ## Checks format
+check_input(seal_peaks, show_peaks=TRUE) ## Includes a barplot of peaks
 
 }
 \author{

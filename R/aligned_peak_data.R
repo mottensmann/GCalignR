@@ -2,7 +2,7 @@
 #'
 #' @description
 #' This is in example of an aligned gas-chromatography dataset processed with \code{\link{align_chromatograms}}.
-#' A part of the raw data is accessible within this package \strong{seal_peaks.RData}. The Data is comprised of 41 Mother-Pup pairs of two different colonies from Bird Island, South Georgia. In addition two blanks are included.
+#' A part of the raw data is accessible within this package \strong{peak_data.RData}. The Data is comprised of 41 Mother-Pup pairs of two different colonies from Bird Island, South Georgia. In addition two blanks are included.
 #'
 #' @format Object of class "GCalign" including three lists. List \strong{"aligned"} includes data.frames
 #' for all variables present in the raw data ("time" and "area"). The list \strong{"heatmap"} holds data frames
@@ -18,6 +18,6 @@
 #' Stoffel, M.A.; Caspers, B.A.; Forcada, J.; Giannakara, A.; Baier, M.; Eberhart-Phillips, L.; Müller, C.; Hoffman, J.I. (2015): Chemical fingerprints encode mother-offspring similarity, colony membership, relatedness, and genetic quality in fur seals. In: Proceedings of the National Academy of Sciences of the United States of America 112 (36), S. E5005-12. DOI: 10.1073/pnas.1506076112.
 #'
 #' @keywords datasets
-#' @name seal_peaks_aligned
+#' @name aligned_peak_data
 #' @docType data
 NULL

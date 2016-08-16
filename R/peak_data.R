@@ -6,18 +6,18 @@
 #'
 #' @format
 #' A  list of data frames. Each data frame contains gas-chromatography peak data of an sample.
-#' The variables within each \code{data.frame} are: "time" (peak retention time) and "area" (integral of the peak curve).
+#' The variables within each data frame are: "time" (peak retention time) and "area" (integral of the peak curve).
 #' Each list element i.e. each data frame is named with the unique sample ID.
 #'
 #' @source
 #' http://www.pnas.org/content/suppl/2015/08/05/1506076112.DCSupplemental/pnas.1506076112.sd02.xlsx
 #'
 #' @references
-#' Stoffel, M.A.; Caspers, B.A.; Forcada, J.; Giannakara, A.; Baier, M.; Eberhart-Phillips, L.; Müller, C.; Hoffman, J.I. (2015): Chemical fingerprints encode mother-offspring similarity, colony membership, relatedness, and genetic quality in fur seals. In: Proceedings of the National Academy of Sciences of the United States of America 112 (36), S. E5005-12. DOI: 10.1073/pnas.1506076112.
+#' Stoffel, M.A.; Caspers, B.A.; Forcada, J.; Giannakara, A.; Baier, M.; Eberhart-Phillips, L.; Mueller, C.; Hoffman, J.I. (2015): Chemical fingerprints encode mother-offspring similarity, colony membership, relatedness, and genetic quality in fur seals. In: Proceedings of the National Academy of Sciences of the United States of America 112 (36), S. E5005-12. DOI: 10.1073/pnas.1506076112.
 
 #'
 #' @keywords datasets
-#' @name seal_peaks
+#' @name peak_data
 #'
 #' @docType data
 NULL

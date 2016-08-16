@@ -1,8 +1,8 @@
 context("gc_heatmap")
 
 library(testthat)
-data("seal_peaks_aligned")
-x <- seal_peaks_aligned
+data("aligned_peak_data")
+x <- aligned_peak_data
 out <- gc_heatmap(x)
 
 test_that("output is correct", {

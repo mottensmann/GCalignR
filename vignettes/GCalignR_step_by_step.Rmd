@@ -140,13 +140,13 @@ has to be a `list` of `data frames`. Each `list` element (`data frame`) has the 
 and the `data frame` itself contains the gc-peak data for this individual (again, the minimum
 number of columns is one column for the retention time and one column for another variable such as the area under the peak
 or it's height). All column names within `data frames` have to be the same.
-The attached dataset `seal_peaks` contains data from skin swabs of Antarctic Fur Seals (*Arctocephalus gazella*). 
+The attached dataset `peak_data` contains data from skin swabs of Antarctic Fur Seals (*Arctocephalus gazella*). 
 
 ```{r} 
-data("seal_peaks")
-length(seal_peaks) # number of individuals 
-names(seal_peaks) # names of individuals 
-head(seal_peaks[[1]]) # column names and data 
+data("peak_data")
+length(peak_data) # number of individuals 
+names(peak_data) # names of individuals 
+head(peak_data[[1]]) # column names and data 
 ```
 
 ## GCalignR workflow
@@ -158,7 +158,7 @@ of the aligning algorithm. Common error sources such as missing data or missing 
 among samples (if the input is a list of samples). Error messages will indicate any violation.
 
 ```{r}
-check_input(data = seal_peaks,show_peaks = F) # If show_peaks = T, a histogram of peaks is plotted 
+check_input(data = peak_data,show_peaks = F) # If show_peaks = T, a histogram of peaks is plotted 
 ```
 
 ### Align Chromatograms
@@ -167,22 +167,22 @@ The main function in `GCalignR´s` alignment workflow is `align_chromatograms` a
 See `align_chromatograms` for a detailled description of the arguments.
 
 ```{r, eval = FALSE}
-seal_peaks <- seal_peaks[1:4] # subset for speed reasons
-seal_peaks_aligned <- align_chromatograms(data = seal_peaks, # input data
+peak_data <- peak_data[1:4] # subset for speed reasons
+peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     conc_col_name = "area", # peak abundance variable
     rt_col_name = "time", # retention time 
     rt_cutoff_low = 5, # cut peaks with retention times below 5 Minutes
     rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
     reference = "M48", # name of reference 
     max_linear_shift = 0.05, # maximum linear shift of chromatograms
-    max_diff_peak2mean = 0.02, # maximum distance of a peak to the mean
+    max_diff_peak2mean = 0.03, # maximum distance of a peak to the mean
     min_diff_peak2peak = 0.03, # maximum distance between the mean of two peaks
     blanks = "C2", # no blanks. Specify blanks by names (e.g. c("blank1", "blank2"))
     delete_single_peak = TRUE, # delete peaks that are present in just one sample 
     write_output = NULL) # add c("time","area") to write data frames to .txt file
 ```
 ```{r}
-data("seal_peaks_aligned") # the package includes the already aligned data set  
+data("aligned_peak_data") # the package includes the already aligned data set  
 ``` 
 
 ### Plot Diagnostics for the aligned data
@@ -192,16 +192,16 @@ aligned peak profiles. By changing function arguments the heatmap can be customi
 A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap.  
 
 ```{r,message=FALSE,fig.width=6,fig.height=6}
-gc_heatmap(seal_peaks_aligned,threshold = 0.05) # By default a threshold of 0.05 is used to mark deviations
+gc_heatmap(aligned_peak_data,threshold = 0.05) # By default a threshold of 0.05 is used to mark deviations
 ```
 
 
 ```{r,message=FALSE,fig.width=6,fig.height=6}
-plot(seal_peaks_aligned) # Three Diagnostics, can be invoked separetely
+plot(aligned_peak_data) # Three Diagnostics, can be invoked separetely
 ```
 
 ```{r, eval=FALSE}
-summary(seal_peaks_aligned) # Summary of the alingnment procedure
+summary(aligned_peak_data) # Summary of the alingnment procedure
 ```
 ### Normalise peaks and log+1 transformation
 
@@ -210,7 +210,7 @@ to compensate for differences in the baseline concentration of samples. Note tha
 even if the data already contained a measure of relative abundance, in case that any of retention time cutoffs, single peak deletion or blank peak removal was applied. The output is a list of data frames containing the relative abundance of peaks for every individual.
 
 ```{r}
-scent <- norm_peaks(seal_peaks_aligned,conc_col_name = "area",rt_col_name = "time",out = "data.frame") # normalise area and return a data frame
+scent <- norm_peaks(aligned_peak_data,conc_col_name = "area",rt_col_name = "time",out = "data.frame") # normalise area and return a data frame
 scent <- log(scent+1) # commonly used transformation for abundance data to reduce the extent of mean-variance trends
 ````
 

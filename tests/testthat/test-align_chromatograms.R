@@ -1,8 +1,8 @@
 context("align_chromatograms")
 
 library(testthat)
-data("seal_peaks")
-data <- seal_peaks[1:3]
+data("peak_data")
+data <- peak_data[1:3]
 
 set.seed(1)
 out <- align_chromatograms(data, sep = "\t", conc_col_name= "area", rt_col_name = "time", write_output = NULL,

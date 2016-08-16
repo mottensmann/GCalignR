@@ -368,7 +368,7 @@ if (!is.null(write_output)){
     Logbook[["Variation"]][["Aligned"]] <- unlist(align_var(gc_peak_list_aligned,rt_col_name))
     Logbook[["Date"]]["End"] <- as.character(strftime(Sys.time()))
 
-    call <- as.list(match.call())[-1] # Call of align_chromatograms
+    call <- as.list(match.call())[-1] # Call of align_chromatograms, List
     call <- function_call(call = call,FUN = align_chromatograms) # Defaults added
     Logbook[["Call"]] <- call
     output_algorithm <- list(aligned=output, #summary=align_summary,

@@ -31,6 +31,13 @@ print.GCalign <- function(x,write_text_file=FALSE,...){
     function_call[["blanks"]] <- if(length(function_call[["blanks"]])>2){
         paste0("(",paste(as.character(function_call[["blanks"]]),collapse = ", "),")")
     }
+    function_call[["write_output"]] <- if(length(function_call[["write_output"]])>1){
+        paste0("(",paste(as.character(function_call[["write_output"]]),collapse = ", "),")")
+
+    }
+    # Tweak the NULL entries, so they are printable
+    which_NULL <- as.vector(which(lapply(function_call, function(x) out <- class(x))=="NULL"))
+    function_call[which_NULL] <- "NULL"
     names_call <- names(function_call)
     peaks <- x[["Logfile"]][["Aligned"]]
     names_peaks <- names(peaks)
@@ -87,10 +94,10 @@ cat("\n\n")
 # Refer to plots
 # -------------
 cat("Fur further details:\n")
-text <- paste0("Type 'gc_heatmap(",object_name,")'","to retrieve a heatmap for the alignment accuracy")
+text <- paste0("Type 'gc_heatmap(",object_name,")'"," to retrieve a heatmap for the alignment accuracy")
 cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
 cat("\n")
-text <- paste0("Type 'plot(",object_name,")'","to retrieve further diagnostic plots")
+text <- paste0("Type 'plot(",object_name,")'"," to retrieve further diagnostic plots")
 cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
 
 if(write_text_file==TRUE) {

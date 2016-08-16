@@ -4,13 +4,13 @@
 \alias{print.GCalign}
 \title{Summarizing Peak Alignments with GCalignR}
 \usage{
-\method{print}{GCalign}(x, write_txt_file = FALSE, ...)
+\method{print}{GCalign}(x, write_text_file = FALSE, ...)
 }
 \arguments{
-\item{write_txt_file}{logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
+\item{write_text_file}{logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
 to the console in this case.}
 
-\item{...}{optional arguments passed on to methods.}
+\item{...}{optional arguments passed on to methods. Internally \link{cat} is used to generate output, hence optional arguments are currently not ignored.}
 
 \item{object}{an object of class \strong{"GCalign"}, the result of a call to \code{\link{align_chromatograms}}}
 }

@@ -29,10 +29,10 @@ print.GCalign <- function(x,write_text_file=FALSE,...){
     function_call <- x[["Logfile"]][["Call"]] # List of all function arguments
     function_call[["sep"]] <- ifelse(function_call[["sep"]]=="\t","\\t",function_call[["sep"]])
     function_call[["blanks"]] <- if(length(function_call[["blanks"]])>2){
-        paste0("(",paste(as.character(function_call[["blanks"]]),collapse = ", "),")")
+        paste0("(",paste(as.character(function_call[["blanks"]][-1]),collapse = ", "),")")
     }
     function_call[["write_output"]] <- if(length(function_call[["write_output"]])>1){
-        paste0("(",paste(as.character(function_call[["write_output"]]),collapse = ", "),")")
+        paste0("(",paste(as.character(function_call[["write_output"]][-1]),collapse = ", "),")")
 
     }
     # Tweak the NULL entries, so they are printable

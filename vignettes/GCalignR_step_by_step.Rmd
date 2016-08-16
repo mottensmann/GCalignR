@@ -215,17 +215,25 @@ scent <- log(scent+1) # commonly used transformation for abundance data to reduc
 ````
 
 
-### Visualise patterns by ordination plots using the *vegan* 
+### Visualise patterns by ordination plots using the *vegan* package
 
-The `vegan`package offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out *?vegan* for a first overview. 
+`vegan` offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out *?vegan* for a first overview. 
 
-```{r}
+### Non-metric multidimensional scaling 
+```{r,fig.align="center",fig.cap="NMDS-Plot"}
 data("peak_factors") # factors for individual scent samples
 scent <- scent[match(row.names(peak_factors),row.names(scent)),] # bring both to the same order
 scent_nmds <- vegan::metaMDS(comm = scent) # performs Nonmetric multidimensional scaling (NMDS)
 scent_nmds <- as.data.frame(scent_nmds$points) # get the xy coordinates for every individual 
 scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony) # add the colony as a factor 
 ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color=colony)) +
-    ggplot2::geom_point(size=4) + ggplot2::stat_ellipse(size=2) + ggplot2::labs(title ="", x = "MDS1", y = "MDS2") + ggplot2::theme_bw()
-````
+    ggplot2::geom_point(size=4) + ggplot2::stat_ellipse(size=2) + ggplot2::labs(title ="", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
+```
+### Multivariate analysis using *adonis*
+Using **adonis** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
+```{r}
+vegan::adonis(scent ~ peak_factors$colony,permutations = 999) # Colonies differ in the location
+anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony)) # No dispersion effect
+```
+
 ## Literature

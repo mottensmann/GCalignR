@@ -136,18 +136,16 @@ peak_lister <- function(gc_peak_list,rt_col_name){
 }
 
 function_call <- function(call,FUN="align_chromatograms"){
-    form <- formals(FUN)
-    for ( n in names(form)){ # for every args of the function
-        if (!(n %in% names(call))){ # Find args not called
-            call <- append(call,form[n])  ## add missing args
-        }
+    form <- formals(FUN) # all arguemnts and there defaults, blank means no default.
+    for (n in names(form)){ # for every args of the function
+        if (!(n %in% names(call))) call <- append(call,form[n])  ## add missing args to list call
     }
     type <- as.vector(which(lapply(call, function(x) out <- class(x))!="NULL"))
-    call[type] <- lapply(call[type], function(x) x <- as.character(x))
-    call[-type] <- lapply(call[-type], function(x) x <- "NULL")
-    call <- do.call(rbind,call)
-    call <- t(as.data.frame(call))
-    row.names(call) <- NULL
+    call[type] <- lapply(call[type], function(x) x <- as.character(x)) # if not NULL, convert to char
+    call[-type] <- lapply(call[-type], function(x) x <- "NULL") # if NULL --> "NULL"
+    # call <- do.call(rbind,call) # creates data frame > 1 column if more than one blank!
+    # call <- t(as.data.frame(call))
+    # row.names(call) <- NULL
     return(call)
 }
 

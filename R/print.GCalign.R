@@ -23,50 +23,75 @@
 #'
 print.GCalign <- function(x,write_text_file=FALSE,...){
 
+    object_name <- as.list(match.call())[["x"]] # Name of the GCalign Object
+
     # Extract some informative pieces from the Logfile
-    object_name <- as.list(match.call())[["object"]] # Name of the GCalign Object
-    function_call <- x[["Logfile"]][["Call"]][1,]
+    function_call <- x[["Logfile"]][["Call"]] # List of all function arguments
     function_call[["sep"]] <- ifelse(function_call[["sep"]]=="\t","\\t",function_call[["sep"]])
+    function_call[["blanks"]] <- if(length(function_call[["blanks"]])>2){
+        paste0("(",paste(as.character(function_call[["blanks"]]),collapse = ", "),")")
+    }
     names_call <- names(function_call)
     peaks <- x[["Logfile"]][["Aligned"]]
     names_peaks <- names(peaks)
 
-if(write_text_file==TRUE){
+if(write_text_file==TRUE){ # write a textfile, no output to the Console if TRUE
     sink(paste0(object_name,"_summary.txt"),append = FALSE) # Prepare a Text file
 }
-    cat(stringr::str_wrap(paste("Summary of Peak Alignment running align_chromatograms from package GCalignR\nInput Data: ",x[["Logfile"]][["Input"]]["File"]),width=80,exdent=2,indent=2))
-    cat("\tStart: ", x[["Logfile"]][["Date"]]["Start"],"\tEnd: ",x[["Logfile"]][["Date"]]["End"],"\n\n")
 
+# Information about the date
+# --------------------------
+    cat(stringr::str_wrap(paste("Summary of Peak Alignment running align_chromatograms from package GCalignR\nInput: ",x[["Logfile"]][["Input"]]["File"]),width=80,exdent=2,indent=2))
+    cat("\tStart: ", x[["Logfile"]][["Date"]]["Start"],"\tFinished: ",x[["Logfile"]][["Date"]]["End"],"\n\n")
     cat("Call:\n")
-    cat("GCalignR::align_chromatograms(")
 
+# Function Call
+# ---------------
     c <- 1
-    text <- character()
+    text <- character()# used in this function to collect and then print output
+    text <- c(text, (paste0("GCalignR::align_chromatograms(")))
     for(i in names_call){
         if(c < length(names_call)){
-     text <- c(text,paste0(i,"=",as.character(function_call[[i]]),""))
+     text <- c(text,paste0(i,"=",paste0(as.character(function_call[[i]]),", ")))
             }else{
      text <- c(text,paste0(i,"=",as.character(function_call[[i]]),")"))
         }
         c <- c +1
     }
-    cat(stringr::str_wrap(paste(text,collapse = ", "),width=80,exdent=2,indent=2))
+    cat(stringr::str_wrap(paste(text,collapse = ""),width=80,exdent=2,indent=2))
 
-
+    # Summary of substances that have been scored and filtred
+# ---------------------------------------------------------
+text <- character()
     cat("\n\nSummary of scored substances:\n\n")
-    cat("In total",peaks["Peaks"],"substances were identified among all samples.\n")
-    if(any((names_peaks) %in% "In_Blanks")) cat(peaks["In_Blanks"],"substances were present in blanks. The corresponding peaks as well as the blanks were removed from the data set.")
-    if(any((names_peaks) %in% "Singular")) cat(peaks["Singular"],"substances were present in just one single sample and were removed.")
-    cat("After the processing",peaks["Retained"], "substances are reatained in the data set")
-    cat("\n")
-    cat(x[["Logfile"]][["Input"]]["Samples"],"Samples were aligned to the reference",paste0("'",x[["Logfile"]][["Input"]]["Reference"],"'"))
-    cat(" by means of small linear adjustments\n in order to control for systematic temporal shifts in the gas-chromatography run:\n\n")
-   # cat("Overview of applied shifts\n")
-    #print(x[["Logfile"]][["LinearShift"]])
-    cat("\nVariation of Retention Times. Minimum and Maximum values refer to the smallest and the largest variation\n")
-    cat("within individual peaks respectively.")
-    cat("Median, Mean & Standard Deviation summarise the population of peaks.\nNote that a reduction in the variation is expected only for the aligned data!\n\n")
-    print(x[["Logfile"]][["Variation"]])
+print(peaks)
+cat("\n")
+text <- c(text,paste("In total",peaks["Peaks"],"substances were identified among all samples."))
+
+if(any((names_peaks) %in% "In_Blanks")) text <- c(text,paste(peaks["In_Blanks"],"substances were present in blanks. The corresponding peaks as well as the blanks were removed from the data set."))
+    if(any((names_peaks) %in% "Singular")) text <- c(text,paste(peaks["Singular"],"substances were present in just one single sample and were removed."))
+text <- c(text,paste(peaks["Retained"], "substances are reatained after all filtering steps."))
+cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
+
+# Reference & Sample  Names.
+# -------------------
+text <- character()
+cat("\n\nSample Overview")
+text <- c(text,paste("The following",x[["Logfile"]][["Input"]]["Samples"],"Samples were aligned to the reference",paste0("'",x[["Logfile"]][["Input"]]["Reference"],"':")))
+cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
+cat("\n")
+text <- paste(names(x[["aligned"]][["time"]])[-1],collapse = ", ")
+cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
+cat("\n\n")
+
+# Refer to plots
+# -------------
+cat("Fur further details:\n")
+text <- paste0("Type 'gc_heatmap(",object_name,")'","to retrieve a heatmap for the alignment accuracy")
+cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
+cat("\n")
+text <- paste0("Type 'plot(",object_name,")'","to retrieve further diagnostic plots")
+cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
 
 if(write_text_file==TRUE) {
     sink() # Close the connection

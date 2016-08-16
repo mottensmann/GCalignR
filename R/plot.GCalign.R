@@ -34,7 +34,7 @@
 #'
 #' @export
 #'
-plot.GCalign <- function(x,which_plot=c("All","Linear_Shifts","Peak_Range","Peak_Counts"),...){
+plot.GCalign <- function(x,which_plot=c("All","Linear_Shifts","Peak_Range","Peak_Counts","Peak_Sharing"),...){
 
     # initialising by picking arguments from the function call
     mcall = as.list(match.call())[-1L]
@@ -146,6 +146,31 @@ plot.GCalign <- function(x,which_plot=c("All","Linear_Shifts","Peak_Range","Peak
         graphics::text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
 
     }
+    hist_shared_peaks <- function(x,mcall,...){
+        df <- x[["heatmap_input"]][["aligned_rts"]][-1] # check that this is up to date!
+        shared_substances <- data.frame(time=round(as.numeric(names(df)),3),prop=unlist(lapply(1:ncol(df), function(col){
+            sub <- df[,col] # all entries of a column
+            N <- length(sub[sub>0])
+            N/length(sub)*100
+        })))
+
+
+        # xmax <- max(shared_substances["prop"])
+        # xmin <- min(shared_substances["prop"])
+
+        arg_list <- list()
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Shared Peaks among Samples"))
+        if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Number of Substances"))
+        if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Proportion of Samples [%]"))
+        if(!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks =seq(0,100,by=5)))
+        if(!("freq") %in% names(mcall)||!("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = FALSE))
+        if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))
+        if(!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab=1.5))
+        if(!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#91bfdb"))
+
+        do.call(graphics::hist,args=c(list(x=shared_substances[["prop"]]),arg_list,...))
+
+    }
 # --------------------------------------------------------------------
 
 if(which_plot=="Linear_Shifts"){
@@ -157,13 +182,16 @@ hist_linshift(object = x,mcall = mcall,...)
 } else if(which_plot=="Peak_Counts"){
     bar_peakdistr(x = x,mcall = mcall,...)
 
-} else{
+} else if(which_plot=="All"){
     graphics::layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
     bar_peakdistr(x = x,mcall = mcall)
     hist_linshift(object = x,mcall = mcall)
     hist_peakvar(x = x,mcall = mcall)
     graphics::layout(mat = 1,widths = 1,heights = 1)#back to normal screen partition
 
+} else{
+    # Plot peak sharing distribution
+hist_shared_peaks(x=x,mcall=mcall,...)
 }
 }
 

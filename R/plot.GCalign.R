@@ -45,14 +45,17 @@ plot.GCalign <- function(x,which_plot=c("All","Linear_Shifts","Peak_Range","Peak
 # -------------------------------------------------------------------
 
     hist_linshift <- function(object,mcall,...){
+# uncommented code was already redundanct, but is not working since Logfile´s call was tranformed
+# to a list (former data frame). Could be recoded easily if needed!
+# MO 16.08.16
 
-        xl <- as.data.frame(object[["Logfile"]][["Call"]]) # function call
-        xl <- as.numeric(as.character(xl[["max_linear_shift"]])) # get the xdow for linear shifts
-        xl <- seq(-xl[[1]],xl[[1]],0.01) # all linear steps investigated
-        xl <- object[["Logfile"]][["LinearShift"]]["shift"]
+        # xl <- as.data.frame(object[["Logfile"]][["Call"]]) # function call
+        # xl <- as.numeric(as.character(xl[["max_linear_shift"]])) # get the range for linear shifts
+        # xl <- seq(-xl[[1]],xl[[1]],0.01) # all linear steps investigated
+         xl <- object[["Logfile"]][["LinearShift"]]["shift"]
 
         df <- as.vector(unlist(as.vector(xl))) # steps of linear shifts and their frequency
-        xmax <- as.numeric(as.character(as.data.frame(object[["Logfile"]][["Call"]])[["max_linear_shift"]][[1]]))
+        xmax <- object[["Logfile"]][["Call"]][["max_linear_shift"]]
         xmin <- -xmax
 
         # check for optional arguments in the function call, take defaults, if missing

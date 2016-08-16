@@ -130,7 +130,7 @@ check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
         ymax <- max(peaks)
 
         arg_list <- list()
-        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Peak Counts in the raw data\n befire running GCalignR"))
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Peak Counts in the raw data\n before running GCalignR"))
         if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
         if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
         if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))

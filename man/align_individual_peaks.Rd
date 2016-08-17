@@ -12,11 +12,11 @@ align_individual_peaks(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1,
 Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{max_diff_peak2mean}{Defines the allowed deviation of retention times around the mean of
-the corresponding row. Peaks with differing retention times are moved
+the corresponding row (i.e. substance). Peaks with differing retention times are moved
 to a more appropriate mean retention time. Default is 0.02.}
 
 \item{n_iter}{integer indicating the number of iterations of the core alignment algorithm. Additional replications of
-the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
+the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show
 some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
 with a Heatmap \code{\link{gc_heatmap}}.}
 

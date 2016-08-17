@@ -23,7 +23,7 @@ the peak and the area under the peak. The variables have to have the same name a
 the individual. See the vignette for an example. The data can be checked by running \code{\link{check_input}}}
 
 \item{sep}{The field separator character. Values on each line of the file are separated by this
-character. The default is tab seperated (sep = '\\t'). See the \code{sep} argument in \code{\link[utils]{read.table}} for details.}
+character. The default is tab seperated (\code{sep = '\\t'}). See the \code{sep} argument in \code{\link[utils]{read.table}} for details.}
 
 \item{conc_col_name}{Character string naming a column used for the quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
@@ -32,7 +32,7 @@ The designated variable needs to be numeric.}
 
 \item{write_output}{Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 The default is \code{NULL}.Names of the text files are concatenations of \code{datafile} and the output variables.
-Strings need to correspond to column names of the \code{datafile}.}
+Strings need to correspond to column names of \code{data}.}
 
 \item{rt_cutoff_low}{Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.}
 
@@ -49,26 +49,27 @@ with respect to the reference. Shifts are evaluated within - \code{max_linear_sh
 Default is 0.05.}
 
 \item{max_diff_peak2mean}{Defines the allowed deviation of retention times around the mean of
-the corresponding row. Peaks with differing retention times are moved
+the corresponding row (i.e. substance). Peaks with differing retention times are moved
 to a more appropriate mean retention time. Default is 0.02.}
 
 \item{min_diff_peak2peak}{Defines the minimum difference in retention times among distinct
 substances. Substances that differ less, are merged if every sample contains either one
 or none of the respective compounds. This parameter is a major determinant in the classification
 of distinct peaks. Therefore careful consideration is required to adjust this setting to
-your needs (i.e. the resolution of your gas-chromatography pipeline). Large values might cause the
-merge of true peaks, if those are not occuring within one individual, which might happen by chance
-with a low sample size. Small values can be considered as conservative. Default is 0.02.}
+your needs (i.e. the resolution of your gas-chromatography pipeline). Large values may cause the
+merge of true peaks with similar retention times, if those are not simultaneously occuring within at least
+one individual. Especially for small sample sizes this could be the case just by chance
+Small values can be considered as conservative. Default is 0.02.}
 
 \item{blanks}{Character vector of names of blanks. If specified, all substances found in any of the blanks
-will be removed from all samples (i.e. c("blank1", "blank2")). The names have to correspond
-to a name given in the first line of \code{data}.}
+will be removed from all samples, before the blanks are deleted from the aligned data.
+The names have to correspond to a name given in the first line of \code{data}.}
 
-\item{delete_single_peak}{logical, determines whether substances that occur in just one sample are
+\item{delete_single_peak}{logical, determining whether substances that occur in just one sample are
 removed or not. By default single substances are retained in chromatograms.}
 
 \item{n_iter}{integer indicating the number of iterations of the core alignment algorithm. Additional replications of
-the alignment and merging steps can be helpful to clean-up chromatograms, that otherwise show
+the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show
 some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
 with a Heatmap \code{\link{gc_heatmap}}.}
 
@@ -100,7 +101,7 @@ transfered step-wise to the same location (i.e row) in order to group substances
 that show smaller differences in mean retention times than expected by the achievable resolution
 of the gas-chromatography or the chemistry of the compounds are merged. Several optional processing steps are available
 ranging from the removal of peaks representing contaminations (requires to include blanks as a control) to the removal
-of uninformative peaks that are present in just one sample.
+of uninformative peaks that are present in just one sample. Further Details can be found in
 }
 \examples{
 data(gc_peak_data)

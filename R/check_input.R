@@ -24,8 +24,8 @@
 #'@import magrittr stringr
 #'
 #' @examples
-#' check_input(seal_peaks) ## Checks format
-#' check_input(seal_peaks, show_peaks=TRUE) ## Includes a barplot of peaks
+#' check_input(peak_data) ## Checks format
+#' check_input(peak_data, show_peaks=TRUE) ## Includes a barplot of peaks
 #'
 #' @export
 #'
@@ -145,7 +145,7 @@ check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
         graphics::text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
 
     }
-
+    return.value <- "TRUE"
 }
 
 

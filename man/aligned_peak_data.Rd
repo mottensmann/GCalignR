@@ -9,7 +9,7 @@ for all variables present in the raw data ("time" and "area"). The list \strong{
 with retention times of the input data, linearly adjusted retention times as well as the final output, were
 peaks are aligned among samples. This file is primarily used in \code{\link{gc_heatmap}}. The list \strong{"Logfile"}
 summarises the alignment process and the data structure before, during and after running \code{\link{align_chromatograms}}.
-For a convenient overview use \code{\link{summary.GCalign}}.}
+For a convenient overview use \code{\link{print.GCalign}}.}
 \source{
 http://www.pnas.org/content/suppl/2015/08/05/1506076112.DCSupplemental/pnas.1506076112.sd02.xlsx
 }

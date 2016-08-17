@@ -9,10 +9,10 @@
 #'
 #' @examples
 #' ## All three plots
-#' plot(gc_peaks_aligned)
+#' plot(aligned_peak_data)
 #'
 #' ## Distribution of Peaks
-#' plot(gc_peaks_aligned,which_plot="Peak_Counts")
+#' plot(aligned_peak_data,which_plot="Peak_Counts")
 #'
 #' @param x \code{GCalign} object, created by \code{\link{align_chromatograms}}
 #'

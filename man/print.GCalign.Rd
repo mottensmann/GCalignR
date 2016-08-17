@@ -18,7 +18,7 @@ to the console in this case.}
 print method for class "GCalign"
 }
 \examples{
-print(gc_peaks_aligned) # prints summary to the Console
+print(aligned_peak_data) # prints summary to the Console
 
 }
 \author{

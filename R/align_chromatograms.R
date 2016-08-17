@@ -112,9 +112,9 @@
 #' @import magrittr
 #'
 #' @examples
-#' data(seal_peaks)
-#' seal_peaks <- seal_peaks[1:4]
-#' out <- align_chromatograms(seal_peaks, conc_col_name = "area", rt_col_name = "time",
+#' data(peak_data)
+#' peak_data <- peak_data[1:4]
+#' out <- align_chromatograms(peak_data, conc_col_name = "area", rt_col_name = "time",
 #'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
 #'          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
 #'          blanks = NULL, delete_single_peak = TRUE)

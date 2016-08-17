@@ -11,7 +11,7 @@
 #' to the console in this case.
 #'
 #' @examples
-#' print(gc_peaks_aligned) # prints summary to the Console
+#' print(aligned_peak_data) # prints summary to the Console
 #'
 #' @param ...
 #' optional arguments passed on to methods. Internally \link{cat} is used to generate output, hence optional arguments are currently not ignored.

@@ -90,7 +90,8 @@ Returns an object of class GCalign that is a a list with the following elements:
  (meinolf.ottensmann@web.de)
 }
 \description{
-\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}.
+\code{align_chromatograms()} is the core function of \code{\link{GCalignR}}. Check out the vignette
+to get started: utils::browseVignettes(package = "GCalignR")
 }
 \details{
 The Alignment of Peaks is archieved by running three major algorithms always considering the complete
@@ -104,10 +105,10 @@ ranging from the removal of peaks representing contaminations (requires to inclu
 of uninformative peaks that are present in just one sample. Further Details can be found in
 }
 \examples{
-data(gc_peak_data)
-gc_peak_data <- gc_peak_data[1:4]
-out <- align_chromatograms(gc_peak_data, conc_col_name = "area", rt_col_name = "RT",
-       rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "ind3",
+data(seal_peaks)
+seal_peaks <- seal_peaks[1:4]
+out <- align_chromatograms(seal_peaks, conc_col_name = "area", rt_col_name = "time",
+       rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
          max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.03,
          blanks = NULL, delete_single_peak = TRUE)
 

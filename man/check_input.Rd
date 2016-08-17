@@ -4,27 +4,26 @@
 \alias{check_input}
 \title{Check correct formatting of data input}
 \usage{
-check_input(data, sep = "\\t", ...)
+check_input(data, show_peaks = FALSE, sep = "\\t", ...)
 }
 \arguments{
 \item{data}{path to a data file or the name of a list in the Global Environment.}
 
+\item{show_peaks}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
+
 \item{sep}{The field separator character. Values on each line of the file are separated by this
 character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}
 
-\item{...}{optional arguments used internally in GCalignR. See source code for details.}
-}
-\value{
-TRUE if data is formatted correctly, warning and explanation if not.
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
+\code{show_peaks==TRUE}.}
 }
 \description{
 Checks conformity between the input format and the requirements of GCalignR. Supported are
-a \code{.txt} files or lists of data.frames. See \code{\link{align_chromatograms}} for details.
+\code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
 }
 \examples{
-data(gc_peak_data)
-gc_peak_data <- gc_peak_data[1:4]
-check_input(gc_peak_data)
+check_input(seal_peaks) ## Checks format
+check_input(seal_peaks, show_peaks=TRUE) ## Includes a barplot of peaks
 
 }
 \author{

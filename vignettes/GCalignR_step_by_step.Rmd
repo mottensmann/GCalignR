@@ -61,7 +61,12 @@ library("GCalignR")
 
 * `align_chromatograms`: Aligns gas-chromatography peak data by retention times. 
 * `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap, the user can visually
-inspect the quality of the alignment and if necessary adjust the parameters.
+inspect the quality of the alignment and if necessary adjust the parameters accordingly.
+* `check_input`: Checks the format of the input data for conformity with the requirements and highlights violations.
+* `plot.GCalign`: Plots the distribution of Peaks after the alignment and shows density histograms of applied linear
+transformations and retention time ranges (i.e. difference between minimum and maximum retention time per substance).
+* `summary.GCalign`: Summarises the alignment procedure (e.g. documents all arguments to the function call).
+* `norm_peaks`: Normalises the abundance measure of peaks and returns and data frame of peak concentrations for all samples that is ready to use for analysis tools such as [LINK to vegan´s nmds functions]
 
 
 ## The alignment algorithm
@@ -131,61 +136,104 @@ knitr::include_graphics("example2.jpg")
 ### alternative input from R
 
 Alternative to reading a .txt file, GCalignR also takes input directly from R. Here, `data`
-has to be a `list` of `data.frames`. Each `list` element (`data.frame`) has the ID of an individual
-and the `data.frame` itself contains the gc-peak data for this individual (again, the minimum
+has to be a `list` of `data frames`. Each `list` element (`data frame`) has the ID of an individual
+and the `data frame` itself contains the gc-peak data for this individual (again, the minimum
 number of columns is one column for the retention time and one column for another variable such as the area under the peak
-or it's height). All column names within `data.frames` have to be the same.
-The attached dataset `gc_peak_data` contains data from preen secretions of plovers. 
+or it's height). All column names within `data frames` have to be the same.
+The attached dataset `peak_data` contains data from skin swabs of Antarctic Fur Seals (*Arctocephalus gazella*). 
 
 ```{r} 
-data("gc_peak_data")
-length(gc_peak_data) # number of individuals
-names(gc_peak_data) # names of individuals
-head(gc_peak_data[[1]]) # column names and data
+data("peak_data")
+length(peak_data) # number of individuals 
+names(peak_data) # names of individuals 
+head(peak_data[[1]]) # column names and data 
 ```
 
+## GCalignR workflow
 
-## Using align_chromatograms()
+### Check the input
 
-The main function in `GCalignR` is `align_chromatograms()` and this is how it works. 
+Quickly check the data for the correct format with `check_input`. This function tests for full conformity with the requirements
+of the aligning algorithm. Common error sources such as missing data or missing sample names are eliminated as well as unconsistencies 
+among samples (if the input is a list of samples). Error messages will indicate any violation.
+
+```{r}
+check_input(data = peak_data,show_peaks = F) # If show_peaks = T, a histogram of peaks is plotted 
+```
+
+### Align Chromatograms
+
+The main function in `GCalignR´s` alignment workflow is `align_chromatograms` and this is how it works. 
 See `align_chromatograms` for a detailled description of the arguments.
 
-```{r, results= "hide"} 
-gc_peak_data_test <- gc_peak_data[1:4] # subset 4 individuals for speed reasons
-out <- align_chromatograms(data = gc_peak_data_test, # usually path to a .txt file
-                           conc_col_name = "area", # column name of area under peak variable
-                           rt_col_name = "RT", # column name of retention time 
-                           rt_cutoff_low = 5, # cut peaks with retention times under 5s
-                           rt_cutoff_high = 45, # cut peaks with retention times above 45 s
-                           reference = "ind3", # name of reference chromatogram
-                           max_linear_shift = 0.05, # maximum shift of chromatograms
-                           max_diff_peak2mean = 0.02, # maximum distance of a peak to the mean
-                           min_diff_peak2peak = 0.03, # maximum distance between two (mean) peaks
-                           blanks = NULL, # no blanks. Specify blanks by name (e.g. c("blank1", "blank2"))
-                           delete_single_peak = TRUE) # delete substances that are present in just one
-                                                      # individual
+```{r, eval = FALSE}
+peak_data <- peak_data[1:4] # subset for speed reasons
+peak_data_aligned <- align_chromatograms(data = peak_data, # input data
+    conc_col_name = "area", # peak abundance variable
+    rt_col_name = "time", # retention time 
+    rt_cutoff_low = 5, # cut peaks with retention times below 5 Minutes
+    rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
+    reference = "M48", # name of reference 
+    max_linear_shift = 0.05, # maximum linear shift of chromatograms
+    max_diff_peak2mean = 0.03, # maximum distance of a peak to the mean
+    min_diff_peak2peak = 0.03, # maximum distance between the mean of two peaks
+    blanks = "C2", # no blanks. Specify blanks by names (e.g. c("blank1", "blank2"))
+    delete_single_peak = TRUE, # delete peaks that are present in just one sample 
+    write_output = NULL) # add c("time","area") to write data frames to .txt file
 ```
+```{r}
+data("aligned_peak_data") # the package includes the already aligned data set  
+``` 
 
-## Using gc_heatmap
+### Plot Diagnostics for the aligned data
 
-To visualise the conducted alignment use `gc_heatmap` to quickly inspect the
-aligned peak profiles. By changing function arguments the heatmap can be customized according to your needs.
-A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. 
+To visualise the conducted alignment use `gc_heatmap` to quickly inspect the 
+aligned peak profiles. By changing function arguments the heatmap can be customized according to your needs. 
+A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap.  
 
 ```{r,message=FALSE,fig.width=6,fig.height=6}
-gc_heatmap(out) # By default a threshold of 0.05 is used to mark deviations
+gc_heatmap(aligned_peak_data,threshold = 0.05) # By default a threshold of 0.05 is used to mark deviations
 ```
 
-## Using norm_peaks
+
+```{r,message=FALSE,fig.width=6,fig.height=6}
+plot(aligned_peak_data) # Three Diagnostics, can be invoked separetely
+```
+
+```{r, eval=FALSE}
+summary(aligned_peak_data) # Summary of the alingnment procedure
+```
+### Normalise peaks and log+1 transformation
 
 `norm_peaks` is used to normalize the desired measure of concentration on the individual level in order
 to compensate for differences in the baseline concentration of samples. Note that this step is required,
-even if the data already contained a measure of relative abundance, in case that any of retention time cutoffs, single peak deletion or blank peak removal was applied. 
+even if the data already contained a measure of relative abundance, in case that any of retention time cutoffs, single peak deletion or blank peak removal was applied. The output is a list of data frames containing the relative abundance of peaks for every individual.
 
-```{r,eval=FALSE}
-rel_area <- norm_peaks(aligned)
+```{r}
+scent <- norm_peaks(aligned_peak_data,conc_col_name = "area",rt_col_name = "time",out = "data.frame") # normalise area and return a data frame
+scent <- log(scent+1) # commonly used transformation for abundance data to reduce the extent of mean-variance trends
 ````
 
 
+### Visualise patterns by ordination plots using the *vegan* package
+
+`vegan` offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out *?vegan* for a first overview. 
+
+### Non-metric multidimensional scaling 
+```{r,fig.align="center",fig.cap="NMDS-Plot"}
+data("peak_factors") # factors for individual scent samples
+scent <- scent[match(row.names(peak_factors),row.names(scent)),] # bring both to the same order
+scent_nmds <- vegan::metaMDS(comm = scent) # performs Nonmetric multidimensional scaling (NMDS)
+scent_nmds <- as.data.frame(scent_nmds$points) # get the xy coordinates for every individual 
+scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony) # add the colony as a factor 
+ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color=colony)) +
+    ggplot2::geom_point(size=4) + ggplot2::stat_ellipse(size=2) + ggplot2::labs(title ="", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
+```
+### Multivariate analysis using *adonis*
+Using **adonis** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
+```{r}
+vegan::adonis(scent ~ peak_factors$colony,permutations = 999) # Colonies differ in the location
+anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony)) # No dispersion effect
+```
 
 ## Literature

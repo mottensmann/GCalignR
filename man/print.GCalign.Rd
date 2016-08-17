@@ -2,21 +2,24 @@
 % Please edit documentation in R/print.GCalign.R
 \name{print.GCalign}
 \alias{print.GCalign}
-\title{print.GCalign: Gives an overview about an executed alignment}
+\title{Summarizing Peak Alignments with GCalignR}
 \usage{
-\method{print}{GCalign}(x, ...)
+\method{print}{GCalign}(x, write_text_file = FALSE, ...)
 }
 \arguments{
-\item{x}{Object of class \code{GCalign}}
+\item{x}{an object of class \strong{"GCalign"}, the result of a call to \code{\link{align_chromatograms}}}
 
-\item{...}{actually not useful here, but required to pass the check (S3 method of print)}
+\item{write_text_file}{logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
+to the console in this case.}
+
+\item{...}{optional arguments passed on to methods. Internally \link{cat} is used to generate output, hence optional arguments are currently not ignored.}
 }
 \description{
-print.GCalign: Gives an overview about an executed alignment
+print method for class "GCalign"
 }
-\details{
-for function arguments that have not been entered the default are printer, but
-these are update automatically, if these are changed in the main funtion!
+\examples{
+print(gc_peaks_aligned) # prints summary to the Console
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann

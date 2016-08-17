@@ -1,45 +1,64 @@
 #' gc_heatmap visualises the goodness of the chromatogram alignment
 #'
 #' @description Visualises the deviation of single samples from the whole population by comparing
-#'          the actual retention time against the mean of all other samples containing the same
-#'          substance. Two types of heatmaps are available. A binary heatmap allows to determine
-#'          if single samples within each chromatogram are correctly assigned to a certain substance,
-#'          by setting a fixed threshold of allowed deviations from the mean. The optional discrete
-#'          heatmap allows to check the deviations quantitatively.
+#' the actual retention time against the mean of all other samples containing the same
+#' substance. Two types of heatmaps are available. A binary heatmap allows to determine
+#' if single samples within each chromatogram are correctly assigned to a certain substance,
+#' by setting a fixed threshold of allowed deviations from the mean. The optional discrete
+#' heatmap allows to check the deviations quantitatively.
 #'
-#' @param GcOut \code{data.frame} output of align_chromatograms. Class \code{GCalign}
+#' @param GcOut object of class "GCalign", the output of align_chromatograms.
 #'
-#' @param algorithm_step \code{character} indicating which step of the algorithm is plotted. Either
-#'          \code{rt_raw}, \code{rt_linear} or \code{rt_aligned}
+#' @param algorithm_step
+#' character string, indicating which step of the algorithm is plotted. Either
+#' \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts}
 #'
-#' @param substance_subset \code{vector} containing indices of substances (i.e. rows) to plot
-#'          By default \code{NULL} indicating all substances are plotted
+#' @param substance_subset
+#' Vector containing indices of substances (i.e. rows) to plot
+#' By default \code{NULL} indicating all substances are plotted
 #'
-#' @param guide \code{character} indicating type of colourbar as discrete (i.e 'legend')
-#'          or gradient (i.e 'colourbar)
+#' @param guide
+#' Character string, selects the type of colourbar as discrete (i.e 'legend')
+#' or gradient (i.e 'colourbar)
 #'
-#' @param  samples_subset \code{vector} indicating which samples are plotted on the heatmap.
-#'          Either a \code{numeric} \code{vector} of indices or a \code{character} \code{vector}
-#'          of sample names
+#' @param  samples_subset
+#' Vector indicating which samples are plotted on the heatmap.
+#' Either a numeric vector of indices or a vector of sample names
 #'
-#' @param  type \code{character} specifying whether a binary heatmap or a heatmap of continous
-#'          deviations is plotted.
+#' @param  type
+#' Character specifying whether a binary heatmap or a heatmap of continous
+#' deviations is plotted.
 #'
-#' @param threshold \code{numeric} indicates the acceptable deviation of individual peak retention times
-#'  from the mean retention time of the respective peak across all samples.
+#' @param threshold
+#' Decimal indicating the threshold deviation of individual peak retention times
+#' from the mean retention time of the respective peak across all samples.
 #'
 #' @return
-#' \item{hm}{object of \code{class} ggplot}
+#' object of class "ggplot"
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
 #' @import ggplot2 RColorBrewer grDevices
 #'
+#' @examples
+#'
+#'  ## with defaults
+#'  gc_heatmap(seal_peaks_aligned, algorithm_step="aligned_rts")
+#'
+#'  ## input data
+#'  gc_heatmap(seal_peaks_aligned,algorithm_step="input_rts")
+#'
+#'  ## subset of the first 50 Peaks
+#'  gc_heatmap(seal_peaks_aligned,algorithm_step="aligned_rts",substance_subset = 1:50)
+#'
+#'  ## subset of individuals, stricter threshold
+#'  gc_heatmap(seal_peaks_aligned,samples_subset = c("ind1","ind2","ind9","ind14"),threshold=0.02)
+#'
 #' @export
 #'
 
-gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','initial_rt'),substance_subset=NULL,guide=c('legend','colourbar'),
+gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rts','linear_transformed_rts','input_rts'),substance_subset=NULL,guide=c('legend','colourbar'),
                       samples_subset=NULL,type=c("binary","continous"),threshold=0.05){
 
     algorithm_step <- match.arg(algorithm_step)
@@ -53,7 +72,7 @@ gc_heatmap <-function(GcOut,algorithm_step=c('aligned_rt','linear_shifted_rt','i
     # B Formatting and sorting
     ##########################
     rt_df[,'id'] <- as.character(rt_df[,'id'])
-    rt_df <- rt_df[match(as.character(GcOut[["heatmap_input"]][["initial_rt"]][,1]),as.character(rt_df[,1])),]
+    rt_df <- rt_df[match(as.character(GcOut[["heatmap_input"]][["input_rts"]][,1]),as.character(rt_df[,1])),]
 
 
     ##################################################

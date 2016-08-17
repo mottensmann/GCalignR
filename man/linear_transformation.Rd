@@ -21,10 +21,6 @@ Default is 0.05.}
 between \code{max_linear_shift} and \code{-max_linear_shift}.}
 
 \item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
-
-\item{error}{numeric value defining the allowed difference in retention times in
-derterming if two peaks are shared. The default \code{error=0} counts
-a peak a shared if retention times match excatly.}
 }
 \value{
 A list of data.frames containing chromatograms with applied linear shifts

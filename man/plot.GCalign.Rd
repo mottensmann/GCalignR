@@ -2,18 +2,42 @@
 % Please edit documentation in R/plot.GCalign.R
 \name{plot.GCalign}
 \alias{plot.GCalign}
-\title{plot.GCalign}
+\title{Plot Diagonstics for an Gcalign Object}
 \usage{
-\method{plot}{GCalign}(GcOut)
+\method{plot}{GCalign}(x, which_plot = c("All", "Linear_Shifts", "Peak_Range",
+  "Peak_Counts", "Peak_Sharing"), ...)
+}
+\arguments{
+\item{x}{\code{GCalign} object, created by \code{\link{align_chromatograms}}}
+
+\item{which_plot}{character string indicating which plot is returned. Available are
+\strong{"Linear_Shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
+\strong{"Peak_Range"} a histogram summarising the range of retention times for every peak defined
+by the difference between minimum and maximum retention times respectively. The third option
+is \strong{"Peak_Counts"} plotting a barchart of the number of peaks per sample. By default all
+three plots are returned as subplots of one figure.}
+
+\item{...}{optional arguments passed on to methods. See
+\code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
+Please Note that optional arguments are currently not passed on when plotting all figures.}
 }
 \description{
-plot.GCalign creates basic plots visualising the alignment accuracy of chromatograms that
-have been processed by \code{\link{align_chromatograms}}
+Three plots are currently available: One plot visualises the distribution of linear shifts
+that were applied to align chromatograms to a reference before aligning individual peaks.
+A second plot illustrates the remaining variation of retention times on the level of individual
+peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
+of peak numbers after aligning the chromatograms.
+}
+\examples{
+## All three plots
+plot(gc_peaks_aligned)
+
+## Distribution of Peaks
+plot(gc_peaks_aligned,which_plot="Peak_Counts")
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
-
- @export
 }
 

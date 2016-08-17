@@ -2,18 +2,21 @@
 #'
 #'@description
 #' Checks conformity between the input format and the requirements of GCalignR. Supported are
-#' a \code{.txt} files or lists of data.frames. See \code{\link{align_chromatograms}} for details.
+#' \code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
 #'
 #'@param data
 #'       path to a data file or the name of a list in the Global Environment.
+#'
+#'@param show_peaks
+#'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.
+#'
 #'@param sep
 #'The field separator character. Values on each line of the file are separated by this
 #'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param ...
-#'optional arguments used internally in GCalignR. See source code for details.
-#'
-#'@return TRUE if data is formatted correctly, warning and explanation if not.
+#'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
+#'\code{show_peaks==TRUE}.
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
@@ -21,15 +24,15 @@
 #'@import magrittr stringr
 #'
 #' @examples
-#' data(gc_peak_data)
-#' gc_peak_data <- gc_peak_data[1:4]
-#' check_input(gc_peak_data)
+#' check_input(seal_peaks) ## Checks format
+#' check_input(seal_peaks, show_peaks=TRUE) ## Includes a barplot of peaks
 #'
 #' @export
 #'
 
-check_input <- function(data, sep = "\t",...) {
+check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
 
+    mcall = as.list(match.call())[-1L]
     opt <- list(...) # optional parameters
 
     if (is.character(data)) { # Check if data is the path to a txt.file
@@ -77,13 +80,19 @@ check_input <- function(data, sep = "\t",...) {
     # Some checks further checks #
     ##############################
     if(any(names(opt)=="write_output")){
-        if(any(!(opt[["write_output"]]%in%col_names))) stop("Strings in write_output need to indicate a variable contained in data!")
+        if(any(!(opt[["write_output"]]%in%col_names))) stop("Names in write_output have to be included as a variable in the data!")
     }
     if(any(stringr::str_detect(string = ind_names, pattern = " "))) warning("Avoid whitespaces in Sample Names!")
     if(any(stringr::str_detect(string = ind_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Sample Names should only contain Letters, Numbers and '_' ")
     if(any(stringr::str_detect(string = col_names, pattern = " "))) warning("Avoid whitespaces in Variable Names!")
     if(any(stringr::str_detect(string = col_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Variable Names should only contain Letters, Numbers and '_' ")
 
+    if(any(names(opt)=="blank")){
+        if(any(!(opt[["blank"]]%in%ind_names))) stop("blanks have to refer to samples in the data!")
+    }
+    if(any(names(opt)=="reference")){
+        if(any(!(opt[["reference"]]%in%ind_names))) stop("reference has to be included as a sample in the data!")
+    }
     format_error <- function(x){
         check_var_count <- function(x){
             mat <- as.matrix(x)
@@ -100,8 +109,43 @@ check_input <- function(data, sep = "\t",...) {
 
     format_error(gc_peak_list) # Checks that every sample has the same number of values per column
     cat("All checks passed!\nReady for processing with align_chromatograms")
-    return("Passed")
-}
 
+    if(show_peaks==TRUE){
+        counter <- function(gc_peak_list){
+            number <- lapply(gc_peak_list, function(x){
+                temp <- x[,1] # vectorize the first column
+                length(temp[!is.na(temp)]) # number of peaks
+            } )
+            out <- t(as.data.frame((number)))
+            out <- reshape2::melt(out)
+            out <- out[,c("Var1","value")]
+            out <- as.data.frame(out)
+            colnames(out) <- c("ID","Peaks")
+            return(out)
+        }
+
+        out <- counter(gc_peak_list)
+        peaks <- as.vector(unlist(out["Peaks"]))
+        names(peaks) <- unlist(out["ID"])
+        ymax <- max(peaks)
+
+        arg_list <- list()
+        if(!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Peak Counts in the raw data\n before running GCalignR"))
+        if(!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
+        if(!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
+        if(!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis=1.5))
+        if(!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab=1.5))
+        if(!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "blue"))
+        if(!"srt"%in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
+        if(!"las"%in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
+        if(!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg=names(peaks)))
+        if(!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim=c(0,ymax+5)))
+
+        bars <- do.call(graphics::barplot,args=c(list(height=peaks),arg_list,...))
+        graphics::text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
+
+    }
+
+}
 
 

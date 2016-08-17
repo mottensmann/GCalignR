@@ -14,13 +14,9 @@
 #' indicates the step size in which linear shifts are evaluated
 #' between \code{max_linear_shift} and \code{-max_linear_shift}.
 #'
-#' @param error
-#' numeric value defining the allowed difference in retention times in
-#' derterming if two peaks are shared. The default \code{error=0} counts
-#' a peak a shared if retention times match excatly.
-#'
 #' @inheritParams align_chromatograms
-#' @inheritParams matrix_append
+#'
+#' @inheritParams align_peaks
 #'
 #' @return
 #' A list of data.frames containing chromatograms with applied linear shifts

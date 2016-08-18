@@ -3,8 +3,8 @@ Title: Simple Peak Alignment for Gas-Chromatography Data
 Version: 0.0.9000
 Authors@R: c(person("Martin", "Stoffel", email = "martin.adam.stoffel@gmail.com", role = c("aut")),
              person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre")))
-Description: Aligns chromatography peaks with a three step algorithm: (1) Linear
-    transformation of retention times to maximise shared peaks between samples
+Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
+    transformation of retention times to maximise shared peaks among samples
     (2) Align peaks within a certain error-interval (3) Merges rows that show
     complementary peak patterns and similar retention time means.
 Depends:

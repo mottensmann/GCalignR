@@ -68,9 +68,9 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1, rt_
     if(current_RT==0){ # Do not shift, if current has no substance in that row
         current_RT <- av_rt # Indicates not to shift anything
     }
-    if (current_RT > av_rt + max_diff_peak2mean) { # Peak´s RT > Mean of Population
+    if (current_RT > av_rt + max_diff_peak2mean) { # Peak RT > Mean of Population
         gc_peak_list <- shift_rows(gc_peak_list,S,current_row)
-    } else if (current_RT < (av_rt - max_diff_peak2mean)) { # # Peak´s RT > Mean of Population
+    } else if (current_RT < (av_rt - max_diff_peak2mean)) { # Peak RT < Mean of Population
         for(J in 1:(S-1)){
             if(gc_peak_list[[J]][current_row, rt_col_name] <= (current_RT + max_diff_peak2mean)){
               # Do nothing, substance? position is valid

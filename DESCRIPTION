@@ -10,14 +10,14 @@ Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
 Depends:
     R (>= 3.2.3)
 Imports: stringr,
-        readr,
         magrittr,
+        readr,
+        vegan,
         ggplot2,
         RColorBrewer,
         reshape2,
         gridExtra,
         stringi,
-        vegan
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1

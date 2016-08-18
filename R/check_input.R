@@ -1,8 +1,8 @@
-#' Check correct formatting of data input
+#' Check correct input format for processing in GCalignR
 #'
 #'@description
 #' Checks conformity between the input format and the requirements of GCalignR. Supported are
-#' \code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
+#' a path to a Text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 #'
 #'@param data
 #'       path to a data file or the name of a list in the Global Environment.
@@ -10,9 +10,7 @@
 #'@param show_peaks
 #'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.
 #'
-#'@param sep
-#'The field separator character. Values on each line of the file are separated by this
-#'character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.
+#'@inheritParams align_chromatograms
 #'
 #'@param ...
 #'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
@@ -32,9 +30,11 @@
 
 check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
 
+    ## Get the name of "data" and optional parameters
     mcall = as.list(match.call())[-1L]
-    opt <- list(...) # optional parameters
+    opt <- list(...)
 
+## Check files
     if (is.character(data)) { # Check if data is the path to a txt.file
         if (!stringr::str_detect(data, ".txt")) {
             stop("Data is not of the expected format. Specify a valid path to a .txt-file")
@@ -76,10 +76,8 @@ check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
         gc_peak_list <- data
     }
 
-    ##############################
-    # Some checks further checks #
-    ##############################
-    if(any(names(opt)=="write_output")){
+## Do some internal checks if write_output is defined in align_chromatograms
+        if(any(names(opt)=="write_output")){
         if(any(!(opt[["write_output"]]%in%col_names))) stop("Names in write_output have to be included as a variable in the data!")
     }
     if(any(stringr::str_detect(string = ind_names, pattern = " "))) warning("Avoid whitespaces in Sample Names!")

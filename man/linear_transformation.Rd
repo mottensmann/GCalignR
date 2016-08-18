@@ -13,9 +13,7 @@ Rows represent distinct peaks. Retention time is a required variable.}
 
 \item{reference}{a character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
 
-\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks
-with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
-Default is 0.05.}
+\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.The default is 0.05. The value of this parameter strongly depends on the linear trends the are expected for a given data set and should cover the expected range of linear shifts.}
 
 \item{step_size}{indicates the step size in which linear shifts are evaluated
 between \code{max_linear_shift} and \code{-max_linear_shift}.}

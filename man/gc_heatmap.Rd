@@ -2,33 +2,33 @@
 % Please edit documentation in R/gc_heatmap.R
 \name{gc_heatmap}
 \alias{gc_heatmap}
-\title{gc_heatmap visualises the goodness of the chromatogram alignment}
+\title{gc_heatmap visualises the goodness of a chromatogram alignments}
 \usage{
-gc_heatmap(GcOut, algorithm_step = c("aligned_rts", "linear_transformed_rts",
+gc_heatmap(object, algorithm_step = c("aligned_rts", "linear_transformed_rts",
   "input_rts"), substance_subset = NULL, guide = c("legend", "colourbar"),
   samples_subset = NULL, type = c("binary", "continous"),
-  threshold = 0.05)
+  threshold = 0.05, label_size = NULL)
 }
 \arguments{
-\item{GcOut}{object of class "GCalign", the output of align_chromatograms.}
+\item{object}{object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{character string, indicating which step of the algorithm is plotted. Either
-\strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts}}
+\item{algorithm_step}{character indicating which step of the algorithm is plotted. Either \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts}.}
 
-\item{substance_subset}{Vector containing indices of substances (i.e. rows) to plot
-By default \code{NULL} indicating all substances are plotted}
+\item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.}
 
-\item{guide}{Character string, selects the type of colourbar as discrete (i.e 'legend')
-or gradient (i.e 'colourbar)}
+\item{guide}{Character string, selects the type of colourbar as discrete (i.e \strong{'legend'})
+or gradient (i.e \strong{'colourbar})}
 
 \item{samples_subset}{Vector indicating which samples are plotted on the heatmap.
-Either a numeric vector of indices or a vector of sample names}
+Either a numeric vector of indices (order in the input) or a vector of sample names}
 
 \item{type}{Character specifying whether a binary heatmap or a heatmap of continous
 deviations is plotted.}
 
 \item{threshold}{Decimal indicating the threshold deviation of individual peak retention times
 from the mean retention time of the respective peak across all samples.}
+
+\item{label_size}{Determines the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readibility and messines due to a potentially large number of substances and samples. Note: Label for substances on the x axis are only plotted if a subset of substances was selected, or less than xxx substances are present in the data.}
 }
 \value{
 object of class "ggplot"
@@ -43,16 +43,16 @@ heatmap allows to check the deviations quantitatively.
 }
 \examples{
 
- ## with defaults
+ ## Default settings: The final output is plotted
  gc_heatmap(aligned_peak_data, algorithm_step="aligned_rts")
 
- ## input data
+ ## Plot the input data
  gc_heatmap(aligned_peak_data,algorithm_step="input_rts")
 
- ## subset of the first 50 Peaks
+ ## Plot a subset of the first 50 scored substances
  gc_heatmap(aligned_peak_data,algorithm_step="aligned_rts",substance_subset = 1:50)
 
- ## subset of individuals, stricter threshold
+ ## Plot specific samples, apply a stricter threshold
  gc_heatmap(aligned_peak_data,samples_subset = c("M2","P7","M13","P13"),threshold=0.02)
 
 }

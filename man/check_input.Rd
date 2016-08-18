@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_input.R
 \name{check_input}
 \alias{check_input}
-\title{Check correct formatting of data input}
+\title{Check correct input format for processing in GCalignR}
 \usage{
 check_input(data, show_peaks = FALSE, sep = "\\t", ...)
 }
@@ -11,15 +11,14 @@ check_input(data, show_peaks = FALSE, sep = "\\t", ...)
 
 \item{show_peaks}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
 
-\item{sep}{The field separator character. Values on each line of the file are separated by this
-character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}
+\item{sep}{The field separator character. The default is tab seperated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
 \code{show_peaks==TRUE}.}
 }
 \description{
 Checks conformity between the input format and the requirements of GCalignR. Supported are
-\code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
+a path to a Text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 }
 \examples{
 check_input(peak_data) ## Checks format

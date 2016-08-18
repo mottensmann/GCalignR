@@ -11,14 +11,9 @@ align_peaks(gc_peak_list, max_diff_peak2mean = 0.02, n_iter = 1,
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
 Rows represent distinct peaks. Retention time is a required variable.}
 
-\item{max_diff_peak2mean}{Defines the allowed deviation of retention times around the mean of
-the corresponding row (i.e. substance). Peaks with differing retention times are moved
-to a more appropriate mean retention time. Default is 0.02.}
+\item{max_diff_peak2mean}{Defines the allowed deviation of retention times around the mean of the corresponding row (i.e. scored substance). Peaks with differing retention times are moved to a more appropriate mean retention time. The default is 0.03.}
 
-\item{n_iter}{integer indicating the number of iterations of the core alignment algorithm. Additional replications of
-the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show
-some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually
-with a Heatmap \code{\link{gc_heatmap}}.}
+\item{n_iter}{integer indicating the number of iterations of the core alignment algorithm. Additional replications of the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually with a Heatmap \code{\link{gc_heatmap}}. Currently we recommend to run the algorithm once and check the output carefully to fine tune function paramters rather than running multiple iterations.}
 
 \item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 

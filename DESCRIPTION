@@ -16,7 +16,8 @@ Imports: stringr,
         RColorBrewer,
         reshape2,
         gridExtra,
-        stringi
+        stringi,
+        vegan
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1

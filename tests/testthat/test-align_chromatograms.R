@@ -11,10 +11,12 @@ out <- align_chromatograms(data, sep = "\t", conc_col_name= "area", rt_col_name 
         delete_single_peak = FALSE, n_iter=1)
 
 test_that("output is correct", {
-    expect_equal(out[["Logfile"]][["Aligned"]][["Retained"]], 114)
-    expect_equal(out[["Logfile"]][["Variation"]][["Aligned"]][["Max"]], 0.01)
-    expect_equal(names(out), c("aligned","heatmap_input","Logfile"))
-    expect_equal(any(is.na(out[["aligned"]])),FALSE)
+    expect_equal(out[["Logfile"]][["Aligned"]][["Retained"]], 114) # Number of Peaks
+    expect_equal(out[["Logfile"]][["Variation"]][["Aligned"]][["Max"]], 0.01) # Variation of Rts
+    expect_equal(names(out), c("aligned","heatmap_input","Logfile")) # Names of the Output
+    expect_equal(any(is.na(out[["aligned"]])),FALSE) # No NAs
+    expect_that(str(out[["Logfile"]]), prints_text("List of 7"))
+
 })
 
 

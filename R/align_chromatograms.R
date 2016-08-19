@@ -2,7 +2,9 @@
 #'
 #'@description
 #'\strong{align_chromatograms} is the core function of \code{\link{GCalignR}} that fasciliates the alignment of gas-chromatography data.
-#' Read through the documentation here and take a look at the vignette of \strong{GCalignR} by typing: \emph{browseVignettes("GCalignR")}
+#' Read through the documentation here and take a look at the \href{../doc/GCalignR_step_by_step.html}{GCalignR Vignette}
+#'
+#' .
 #'
 #'@details
 #' The Alignment of Peaks is archieved by running \strong{three major algorithms} always considering the complete

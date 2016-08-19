@@ -6,9 +6,15 @@
 \alias{GCalignR-package}
 \title{GCalignR: A package to align gas-chromatography peaks based on retention times}
 \description{
-\code{GCalignR} contains the following functions:
-\code{\link{align_chromatograms}}
-\code{\link{gc_heatmap}}
+\code{GCalignR} contains the following functions that are explained in \href{../doc/GCalignR_step_by_step.html}{GCalignR Vignette}:
+
+\link{align_chromatograms}
+
+\link{check_input}
+
+\link{gc_heatmap}
+
+\link{norm_peaks}
 }
 \details{
 Gas-chromatography (GC) & gas-chromatography-mass-spectrometry (GC-MS) are

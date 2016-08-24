@@ -158,7 +158,7 @@ of the aligning algorithm. Common error sources such as missing data or missing 
 among samples (if the input is a list of samples). Error messages will indicate any violation.
 
 ```{r}
-check_input(data = peak_data,show_peaks = F) # If show_peaks = T, a histogram of peaks is plotted 
+check_input(data = peak_data,list_peaks = F) # If list_peaks = T, a histogram of peaks is plotted 
 ```
 
 ### Align Chromatograms

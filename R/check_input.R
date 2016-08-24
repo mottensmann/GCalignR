@@ -85,11 +85,11 @@ check_input <- function(data,show_peaks=FALSE, sep = "\t",...) {
     if(any(stringr::str_detect(string = col_names, pattern = " "))) warning("Avoid whitespaces in Variable Names!")
     if(any(stringr::str_detect(string = col_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Variable Names should only contain Letters, Numbers and '_' ")
 
-    if(any(names(opt)=="blank")){
-        if(any(!(opt[["blank"]]%in%ind_names))) stop("blanks have to refer to samples in the data!")
+    if(any(names(opt) == "blank")){
+        if(any(!(opt[["blank"]] %in% ind_names))) stop("blanks have to refer to samples in the data!")
     }
-    if(any(names(opt)=="reference")){
-        if(any(!(opt[["reference"]]%in%ind_names))) stop("reference has to be included as a sample in the data!")
+    if(any(names(opt) == "reference")){
+        if(!is.null(opt[["reference"]]) & any(!(opt[["reference"]] %in% ind_names))) stop("reference has to be included as a sample in the data!")
     }
     format_error <- function(x){
         check_var_count <- function(x){

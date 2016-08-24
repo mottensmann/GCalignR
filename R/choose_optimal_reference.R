@@ -12,20 +12,29 @@
 #' @param rt_col_name
 #' Name of the column in data frames of \code{gc_peak_list} that contains retention times.
 #'
-#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
+#' @return
+#' returns a list with following elements
+#' \item{sample}{Name of the sample with the highest average similarity to all other samples}
+#' \item{score}{Median number of shared peaks with other samples}
 #'
-#' @return returns a list with following elements
-#' \item{}
+#' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
 #' @export
 #'
-
-pick_best_reference <- function(gc_peak_list = NULL,rt_col_name = NULL){
-    if(is.null(rt_col_name)) stop("Specify retention time column")
-    if(is.null(gc_peak_list)) stop("Provide a list of sampples")
+choose_optimal_reference <- function(gc_peak_list = NULL, rt_col_name = NULL){
+    if (is.null(rt_col_name)) stop("Specify retention time column")
+    if (is.null(gc_peak_list)) stop("Provide a list of sampples")
     ## get the median scores for shared peaks
     x <- df_median_sim_score(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name)
-    index <- which(x[["score"]]==max(x[["score"]]))
+    index <- which(x[["score"]] == max(x[["score"]]))
+    ## If more than one would get the same score, take the most central run
+    if (length(index) > 1) {
+    ## Odd or even number of samples determines the most central element
+    centre <- ifelse(length(gc_peak_list) %% 2,length(gc_peak_list)/2 + 0.5,length(gc_peak_list)/2)
+    diffs <- abs(centre - index)
+    ## If still more than one index is equally well suited, i.e. Number 2 &
+    index <- which(diffs == min(diffs))[1]
+    }
     return(list(sample = as.character(x[["sample"]][[index]]), score = x[["score"]][[index]]))
 }
 
@@ -33,7 +42,7 @@ pick_best_reference <- function(gc_peak_list = NULL,rt_col_name = NULL){
 ## Scores for all samples
 df_median_sim_score <- function(gc_peak_list,rt_col_name){
 x <- data.frame(score = rep(NA,length(gc_peak_list)),sample = names(gc_peak_list))
-    for(i in 1:length(gc_peak_list)){
+    for(i in 1:length(gc_peak_list)) {
     x[["score"]][i] <- median_sim_score(gc_peak_list = gc_peak_list, ref_df = gc_peak_list[[i]],rt_col_name = rt_col_name)
     }
 return(x)
@@ -52,14 +61,14 @@ chrom_sim_score <- function(gc_peak_df, ref_df, rt_col_name,error=0) {
     ## Initialise vector tracking shared peaks
     peaks <- 0
     ## loop through the sample
-    for (k in 1:length(sample_chroma)){
+    for (k in 1:length(sample_chroma)) {
         ## loop through the Reference Chromatogram
-        for (l in 1:length(ref_chroma)){
+        for (l in 1:length(ref_chroma)) {
             temp_peak <- sample_chroma[k]
             ref_peak <- ref_chroma[l]
             ## Avoid comparison with cases of RT=0
-            if (temp_peak != 0){
-                if ((temp_peak <= ref_peak + error) & (temp_peak >= ref_peak - error)){
+            if (temp_peak != 0) {
+                if ((temp_peak <= ref_peak + error) & (temp_peak >= ref_peak - error)) {
                     peaks <- peaks + 1
                 }
             }

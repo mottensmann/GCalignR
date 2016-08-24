@@ -86,7 +86,7 @@
 align_chromatograms <- function(data, sep = "\t",conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
 
 ## Check the format of the input
-check_input(data,sep,write_output=write_output,blank=blanks)
+check_input(data,sep,write_output = write_output,blank = blanks,reference = reference)
 
 ## Preallocate a list to save a protocoll of the alignment
 Logbook <- list()
@@ -98,7 +98,8 @@ cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = 
 ## 1: Check function call
 if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
 if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
-if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
+## reference by default NULL means that a 'optimal' is picked based on average similarities
+# if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
 
 ## 2: Load Data
 if (is.character(data)) {
@@ -135,16 +136,21 @@ if (is.character(data)) {
 }
 
 ## Write some information about the input data to the Logfile
-if(reference == "reference"){
+if(!is.null(reference)) {
+    if(reference == "reference") {
     cat(paste0('GC-data for ',as.character(length(ind_names) - 1),' samples loaded\n'))
     Logbook[["Input"]]["Samples"] <- length(ind_names) - 1
-} else {
+## If the reference was determined by the user or is going to be picked in this function
+## does not matter for estimating the Sample number, but for writing the reference id to
+## the Logfile, hence this code snipset is moved further down and executed after Linear Shifts
+    }
+    } else {
     cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)
 }
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
     Logbook[["Input"]]["File"] <- as.character(as.character(match.call()["data"]))
-    Logbook[["Input"]]["Reference"] <- reference
+    #Logbook[["Input"]]["Reference"] <- reference
     Logbook[["Input"]]["Retention_Time"] <- rt_col_name
     Logbook[["Input"]]["Concentration"] <- conc_col_name
     Logbook[["Input"]]["Peaks"] <- peak_counter(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name)
@@ -189,11 +195,12 @@ if(is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
 
     gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
+    ## reference is not a true sample and is used exclusevely for linear alignment
+if(!is.null(reference)){
+if(reference == "reference"){
     cat(paste0('\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
 
-    ## reference is not a true sample and is used exclusevely for linear alignment
-if(reference == "reference"){
-    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
+gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
@@ -202,17 +209,33 @@ if(reference == "reference"){
     gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear) == reference)]
     ## remove the reference from the input retention time matrix
     gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw) == reference)]
-}else if(is.null(reference)){
-    ## If no reference was specified by the user, the reference is determined, such
-    ## that the sample with the highest avarage similarity to all other samples is used.
-
-} else{
+}  else{
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
 }
+}else if(is.null(reference)){
+    ## If no reference was specified by the user, the reference is determined, such
+    ## that the sample with the highest avarage similarity to all other samples is used.
+    best.ref <- choose_optimal_reference(gc_peak_list = gc_peak_list, rt_col_name = rt_col_name)
+    ## set the reference
+    reference <- best.ref[["sample"]]
+    text <- paste0("A reference was not specified, hence '",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],")")
+    cat("\n")
+    cat(stringr::str_wrap(paste(text,collapse = ""),width=80,exdent=0,indent=0))
+    cat(paste0('\n\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
+    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
+    Logbook <- gc_peak_list_linear[["Logbook"]]
+    gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
+    gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
+    gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
+
+}
+    ## Write the reference to the Logfile, needs to move do this position,
+    ## because if reference is NULL by default and needs to be choosen before
+    Logbook[["Input"]]["Reference"] <- reference
     cat("Done\n\n")
 ## equalise chromatograms sizes
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)

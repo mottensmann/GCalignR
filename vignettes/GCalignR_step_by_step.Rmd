@@ -65,7 +65,7 @@ inspect the quality of the alignment and if necessary adjust the parameters acco
 * `check_input`: Checks the format of the input data for conformity with the requirements and highlights violations.
 * `plot.GCalign`: Plots the distribution of Peaks after the alignment and shows density histograms of applied linear
 transformations and retention time ranges (i.e. difference between minimum and maximum retention time per substance).
-* `summary.GCalign`: Summarises the alignment procedure (e.g. documents all arguments to the function call).
+* `print.GCalign`: Summarises the alignment procedure (e.g. documents all arguments to the function call).
 * `norm_peaks`: Normalises the abundance measure of peaks and returns and data frame of peak concentrations for all samples that is ready to use for analysis tools such as [LINK to vegan´s nmds functions]
 
 
@@ -173,7 +173,7 @@ peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     rt_col_name = "time", # retention time 
     rt_cutoff_low = 5, # cut peaks with retention times below 5 Minutes
     rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
-    reference = "M48", # name of reference 
+    reference = NULL, # Reference will be choosen automatically 
     max_linear_shift = 0.05, # maximum linear shift of chromatograms
     max_diff_peak2mean = 0.03, # maximum distance of a peak to the mean
     min_diff_peak2peak = 0.03, # maximum distance between the mean of two peaks
@@ -201,7 +201,7 @@ plot(aligned_peak_data) # Three Diagnostics, can be invoked separetely
 ```
 
 ```{r, eval=FALSE}
-summary(aligned_peak_data) # Summary of the alingnment procedure
+print(aligned_peak_data) # Summary of the alingnment procedure
 ```
 ### Normalise peaks and log+1 transformation
 

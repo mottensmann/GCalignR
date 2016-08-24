@@ -5,30 +5,36 @@
 \title{gc_heatmap visualises the goodness of a chromatogram alignments}
 \usage{
 gc_heatmap(object, algorithm_step = c("aligned_rts", "linear_transformed_rts",
-  "input_rts"), substance_subset = NULL, guide = c("legend", "colourbar"),
-  samples_subset = NULL, type = c("binary", "continous"),
-  threshold = 0.05, label_size = NULL)
+  "input_rts"), substance_subset = NULL, legend_type = c("legend",
+  "colourbar"), samples_subset = NULL, type = c("binary", "continuous"),
+  threshold = 0.05, label_size = NULL, show_legend = TRUE,
+  main_title = NULL, show_title = TRUE)
 }
 \arguments{
-\item{object}{object of class "GCalign", the output of a call to \link{align_chromatograms}.}
+\item{object}{Object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{character indicating which step of the algorithm is plotted. Either \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts}.}
+\item{algorithm_step}{\strong{Character} indicating which step of the algorithm is plotted. Either \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts}.}
 
-\item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.}
+\item{substance_subset}{\strong{Integer vector} containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.}
 
-\item{guide}{Character string, selects the type of colourbar as discrete (i.e \strong{'legend'})
-or gradient (i.e \strong{'colourbar})}
+\item{legend_type}{\strong{Character}, selects the type of colourbar as \strong{discrete} (i.e retention times are classified as deviation or not) or \strong{gradient} (i.e deviations are presented on a fine scale)}
 
 \item{samples_subset}{Vector indicating which samples are plotted on the heatmap.
 Either a numeric vector of indices (order in the input) or a vector of sample names}
 
-\item{type}{Character specifying whether a binary heatmap or a heatmap of continous
+\item{type}{Character specifying whether a \strong{'binary'} heatmap or a heatmap of \strong{'continuous'}
 deviations is plotted.}
 
-\item{threshold}{Decimal indicating the threshold deviation of individual peak retention times
-from the mean retention time of the respective peak across all samples.}
+\item{threshold}{\strong{Numeric}, indicates the threshold above which the deviation of individual peak retention times
+from the mean retention time of the respective substance are highlighted in \emph{binary} heatmaps.}
 
-\item{label_size}{Determines the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readibility and messines due to a potentially large number of substances and samples. Note: Label for substances on the x axis are only plotted if a subset of substances was selected, or less than xxx substances are present in the data.}
+\item{label_size}{\strong{Integer}, determines the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readibility and messines due to a potentially large number of substances and samples. Note: Labels for substances on the x axis are only possible if a maximum of 150 substances are plotted.}
+
+\item{show_legend}{\strong{Logical} determining whether a legend is included or not. Default is TRUE.}
+
+\item{main_title}{\strong{Character} argument used a title for the plot. If not specified, titles are generated automatically.}
+
+\item{show_title}{\strong{Logical} dertermining whether an overall title is shown for the plot. By default TRUE}
 }
 \value{
 object of class "ggplot"

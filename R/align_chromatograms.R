@@ -83,7 +83,7 @@
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'@export
 #'
-align_chromatograms <- function(data, sep = "\t",conc_col_name=NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+align_chromatograms <- function(data, sep = "\t",conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
 
 ## Check the format of the input
 check_input(data,sep,write_output=write_output,blank=blanks)
@@ -192,8 +192,8 @@ if(is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
     cat(paste0('\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
 
     ## reference is not a true sample and is used exclusevely for linear alignment
-if(reference=="reference"){
-    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift=max_linear_shift, step_size=0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
+if(reference == "reference"){
+    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
@@ -202,7 +202,11 @@ if(reference=="reference"){
     gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear) == reference)]
     ## remove the reference from the input retention time matrix
     gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw) == reference)]
-}else{
+}else if(is.null(reference)){
+    ## If no reference was specified by the user, the reference is determined, such
+    ## that the sample with the highest avarage similarity to all other samples is used.
+
+} else{
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]

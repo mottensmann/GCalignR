@@ -4,36 +4,38 @@
 \alias{plot.GCalign}
 \title{Plot Diagonstics for an Gcalign Object}
 \usage{
-\method{plot}{GCalign}(x, which_plot = c("All", "Linear_Shifts", "Peak_Range",
-  "Peak_Counts", "Peak_Sharing"), ...)
+\method{plot}{GCalign}(x, which_plot = c("All", "linear_shifts", "rt_range",
+  "substance_numbers", "substance_sharing"), ...)
 }
 \arguments{
 \item{x}{\code{GCalign} object, created by \code{\link{align_chromatograms}}}
 
 \item{which_plot}{character string indicating which plot is returned. Available are
-\strong{"Linear_Shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
-\strong{"Peak_Range"} a histogram summarising the range of retention times for every peak defined
+\strong{"linear_shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
+\strong{"rt_range"} a histogram summarising the range of retention times for every peak defined
 by the difference between minimum and maximum retention times respectively. The third option
-is \strong{"Peak_Counts"} plotting a barchart of the number of peaks per sample. By default all
-three plots are returned as subplots of one figure.}
+is \strong{"substance_numbers"} plotting a barchart of the number of substances per sample. Additionally \strong{"substance_sharing"} produces a histogram of the proportion with which substances are shared among samples. This means for every substance the proportion of samples containing the respective peak is estimated. By default all plots are returned as subplots of one figure.}
 
 \item{...}{optional arguments passed on to methods. See
 \code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
 Please Note that optional arguments are currently not passed on when plotting all figures.}
 }
+\value{
+Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "All"} no output is returned next to the multiplot.
+}
 \description{
-Three plots are currently available: One plot visualises the distribution of linear shifts
+Four plots are currently available: One plot visualises the distribution of linear shifts
 that were applied to align chromatograms to a reference before aligning individual peaks.
 A second plot illustrates the remaining variation of retention times on the level of individual
 peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
-of peak numbers after aligning the chromatograms.
+of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram.
 }
 \examples{
 ## All three plots
 plot(aligned_peak_data)
 
 ## Distribution of Peaks
-plot(aligned_peak_data,which_plot="Peak_Counts")
+plot(aligned_peak_data,which_plot="substance_numbers")
 
 }
 \author{

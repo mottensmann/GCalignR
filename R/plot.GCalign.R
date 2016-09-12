@@ -169,7 +169,7 @@ out <- data.frame(shifts = out)
 out
 } else if (which_plot == "rt_range") {
 out <- hist_peakvar(x = x,mcall = mcall,...)
-out <- data.frame(range = out, index_substance = 1:nrow(out))
+out <- data.frame(range = as.vector(out), index_substance = 1:length(as.vector(out)))
 out
 } else if (which_plot == "substance_numbers") {
 out <- bar_peakdistr(x = x,mcall = mcall,...)

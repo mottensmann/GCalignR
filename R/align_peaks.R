@@ -175,9 +175,14 @@ merge_rows <- function(gc_peak_df, to_merge, criterion="strict", rt_col_name,con
 }
 
 mean_retention_time_row <- function(gc_peak_list, samples, retention_row, rt_col_name){
-    rts <- unlist(lapply(gc_peak_list[samples], function(x) x[retention_row, rt_col_name]))
+   xy <- function(x, retention_row, rt_col_name) {
+       out <- x[retention_row, rt_col_name]
+   return(out)
+       }
+    rts <- unlist(lapply(gc_peak_list[samples], xy,retention_row, rt_col_name))
     mean_rt <- mean(rts[!(rts == 0)], na.rm = TRUE)
-
+return(mean_rt
+       )
 }
 
 

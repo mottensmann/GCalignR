@@ -2,13 +2,13 @@
 #'
 #' @description
 #' Four plots are currently available: One plot visualises the distribution of linear shifts
-#' that were applied to align chromatograms to a reference before aligning individual peaks.
+#' that were applied in order to align chromatograms to a reference before aligning individual peaks.
 #' A second plot illustrates the remaining variation of retention times on the level of individual
 #' peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
 #' of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram.
 #'
 #' @examples
-#' ## All three plots
+#' ## All plots are shown by default
 #' plot(aligned_peak_data)
 #'
 #' ## Distribution of Peaks
@@ -32,13 +32,13 @@
 #'  (meinolf.ottensmann@@web.de)
 #'
 #' @return
-#' Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "All"} no output is returned next to the multiplot.
+#' Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "All"} no output is returned.
 #'
 #' @export
 #'
 plot.GCalign <- function(x,which_plot = c("All","linear_shifts","rt_range","substance_numbers","substance_sharing"), ...) {
 
-    ## initialising by picking arguments from the function call
+    ## initialising by picking arguments from call to plot.GCalign
     mcall = as.list(match.call())[-1L]
     ## allow partial matching
     which_plot <- match.arg(which_plot)
@@ -56,7 +56,7 @@ plot.GCalign <- function(x,which_plot = c("All","linear_shifts","rt_range","subs
 
         ## check for optional arguments in the function call, take defaults, if missing
         arg_list <- list()
-        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Linear transformations"))
+        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Linear Shifts"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Shift size"))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Frequency [%]"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax,by = 0.01)))
@@ -88,7 +88,7 @@ plot.GCalign <- function(x,which_plot = c("All","linear_shifts","rt_range","subs
         xmin <- min(df)
 
         arg_list <- list()
-        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Range of retention times of individual substances"))
+        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Range of retention times\n (individual substances)"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Range [max - min]"))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Frequency [%]"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(xmin,xmax,by = 0.01)))
@@ -123,11 +123,12 @@ plot.GCalign <- function(x,which_plot = c("All","linear_shifts","rt_range","subs
         ymin <- min(peaks)
 
         arg_list <- list()
-        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Number of substances after running GCalignR"))
+        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Number of substances after\n running GCalignR"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.5))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.5))
+        if (!"cex.names" %in% names(mcall)) arg_list <- append(arg_list,list(cex.names = 0.95))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#7570b3"))
         if (!"srt" %in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
         if (!"las" %in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
@@ -149,9 +150,9 @@ plot.GCalign <- function(x,which_plot = c("All","linear_shifts","rt_range","subs
         })))
 
         arg_list <- list()
-        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Shared substances among samples"))
+        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Shared substances\namong samples"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Number of substances"))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Proportion of samples [%]"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Frequency [%]"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(0,100,by = 5)))
         if (!("freq") %in% names(mcall) || !("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.5))

@@ -1,6 +1,6 @@
 ---
-title: "GCalignR step by step"
-author: "Martin A. Stoffel, Meinolf Ottensmann, Joseph Hoffman"
+title: "GCalignR Step by Step"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Barbara Caspers, Joseph Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
 
 ## Introduction
 
-Metabolomics approaches such as Gas Chromatography-Mass Spectrometry (GC-MS) are increasingly used
+Metabolomics approaches such as Gas-Chromatography-Mass-Spectrometry (GC-MS) are increasingly used
 by biologists to unravel the chemical basis of animal olfactory communication (citations). For the detection
 of broader patterns in chemical samples most researchers use an untargeted approach and
 analyse the whole spectrum of chemicals rather than targeting specific compounds. However, 

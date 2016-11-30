@@ -21,17 +21,17 @@ is \strong{"substance_numbers"} plotting a barchart of the number of substances 
 Please Note that optional arguments are currently not passed on when plotting all figures.}
 }
 \value{
-Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "All"} no output is returned next to the multiplot.
+Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "All"} no output is returned.
 }
 \description{
 Four plots are currently available: One plot visualises the distribution of linear shifts
-that were applied to align chromatograms to a reference before aligning individual peaks.
+that were applied in order to align chromatograms to a reference before aligning individual peaks.
 A second plot illustrates the remaining variation of retention times on the level of individual
 peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
 of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram.
 }
 \examples{
-## All three plots
+## All plots are shown by default
 plot(aligned_peak_data)
 
 ## Distribution of Peaks

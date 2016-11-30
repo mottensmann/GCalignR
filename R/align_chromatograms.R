@@ -222,7 +222,7 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = ma
     best.ref <- choose_optimal_reference(gc_peak_list = gc_peak_list, rt_col_name = rt_col_name)
     ## set the reference
     reference <- best.ref[["sample"]]
-    text <- paste0("A reference was not specified, hence '",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],")")
+    text <- paste0("A reference was not specified. Hence '",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],")")
     cat("\n")
     cat(stringr::str_wrap(paste(text,collapse = ""),width=80,exdent=0,indent=0))
     cat(paste0('\n\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))

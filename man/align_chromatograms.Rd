@@ -8,12 +8,12 @@ align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
   rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
   rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,
-  delete_single_peak = FALSE, n_iter = 1, merge_rare_peaks = FALSE)
+  delete_single_peak = FALSE, iterations = 1)
 }
 \arguments{
-\item{data}{Two input formats are supported. The first option is the \strong{path to a text file} with extension \code{.txt} containing the gc-data. It is expected that the file is formatted following this principle: The first row contains sample names, the second row column names of the corresponding chromatograms.Starting with the third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The matrix for each sample needs to consist of the same number of columns, at least two are required: The retention time and a measure of concentration (e.g. peak area or height). See the package vignette for an example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains the peak data for a single individual with at least two variables, the retention time of the peak and the area under the peak. The variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. See the vignette for an example. The data can be checked by running \code{\link{check_input}}.}
+\item{data}{Two input formats are supported. The first option is the \strong{path to a text file} with extension containing the gc-data. It is expected that the file is formatted following this principle: The first row contains sample names, the second row column names of the corresponding chromatograms. Starting with the third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The matrix for each sample needs to consist of the same number of columns, at least two are required: The retention time and a measure of concentration (e.g. peak area or height). See the \href{../doc/GCalignR_step_by_step.html}{vignette} for an example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains the peak data for a single individual with at least two variables, the retention time of the peak and the area under the peak. The variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. The format can be checked by running \code{\link{check_input}}.}
 
-\item{sep}{The field separator character. The default is tab seperated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
+\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{conc_col_name}{Character naming a column used for the quantification of peaks (e.g. peak area or peak height).
 The designated variable needs to be numeric.}
@@ -21,7 +21,7 @@ The designated variable needs to be numeric.}
 \item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 
 \item{write_output}{Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
-The default is \code{NULL}. Names of the text files are concatenations of \code{data} and the output variables. Vector elements need to correspond to column names of \code{data}.}
+The default is \code{NULL}. Vector elements need to correspond to column names of \code{data}.}
 
 \item{rt_cutoff_low}{Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.}
 
@@ -42,11 +42,7 @@ in \code{data} containing user-defined peaks (e.g. an internal standard) to alig
 
 \item{delete_single_peak}{logical, determining whether substances that occur in just one sample are removed or not. By default single substances are retained in chromatograms.}
 
-\item{n_iter}{integer indicating the number of iterations of the core alignment algorithm. Additional replications of the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually with a Heatmap \code{\link{gc_heatmap}}. Currently we recommend to run the algorithm once and check the output carefully to fine tune function paramters rather than running multiple iterations.}
-
-\item{merge_rare_peaks}{logical determining whether peaks that are redundant by means of a similar retention times
-are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
-Always the peak with the higher abundance (i.e. peak area or peak height) is retained. Default is \code{FALSE}}
+\item{iterations}{integer indicating the number of iterations of the core alignment algorithm. Additional replications of the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually with a Heatmap \code{\link{gc_heatmap}}. Currently we recommend to run the algorithm once and check the output carefully to fine tune function paramters rather than running multiple iterations.}
 }
 \value{
 Returns an object of class "GCalign" that is a a list with several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
@@ -59,8 +55,7 @@ Returns an object of class "GCalign" that is a a list with several objects that 
 Read through the documentation here and take a look at the \href{../doc/GCalignR_step_by_step.html}{GCalignR Vignette}
 }
 \details{
-The Alignment of Peaks is archieved by running \strong{three major algorithms} always considering the complete
-set of samples submitted to the function.
+The Alignment of Peaks is achieved by running \strong{three major algorithms} always considering the complete set of samples submitted to the function.
 In brief: \strong{(1) Peaks are linearly shifted} to maximise similarity with a reference to account for systematic shifts in retention times caused by gas-chromatography processing. \strong{(2) Peaks of similar retention times are aligned} in order to match similar retention times to the same substance. During the algorithm proceeds, these clusters are continously revised and every peaks is moved to the optimal location(i.e. substance). \strong{(3) Peaks of similar retention time are merged} if they show smaller differences in mean retention times than expected by the achievable resolution of the gas-chromatography or the chemistry of the compounds are merged. This has to be specfied by the paramters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}. Several optional processing steps are available, ranging from the removal of peaks representing contaminations (requires to include blanks as a control) to the removal of uninformative peaks that are present in just one sample.
 }
 \examples{

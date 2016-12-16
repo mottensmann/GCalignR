@@ -6,15 +6,14 @@
 #'
 #'
 #'@details
-#' The Alignment of Peaks is archieved by running \strong{three major algorithms} always considering the complete
-#' set of samples submitted to the function.
+#' The Alignment of Peaks is achieved by running \strong{three major algorithms} always considering the complete set of samples submitted to the function.
 #' In brief: \strong{(1) Peaks are linearly shifted} to maximise similarity with a reference to account for systematic shifts in retention times caused by gas-chromatography processing. \strong{(2) Peaks of similar retention times are aligned} in order to match similar retention times to the same substance. During the algorithm proceeds, these clusters are continously revised and every peaks is moved to the optimal location(i.e. substance). \strong{(3) Peaks of similar retention time are merged} if they show smaller differences in mean retention times than expected by the achievable resolution of the gas-chromatography or the chemistry of the compounds are merged. This has to be specfied by the paramters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}. Several optional processing steps are available, ranging from the removal of peaks representing contaminations (requires to include blanks as a control) to the removal of uninformative peaks that are present in just one sample.
 #'
 #'@param data
-#' Two input formats are supported. The first option is the \strong{path to a text file} with extension \code{.txt} containing the gc-data. It is expected that the file is formatted following this principle: The first row contains sample names, the second row column names of the corresponding chromatograms.Starting with the third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The matrix for each sample needs to consist of the same number of columns, at least two are required: The retention time and a measure of concentration (e.g. peak area or height). See the package vignette for an example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains the peak data for a single individual with at least two variables, the retention time of the peak and the area under the peak. The variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. See the vignette for an example. The data can be checked by running \code{\link{check_input}}.
+#' Two input formats are supported. The first option is the \strong{path to a text file} with extension containing the gc-data. It is expected that the file is formatted following this principle: The first row contains sample names, the second row column names of the corresponding chromatograms. Starting with the third row, peak data are included, whereby matrices of single samples are concatenated horizontally. The matrix for each sample needs to consist of the same number of columns, at least two are required: The retention time and a measure of concentration (e.g. peak area or height). See the \href{../doc/GCalignR_step_by_step.html}{vignette} for an example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains the peak data for a single individual with at least two variables, the retention time of the peak and the area under the peak. The variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. The format can be checked by running \code{\link{check_input}}.
 #'
 #'@param sep
-#' The field separator character. The default is tab seperated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.
+#' The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param conc_col_name
 #' Character naming a column used for the quantification of peaks (e.g. peak area or peak height).
@@ -25,7 +24,7 @@
 #'
 #'@param write_output
 #' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
-#' The default is \code{NULL}. Names of the text files are concatenations of \code{data} and the output variables. Vector elements need to correspond to column names of \code{data}.
+#' The default is \code{NULL}. Vector elements need to correspond to column names of \code{data}.
 #'
 #'@param rt_cutoff_low
 #' Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
@@ -53,13 +52,9 @@
 #'@param delete_single_peak
 #' logical, determining whether substances that occur in just one sample are removed or not. By default single substances are retained in chromatograms.
 #'
-#'@param n_iter
+#'@param iterations
 #' integer indicating the number of iterations of the core alignment algorithm. Additional replications of the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually with a Heatmap \code{\link{gc_heatmap}}. Currently we recommend to run the algorithm once and check the output carefully to fine tune function paramters rather than running multiple iterations.
 #'
-#' @param merge_rare_peaks
-#' logical determining whether peaks that are redundant by means of a similar retention times
-#' are merged. If \code{TRUE} peaks are merged as long as only 5 % of the samples contain two peaks.
-#' Always the peak with the higher abundance (i.e. peak area or peak height) is retained. Default is \code{FALSE}
 #'
 #'@return
 #' Returns an object of class "GCalign" that is a a list with several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
@@ -83,51 +78,50 @@
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'@export
 #'
-align_chromatograms <- function(data, sep = "\t",conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL,delete_single_peak = FALSE,n_iter=1,merge_rare_peaks=FALSE) {
+align_chromatograms <- function(data, sep = "\t", conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL, delete_single_peak = FALSE, iterations = 1) {
 
-## Check the format of the input
-check_input(data,sep,write_output = write_output,blank = blanks,reference = reference)
+# Check the input
+x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference)
+if (x != TRUE) stop("Processing not possible, check warnings for details")
 
-## Preallocate a list to save a protocoll of the alignment
+# Preallocate a list to save a protocoll of the alignment
 Logbook <- list()
 Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
 
-## print start of GCalignR
+# print start of GCalignR
 cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%H:%M:%S")),'\n\n'))
 
-## 1: Check function call
+# 1: Check function call
 if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
 if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
-## reference by default NULL means that a 'optimal' is picked based on average similarities
-# if (is.null(reference)) stop("Reference is missing. Specify a reference to align the others to")
 
-## 2: Load Data
+# 2: Load Data
 if (is.character(data)) {
-    ## Data is supplied as a Text File
-    ## Get Sample Names
+    # Data is supplied as a Text File
+    # Get Sample Names
     ind_names <- readr::read_lines(data, n_max = 1) %>%
         stringr::str_split(pattern = sep) %>%
         unlist()
     ind_names <- ind_names[ind_names != ""]
-    ## Get Variable Names
+    # Get Variable Names
     col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
         stringr::str_split(pattern = sep) %>%
         unlist()
     col_names <- col_names[col_names != ""]
     col_names <- stringr::str_trim(col_names)
     ind_names <- stringr::str_trim(ind_names)
-    ## Get Peak Data
+    # Get Peak Data
     gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
-    ## Remove just NA-rows
+    # Remove just NA-rows
     gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
-    ## Remove empty rows
+    # Remove empty rows
     gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]
-    ## Transform all variables to numeric
+    # Transform all variables to numeric
     gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
-    ## convert to list
+    # convert to list
     gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
 
-    ## Data is supplied in a List
+    # Data is supplied in a List
 } else if (is.list(data)) {
     col_names <- unlist(lapply(data, function(x) out <- names(x)))
     col_names <- names(data[[1]])
@@ -135,59 +129,58 @@ if (is.character(data)) {
     gc_peak_list <- data
 }
 
-## Write some information about the input data to the Logfile
-if(!is.null(reference)) {
-    if(reference == "reference") {
-    cat(paste0('GC-data for ',as.character(length(ind_names) - 1),' samples loaded\n'))
+# save gc_peak_list for documentation
+input_list <- gc_peak_list
+
+# Write some information about the input data to the Logfile
+if (!is.null(reference)) {
+    if (reference == "reference") {
+    cat(paste0('GC-data for ',as.character(length(ind_names) - 1),' samples loaded.'))
     Logbook[["Input"]]["Samples"] <- length(ind_names) - 1
-## If the reference was determined by the user or is going to be picked in this function
-## does not matter for estimating the Sample number, but for writing the reference id to
-## the Logfile, hence this code snipset is moved further down and executed after Linear Shifts
     }
     } else {
-    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded\n'))
+    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded.'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)
 }
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
     Logbook[["Input"]]["File"] <- as.character(as.character(match.call()["data"]))
-    #Logbook[["Input"]]["Reference"] <- reference
     Logbook[["Input"]]["Retention_Time"] <- rt_col_name
     Logbook[["Input"]]["Concentration"] <- conc_col_name
     Logbook[["Input"]]["Peaks"] <- peak_counter(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name)
-    ## Only created if blanks!=NULL
-if(!is.null(blanks)) Logbook[["Input"]][["Blanks"]] <- paste(blanks,collapse = "; ")
+    # Only created if blanks!=NULL
+if (!is.null(blanks)) Logbook[["Input"]][["Blanks"]] <- paste(blanks,collapse = "; ")
 
-## 3: Start the processing of the gas-chromatography-data
+# 3: Start the processing of the gas-chromatography-data
 
 ## 3.1: Cut retention times
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
-## Write to the Logfile
-## Lower threshold
-if (!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)){
+# Write to the Logfile
+# Lower threshold
+if (!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)) {
     Logbook[["Filtering"]]["RT_Cutoff_Low"] <- as.character(rt_cutoff_low)
     Logbook[["Filtering"]]["RT_Cutoff_High"] <- "None"
 }
-    ## upper threshold
-if (!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
+    # upper threshold
+if (!is.null(rt_cutoff_high) & is.null(rt_cutoff_low)) {
     Logbook[["Filtering"]]["RT_Cutoff_Low"] <- "None"
     Logbook[["Filtering"]]["RT_Cutoff_High"] <- as.character(rt_cutoff_high)
 }
-    ## Lower and upper threshold
-if (!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)){
+    # Lower and upper threshold
+if (!is.null(rt_cutoff_high) & !is.null(rt_cutoff_low)) {
     Logbook[["Filtering"]]["RT_Cutoff_Low"] <- as.character(rt_cutoff_low)
     Logbook[["Filtering"]]["RT_Cutoff_High"] <- as.character(rt_cutoff_high)
 }
-    ## No cutoff applied
-if(is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
+    ##No cutoff applied
+if (is.null(rt_cutoff_high) & is.null(rt_cutoff_low)) {
     Logbook[["Filtering"]]["RT_Cutoff_Low"] <- "None"
     Logbook[["Filtering"]]["RT_Cutoff_High"] <- "None"
 }
 
-## 3.2: Linear Transformation of peak retention times
+# 3.2: Linear Transformation of peak retention times
 
-    ## Round retention times to two decimals
+    # Round retention times to two decimals
     round_rt <- function(gc_peak_df,rt_col_name=rt_col_name){
     gc_peak_df[rt_col_name] <- round(gc_peak_df[rt_col_name],digits = 2)
     return(gc_peak_df)
@@ -195,9 +188,9 @@ if(is.null(rt_cutoff_high) & is.null(rt_cutoff_low)){
 
     gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
-    ## reference is not a true sample and is used exclusevely for linear alignment
-if(!is.null(reference)){
-if(reference == "reference"){
+    # reference is not a true sample and is used exclusevely for linear alignment
+if (!is.null(reference)) {
+if (reference == "reference") {
     cat(paste0('\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
 
 gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
@@ -205,111 +198,110 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = ma
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
-    ## remove reference after the systematic errors were corrected
+    # remove reference after the systematic errors were corrected
     gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear) == reference)]
-    ## remove the reference from the input retention time matrix
+    # remove the reference from the input retention time matrix
     gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw) == reference)]
-}  else{
+}  else {
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
 }
-}else if(is.null(reference)){
-    ## If no reference was specified by the user, the reference is determined, such
-    ## that the sample with the highest avarage similarity to all other samples is used.
+} else if (is.null(reference)) {
+    # If no reference was specified by the user, the reference is determined, such
+    # that the sample with the highest avarage similarity to all other samples is used.
     best.ref <- choose_optimal_reference(gc_peak_list = gc_peak_list, rt_col_name = rt_col_name)
-    ## set the reference
+    # set the reference
     reference <- best.ref[["sample"]]
-    text <- paste0("A reference was not specified. Hence '",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],")")
+    text <- paste0("A reference was not specified. Hence, '",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],").")
     cat("\n")
-    cat(stringr::str_wrap(paste(text,collapse = ""),width=80,exdent=0,indent=0))
-    cat(paste0('\n\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
+    cat(stringr::str_wrap(paste(text,collapse = ""),width = 80,exdent = 0,indent = 0))
+    cat(paste0('\nStart Linear Transformation with ',"\"",as.character(reference),"\"",' as a reference ...'))
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
-
 }
-    ## Write the reference to the Logfile, needs to move do this position,
-    ## because if reference is NULL by default and needs to be choosen before
+    # Write the reference to the Logfile, needs to move do this position,
+    # because if reference is NULL by default and needs to be choosen before
     Logbook[["Input"]]["Reference"] <- reference
-    cat("Done\n\n")
-## equalise chromatograms sizes
+    cat("Done\n")
+    # equalise chromatograms sizes
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
-## 3.3 Align peaks & Merge Rows
+# 3.3 Align peaks & Merge Rows
 
-    cat(c('Start Alignment of Peaks ... ','This might take a while!\n','\n'))
+    cat(c('Start Alignment of Peaks ... ','This might take a while!\n'))
 
-    ## Random trivia
-    Fun_Fact()
-    ## avoid to overwrite the list of linear transformed peaks
+    # Random trivia
+    #Fun_Fact()
+    # avoid to overwrite the list of linear transformed peaks
     gc_peak_list_aligned <- gc_peak_list_linear
-    no_peaks <- matrix(NA,nrow = n_iter,ncol = 1)
-    merged_peaks <- matrix(NA, nrow = n_iter,ncol = 1)
+    no_peaks <- matrix(NA,nrow = iterations,ncol = 1)
+    merged_peaks <- matrix(NA, nrow = iterations,ncol = 1)
 
-    ## Allows to iteratively execute the algorithm
-for (R in 1:n_iter){
-    gc_peak_list_aligned <- align_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, n_iter = n_iter, rt_col_name = rt_col_name,R=R)
-    ## mean rt per row
+    # Allows to iteratively execute the algorithm
+for (R in 1:iterations) {
+    gc_peak_list_aligned <- align_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean, iterations = iterations, rt_col_name = rt_col_name,R = R)
+    # mean rt per row
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
-    # # remove empty rows
+    # remove empty rows
     gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) {
     keep_rows <- which(!is.na(average_rts))
     out <- x[keep_rows, ]
     })
 
-    ## mean rt per row
+    # mean rt per row
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
-    ## N before merging
+    # N before merging
     no_peaks[R] <- nrow(gc_peak_list_aligned[[1]])
-    ## merge rows
+    # merge rows
     gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak = min_diff_peak2peak, rt_col_name = rt_col_name)
-    ##estimate N of merged peaks
+    # estimate N of merged peaks
     merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
-    ## N after merging
+    # N after merging
     no_peaks[R] <- nrow(gc_peak_list_aligned[[1]])
-    ## After the merging
+    # After the merging
     Logbook[["Aligned"]]["Peaks"] <- no_peaks[R]
 
-    ## allows to merge rows where a few individuals carry two peaks (<5%)
-if(R == n_iter & merge_rare_peaks == TRUE){
+    # allows to merge rows where a few individuals carry two peaks (<5%)
+# if (R == iterations & merge_rare_peaks == TRUE) {
+#     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
+#     gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak = min_diff_peak2peak, rt_col_name = rt_col_name,criterion = "proportional",conc_col_name = conc_col_name)
+#     merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
+#     # cause they were eliminated
+#     rare_peak_pairs <- 0
+# }
+    cat('\nMerged Redundant Peaks')
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
-    gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned, min_diff_peak2peak = min_diff_peak2peak, rt_col_name = rt_col_name,criterion="proportional",conc_col_name = conc_col_name)
-    merged_peaks[R] <- no_peaks[R] - nrow(gc_peak_list_aligned[[1]])
-    ## cause they were eliminated
-    rare_peak_pairs <- 0
-}
-    cat('\n\nMerged Redundant Peaks')
-    average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
-    ## delete empty rows again
+    # delete empty rows again
     gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)
 
 }
 
-cat(paste0('\n\n','Peak Alignment Done'),'\n\n')
+cat(paste0('\n','Peak Alignment Done'),'\n\n')
 
-## 4. Clean Up Chromatograms
+# 4. Clean Up Chromatograms
     gc_peak_list_aligned <- gc_peak_list_aligned[match(names(gc_peak_list_raw),names(gc_peak_list_aligned))]
 
-    ## delete peaks present in blanks, then remove the blanks
+    # delete peaks present in blanks, then remove the blanks
 if (!is.null(blanks)) {
-    ## delete peaks present in blanks
+    # delete peaks present in blanks
     delete_blank <- function(blank, gc_peak_list_aligned) {
-        ## indices of peaks
+        # indices of peaks
     del_substances <- which(gc_peak_list_aligned[[blank]][[rt_col_name]] > 0)
-    ## remove peaks, delete row
+    # remove peaks, delete row
     chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances,])
-    ## removes the blank from the list
+    # removes the blank from the list
     chroma_out[blank] <- NULL
     return(chroma_out)
     }
-    ## Number of Peaks including Blanks
+    # Number of Peaks including Blanks
     N <- nrow(gc_peak_list_aligned[[1]])
-    ## delete all blanks
+    # delete all blanks
 for (i in blanks) {gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)}
     N <- N -  nrow(gc_peak_list_aligned[[1]])
     Logbook[["Filtering"]]["Blank_Peaks"] <- N
@@ -317,38 +309,40 @@ for (i in blanks) {gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)
     cat('Blank Peaks deleted & Blanks removed\n\n')
 }
 
-    ## RT as a Matrix
+    # RT as a Matrix
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
-    ## To estimate the number of deleted peaks
+    # To estimate the number of deleted peaks
     singular_peaks <- nrow(rt_mat)
-    ## find single retention times in rows
+    # find single retention times in rows
 if (delete_single_peak) {
     single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
-    ## delete substances occuring in just one individual
+    # delete substances occuring in just one individual
     if (length(single_subs_ind) > 0) {
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
     }
     cat(paste('Single Peaks deleted:',as.character(length(single_subs_ind)),'have been removed\n\n'))
     Logbook[["Aligned"]]["Singular"] <- length(single_subs_ind)
 }
-    ## final RT Matrix
+    # final RT Matrix
     rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
-    ## how many were deleted, if any
+    # how many were deleted, if any
     singular_peaks <- singular_peaks - nrow(rt_mat)
     Logbook[["Aligned"]]["Retained"] <- nrow(gc_peak_list_aligned[[1]])
 
-## 5: Create Output for Heatmaps
-    ## Initial input
+# 5: Create Output for Heatmaps
+    # Initial input
     rt_raw <- rt_extract(gc_peak_list = gc_peak_list_raw,rt_col_name = rt_col_name)
-    ## # after linear shifts were corrected
+    # after linear shifts were corrected
     rt_linear <- rt_extract(gc_peak_list = gc_peak_list_linear,rt_col_name = rt_col_name)
-    ## final output
+    # final output
     rt_aligned <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name = rt_col_name)
-    ## mean per row without 0
+
+# 6: Create output matrices for Variables
+
+    # Aligned data
+    # mean per row without 0
     row_mean <- function(x) {if (all(x == 0)) 0 else mean(x[x != 0])}
     mean_per_row <- apply(rt_mat,1, row_mean)
-
-## 6: Create output matrices for Variables
     output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[y]))))
     output <- lapply(output, function(x){
         names(x) <- names(gc_peak_list_aligned)
@@ -366,16 +360,37 @@ if (delete_single_peak) {
     })
     names(output) <- col_names
 
-## 7: Write output to text files
+    # Input
+    rt_mat <- do.call(cbind, lapply(gc_peak_list_raw, function(x) x[[rt_col_name]]))
+    mean_per_row <- apply(rt_mat,1, row_mean)
+    input <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_raw, function(x) x[y]))))
+    input <- lapply(input, function(x){
+        names(x) <- names(gc_peak_list_raw)
+        x
+    })
 
-if (!is.null(write_output)){
-    ## Take the text-file name as a prefix for each output file
-    if(is.character(data)){
+    input <- lapply(input, function(x){
+        x <- cbind(mean_per_row, x)
+        x
+    })
+
+    input <- lapply(input, function(x){
+        names(x)[1] <- "mean_RT"
+        x
+    })
+    names(input) <- col_names
+
+
+# 7: Write output to text files
+
+if (!is.null(write_output)) {
+    # Take the text-file name as a prefix for each output file
+    if (is.character(data)) {
         prefix <- strsplit(data,split = "/")
         prefix <- as.character(prefix[[1]][length(prefix[[1]])])
         prefix <- as.character(strsplit(prefix,split = ".txt"))
     } else {
-        ## For a List take "Aligned" as prefix
+        # For a List take "Aligned" as prefix
         prefix <- "Aligned"
     }
         write_files <- function(x) {
@@ -393,21 +408,21 @@ if (!is.null(write_output)){
     Logbook[["Variation"]][["Aligned"]] <- unlist(align_var(gc_peak_list_aligned,rt_col_name))
     Logbook[["Date"]]["End"] <- as.character(strftime(Sys.time()))
 
-    ## Call of align_chromatograms, List
+    # Call of align_chromatograms, List
     call <- as.list(match.call())[-1]
-    ## Defaults added to the function call List
+    # Defaults added to the function call List
     call <- function_call(call = call,FUN = align_chromatograms)
     Logbook[["Call"]] <- call
 
-## 9 Generate output of the function call as a list
+# 9 Generate output of the function call as a list
 
         output_algorithm <- list(aligned = output,
                              heatmap_input = list(input_rts = rt_raw,
                              linear_transformed_rts = rt_linear,aligned_rts = rt_aligned),
-                             Logfile = Logbook)
+                             Logfile = Logbook, aligned_list = gc_peak_list_aligned ,input_list = input_list, input_matrix = input)
 
-    class(output_algorithm) <- "GCalign" # Define GCalignR object calss
+    class(output_algorithm) <- "GCalign"
 
-    cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n')
+    cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n\n')
     return(output_algorithm)
 }

@@ -8,26 +8,24 @@ linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
   step_size = 0.01, rt_col_name, Logbook)
 }
 \arguments{
-\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data (e.g. retention time, peak area, peak height) of one sample. Variables are stored in columns.
-Rows represent distinct peaks. Retention time is a required variable.}
+\item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data
+(e.g. retention time, peak area, peak height) of one sample. Variables are
+stored in columns. Rows represent distinct peaks. Retention time is a
+required variable.}
 
-\item{reference}{a character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
+\item{reference}{character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
 
 \item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.The default is 0.05. The value of this parameter strongly depends on the linear trends the are expected for a given data set and should cover the expected range of linear shifts.}
 
-\item{step_size}{indicates the step size in which linear shifts are evaluated
-between \code{max_linear_shift} and \code{-max_linear_shift}.}
+\item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 
 \item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 }
 \value{
-A list of data.frames containing chromatograms with applied linear shifts
+List of data.frames containing chromatograms with applied linear shifts
 }
 \description{
-\code{linear_transformation()} applies small linear shifts of all peaks of
-individual samples with respect to one reference. Thereby the number of shared
-compounds among samples is maximized. The interval in which linear transformations are evaluated
-is adjustable as well as the step size within this range.
+\strong{linear_transformation()} shifts whole chromatograms relative to a predefined reference to account for systematic shifts in peak retention times among gas-chromatography runs.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

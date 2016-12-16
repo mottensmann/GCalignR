@@ -2,16 +2,16 @@
 % Please edit documentation in R/check_input.R
 \name{check_input}
 \alias{check_input}
-\title{Check correct input format for processing in GCalignR}
+\title{Check input prior to processing in GCalignR}
 \usage{
 check_input(data, list_peaks = FALSE, sep = "\\t", ...)
 }
 \arguments{
-\item{data}{path to a data file or the name of a list in the Global Environment.}
+\item{data}{path to a data file or the name of a list in the global environment.}
 
 \item{list_peaks}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
 
-\item{sep}{The field separator character. The default is tab seperated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
+\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Reguires \code{list_peaks == TRUE}.}
 }
@@ -19,8 +19,7 @@ check_input(data, list_peaks = FALSE, sep = "\\t", ...)
 If \code{list_peaks = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
 }
 \description{
-Checks conformity between the input format and the requirements of GCalignR. Supported are
-a path to a Text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
+Checks conformity between the input format and the requirements of GCalignR. Data is accepted in form of the path to a text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 }
 \examples{
 ## Checks format

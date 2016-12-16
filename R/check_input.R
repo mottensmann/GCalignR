@@ -1,11 +1,10 @@
-#' Check correct input format for processing in GCalignR
+#' Check input prior to processing in GCalignR
 #'
 #'@description
-#' Checks conformity between the input format and the requirements of GCalignR. Supported are
-#' a path to a Text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
+#' Checks conformity between the input format and the requirements of GCalignR. Data is accepted in form of the path to a text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 #'
 #'@param data
-#'       path to a data file or the name of a list in the Global Environment.
+#'       path to a data file or the name of a list in the global environment.
 #'
 #'@param list_peaks
 #'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.
@@ -147,9 +146,9 @@ check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
     ## Checks that every sample has the same number of values per column
     format_pass <- format_error(gc_peak_list)
     if (pass == TRUE & format_pass == TRUE) {
-        cat("All checks passed!\nReady for processing with align_chromatograms")
+        cat("All checks passed!\nReady for processing with align_chromatograms\n")
     } else {
-        cat("Not all checks have been passed. Read warning messages and change data accordingly")
+        cat("Not all checks have been passed. Read warning messages and change data accordingly\n")
     }
 
 
@@ -186,8 +185,7 @@ check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
         if (!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg = names(peaks)))
         if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(0,ymax + 5)))
 
-        bars <- do.call(graphics::barplot,args=c(list(height=peaks),arg_list,...))
-        # graphics::text(x=bars,y=peaks+2,labels = as.character(peaks),cex = 0.9)
+        bars <- do.call(graphics::barplot,args = c(list(height = peaks),arg_list,...))
     }
     if (list_peaks == TRUE) {
         ## Form a data frame with peak numbers
@@ -203,5 +201,3 @@ check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
     ## return
     return.values <- output
 }
-
-

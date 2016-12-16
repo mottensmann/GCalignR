@@ -32,7 +32,7 @@ choose_optimal_reference <- function(gc_peak_list = NULL, rt_col_name = NULL){
     ## Odd or even number of samples determines the most central element
     centre <- ifelse(length(gc_peak_list) %% 2,length(gc_peak_list)/2 + 0.5,length(gc_peak_list)/2)
     diffs <- abs(centre - index)
-    ## If still more than one index is equally well suited, i.e. Number 2 &
+    ## If still more than one index is equally well suited, i.e. Number 2 & 4
     index <- which(diffs == min(diffs))[1]
     }
     return(list(sample = as.character(x[["sample"]][[index]]), score = x[["score"]][[index]]))

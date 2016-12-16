@@ -4,10 +4,9 @@ library(testthat)
 data("aligned_peak_data")
 x <- aligned_peak_data
 out1 <- plot(x)
-out2 <- plot(x,which_plot = 'linear_shifts')
-out3 <- plot(x,which_plot = 'rt_range')
-out4 <- plot(x,which_plot = 'linear_shifts')
-out5 <- plot(x,which_plot = 'linear_shifts')
+out2 <- plot(x,which_plot = 'shifts')
+out3 <- plot(x,which_plot = 'variation')
+
 
 
 test_that("output is correct", {

@@ -93,7 +93,7 @@ cat("\n\n")
 
 # Refer to plots
 # -------------
-cat("Fur further details:\n")
+cat("For further details:\n")
 text <- paste0("Type 'gc_heatmap(",object_name,")'"," to retrieve a heatmap for the alignment accuracy")
 cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))
 cat("\n")

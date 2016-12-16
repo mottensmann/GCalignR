@@ -236,6 +236,7 @@ scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony) # add the colony as a
 ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color=colony)) +
     ggplot2::geom_point(size=4) + ggplot2::stat_ellipse(size=2) + ggplot2::labs(title ="", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
 ```
+
 ### Multivariate analysis using *adonis*
 Using **adonis** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
 ```{r}

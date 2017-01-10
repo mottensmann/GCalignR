@@ -2,28 +2,30 @@
 % Please edit documentation in R/check_input.R
 \name{check_input}
 \alias{check_input}
-\title{Check correct formatting of data input}
+\title{Check input prior to processing in GCalignR}
 \usage{
-check_input(data, show_peaks = FALSE, sep = "\\t", ...)
+check_input(data, list_peaks = FALSE, sep = "\\t", ...)
 }
 \arguments{
-\item{data}{path to a data file or the name of a list in the Global Environment.}
+\item{data}{path to a data file or the name of a list in the global environment.}
 
-\item{show_peaks}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
+\item{list_peaks}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
 
-\item{sep}{The field separator character. Values on each line of the file are separated by this
-character. The default is tab seperated (sep = '\\t'). See \code{sep} argument in \code{\link[utils]{read.table}} for details.}
+\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Only used if
-\code{show_peaks==TRUE}.}
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Reguires \code{list_peaks == TRUE}.}
+}
+\value{
+If \code{list_peaks = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
 }
 \description{
-Checks conformity between the input format and the requirements of GCalignR. Supported are
-\code{.txt} files or lists of data frames. See \code{\link{align_chromatograms}} for details.
+Checks conformity between the input format and the requirements of GCalignR. Data is accepted in form of the path to a text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 }
 \examples{
-check_input(peak_data) ## Checks format
-check_input(peak_data, show_peaks=TRUE) ## Includes a barplot of peaks
+## Checks format
+check_input(peak_data)
+## Includes a barplot of peak numbers in the raw data
+check_input(peak_data, list_peaks = TRUE)
 
 }
 \author{

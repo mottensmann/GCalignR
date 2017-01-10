@@ -6,9 +6,6 @@
 \usage{
 Fun_Fact()
 }
-\value{
-\item{text}{a short trivia}
-}
 \description{
 randomly selects a trivia from the list  of astonishing facts
 }

@@ -1,6 +1,6 @@
 ---
-title: "GCalignR step by step"
-author: "Martin A. Stoffel, Meinolf Ottensmann, Joseph Hoffman"
+title: "GCalignR Step by Step"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Barbara Caspers, Joseph Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -13,12 +13,12 @@ vignette: >
 ```{r, echo = FALSE}
 library(knitr)
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
-    fig.width = 5, fig.height = 4) # warning = FALSE
+    fig.width = 6, fig.height = 6) # warning = FALSE
 ```
 
-## Intro
+## Introduction
 
-Metabolomics approaches such as Gas Chromatography-Mass Spectrometry (GC-MS) are increasingly used
+Metabolomics approaches such as Gas-Chromatography-Mass-Spectrometry (GC-MS) are increasingly used
 by biologists to unravel the chemical basis of animal olfactory communication (citations). For the detection
 of broader patterns in chemical samples most researchers use an untargeted approach and
 analyse the whole spectrum of chemicals rather than targeting specific compounds. However, 
@@ -59,14 +59,20 @@ library("GCalignR")
 
 ## GCalignR contains the following functions:
 
-* `align_chromatograms`: Aligns gas-chromatography peak data by retention times. 
-* `gc_heatmap`: Plots the results (and intermediate steps) of the alignment. With a heatmap, the user can visually
+* `align_chromatograms`: 
+Aligns gas-chromatography peak data by retention times. 
+* `gc_heatmap`: 
+Plots the results (and intermediate steps) of the alignment. With a heatmap, the user can visually
 inspect the quality of the alignment and if necessary adjust the parameters accordingly.
-* `check_input`: Checks the format of the input data for conformity with the requirements and highlights violations.
-* `plot.GCalign`: Plots the distribution of Peaks after the alignment and shows density histograms of applied linear
+* `check_input`: 
+Checks the format of the input data for conformity with the requirements and highlights violations.
+* `plot.GCalign`: 
+Plots the distribution of Peaks after the alignment and shows density histograms of applied linear
 transformations and retention time ranges (i.e. difference between minimum and maximum retention time per substance).
-* `summary.GCalign`: Summarises the alignment procedure (e.g. documents all arguments to the function call).
-* `norm_peaks`: Normalises the abundance measure of peaks and returns and data frame of peak concentrations for all samples that is ready to use for analysis tools such as [LINK to vegan´s nmds functions]
+* `print.GCalign`: 
+Summarises the alignment procedure (e.g. documents all arguments to the function call).
+* `norm_peaks`: 
+Normalises the abundance measure of peaks and returns and data frame of peak concentrations for all samples that is ready to use for analysis tools such as [LINK to vegan´s nmds functions]
 
 
 ## The alignment algorithm
@@ -123,13 +129,13 @@ peak as well as the area under the peak you would write `RT area` into the secon
 horizontally. Each chromatogram needs to consist of the same number of columns, at least two are
 required (e.g. the retention time and the area).
 
-```{r, out.width = 500, fig.retina = NULL, echo = FALSE}
+```{r, out.width = 650, fig.retina = NULL, echo = FALSE}
 knitr::include_graphics("example.jpg") 
 ```
 
 Naturally, not all chromatograms contain the same number of peaks.
 
-```{r, out.width = 500, fig.retina = NULL, echo = FALSE} 
+```{r, out.width = 650, fig.retina = NULL, echo = FALSE} 
 knitr::include_graphics("example2.jpg") 
 ```
 
@@ -158,7 +164,7 @@ of the aligning algorithm. Common error sources such as missing data or missing 
 among samples (if the input is a list of samples). Error messages will indicate any violation.
 
 ```{r}
-check_input(data = peak_data,show_peaks = F) # If show_peaks = T, a histogram of peaks is plotted 
+check_input(data = peak_data,list_peaks = F) # If list_peaks = T, a histogram of peaks is plotted 
 ```
 
 ### Align Chromatograms
@@ -173,7 +179,7 @@ peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     rt_col_name = "time", # retention time 
     rt_cutoff_low = 5, # cut peaks with retention times below 5 Minutes
     rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
-    reference = "M48", # name of reference 
+    reference = NULL, # Reference will be choosen automatically 
     max_linear_shift = 0.05, # maximum linear shift of chromatograms
     max_diff_peak2mean = 0.03, # maximum distance of a peak to the mean
     min_diff_peak2peak = 0.03, # maximum distance between the mean of two peaks
@@ -191,17 +197,17 @@ To visualise the conducted alignment use `gc_heatmap` to quickly inspect the
 aligned peak profiles. By changing function arguments the heatmap can be customized according to your needs. 
 A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap.  
 
-```{r,message=FALSE,fig.width=6,fig.height=6}
+```{r,message=FALSE,fig.width=8,fig.height=8}
 gc_heatmap(aligned_peak_data,threshold = 0.05) # By default a threshold of 0.05 is used to mark deviations
 ```
 
 
-```{r,message=FALSE,fig.width=6,fig.height=6}
+```{r,message=FALSE,fig.width=8,fig.height=8}
 plot(aligned_peak_data) # Three Diagnostics, can be invoked separetely
 ```
 
 ```{r, eval=FALSE}
-summary(aligned_peak_data) # Summary of the alingnment procedure
+print(aligned_peak_data) # Summary of the alingnment procedure
 ```
 ### Normalise peaks and log+1 transformation
 
@@ -221,6 +227,7 @@ scent <- log(scent+1) # commonly used transformation for abundance data to reduc
 
 ### Non-metric multidimensional scaling 
 ```{r,fig.align="center",fig.cap="NMDS-Plot"}
+library(vegan)
 data("peak_factors") # factors for individual scent samples
 scent <- scent[match(row.names(peak_factors),row.names(scent)),] # bring both to the same order
 scent_nmds <- vegan::metaMDS(comm = scent) # performs Nonmetric multidimensional scaling (NMDS)
@@ -229,6 +236,7 @@ scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony) # add the colony as a
 ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color=colony)) +
     ggplot2::geom_point(size=4) + ggplot2::stat_ellipse(size=2) + ggplot2::labs(title ="", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
 ```
+
 ### Multivariate analysis using *adonis*
 Using **adonis** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
 ```{r}

@@ -2,57 +2,59 @@
 % Please edit documentation in R/GC_Heatmap.R
 \name{gc_heatmap}
 \alias{gc_heatmap}
-\title{gc_heatmap visualises the goodness of the chromatogram alignment}
+\title{Visualises peak alignments}
 \usage{
-gc_heatmap(GcOut, algorithm_step = c("aligned_rts", "linear_transformed_rts",
-  "input_rts"), substance_subset = NULL, guide = c("legend", "colourbar"),
-  samples_subset = NULL, type = c("binary", "continous"),
-  threshold = 0.05)
+gc_heatmap(object, algorithm_step = c("aligned_rts", "linear_transformed_rts",
+  "input_rts"), substance_subset = NULL, legend_type = c("legend",
+  "colourbar"), samples_subset = NULL, type = c("binary", "continuous"),
+  threshold = 0.05, label_size = NULL, show_legend = TRUE,
+  main_title = NULL, label = TRUE)
 }
 \arguments{
-\item{GcOut}{object of class "GCalign", the output of align_chromatograms.}
+\item{object}{Object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{character string, indicating which step of the algorithm is plotted. Either
-\strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts}}
+\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts} specifiying the raw, linearly shifted or aligned data respectively.}
 
-\item{substance_subset}{Vector containing indices of substances (i.e. rows) to plot
-By default \code{NULL} indicating all substances are plotted}
+\item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.}
 
-\item{guide}{Character string, selects the type of colourbar as discrete (i.e 'legend')
-or gradient (i.e 'colourbar)}
+\item{legend_type}{Character specifying the type of colourbar as \strong{discrete} (i.e retention times are classified as deviating or not) or \strong{gradient} (i.e deviations are presented on a fine scale).}
 
 \item{samples_subset}{Vector indicating which samples are plotted on the heatmap.
-Either a numeric vector of indices or a vector of sample names}
+Either a numeric vector of indices (order in the input) or a vector of sample names.}
 
-\item{type}{Character specifying whether a binary heatmap or a heatmap of continous
+\item{type}{Character specifying whether a \strong{'binary'} heatmap or a heatmap of \strong{'continuous'}
 deviations is plotted.}
 
-\item{threshold}{Decimal indicating the threshold deviation of individual peak retention times
-from the mean retention time of the respective peak across all samples.}
+\item{threshold}{Numerical value denoting the threshold above which the deviation of individual peak retention times
+from the mean retention time of the respective substance is highlighted in \emph{binary} heatmaps.}
+
+\item{label_size}{Integer determining the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readibility and messines due to a potentially large number of substances and samples. Note: Labels for substances on the x axis are only possible if a maximum of 150 substances are plotted.}
+
+\item{show_legend}{Logical determining whether a legend is included or not. Default is TRUE.}
+
+\item{main_title}{Character argument used a title for the plot. If not specified, titles are generated automatically.}
+
+\item{label}{Logical determining whether labels for samples and substances are used. By default sample names are written on the vertical axis, but in large data sets its less readible and may be used effectively only for subsets of the data.}
 }
 \value{
 object of class "ggplot"
 }
 \description{
-Visualises the deviation of single samples from the whole population by comparing
-the actual retention time against the mean of all other samples containing the same
-substance. Two types of heatmaps are available. A binary heatmap allows to determine
-if single samples within each chromatogram are correctly assigned to a certain substance,
-by setting a fixed threshold of allowed deviations from the mean. The optional discrete
-heatmap allows to check the deviations quantitatively.
+Illustrates the distribution of peaks among samples and indicates deviation from the mean retention time of grouped substances.Two types of heatmaps are available. A binary heatmap allows to determine
+if the retention time of single samples deviates by more than a user defined threshold from the mean. Optionally, a discrete heatmap allows to check deviations quantitatively.
 }
 \examples{
 
- ## with defaults
+ ## Default settings: The final output is plotted
  gc_heatmap(aligned_peak_data, algorithm_step="aligned_rts")
 
- ## input data
+ ## Plot the input data
  gc_heatmap(aligned_peak_data,algorithm_step="input_rts")
 
- ## subset of the first 50 Peaks
+ ## Plot a subset of the first 50 scored substances
  gc_heatmap(aligned_peak_data,algorithm_step="aligned_rts",substance_subset = 1:50)
 
- ## subset of individuals, stricter threshold
+ ## Plot specific samples, apply a stricter threshold
  gc_heatmap(aligned_peak_data,samples_subset = c("M2","P7","M13","P13"),threshold=0.02)
 
 }

@@ -114,60 +114,87 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         x <- do.call(graphics::hist,args = c(list(x = df),arg_list,list(...)))
         graphics::axis(side = 1, at = x[["mids"]], labels = seq(xmin, xmax, 0.01))
         return(df)
-    }
-
-
+    }#end function
 
     bar_peakdistr <- function(x,mcall,...) {
         rt_var_name <- x[["Logfile"]][["Input"]][["Retention_Time"]]
-        conc_var_name <- x[["Logfile"]][["Input"]][["Concentration"]]
-        ## Peaks of All Samples
-        data <- (x[["aligned"]][[rt_var_name]])
+        ## Peaks of all Samples after the alignment
+        alg <- (x[["aligned"]][[rt_var_name]])
+        ## prior distribution
+        pr <- x[["heatmap_input"]][["input_rts"]]
         ## get rid of mean retention time column
-        data <- data[,2:ncol(data)]
+        alg <- alg[,2:ncol(alg)]
+        pr <- pr[,2:ncol(pr)]
+        # transpose pr
+        pr <- as.data.frame(t(pr))
 
-        peak_df <- matrix(NA,ncol = 2,nrow = length(data))
-        peak_df[,1] <- names(data)
-        peak_df[,2] <- unlist(lapply(1:ncol(data), function(y) temp <- length(data[,y][data[,y] > 0])))
+        order <- which(names(pr) %in% names(alg)) # Check!
+
+        peak_df <- matrix(0,ncol = 3,nrow = ncol(pr))
+        peak_df[,1] <- names(pr)
+        peak_df[,2] <- unlist(lapply(1:ncol(pr), function(y) temp <- length(pr[,y][pr[,y] > 0])))
+        peak_df[order,3] <- unlist(lapply(1:ncol(alg), function(y) temp <- length(alg[,y][alg[,y] > 0])))
         peak_df <- data.frame(peak_df)
-        names(peak_df) <- c("ID","Peaks")
-        peak_df[["Peaks"]] <- as.numeric(as.character(peak_df[["Peaks"]]))
+        names(peak_df) <- c("id","pre-align.","aligned")
+        peak_df[["pre-align."]] <- as.numeric(as.character(peak_df[["pre-align."]]))
+        peak_df[["aligned"]] <- as.numeric(as.character(peak_df[["aligned"]]))
 
-        peaks <- peak_df[["Peaks"]]
-        names(peaks) <- peak_df[["ID"]]
 
-        ymax <- max(peaks)
+        peaks <- peak_df
+        peaks[["pre-align."]] <- peaks[["pre-align."]] - peaks[["aligned"]]
+        lablist <- peaks[["id"]]
+        peaks <- t(peaks[,c(3,2)])
+
+        ymax <- max(peak_df[,2:3])
         ymin <- min(peaks)
 
         arg_list <- list()
-        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Number of peaks after alignment"))
+        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = ""))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Peaks"))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.5))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.5))
         if (!"cex.names" %in% names(mcall)) {
-             lab_thresh <- c(20,30,40,50,60,Inf)
-             lab_size <- c(1.2,1.1,0.95,0.85,0.75,0.7)
-             samples_size <- ncol(data)
-             # find the matching size
-             temp <- which(lab_thresh > samples_size)
-             label_size <- lab_size[min(temp) - 1]
+            lab_thresh <- c(20,30,40,50,60,Inf)
+            lab_size <- c(1.2,1.1,0.95,0.85,0.75,0.7)
+            samples_size <- ncol(pr)
+            # find the matching size
+            temp <- which(lab_thresh > samples_size)
+            if (min(temp) == 1) {
+                label_size <- lab_size[1]
+            } else {
+                label_size <- lab_size[min(temp) - 1]
+            }
         }
         if (!"cex.names" %in% names(mcall)) arg_list <- append(arg_list,list(cex.names = label_size))
-        if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#7570b3"))
+        if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = c("red","blue")))
         if (!"srt" %in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
         if (!"las" %in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
-        if (!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg = ""))
-        if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(0,ymax + 5)))
+        if (!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg = rep("",each = ncol(peaks))))
+        if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(0,ymax + 15)))
+        colnames(peaks) <- lablist
+        # Manual legend
+        # l <- legend("topright", rownames(peaks), fill = c("red","blue"), bty = "n", plot = F)
+        #dev.off() # to reset the graphics pars to defaults
+        #par(mar = c(par('mar')[1:3], 0)) # optional, removes extraneous right inner margin space
+        #plot.new()
+        # calculate right margin width in ndc
+        #w <- grconvertX(l$rect$w, to = 'ndc') - grconvertX(0, to = 'ndc')
+        #par(omd = c(0, 1 - w, 0, 1))
 
+       bars <- do.call(graphics::barplot,args = c(list(height = peaks, plot = F),arg_list,list(...)))
+        if (!"xlim" %in% names(mcall)) arg_list <- append(arg_list, list(xlim = c(0, max(bars) + 3)))
         bars <- do.call(graphics::barplot,args = c(list(height = peaks),arg_list,list(...)))
-        # graphics::text(x = bars,y = peaks + 2,labels = as.character(peaks),cex = 0.9)
-        lablist <- as.vector(names(peaks))
+        legend("topleft", rownames(peaks), fill = c("red","blue"), inset = c(-0.009,0), xjust = 0, cex = 0.75, bty = "n")
+
+
         if (!"names.arg" %in% names(mcall)) {
-        graphics::text(bars, graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size)
+            graphics::text(bars, graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size)
         }
-        return(peaks)
-    }
+        rownames(peak_df) <- peak_df[["id"]]
+        return(peak_df)
+    }#bar_peak_dist
+
     hist_shared_peaks <- function(x,mcall,...){
         ### check that this is up to date!
         df <- x[["heatmap_input"]][["aligned_rts"]][-1]
@@ -204,7 +231,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         x <- do.call(graphics::hist,args = c(list(x = peaks_shared[["prop"]]),arg_list,list(...)))
         graphics::axis(side = 1, at = x[["mids"]][seq(1,101,2)], labels = seq(0, 100, 2))
         return(peaks_shared)
-    }
+    }#hist_shared_peaks
 # --------------------------------------------------------------------
 
 if (which_plot == "shifts") {
@@ -217,21 +244,21 @@ out <- data.frame(range = as.vector(out), index_sharing = 1:length(as.vector(out
 out
 } else if (which_plot == "peak_numbers") {
 out <- bar_peakdistr(x = x,mcall = mcall,...)
-out <- data.frame(sample = names(out), sharings = out,row.names = 1:length(out))
+out <- data.frame(sample = rownames(out), pre_aligned = out[["pre-align."]],aligned = out[["aligned"]],row.names = 1:nrow(out))
 out
-} else if (which_plot == "all") {
-    graphics::layout(matrix(c(1,1,1,2,3,4), 2, 3, byrow = TRUE))
-    bar_peakdistr(x = x,mcall = mcall)
-    hist_linshift(object = x,mcall = mcall)
-    hist_peakvar(x = x,mcall = mcall)
-    hist_shared_peaks(x = x, mcall = mcall,...)
-    ## back to normal screen partition
-    graphics::layout(mat = 1,widths = 1,heights = 1)
 
 } else if (which_plot == "peaks_shared") {
     ## Plot peak sharing distribution
 out <- hist_shared_peaks(x = x,mcall = mcall,...)
 out <- data.frame(rt = out[["time"]], prop = out[["prop"]])
 out
+} else if (which_plot == "all")  {
+  graphics::layout(matrix(c(1,1,1,2,3,4), 2, 3, byrow = TRUE))
+  bar_peakdistr(x = x,mcall = mcall)
+  hist_linshift(object = x,mcall = mcall)
+  hist_peakvar(x = x,mcall = mcall)
+  hist_shared_peaks(x = x, mcall = mcall,...)
+  ## back to normal screen partition
+  graphics::layout(mat = 1,widths = 1,heights = 1)
 }
 }

@@ -1,6 +1,6 @@
 ---
 title: "GCalignR Step by Step"
-author: "Meinolf Ottensmann, Martin A. Stoffel, Barbara Caspers, Joseph Hoffman"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib

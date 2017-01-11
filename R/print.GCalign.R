@@ -75,7 +75,7 @@ print(peaks)
 cat("\n")
 text <- c(text,paste("In total",peaks["Peaks"],"substances were identified among all samples."))
 
-if(any((names_peaks) %in% "In_Blanks")) text <- c(text,paste(peaks["In_Blanks"],"substances were present in blanks. The corresponding peaks as well as the blanks were removed from the data set."))
+if(any((names_peaks) %in% "In_Blanks")) text <- c(text,paste(peaks["Blanks"],"substances were present in blanks. The corresponding peaks as well as the blanks were removed from the data set."))
     if(any((names_peaks) %in% "Singular")) text <- c(text,paste(peaks["Singular"],"substances were present in just one single sample and were removed."))
 text <- c(text,paste(peaks["Retained"], "substances are retained after all filtering steps."))
 cat(stringr::str_wrap(paste(text,collapse = " "),width=80,exdent=2,indent=2))

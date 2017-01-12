@@ -135,11 +135,11 @@ input_list <- gc_peak_list
 # Write some information about the input data to the Logfile
 if (!is.null(reference)) {
     if (reference == "reference") {
-    cat(paste0('GC-data for ',as.character(length(ind_names) - 1),' samples loaded.'))
+    cat(paste0('Data for ',as.character(length(ind_names) - 1),' samples loaded.'))
     Logbook[["Input"]]["Samples"] <- length(ind_names) - 1
     }
     } else {
-    cat(paste0('GC-data for ',as.character(length(ind_names)),' samples loaded.'))
+    cat(paste0('Data for ',as.character(length(ind_names)),' samples loaded.'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)
 }
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
@@ -228,7 +228,7 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = ma
     # Write the reference to the Logfile, needs to move do this position,
     # because if reference is NULL by default and needs to be choosen before
     Logbook[["Input"]]["Reference"] <- reference
-    cat("Done\n")
+    cat(" Done\n")
     # equalise chromatograms sizes
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
@@ -423,6 +423,6 @@ if (!is.null(write_output)) {
 
     class(output_algorithm) <- "GCalign"
 
-    cat(paste('Alignment was Successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n\n')
+    cat(paste0('Alignment was successful!\n','Time:'),strftime(Sys.time(),format = "%H:%M:%S"),'\n\n')
     return(output_algorithm)
 }

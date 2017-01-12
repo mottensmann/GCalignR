@@ -4,8 +4,8 @@
 \alias{gc_heatmap}
 \title{Visualises peak alignments}
 \usage{
-gc_heatmap(object, algorithm_step = c("aligned_rts", "linear_transformed_rts",
-  "input_rts"), substance_subset = NULL, legend_type = c("legend",
+gc_heatmap(object, algorithm_step = c("aligned", "linear_shifted",
+  "pre_alignment"), substance_subset = NULL, legend_type = c("legend",
   "colourbar"), samples_subset = NULL, type = c("binary", "continuous"),
   threshold = 0.05, label_size = NULL, show_legend = TRUE,
   main_title = NULL, label = TRUE)
@@ -13,7 +13,7 @@ gc_heatmap(object, algorithm_step = c("aligned_rts", "linear_transformed_rts",
 \arguments{
 \item{object}{Object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts} specifiying the raw, linearly shifted or aligned data respectively.}
+\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifiying the raw, linearly shifted or aligned data respectively.}
 
 \item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.}
 
@@ -46,13 +46,13 @@ if the retention time of single samples deviates by more than a user defined thr
 \examples{
 
  ## Default settings: The final output is plotted
- gc_heatmap(aligned_peak_data, algorithm_step="aligned_rts")
+ gc_heatmap(aligned_peak_data, algorithm_step="aligned")
 
  ## Plot the input data
- gc_heatmap(aligned_peak_data,algorithm_step="input_rts")
+ gc_heatmap(aligned_peak_data,algorithm_step="pre_alignment")
 
  ## Plot a subset of the first 50 scored substances
- gc_heatmap(aligned_peak_data,algorithm_step="aligned_rts",substance_subset = 1:50)
+ gc_heatmap(aligned_peak_data,algorithm_step="aligned",substance_subset = 1:50)
 
  ## Plot specific samples, apply a stricter threshold
  gc_heatmap(aligned_peak_data,samples_subset = c("M2","P7","M13","P13"),threshold=0.02)

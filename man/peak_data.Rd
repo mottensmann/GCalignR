@@ -12,7 +12,7 @@ http://www.pnas.org/content/suppl/2015/08/05/1506076112.DCSupplemental/pnas.1506
 }
 \description{
 This is in example of a typical gas-chromatography output file, listing a number of peaks with their
-respective retention times and abundance measures. Peaks were detected using Xcalibur 2.0.5 (Thermo Fisher Scientific).The Data is comprised of 41 Mother-Pup pairs of two different colonies from Bird Island, South Georgia. In addition two blanks are included.
+respective retention times and abundance measures. Peaks were detected using Xcalibur 2.0.5 (Thermo Fisher Scientific).The Data is comprised of 41 Mother-Pup pairs of two different colonies from Bird Island, South Georgia. In addition two blanks (i.e. negative controls) are included.
 }
 \references{
 Stoffel, M.A.; Caspers, B.A.; Forcada, J.; Giannakara, A.; Baier, M.; Eberhart-Phillips, L.; Mueller, C.; Hoffman, J.I. (2015): Chemical fingerprints encode mother-offspring similarity, colony membership, relatedness, and genetic quality in fur seals. In: Proceedings of the National Academy of Sciences of the United States of America 112 (36), S. E5005-12. DOI: 10.1073/pnas.1506076112.

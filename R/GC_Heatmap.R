@@ -8,7 +8,7 @@
 #' Object of class "GCalign", the output of a call to \link{align_chromatograms}.
 #'
 #' @param algorithm_step
-#' Character indicating which step of the algorithm is plotted. Either \strong{input_rts}, \strong{linear_transformed_rts} or \strong{aligned_rts} specifiying the raw, linearly shifted or aligned data respectively.
+#' Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifiying the raw, linearly shifted or aligned data respectively.
 #'
 #' @param substance_subset
 #' Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.
@@ -52,24 +52,31 @@
 #' @examples
 #'
 #'  ## Default settings: The final output is plotted
-#'  gc_heatmap(aligned_peak_data, algorithm_step="aligned_rts")
+#'  gc_heatmap(aligned_peak_data, algorithm_step="aligned")
 #'
 #'  ## Plot the input data
-#'  gc_heatmap(aligned_peak_data,algorithm_step="input_rts")
+#'  gc_heatmap(aligned_peak_data,algorithm_step="pre_alignment")
 #'
 #'  ## Plot a subset of the first 50 scored substances
-#'  gc_heatmap(aligned_peak_data,algorithm_step="aligned_rts",substance_subset = 1:50)
+#'  gc_heatmap(aligned_peak_data,algorithm_step="aligned",substance_subset = 1:50)
 #'
 #'  ## Plot specific samples, apply a stricter threshold
 #'  gc_heatmap(aligned_peak_data,samples_subset = c("M2","P7","M13","P13"),threshold=0.02)
 #'
 #' @export
 #'
-gc_heatmap <- function(object, algorithm_step = c('aligned_rts','linear_transformed_rts','input_rts'), substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL, type = c("binary","continuous"), threshold = 0.05, label_size = NULL, show_legend = TRUE, main_title = NULL, label = TRUE) {
+gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pre_alignment'), substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL, type = c("binary","continuous"), threshold = 0.05, label_size = NULL, show_legend = TRUE, main_title = NULL, label = TRUE) {
 
     algorithm_step <- match.arg(algorithm_step)
+    if(algorithm_step == "aligned") algorithm_step <- "aligned_rts"
+    if(algorithm_step == "linear_shifted") algorithm_step <- "linear_transformed_rts"
+    if(algorithm_step == "pre_alignment") algorithm_step <- "input_rts"
+
     type <- match.arg(type)
+
     legend_type <- match.arg(legend_type)
+
+
 
 # Get the retention time matrix for the selected step
     rt_df <- object[['heatmap_input']][[algorithm_step]]

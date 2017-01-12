@@ -68,9 +68,9 @@
 gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pre_alignment'), substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL, type = c("binary","continuous"), threshold = 0.05, label_size = NULL, show_legend = TRUE, main_title = NULL, label = TRUE) {
 
     algorithm_step <- match.arg(algorithm_step)
-    if(algorithm_step == "aligned") algorithm_step <- "aligned_rts"
-    if(algorithm_step == "linear_shifted") algorithm_step <- "linear_transformed_rts"
-    if(algorithm_step == "pre_alignment") algorithm_step <- "input_rts"
+    if (algorithm_step == "aligned") algorithm_step <- "aligned_rts"
+    if (algorithm_step == "linear_shifted") algorithm_step <- "linear_transformed_rts"
+    if (algorithm_step == "pre_alignment") algorithm_step <- "input_rts"
 
     type <- match.arg(type)
 
@@ -84,12 +84,16 @@ gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pr
 
 # Try to estimate a suitable label_size
 if (is.null(label_size)) {
-    lab_thresh <- c(20,40,60,80,100,120,140, Inf)
-    lab_size <- c(12,10,8,8,6,5.5,4,4)
+        lab_thresh <- c(20,40,60,80,100,120,140, Inf)
+    lab_size <- c(12,10,8,8,6,5,4,4)
     samples_size <- nrow(rt_df)
     # find the matching size
     temp <- which(lab_thresh > samples_size)
-    label_size <- lab_size[min(temp) - 1]
+    if (min(temp) == 1) {
+        label_size <- lab_size[1]
+    } else {
+        label_size <- lab_size[min(temp) - 1]
+    }
 }
 
 # Substance subsetting
@@ -159,9 +163,9 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
         hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = legend_type,name = 'Deviation',na.value = "white")
         hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),"Deviation of individual peak retentention times from the substance mean",main_title))
     }
-    hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 14,face = 'bold'))
-    hm <- hm + theme(axis.title.x = element_text(size = 12),
-                     axis.title.y = element_text(size = 12),
+    hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))
+    hm <- hm + theme(axis.title.x = element_text(size = 10),
+                     axis.title.y = element_text(size = 10),
                      axis.text.x = element_blank(),
                      axis.ticks.y = element_line(size = 0.3, colour = "grey40"),
                      axis.ticks.x = element_line(size = 0.3, colour = "grey40"),

@@ -18,7 +18,7 @@ You can install:
     devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
     ```
 
-If you encounter bug or if you have any suggestions for improvement, just contact martin.adam.stoffel\[at\]gmail.com or meinolf.ottensmann\[at\]web.de
+If you encounter bugs or if you have any suggestions for improvement, just contact martin.adam.stoffel\[at\]gmail.com or meinolf.ottensmann\[at\]web.de
 
 Get started with GCalignR
 -------------------------

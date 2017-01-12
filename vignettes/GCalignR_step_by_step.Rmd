@@ -1,6 +1,6 @@
 ---
 title: "GCalignR Step by Step"
-author: "Meinolf Ottensmann, Martin A. Stoffel, Barbara Caspers, Joseph Hoffman"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Hazel Nichols, Joseph Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
 ## Introduction
 
 Metabolomics approaches such as Gas-Chromatography-Mass-Spectrometry (GC-MS) are increasingly used
-by biologists to unravel the chemical basis of animal olfactory communication (citations). For the detection
+by biologists to unravel the chemical basis of animal olfactory communication. For the detection
 of broader patterns in chemical samples most researchers use an untargeted approach and
 analyse the whole spectrum of chemicals rather than targeting specific compounds. However, 
 chromatography data across multiple samples are not directly comparable as the retention times of peaks
@@ -32,7 +32,7 @@ sample size and the number of compounds present in the samples, manual alignment
 might be biased due to subjective expectations of the researcher. 
 
 `GCalignR` provides a simple means of aligning peaks from gas chromatography data based
-on retention times. It has been developed in R and the results can easily be used as input
+on retention times. The aligned data can easily be used as input
 for further statistical packages such as `vegan`. We specifically developed and tested `GCalignR` 
 as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. 
 
@@ -43,8 +43,8 @@ The development version can be downloaded from [GitHub](https://github.com/masto
 the following code:
 
 ```{r, eval = FALSE} 
-install.packages("devtools") devtools::install_github("mastoffel/GCalignR",
-build_vignettes = TRUE) 
+install.packages("devtools") 
+devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE) 
 ```
 
 The package provides a comprehensive documentation, check out the `GCalignR` help file.
@@ -218,7 +218,7 @@ even if the data already contained a measure of relative abundance, in case that
 ```{r}
 scent <- norm_peaks(aligned_peak_data,conc_col_name = "area",rt_col_name = "time",out = "data.frame") # normalise area and return a data frame
 scent <- log(scent+1) # commonly used transformation for abundance data to reduce the extent of mean-variance trends
-````
+```
 
 
 ### Visualise patterns by ordination plots using the *vegan* package

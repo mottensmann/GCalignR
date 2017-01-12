@@ -3,6 +3,9 @@
 #'@description
 #' Checks conformity between the input format and the requirements of GCalignR. Data is accepted in form of the path to a text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 #'
+#' @details
+#' The data needs to fullfil certain formatting standards. Sample names are expected to contain just letters, numbers and underscores. Each sample hast to contain the same number of columns that is determined given the number of variables. It is mandatory that the values of all variables are numeric, i.e. they are allowed to contain numbers from 0-9 and "." as the only decimal character.
+#'
 #'@param data
 #'       path to a data file or the name of a list in the global environment.
 #'
@@ -58,6 +61,12 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data
         gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+        ## Check that all values are numeric with proper decimal operator
+        x <- as.vector(unlist(gc_data))
+        na <- length(x[is.na(x)])
+        y <- as.vector(as.data.frame(apply(gc_data, 2, as.numeric)))
+        y <- as.vector(unlist(y))
+        if (suppressWarnings(length(y[is.na(y)]) - na > 0)) stop("Data contains non-numeric data. Make sure not to use >,< as a decimal operator")
         ## Remove just NA-rows
         gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
         ## Remove empty rows
@@ -86,6 +95,13 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             pass <- FALSE
             warning("Every Sample has to be a data.frame")
         }
+        ## Check that all values are numeric with proper decimal operator
+        x <- as.vector(unlist(data))
+        na <- length(x[is.na(x)])
+        x <- as.data.frame(data)
+        y <- as.vector(as.data.frame(apply(x, 2, as.numeric)))
+        y <- as.vector(unlist(y))
+        if (suppressWarnings(length(y[is.na(y)]) - na > 0)) stop("Data contains non-numeric data. Make sure not to use ',' as a decimal operator")
         ## check all data.frames are named
         if ((is.null(names(data)))) {
             pass <- FALSE
@@ -99,6 +115,12 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
         col_names <- names(data[[1]])
         ind_names <- names(data)
         if (any(duplicated(ind_names))) warning("Avoid duplicates in sample names")
+        ## Check for presence of any "," instead of a "." as decimal sign
+        x <- as.vector(unlist(data))
+        na <- length(x[is.na(x)])
+        y <- as.vector(as.data.frame(apply(as.data.frame(data), 2, as.numeric)))
+        y <- as.vector(unlist(y))
+        if (length(y[is.na(y)]) - na > 0) stop("Data contains non-numeric data. Make sure not to use ',' as a decimal operator")
         gc_peak_list <- data
     }
 
@@ -176,7 +198,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = ""))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "# Peaks"))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"cex.names" %in% names(mcall)) {

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' This is in example of a typical gas-chromatography output file, listing a number of peaks with their
-#' respective retention times and abundance measures. Peaks were detected using Xcalibur 2.0.5 (Thermo Fisher Scientific).The Data is comprised of 41 Mother-Pup pairs of two different colonies from Bird Island, South Georgia. In addition two blanks are included.
+#' respective retention times and abundance measures. Peaks were detected using Xcalibur 2.0.5 (Thermo Fisher Scientific).The Data is comprised of 41 Mother-Pup pairs of two different colonies from Bird Island, South Georgia. In addition two blanks (i.e. negative controls) are included.
 #'
 #' @format
 #' A  list of data frames. Each data frame contains gas-chromatography peak data of an sample.

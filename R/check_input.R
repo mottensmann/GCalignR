@@ -6,13 +6,13 @@
 #'@param data
 #'       path to a data file or the name of a list in the global environment.
 #'
-#'@param list_peaks
+#'@param plot
 #'logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.
 #'
 #'@inheritParams align_chromatograms
 #'
 #'@param ...
-#'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Reguires \code{list_peaks == TRUE}.
+#'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Reguires \code{plot == TRUE}.
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
@@ -20,17 +20,17 @@
 #'@import magrittr stringr
 #'
 #'@return
-#' If \code{list_peaks = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
+#' If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
 #'
 #' @examples
 #' ## Checks format
 #' check_input(peak_data)
 #' ## Includes a barplot of peak numbers in the raw data
-#' check_input(peak_data, list_peaks = TRUE)
+#' check_input(peak_data, plot = TRUE)
 #'
 #' @export
 #'
-check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
+check_input <- function(data,plot = FALSE, sep = "\t", ...) {
 
     # Preallocate a flag for passing the test. Every severe issues sets pass to FALSE
     pass = TRUE
@@ -152,13 +152,13 @@ check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
     }
 
 
-    if (list_peaks == TRUE) {
+    if (plot == TRUE) {
         counter <- function(gc_peak_list){
             number <- lapply(gc_peak_list, function(x){
                 ## vectorize the first column
                 temp <- x[,1]
                 ## Estimate number of peaks
-                length(temp[!is.na(temp)])
+                length(temp[!is.na(temp) & temp > 0])
             } )
             out <- t(as.data.frame((number)))
             out <- reshape2::melt(out)
@@ -174,11 +174,25 @@ check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
         ymax <- max(peaks)
 
         arg_list <- list()
-        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Number of peaks per sample in raw data"))
+        if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = ""))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "Number of Peaks"))
-        if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.5))
-        if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.5))
+        if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
+        if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
+        if (!"cex.names" %in% names(mcall)) {
+            lab_thresh <- c(20,30,40,50,60,Inf)
+            lab_size <- c(1.2,1.1,0.95,0.85,0.75,0.7)
+            samples_size <- length(peaks)
+            # find the matching size
+            temp <- which(lab_thresh > samples_size)
+            if (min(temp) == 1) {
+                label_size <- lab_size[1]
+            } else {
+                label_size <- lab_size[min(temp) - 1]
+            }
+        }
+        if (!"cex.names" %in% names(mcall)) arg_list <- append(arg_list,list(cex.names = label_size))
+
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "blue"))
         if (!"srt" %in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
         if (!"las" %in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
@@ -187,7 +201,7 @@ check_input <- function(data,list_peaks = FALSE, sep = "\t", ...) {
 
         bars <- do.call(graphics::barplot,args = c(list(height = peaks),arg_list,...))
     }
-    if (list_peaks == TRUE) {
+    if (plot == TRUE) {
         ## Form a data frame with peak numbers
         output <- data.frame(sample = names(peaks), peaks = peaks,row.names = 1:length(peaks))
     } else {

@@ -154,13 +154,17 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
     } else {
         # Spectral colour scheme
         myPalette <-  colorRampPalette(rev(RColorBrewer::brewer.pal(11, "Spectral")))
+        r <- c(min(heat_matrix[["diff"]],na.rm = T),max(heat_matrix[["diff"]],na.rm = T))
+
         # Take 10 colours form the spectral scheme
-        colourset <- myPalette(10)
+        # colourset <- myPalette(10)
         # remove middle ones for higher contrast
-        colourset <- colourset[c(1:4,7:10)]
+        # colourset <- colourset[c(1:4,7:10)]
+
         hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id', fill = 'diff'))
-        hm <- hm + geom_tile(color = "white", size = 0.01)
-        hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = legend_type,name = 'Deviation',na.value = "white")
+        hm <- hm + ggplot2::geom_tile(color = "white", size = 0.01)
+        hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
+        )
         hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),"Deviation of individual peak retentention times from the substance mean",main_title))
     }
     hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))

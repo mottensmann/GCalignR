@@ -21,6 +21,9 @@ If \code{plot = TRUE} a data frame containing sample names and the corresponding
 \description{
 Checks conformity between the input format and the requirements of GCalignR. Data is accepted in form of the path to a text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
 }
+\details{
+The data needs to fullfil certain formatting standards. Sample names are expected to contain just letters, numbers and underscores. Each sample hast to contain the same number of columns that is determined given the number of variables. It is mandatory that the values of all variables are numeric, i.e. they are allowed to contain numbers from 0-9 and "." as the only decimal character.
+}
 \examples{
 ## Checks format
 check_input(peak_data)

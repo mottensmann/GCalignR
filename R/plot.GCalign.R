@@ -59,7 +59,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Shift size"))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "# Samples"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax + 0.01, by = 0.01)))
-        if (!("freq") %in% names(mcall) || !("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
+        if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#1b9e77"))
@@ -98,9 +98,9 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Variation across samples\n(Peak retention time)"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Range [max - min]"))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "# Samples"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "# Substances"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(xmin,xmax + 0.01,by = 0.01)))
-        if (!("freq") %in% names(mcall) || !("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
+        if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#d95f02"))
@@ -110,7 +110,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         # helper to find a good ylim
         p <- as.vector(as.numeric(summary(as.factor(df))))
         p <- max(p) #/sum(p)*100
-        if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list, list(ylim = c(0,round(p + 5,-1))))
+       if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list, list(ylim = c(0,round(p + 5,-1))))
         x <- do.call(graphics::hist,args = c(list(x = df),arg_list,list(...)))
         graphics::axis(side = 1, at = x[["mids"]], labels = seq(xmin, xmax, 0.01))
         return(df)
@@ -189,7 +189,8 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
 
 
         if (!"names.arg" %in% names(mcall)) {
-            graphics::text(bars, graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size)
+            # if ("cex.names" %in% names(mcall)) label_size <- cex.names
+            graphics::text(bars - 0.2*mean(diff(bars)), graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size, offset = -1.25)
         }
         rownames(peak_df) <- peak_df[["id"]]
         return(peak_df)
@@ -217,7 +218,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Frequency of samples [%]"))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "# Substances"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(0,101,by = 1)))
-        if (!("freq") %in% names(mcall) || !("frequency") %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
+        if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "grey10"))

@@ -15,7 +15,7 @@ required variable.}
 
 \item{reference}{character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
 
-\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.The default is 0.05. The value of this parameter strongly depends on the linear trends the are expected for a given data set and should cover the expected range of linear shifts.}
+\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}. The value of this parameter strongly depends on the linear trends that are expected for a given data set and should cover the expected range of linear shifts. Extending the range well beyond a sensible value will cause a considerable increase in computation time. Hence we recommend to start with the default of 0.02 and increase if necessary. See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}}
 
 \item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 

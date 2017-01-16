@@ -22,6 +22,8 @@ required variable.}
 \item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
 }
 \value{
+\item{chroma_aligned}{Transformed data}
+\item{Logbook}{Logbook, record of the applied shifts}
 List of data.frames containing chromatograms with applied linear shifts
 }
 \description{

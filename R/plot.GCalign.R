@@ -173,19 +173,11 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         if (!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg = rep("",each = ncol(peaks))))
         if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(0,ymax + 15)))
         colnames(peaks) <- lablist
-        # Manual legend
-        # l <- legend("topright", rownames(peaks), fill = c("red","blue"), bty = "n", plot = F)
-        #dev.off() # to reset the graphics pars to defaults
-        #par(mar = c(par('mar')[1:3], 0)) # optional, removes extraneous right inner margin space
-        #plot.new()
-        # calculate right margin width in ndc
-        #w <- grconvertX(l$rect$w, to = 'ndc') - grconvertX(0, to = 'ndc')
-        #par(omd = c(0, 1 - w, 0, 1))
 
        bars <- do.call(graphics::barplot,args = c(list(height = peaks, plot = F),arg_list,list(...)))
         if (!"xlim" %in% names(mcall)) arg_list <- append(arg_list, list(xlim = c(0, max(bars) + 3)))
         bars <- do.call(graphics::barplot,args = c(list(height = peaks),arg_list,list(...)))
-        legend("topleft", rownames(peaks), fill = c("red","blue"), inset = c(-0.009,0), xjust = 0, cex = 0.75, bty = "n")
+        graphics::legend("topleft", rownames(peaks), fill = c("red","blue"), inset = c(-0.009,0), xjust = 0, cex = 0.75, bty = "n")
 
 
         if (!"names.arg" %in% names(mcall)) {

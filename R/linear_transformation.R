@@ -14,6 +14,8 @@
 #' @inheritParams align_peaks
 #'
 #' @return
+#' \item{chroma_aligned}{Transformed data}
+#' \item{Logbook}{Logbook, record of the applied shifts}
 #' List of data.frames containing chromatograms with applied linear shifts
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
@@ -23,10 +25,10 @@
 #'
 linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05, step_size = 0.01, rt_col_name,Logbook){
 
-    # Defining internal functions
-    # ###########################
+# Defining internal functions
+# ===========================
 
-    # peak_shift() determines the optimal shift by use of shared_peaks() and best_shift()
+# 'peak_shift' uses 'shared_peaks' and 'best_shift' to find a suitable linear adjustment
     peak_shift <- function(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.005, error = 0, rt_col_name){
 
         right_shift <- max_linear_shift

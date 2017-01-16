@@ -25,3 +25,5 @@ Suggests: knitr,
           rmarkdown,
           testthat
 VignetteBuilder: knitr
+BugReports: https://github.com/mastoffel/GCalignR/issues
+URL: https://github.com/mastoffel/GCalignR

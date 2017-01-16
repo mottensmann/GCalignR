@@ -4,7 +4,7 @@ author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph Hoffman"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
 vignette: >
-  %\VignetteIndexEntry{"Aligning Peaks: A Tutorial"}
+  %\VignetteIndexEntry{Aligning Peaks: A Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,7 @@ vignette: >
 ```{r, echo = FALSE}
 library(knitr)
 library(GCalignR)
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>",cache = FALSE,
     fig.width = 7, fig.height = 7) # warning = FALSE
 ```
 
@@ -23,7 +23,7 @@ During the alignment procedure of peak data derived from gas-chromatograpy the u
 ```{r}
 library(GCalignR)
 data("peak_data")
-data <- peak_data[1:10] # Ten samples for faster compuation
+data <- peak_data[c(1,6,12,18,24,30,36,42)]  
 ```
 
 ## A first alignment
@@ -38,7 +38,7 @@ plot(align_1)
 Heatmaps can be used to visualise a large dataset at a glance but allow to explore the data in detail as well. 
 
 ```{r, cache = TRUE}
-GCalignR::gc_heatmap(object = aligned_peak_data, type = "discrete",label = T)
+GCalignR::gc_heatmap(object = align_1, type = "discrete",label = T)
 ``` 
 
 ## References

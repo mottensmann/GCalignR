@@ -21,7 +21,7 @@
 #' Either a numeric vector of indices (order in the input) or a vector of sample names.
 #'
 #' @param  type
-#' Character specifying whether a \strong{'binary'} heatmap or a heatmap of \strong{'continuous'}
+#' Character specifying whether a \strong{'binary'} heatmap or a heatmap of \strong{'discrete'}
 #' deviations is plotted.
 #'
 #' @param threshold
@@ -65,7 +65,7 @@
 #'
 #' @export
 #'
-gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pre_alignment'), substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL, type = c("binary","continuous"), threshold = 0.05, label_size = NULL, show_legend = TRUE, main_title = NULL, label = TRUE) {
+gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pre_alignment'), substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL, type = c("binary","discrete"), threshold = 0.05, label_size = NULL, show_legend = TRUE, main_title = NULL, label = TRUE) {
 
     algorithm_step <- match.arg(algorithm_step)
     if (algorithm_step == "aligned") algorithm_step <- "aligned_rts"
@@ -148,7 +148,7 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
             hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id',fill = 'diff'))
             hm <- hm + geom_tile(color = "transparent", size = 0.001)
             hm <- hm + scale_fill_continuous(low = "#a6cee3",high = "#b2182b",breaks = c(0,1),na.value = "white", guide = 'legend',name = paste('Deviation\n','>',as.character(threshold)),labels = c('NO','YES'))
-            hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),paste("Deviations of retention times at a threshold of",as.character(threshold)),main_title))
+            hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),paste("Deviation from substance mean retention time\n(Threshold = ",as.character(threshold),")"),main_title))
         }
         # type == continuos
     } else {
@@ -165,7 +165,7 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
         hm <- hm + ggplot2::geom_tile(color = "white", size = 0.01)
         hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
         )
-        hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),"Deviation of individual peak retentention times from the substance mean",main_title))
+        hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
     }
     hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))
     hm <- hm + theme(axis.title.x = element_text(size = 10),
@@ -200,8 +200,8 @@ if ((!is.null(substance_subset) & ncol(rt_df) < 151) || ncol(rt_df) < 151 ) {
                      axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
                      axis.text.y = element_text(size = label_size,hjust = 0.5))
 }
-if (show_legend == FALSE) {hm <- hm + theme(legend.position = "none")}
-if (label == FALSE) {hm <- hm + theme(axis.text = element_blank())}
+if (show_legend == FALSE | show_legend == F) {hm <- hm + theme(legend.position = "none")}
+if (label == FALSE | label == F) {hm <- hm + theme(axis.text = element_blank())}
 # return the ggplot object
 return(hm)
 }

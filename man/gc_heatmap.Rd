@@ -6,7 +6,7 @@
 \usage{
 gc_heatmap(object, algorithm_step = c("aligned", "linear_shifted",
   "pre_alignment"), substance_subset = NULL, legend_type = c("legend",
-  "colourbar"), samples_subset = NULL, type = c("binary", "continuous"),
+  "colourbar"), samples_subset = NULL, type = c("binary", "discrete"),
   threshold = 0.05, label_size = NULL, show_legend = TRUE,
   main_title = NULL, label = TRUE)
 }
@@ -22,7 +22,7 @@ gc_heatmap(object, algorithm_step = c("aligned", "linear_shifted",
 \item{samples_subset}{Vector indicating which samples are plotted on the heatmap.
 Either a numeric vector of indices (order in the input) or a vector of sample names.}
 
-\item{type}{Character specifying whether a \strong{'binary'} heatmap or a heatmap of \strong{'continuous'}
+\item{type}{Character specifying whether a \strong{'binary'} heatmap or a heatmap of \strong{'discrete'}
 deviations is plotted.}
 
 \item{threshold}{Numerical value denoting the threshold above which the deviation of individual peak retention times

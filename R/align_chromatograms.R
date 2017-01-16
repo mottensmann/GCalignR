@@ -2,7 +2,7 @@
 #'
 #'@description
 #'\strong{align_chromatograms} is the core function of \code{\link{GCalignR}} that fasciliates the alignment of gas-chromatography data.
-#' Read through the documentation here and take a look at the \href{../doc/GCalignR_step_by_step.html}{GCalignR Vignette}
+#' Read through the documentation here and take a look at the \href{../doc/GCalignR_step_by_step.html}{GCalignR Step by Step}
 #'
 #'
 #'@details
@@ -24,13 +24,13 @@
 #'
 #'@param write_output
 #' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
-#' The default is \code{NULL}. Vector elements need to correspond to column names of \code{data}.
+#' Vector elements need to correspond to column names of \code{data}.
 #'
 #'@param rt_cutoff_low
-#' Lower threshold under which retention times are cutted (i.e. 5 minutes). Default is NULL.
+#' Lower threshold under which retention times are cutted (i.e. 5 minutes). Default NULL.
 #'
 #'@param rt_cutoff_high
-#' Upper threshold above which retention times are cutted (i.e. 35 minutes). Default is NULL.
+#' Upper threshold above which retention times are cutted (i.e. 35 minutes). Default NULL.
 #'
 #'@param reference
 #' Character string of a sample to which all other samples are aligned to by means of a
@@ -39,22 +39,18 @@
 #' in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear transformation the \code{reference} will be removed from the data.
 #'
 #'@param max_linear_shift
-#' Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.The default is 0.05. The value of this parameter strongly depends on the linear trends the are expected for a given data set and should cover the expected range of linear shifts.
+#' Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}. The value of this parameter strongly depends on the linear trends that are expected for a given data set and should cover the expected range of linear shifts. Extending the range well beyond a sensible value will cause a considerable increase in computation time. Hence we recommend to start with the default of 0.02 and increase if necessary. See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}
 #'
 #'@param max_diff_peak2mean
-#' Defines the allowed deviation of retention times around the mean of the corresponding row (i.e. scored substance). Peaks with differing retention times are moved to a more appropriate mean retention time. The default is 0.03.
+#'Numeric, defines the allowed deviation of retention times from the mean of the corresponding row (i.e. scored substance). Default 0.03
 #'
 #'@param min_diff_peak2peak
-#' Defines the minimum difference in retention times among distinct substances. Substances that differ less, are merged if every sample contains either one or none of the respective compounds. This parameter is a major determinant in the classification of distinct peaks. Therefore careful consideration is required to adjust this setting to your needs (i.e. the resolution of your gas-chromatography pipeline). Large values may cause the merge of true peaks with similar retention times, if those are not simultaneously occuring within at least one individual. Especially for small sample sizes this could be the case just by chance. Small values can be considered as conservative and will reduce the number of scored substances. Default is 0.03.
+#' Numeric, defining the minimum difference in retention times among distinct substances. Substances that differ less, are merged if every sample contains either one or none of the respective compounds. This parameter is a major determinant in the classification of distinct peaks. Therefore careful consideration is required to adjust this setting to your needs (e.g. the resolution of your gas-chromatography pipeline). Large values may cause the merge of true peaks with similar retention times, if those are not simultaneously occuring within at least one individual. Especially for small sample sizes this could be the case just by chance. Small values can be considered as conservative and will reduce the number of scored substances. Default 0.05
 #'@param blanks
-#' Character vector of names of blanks. If specified, all substances found in any of the blanks will be removed from all samples, before the blanks are deleted from the aligned data. The names have to correspond to a name given in the first line of \code{data}.
+#' Character vector of names of negative controls. Substances found in any of the blanks will be removed from all samples, before the blanks are deleted from the aligned data.
 #'
 #'@param delete_single_peak
-#' logical, determining whether substances that occur in just one sample are removed or not. By default single substances are retained in chromatograms.
-#'
-#'@param iterations
-#' integer indicating the number of iterations of the core alignment algorithm. Additional replications of the alignment and merging steps might be helpful to clean-up chromatograms, that otherwise show some remaining peak outliers mapped to the wrong mean retention time. Inspect alignment visually with a Heatmap \code{\link{gc_heatmap}}. Currently we recommend to run the algorithm once and check the output carefully to fine tune function paramters rather than running multiple iterations.
-#'
+#' Logical, determining whether substances that occur in just one sample are removed or not. Default FALSE.
 #'
 #'@return
 #' Returns an object of class "GCalign" that is a a list with several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
@@ -78,7 +74,10 @@
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'@export
 #'
-align_chromatograms <- function(data, sep = "\t", conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.05, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.02, blanks = NULL, delete_single_peak = FALSE, iterations = 1) {
+align_chromatograms <- function(data, sep = "\t", conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.02, max_diff_peak2mean = 0.03, min_diff_peak2peak = 0.05, blanks = NULL, delete_single_peak = FALSE) {
+
+# Iteration have been deleted as function paramter.
+iterations = 1
 
 # Check the input
 x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference)

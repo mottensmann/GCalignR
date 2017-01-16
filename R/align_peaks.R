@@ -52,9 +52,6 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
     # print to Console
     cat(paste('Iteration',as.character(R),'out of',as.character(iterations),' ... '))
 
-    # Randomize the order of samples
-    # shuffle_order <- sample(1:length(gc_peak_list))
-    # gc_peak_list <- gc_peak_list[shuffle_order]
     # Define the start
     current_row <- 1
     while (current_row != 'stop') {
@@ -94,7 +91,7 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
     current_row <- current_row + 1
     # Equalise the matrix size
     gc_peak_list <- lapply(gc_peak_list, matrix_append, gc_peak_list)
-    last_substance_index <- max(which(mean_retention_times(gc_peak_list, rt_col_name) == max(mean_retention_times(gc_peak_list, rt_col_name),na.rm = T)))
+    last_substance_index <- length(mean_retention_times(gc_peak_list, rt_col_name)[mean_retention_times(gc_peak_list, rt_col_name) > 0])
     # remove unused rows
     gc_peak_list <- lapply(gc_peak_list, function(x) x[c(1:last_substance_index), ])
     if (current_row > nrow(gc_peak_list[[s]])) {

@@ -41,10 +41,10 @@
 #' Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}. The value of this parameter strongly depends on the linear trends that are expected for a given data set and should cover the expected range of linear shifts. Extending the range well beyond a sensible value will cause a considerable increase in computation time. Hence we recommend to start with the default of 0.02 and increase if necessary. See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}
 #'
 #'@param max_diff_peak2mean
-#'Numeric, defines the allowed deviation of retention times from the mean of the corresponding row (i.e. scored substance). Default 0.03
+#'Numeric, defines the allowed deviation of retention times from the mean of the corresponding row (i.e. scored substance). Default 0.02
 #'
 #'@param min_diff_peak2peak
-#' Numeric, defining the minimum difference in retention times among distinct substances. Substances that differ less, are merged if every sample contains either one or none of the respective compounds. This parameter is a major determinant in the classification of distinct peaks. Therefore careful consideration is required to adjust this setting to your needs (e.g. the resolution of your gas-chromatography pipeline). Large values may cause the merge of true peaks with similar retention times, if those are not simultaneously occuring within at least one individual. Especially for small sample sizes this could be the case just by chance. Small values can be considered as conservative and will reduce the number of scored substances. Default 0.05
+#' Numeric, defining the minimum difference in retention times among distinct substances. Substances that differ less, are merged if every sample contains either one or none of the respective compounds. This parameter is a major determinant in the classification of distinct peaks. Therefore careful consideration is required to adjust this setting to your needs (e.g. the resolution of your gas-chromatography pipeline). Large values may cause the merge of true peaks with similar retention times, if those are not simultaneously occuring within at least one individual. Especially for small sample sizes this could be the case just by chance. Small values can be considered as conservative and will reduce the number of scored substances. Default 0.08
 
 #'@param blanks
 #' Character vector of names of negative controls. Substances found in any of the blanks will be removed from all samples, before the blanks are deleted from the aligned data.
@@ -74,7 +74,7 @@
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'@export
 #'
-align_chromatograms <- function(data, sep = "\t", conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.02, max_diff_peak2mean = 0.03, min_diff_peak2peak = 0.05, blanks = NULL, delete_single_peak = FALSE) {
+align_chromatograms <- function(data, sep = "\t", conc_col_name = NULL, rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.02, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL, delete_single_peak = FALSE) {
 
 # Print start
 cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S")),'\n\n'))

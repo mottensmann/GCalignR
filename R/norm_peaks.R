@@ -1,7 +1,7 @@
 #' Normalisation of peaks
 #'
 #' @description
-#' \code{norm_peaks} calculates the relative abundance of a peaks by normalising
+#' \code{norm_peaks} calculates the relative abundance of a peak by normalising
 #' with regard to the cumulative abundance of all peaks that are present within an
 #' individual chromatogram. The desired measure of peak abundance needs to be a column
 #' within the original gas-chromatography data \code{datafile} submitted to

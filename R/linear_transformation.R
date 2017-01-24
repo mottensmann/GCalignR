@@ -1,10 +1,13 @@
 #' Shift peaks to eliminate systematic inaccuracies of peak detection by GC.
 #'
 #'@description
-#'\strong{linear_transformation()} shifts whole chromatograms relative to a predefined reference to account for systematic shifts in peak retention times among gas-chromatography runs.
+#'\strong{linear_transformation()} shifts all peaks within chromatograms to maximise the number
+#'of shared peaks with a reference chromatogram. Optimally, the reference contains known peaks which
+#'also occur in the samples. If a sample is taken as a reference, samples with high concentrations
+#'and clear peaks will lead to a better result.
 #'
 #' @param reference
-#' character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.
+#' character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.
 #'
 #' @param step_size
 #' integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.

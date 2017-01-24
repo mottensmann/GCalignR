@@ -1,7 +1,8 @@
-#' Estimate the observed space between peaks
+#' Estimate the observed space between peaks within chromatograms
 #'
 #'@description
-#' The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function allows to infer a suitable value from based on observations of the input.
+#' The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}.
+#' This function allows to infer a suitable value based on the input data.
 #'
 #' @inheritParams check_input
 #' @inheritParams align_chromatograms

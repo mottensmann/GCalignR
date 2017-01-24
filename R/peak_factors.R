@@ -1,4 +1,4 @@
-#' Factors corresponding to gas-chromatography data of Antarctic Fur Seals (\emph{Arctocephalus gazella})
+#' Grouping factors corresponding to gas-chromatography data of Antarctic Fur Seals (\emph{Arctocephalus gazella})
 #'
 #' @description
 #' List of factors corresponding to samples in \code{\link{peak_data}}

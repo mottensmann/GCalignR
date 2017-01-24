@@ -1,11 +1,11 @@
-#' Aligning Peaks based on retention times
+#' Aligning gas-chromatography peaks based on retention times
 #'
 #'@description
-#'\strong{align_chromatograms} is the core function of \code{\link{GCalignR}} that fasciliates the alignment of gas-chromatography data.
-#' Read through the documentation here and take a look at vignettes for a thorough introduction.
+#'\strong{align_chromatograms} is the core function of \code{\link{GCalignR}} to align gas-chromatography peak data.
+#' Read through the documentation below and take a look at vignettes for a thorough introduction.
 #'
 #'@details
-#' The Alignment of Peaks is achieved by running \strong{three major algorithms} always considering the complete set of samples submitted to the function.
+#' The alignment of peaks is achieved by running \strong{three major algorithms} always considering the complete set of samples submitted to the function.
 #' In brief: \strong{(1) Peaks are linearly shifted} to maximise similarity with a reference to account for systematic shifts in retention times caused by gas-chromatography processing. \strong{(2) Peaks of similar retention times are aligned} in order to match similar retention times to the same substance. During the algorithm proceeds, these clusters are continously revised and every peaks is moved to the optimal location(i.e. substance). \strong{(3) Peaks of similar retention time are merged} if they show smaller differences in mean retention times than expected by the achievable resolution of the gas-chromatography or the chemistry of the compounds are merged. This has to be specfied by the paramters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}. Several optional processing steps are available, ranging from the removal of peaks representing contaminations (requires to include blanks as a control) to the removal of uninformative peaks that are present in just one sample.
 #'
 #'@param data
@@ -15,11 +15,11 @@
 #' The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param conc_col_name
-#' Character naming a column used for the quantification of peaks (e.g. peak area or peak height).
-#' The designated variable needs to be numeric.
+#' Character string - the name of the column containing data for the quantification of peak abundance (usually the peak area or peak height).
+#' The variable needs to be numeric and the decimal separator needs to be a point.
 #'
 #'@param rt_col_name
-#' Character string naming the column containing retention times.The designated variable needs to be numeric.
+#' Character string - the name of the column containing the retention times.The variable needs to be numeric and the decimal separator needs to be a point.
 #'
 #'@param write_output
 #' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
@@ -32,10 +32,11 @@
 #' Upper threshold above which retention times are cutted (i.e. 35 minutes). Default NULL.
 #'
 #'@param reference
-#' Character string of a sample to which all other samples are aligned to by means of a
+#' Character string of a sample to which all other samples are aligned by means of a
 #' linear shift (e.g. \code{"M3"}. The name has to correspond to an individual name given
 #' in the first line of \code{data}. Alternatively a sample called \code{reference} can be included
-#' in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to. After the linear transformation the \code{reference} will be removed from the data.
+#' in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to.
+#' After the linear transformation the \code{reference} will be removed from the data.
 #'
 #'@param max_linear_shift
 #' Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}. The value of this parameter strongly depends on the linear trends that are expected for a given data set and should cover the expected range of linear shifts. Extending the range well beyond a sensible value will cause a considerable increase in computation time. Hence we recommend to start with the default of 0.02 and increase if necessary. See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}

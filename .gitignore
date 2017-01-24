@@ -3,5 +3,4 @@
 .RData
 inst/doc
 /test
-*.txt
 bin

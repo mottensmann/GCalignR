@@ -15,7 +15,7 @@ This dataset is comprised of substances and their corresponding retention times 
 Data was extracted from Table 4 of the supporting information from Dellicour and Lecocq (2013). We removed all rows that contain retention times of unknown substances to allow the data beeing used for a conservative estimation of alignment errors of the dataset \code{\link{bfla}}.
 }
 \references{
-Dellicour, S. and Lecocq, T. (2013), GCALIGNER 1.0: An alignment program to compute a multiple sample comparison data matrix from large eco-chemical datasets obtained by GC. J. Sep. Science, 36: 3206–3209. doi:10.1002/jssc.201300388
+Dellicour, S. and Lecocq, T. (2013): GCALIGNER 1.0: An alignment program to compute a multiple sample comparison data matrix from large eco-chemical datasets obtained by GC. J. Sep. Science 36. DOI:10.1002/jssc.201300388
 }
 \keyword{datasets}
 

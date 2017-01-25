@@ -13,9 +13,10 @@ gc_heatmap(object, algorithm_step = c("aligned", "linear_shifted",
 \arguments{
 \item{object}{Object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifiying the raw, linearly shifted or aligned data respectively.}
+\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifiying the raw, linearly shifted or aligned data respectively.
+Default is the heatmap after alignment.}
 
-\item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicating all substances are plotted.}
+\item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicates that all substances are plotted.}
 
 \item{legend_type}{Character specifying the type of colourbar as \strong{discrete} (i.e retention times are classified as deviating or not) or \strong{gradient} (i.e deviations are presented on a fine scale).}
 
@@ -40,7 +41,12 @@ from the mean retention time of the respective substance is highlighted in \emph
 object of class "ggplot"
 }
 \description{
-Illustrates the distribution of peaks among samples and indicates deviation from the mean retention time of grouped substances.Two types of heatmaps are available. A binary heatmap allows to determine
+The goal of aligning chromatography peaks is to get the same substance in the same row, although it
+might have slightly different retention times across samples. This function makes it possible
+to evaluate the alignment by illustrating how far the retention time of a given peak within a sample
+deviates from the mean retention time for this substance across all samples after alignment. In other words,
+given that the mean retention time is the 'real' retention time of a substance, the heatmap
+shows how far a given peak deviates from it. Two types of heatmaps are available. A binary heatmap allows to determine
 if the retention time of single samples deviates by more than a user defined threshold from the mean. Optionally, a discrete heatmap allows to check deviations quantitatively.
 }
 \examples{

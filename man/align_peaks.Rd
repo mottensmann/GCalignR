@@ -13,9 +13,9 @@ align_peaks(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
 stored in columns. Rows represent distinct peaks. Retention time is a
 required variable.}
 
-\item{max_diff_peak2mean}{Numeric, defines the allowed deviation of retention times from the mean of the corresponding row (i.e. scored substance). Default 0.02}
+\item{max_diff_peak2mean}{Numeric, defines the allowed deviation of retention times from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes)}
 
-\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to be numeric and the decimal separator needs to be a point.}
 
 \item{R}{integer indicating the current iteration of the alignment step.
 Created by \link{align_chromatograms}.}

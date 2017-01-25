@@ -2,7 +2,7 @@
 % Please edit documentation in R/peak_interspace.R
 \name{peak_interspace}
 \alias{peak_interspace}
-\title{Estimate the observed space between peaks}
+\title{Estimate the observed space between peaks within chromatograms}
 \usage{
 peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
   quantile_range = c(0, 1))
@@ -10,7 +10,7 @@ peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
 \arguments{
 \item{data}{path to a data file or the name of a list in the global environment.}
 
-\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to be numeric and the decimal separator needs to be a point.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
@@ -19,7 +19,8 @@ peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
 \item{quantile_range}{A numeric vector of length two specifiying arbitrary interquartile range. Only affecting the barplot. Defaults are \code{quantile_range = c(0,1)}.}
 }
 \description{
-The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function allows to infer a suitable value from based on observations of the input.
+The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}.
+This function allows to infer a suitable value based on the input data.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@web.de)

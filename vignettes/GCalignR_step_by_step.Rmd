@@ -18,23 +18,22 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
 
 ## Introduction
 
-Metabolomics approaches such as Gas-Chromatography-Mass-Spectrometry (GC-MS) are increasingly used
-by biologists to unravel the chemical basis of animal olfactory communication. For the detection
-of broader patterns in chemical samples most researchers use an untargeted approach and
-analyse the whole spectrum of chemicals rather than targeting specific compounds. However, 
-chromatography data across multiple samples are not directly comparable as the retention times of peaks
-vary across samples due to subtle, random and often unavoidable variation of the GC-MS machine parameters [@pierce2005classification]. For studies interested in chemical patterns across samples it therefore 
-becomes essential to account for these retention time drifts by using an appropriate alignment method.
-
-Despite the existence of automated alignment algorithms [e.g. @smith2006xcms; @stein1999integrated; @robinson2007dynamic], most researchers in the relatively young fields of mammalian and avian chemical communication align chromatograms manually
-[@charpentier2008smelling; @setchell2010odour; @caspers2011scents; @leclaire2012semiochemical; @theis2013symbiotic] or identify all compounds prior to analysis [@whittaker2010songbird] rather than using automated alignment software. Depending on the
-sample size and the number of compounds present in the samples, manual alignment can take up to several weeks and might be biased due to subjective expectations of the researcher. 
-
 `GCalignR` provides a simple means of aligning peaks from gas chromatography data based
-on retention times. The package also provides ways to visually evaluate the quality of the alignment and allow users to adjust their alignment algorithm parameters to optimize the alignment. The aligned data can easily be used as input
-for further widely used statistical packages such as `vegan`. We specifically developed and tested `GCalignR` 
-as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the data. `GCalignR` has thus been created for situations when the main interest of the research is about broader patterns rather then the specific function of a certain chemical (which might not be aligned correctly in all samples). 
+on retention times. The package functions to to visually evaluate the quality of the alignment and allow users to adjust their alignment algorithm parameters to optimize the alignment. The aligned data can easily be used as input for further widely used statistical packages such as `vegan`. We specifically developed and tested `GCalignR` as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the data and the parameters used for the initial peak detection. In other words: The clearer the peaks which were extracted from the chromatograms, the better the alignment will be. `GCalignR` has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely determined correctly in all cases when just retention times are used. Also, we highly recommend to at least partially double-check the resulting alignment with mass-spectrometry data (of available) or visual ways of comparing peaks across chromatograms.
 
+
+## GCalignR workflow in a larger context
+
+In the flow diagram below, we visualized the functionality of GCalignR within a complete workflow of
+analysing chemical data. After (1) analysis of the chemical samples with GC or GC-MS, an often proprietary 
+software is used to extract a list of peaks (retention times, peak area, also often peak height and
+other variables). Steps (3)-(7) are the the alignment steps within GCalignR, detailled below and in the
+other vignette. After alignment and normalisation, the output can be used as input for multivariate statistics
+in other packages such as vegan (8). 
+
+```{r, out.width = 650, fig.retina = NULL, echo = FALSE}
+knitr::include_graphics("workflow.png") 
+```
 
 ## Installation
 
@@ -50,16 +49,16 @@ devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
 library("GCalignR") 
 ```
 
-The package provides comprehensive documentation, accessible with
+The package documentation can be accessed with:
 
 ```{r, eval = FALSE} 
-?GCalignR 
+?GCalignR # documentation
 ```
 
-## GCalignR contains the following functions:
+## The functions below form the core of `GCalignR`:
 
 * `align_chromatograms`: 
-Aligns gas-chromatography peak data by retention times. The core of the package.
+Aligns gas-chromatography peak data by retention times. The main function of the package.
 * `gc_heatmap`: 
 Plots the results (and intermediate steps) of the alignment. A heatmap allows the user to visually
 inspect the quality of the alignment to adjust the parameters accordingly if necessary.
@@ -71,12 +70,12 @@ transformations and retention time ranges (i.e. difference between minimum and m
 * `print.GCalign`: 
 Summarises the alignment procedure (e.g. documents all arguments to the function call).
 * `norm_peaks`: 
-Normalises the abundance measure of peaks and returns and data frame of peak concentrations for all samples that is ready to use for analysis tools such as [LINK to vegan´s nmds functions]
+Normalises the abundance measure of peaks and returns and data frame of peak concentrations for all samples that is ready to use for analysis tools such as [LINK to vegan's nmds functions]
 
 
 ## The alignment algorithm
 
-The alignment algorithm implemented in the `align_chromatograms` function follows the following steps:
+The alignment algorithm implemented in the `align_chromatograms` function contains the following steps:
 (Here we refer to a peak list as all extracted peaks from a given sample chromatogram)
 
 1. One sample provides a reference peak list, which is used to align all other peak lists
@@ -98,17 +97,18 @@ single substance). The maximum mean difference between two retention time rows c
 
 ## Input data
 
-The statistical analysis of GC or GC-MS data is usually based on the detection of signal peaks within
-chromatograms instead of the full chromatogram. This can be done with proprietary software or free programs such as AMDIS [@stein1999integrated]. The extraction of peaks from chromatograms is based on a certain threshold which might severely influence the quality of the alignment with `GCalignR`. If for instance the peak data includes very small peaks that occured in a very low abundance, the retention time of the peak itself will have a higher poterential error around than very abundant, sharp and therefore high peaks.
+### Extraction of chromatogram peaks outside of GCalignR
 
-The peak data of a chromatogramm usually contain the retention time of a given peak plus additional information such 
-as the area under the peak or its height which are used in the subsequent analysis. 
+The statistical analysis of GC or GC-MS data is usually based on the detection of substance peaks within
+chromatograms instead of the full chromatogram. This can be done with proprietary software or free programs such as AMDIS [@stein1999integrated]. The extraction of peaks from chromatograms is based on a certain threshold which might severely influence the quality of the alignment with `GCalignR`. If for instance the peak data includes very small peaks that occured in a very low abundance, the retention time of the peak itself will have a higher potential error than highly abundant and sharp peaks.
+
+The peak data of a chromatogramm usually contain the retention time of a given peak plus additional information such as the area under the peak or its height which are used in the subsequent analysis. 
 `GCalignR` uses the retention times (and not the mass-spectra, which may not be available, e.g. when 
 using gas-chromatography coupled to a flame ionization detector (FID)) to align the peaks across individuals for subsequent chemometric analysis and pattern detection .The simple assumption is that peaks with similar retention times
 represent the same substances. However, it is highly recommended to verify this assumption by
 comparing also the mass-spectra (if available) of the substances of interest.
 
-## Input file format
+### Input file format
 
 The input file for GCalignR is a .txt file, whereby all elements should be separated by tabs (with
 sep = "/t") or any other separator, which has to be specified with the `sep` argument (see
@@ -120,11 +120,13 @@ contain whitespaces and use the underscore _ as the only special character.
 * The second row
 contains the names of the data columns. For example, if you extracted both the retention time of a
 peak as well as the area under the peak you would write `RT area` into the second line. You can however
-add more variables such as the peak height. 
+add more variables such as the peak height. The variable names should not
+contain whitespaces and use the underscore _ as the only special character. 
 
 * Starting with the third row, the actual peak data is included, whereby single samples are concatenated
 horizontally. Each chromatogram needs to consist of the same number of columns, whereby at least two are
-required, one of which has to contain retention times. (e.g. the retention time and the area).
+required, one of which has to contain retention times. (e.g. the retention time and the area). The decimal
+seperator has to be the point (not comma!).
 
 ```{r, out.width = 650, fig.retina = NULL, echo = FALSE}
 knitr::include_graphics("example.jpg") 
@@ -138,9 +140,9 @@ knitr::include_graphics("example2.jpg")
 
 ### alternative input from R
 
-Alternative to reading a .txt file, GCalignR also takes input directly from R. Here, `data`
-has to be a `list` of `data frames`. Each `list` element (`data frame`) has the ID of an individual
-and the `data frame` itself contains the gc-peak data for this individual (again, the minimum
+Alternatively to reading a .txt file, GCalignR also takes input directly from R. Here, `data`
+has to be a `list` of `data frames`. Each `list` element (`data frame`) has the ID of an individual as its name
+and the `data frame` itself contains the gc peak data for this individual (again, the minimum
 number of columns is one column for the retention time and one column for another variable such as the area under the peak
 or it's height). All column names within `data frames` have to be the same.
 The attached dataset `peak_data` contains data from skin swabs of Antarctic Fur Seals (*Arctocephalus gazella*) (@stoffel2015chemical)
@@ -156,60 +158,73 @@ head(peak_data[[1]]) # column names and data, i.e. one data.frame of list elemen
 
 ### Check the input
 
-To check the data formatting for the most common errors, use the `check_input` function. This will test for conformity with the requirements of the aligning algorithm. Common error sources such as missing data or missing sample names are eliminated as well as unconsistencies among samples (if the input is a list of samples). Error messages will indicate any violation. When a .txt file is used as input, the decimal has to be a point (not a comma). 
+To check the data formatting for the most common errors, use the `check_input` function. This will test for conformity with the requirements of the aligning algorithm. Common error sources such as missing data or missing sample names are eliminated as well as unconsistencies among samples (if the input is a list of samples). Error messages will indicate any violation. When a .txt file is used as input, the decimal has to be a point (not a comma). However, there could potentially be a lot of different error sources so it is advisable 
+to make sure yourself that the data fits the requirements described above.
 
 ```{r}
 check_input(data = peak_data,list_peaks = F) # If list_peaks = T, a histogram of peaks is plotted 
 ```
 
-### Align Chromatograms
+### Align chromatograms
 
 The core function in `GCalignR` is `align_chromatograms`, which will align the peak lists 
 with the algorithm descript above. See `?align_chromatograms` for a detailed description of the arguments.
+The alignment process will take minutes to several hours on a standard computer depending on the sample size.
 
 ```{r, eval = FALSE}
 peak_data <- peak_data[1:4] # subset for speed reasons
 peak_data_aligned <- align_chromatograms(data = peak_data, # input data
-    conc_col_name = "area", # peak abundance variable
-    rt_col_name = "time", # retention time 
+    conc_col_name = "area", # peak abundance variable name
+    rt_col_name = "time", # retention time variable name 
     rt_cutoff_low = 5, # cut peaks with retention times below 5 Minutes
     rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
     reference = NULL, # Reference will be choosen automatically 
-    max_linear_shift = 0.05, # maximum linear shift of chromatograms
-    max_diff_peak2mean = 0.03, # maximum distance of a peak to the mean
-    min_diff_peak2peak = 0.03, # maximum distance between the mean of two peaks
+    max_linear_shift = 0.05, # maximum shift of chromatograms to maximise shared peaks with a reference
+    max_diff_peak2mean = 0.03, # maximum distance of a sample peak to the mean of the peak across samples
+    min_diff_peak2peak = 0.03, # maximum distance between two peaks within a sample
     blanks = "C2", # no blanks. Specify blanks by names (e.g. c("blank1", "blank2"))
     delete_single_peak = TRUE, # delete peaks that are present in just one sample 
-    write_output = NULL) # add c("time","area") to write data frames to .txt file
+    write_output = NULL) # add c("time","area") to write aligned data.frames to .txt file
 ```
 
-The aligned data is now stored in a `data.frame` which can be accessed as follows. 
+The aligned data matrices are now stored in `data.frame`'s which can be accessed as follows:
 
 ```{r, eval = FALSE}
 peak_data_aligned$aligned$time # to access the aligned retention times
 peak_data_aligned$aligned$area # to access the aligned area data
 ```
 
+The package includes the already aligned data set:
 ```{r}
-data("aligned_peak_data") # the package includes the already aligned data set  
+data("aligned_peak_data") 
 ``` 
 
 ### Visual diagnostics for the aligned data
 
-The `gc_heatmap` function can be used to visualise the quality of the alignment. A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. The basic rationale of the alignment was to sort the substances with very similar retention times together, as they most likely represent one substance. The heatmap show how the single peaks for the individuals deviate from the mean retention time of a substance. The larger the deviation, the less likely it is the same substance. However, going back to the original chromatograms and looking at the quality of the peak might help. In the following example, the alignment was fairly good and no substance deviated by more than 0.05 seconds 
+The `gc_heatmap` function can be used to visualise the quality of the alignment. A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. The basic rationale of the alignment was to sort the substances with very similar retention times together, as they most likely represent one substance. The heatmap shows how the single peaks for the individuals deviate from the mean retention time of a substance. The larger the deviation, the less likely it is the same substance. However, going back to the original chromatograms and looking at the quality of the peak might help. In the following example, the alignment was fairly good and no substance deviated by more than 0.05 minutes. 
 
 ```{r,message=FALSE,fig.width=8,fig.height=8}
 gc_heatmap(aligned_peak_data,threshold = 0.05) # By default a threshold of 0.05 is used to mark deviations
 ```
 
+The plot function shows a four figure plot for the aligned data. The first histogram shows the number
+of peaks per sample before and after alignment. The number of peaks is much smaller after the alignment
+as peaks have been deleted which were present in the control samples, as well as peaks that were found
+in just a single individual. The histograms on the bottom left shows the full chromatogram shifts (the first
+step in the algorithm). The bottom middle shows how much peaks vary around their means across samples. 
+The histogram on the bottom right shows how many peaks are shared across samples. In this case,
+there is just a single substance present in all samples, while often 10-12 samples share a single
+substance (the mode of the distribution).
 
 ```{r,message=FALSE,fig.width=8,fig.height=8}
 plot(aligned_peak_data) # Three Diagnostics, can be invoked separetely
 ```
 
+Also, print provides a verbal summary of the alignment procedure.
 ```{r, eval=FALSE}
-print(aligned_peak_data) # Summary of the alignment procedure
+print(aligned_peak_data) 
 ```
+
 ### Normalise peaks and log+1 transformation
 
 `norm_peaks` is used to standardize the concentration of peaks across samples to obtain the relative abundance. This is an essential step prior to the analysis if the absolute concentration chemical samples varies across individuals. Note that this step is required when retention time cutoffs, single peak deletion or blank peak removal was applied, even if the data already contained a measure of relative abundance.

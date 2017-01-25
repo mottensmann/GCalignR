@@ -13,13 +13,19 @@ linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
 stored in columns. Rows represent distinct peaks. Retention time is a
 required variable.}
 
-\item{reference}{character string indicating a sample included in \code{gc_peak_list} used as a reference to align to.}
+\item{reference}{character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.}
 
-\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference. Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}. The value of this parameter strongly depends on the linear trends that are expected for a given data set and should cover the expected range of linear shifts. Extending the range well beyond a sensible value will cause a considerable increase in computation time. Hence we recommend to start with the default of 0.02 and increase if necessary. See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}}
+\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference.
+Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
+The value of this parameter strongly depends on the linear trends that are expected
+for a given data set and should cover the expected range of linear shifts.
+Extending the range well beyond a sensible value will cause a considerable increase in
+computation time. Hence we recommend to start with the default of 0.02 (minutes) and increase if necessary.
+See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}}
 
 \item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 
-\item{rt_col_name}{Character string naming the column containing retention times.The designated variable needs to be numeric.}
+\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to be numeric and the decimal separator needs to be a point.}
 }
 \value{
 \item{chroma_aligned}{Transformed data}
@@ -27,7 +33,10 @@ required variable.}
 List of data.frames containing chromatograms with applied linear shifts
 }
 \description{
-\strong{linear_transformation()} shifts whole chromatograms relative to a predefined reference to account for systematic shifts in peak retention times among gas-chromatography runs.
+\strong{linear_transformation()} shifts all peaks within chromatograms to maximise the number
+of shared peaks with a reference chromatogram. Optimally, the reference contains known peaks which
+also occur in the samples. If a sample is taken as a reference, samples with high concentrations
+and clear peaks will lead to a better result.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &

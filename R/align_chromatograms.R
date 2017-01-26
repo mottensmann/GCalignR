@@ -141,7 +141,8 @@ if (is.character(data)) { # txt file
     col_names <- unlist(lapply(data, function(x) out <- names(x)))
     col_names <- names(data[[1]])
     ind_names <- names(data)
-    gc_peak_list <- data
+    gc_peak_list <- lapply(data,matrix_append,data) # same dimensions of dfs
+
 } # end load data
 
 # save gc_peak_list for documentation purposes

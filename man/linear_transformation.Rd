@@ -15,17 +15,16 @@ required variable.}
 
 \item{reference}{character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.}
 
-\item{max_linear_shift}{Defines a window to search for an optimal linear shift of chromatogram peaks with respect to the reference.
-Shifts are evaluated within - \code{max_linear_shift to + max_linear_shift}.
-The value of this parameter strongly depends on the linear trends that are expected
-for a given data set and should cover the expected range of linear shifts.
-Extending the range well beyond a sensible value will cause a considerable increase in
-computation time. Hence we recommend to start with the default of 0.02 (minutes) and increase if necessary.
+\item{max_linear_shift}{This value defines the maximum time that one chromatogram is expected to be deviating in retention times
+from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same
+retention time to all peaks within a chromatogram to maximise the number of shared peaks with
+the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.
 See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}}
 
 \item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 
-\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+be numeric and the decimal separator needs to be a point.}
 }
 \value{
 \item{chroma_aligned}{Transformed data}

@@ -11,7 +11,8 @@ check_input(data, plot = FALSE, sep = "\\t", ...)
 
 \item{plot}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
 
-\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
+\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
+See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Reguires \code{plot == TRUE}.}
 }

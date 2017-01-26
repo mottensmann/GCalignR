@@ -10,9 +10,11 @@ peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
 \arguments{
 \item{data}{path to a data file or the name of a list in the global environment.}
 
-\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+be numeric and the decimal separator needs to be a point.}
 
-\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}). See the "sep" argument in \code{\link[utils]{read.table}} for details.}
+\item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
+See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{quantiles}{A numeric vector. If specified quantiles are calculated from the distribution.}
 

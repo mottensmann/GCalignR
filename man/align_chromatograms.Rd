@@ -54,7 +54,9 @@ the reference. We recommend to start with the default of 0.02 (minutes) and incr
 See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}}
 
 \item{max_diff_peak2mean}{Numeric, defines the allowed deviation of the retention time of a given peak from the mean of the
-corresponding row (i.e. scored substance). Defaults to 0.02 (minutes)}
+corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects
+the retention time range in which peaks across samples are still counted as the same 'substance',
+i.e. sorted in one row.}
 
 \item{min_diff_peak2peak}{Numeric, defines the expected minimum difference in retention times among different substances.
 Retention time rows that differ less, are therefore merged if every sample contains either
@@ -65,8 +67,7 @@ Therefore careful consideration is required to adjust this setting to your needs
 Large values may cause the merge truely different substances with similar retention times, if those are not
 simultaneously occuring within at least one individual, which might occure by chance for small sample
 sizes. It is therefore recommended to set the value much lower (e.g. 0.02) when few individuals are
-analysed.
-Defaults to 0.08 (minutes).}
+analysed. Defaults to 0.08 (minutes).}
 
 \item{blanks}{Character vector of names of negative controls. Substances found in any of the blanks will be
 removed from all samples, before the blanks are deleted from the aligned data.}
@@ -75,11 +76,13 @@ removed from all samples, before the blanks are deleted from the aligned data.}
 just one sample are removed or not. Default FALSE.}
 }
 \value{
-Returns an object of class "GCalign" that is a a list with several objects that are listed below.
+Returns an object of class "GCalign" that is a a list containing several objects that are listed below.
 Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
 \item{aligned}{Aligned gas-chromatography data subdivided into individual data frames for every variable.
 Samples are represented by columns, rows specifiy substances. The first column of every data frame
-is comprised of the mean retention time of the respective substance (i.e. row).}
+is comprised of the mean retention time of the respective substance (i.e. row). The aligned data
+can be used for further statistical analyses in other packages and also directly written
+to .txt file by specifying the write_output argument in align_chromatograms}
 \item{heatmap_input}{Data frames of retention times; used internally to create heatmaps}
 \item{Logfile}{Included several lists summarizing the data; used to print diagonistics of the alignment}
 }

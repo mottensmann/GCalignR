@@ -7,9 +7,9 @@
 check_input(data, plot = FALSE, sep = "\\t", ...)
 }
 \arguments{
-\item{data}{path to a data file or the name of a list in the global environment.}
+\item{data}{Path to a data file or the name of a list in the global environment.}
 
-\item{plot}{logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
+\item{plot}{Logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
@@ -20,10 +20,16 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
 }
 \description{
-Checks conformity between the input format and the requirements of GCalignR. Data is accepted in form of the path to a text file (i.e. "data.txt") or a list of data frames. See \code{\link{align_chromatograms}} for details.
+Checks formatting of GCalignR input data for some of the main errors. Data is accepted in
+form of the path to a text file (i.e. "data.txt") or a list of data frames.
+See \code{\link{align_chromatograms}} for details.
 }
 \details{
-The data needs to fullfil certain formatting standards. Sample names are expected to contain just letters, numbers and underscores. Each sample hast to contain the same number of columns that is determined given the number of variables. It is mandatory that the values of all variables are numeric, i.e. they are allowed to contain numbers from 0-9 and "." as the only decimal character.
+Sample names should contain just letters, numbers and underscores and no whitespaces.
+Each sample has to contain the same number of columns, one of which is the retention
+time and the others are the other variables. All values should be numeric, i.e. they
+are allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look
+at the vignettes for examples.
 }
 \examples{
 ## Checks format

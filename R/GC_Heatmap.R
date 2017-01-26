@@ -71,7 +71,10 @@
 #'
 #' @export
 #'
-gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pre_alignment'), substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL, type = c("binary","discrete"), threshold = 0.05, label_size = NULL, show_legend = TRUE, main_title = NULL, label = TRUE) {
+gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pre_alignment'),
+    substance_subset = NULL, legend_type = c('legend','colourbar'), samples_subset = NULL,
+    type = c("binary","discrete"), threshold = 0.05, label_size = NULL, show_legend = TRUE,
+    main_title = NULL, label = TRUE) {
 
     algorithm_step <- match.arg(algorithm_step)
     if (algorithm_step == "aligned") algorithm_step <- "aligned_rts"
@@ -206,8 +209,8 @@ if ((!is.null(substance_subset) & ncol(rt_df) < 151) || ncol(rt_df) < 151 ) {
                      axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
                      axis.text.y = element_text(size = label_size,hjust = 0.5))
 }
-if (show_legend == FALSE | show_legend == F) {hm <- hm + theme(legend.position = "none")}
-if (label == FALSE | label == F) {hm <- hm + theme(axis.text = element_blank())}
+if (!show_legend) {hm <- hm + theme(legend.position = "none")}
+if (!label) {hm <- hm + theme(axis.text = element_blank())}
 # return the ggplot object
 return(hm)
 }

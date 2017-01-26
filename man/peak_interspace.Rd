@@ -8,7 +8,7 @@ peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
   quantile_range = c(0, 1))
 }
 \arguments{
-\item{data}{path to a data file or the name of a list in the global environment.}
+\item{data}{Path to a data file or the name of a list in the global environment.}
 
 \item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}

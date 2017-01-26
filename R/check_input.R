@@ -95,6 +95,8 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             pass <- FALSE
             warning("Every Sample has to be a data.frame")
         }
+        ## Adjust sizes of data frames, each has the same number of rows
+        data <- lapply(data,matrix_append,gc_peak_list = data, val = "NA")
         ## Check that all values are numeric with proper decimal operator
         x <- as.vector(unlist(data))
         na <- length(x[is.na(x)])

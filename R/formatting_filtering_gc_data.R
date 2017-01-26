@@ -30,14 +30,16 @@ conv_gc_mat_to_list <- function(gc_data, ind_names, var_names) {
     return(chromatograms)
 }
 
-matrix_append <- function(gc_peak_df, gc_peak_list){
-    # Add zeros matrices to fit the dimensions of the largest matrix
+matrix_append <- function(gc_peak_df, gc_peak_list,val = c("Zero","NA")) {
+    val <- match.arg(val)
+    val <- ifelse(val == "Zero",0,NA)
+    # Add zeros or NAs to matrices to fit the dimensions of the largest matrix
     MaxLength <- max(sapply(gc_peak_list,function(x) nrow(x)))
-    ToAppend <- MaxLength-nrow(gc_peak_df)
+    ToAppend <- MaxLength - nrow(gc_peak_df)
     Cols <- ncol(gc_peak_df)
-    Zeros <- matrix(0,nrow=ToAppend,ncol=Cols)
+    Zeros <- matrix(val,nrow = ToAppend,ncol = Cols)
     colnames(Zeros) <- names(gc_peak_df)
-    gc_peak_df<- rbind(gc_peak_df[,],Zeros)
+    gc_peak_df <- rbind(gc_peak_df[,],Zeros)
     return(gc_peak_df)
 }
 

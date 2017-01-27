@@ -156,7 +156,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"cex.names" %in% names(mcall)) {
             lab_thresh <- c(20,30,40,50,60,Inf)
-            lab_size <- c(1.2,1.1,0.95,0.85,0.75,0.7)
+            lab_size <- c(1.2,1.1,0.95,0.85,0.75,0.75)
             samples_size <- ncol(pr)
             # find the matching size
             temp <- which(lab_thresh > samples_size)
@@ -165,6 +165,8 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
             } else {
                 label_size <- lab_size[min(temp) - 1]
             }
+        } else {
+            label_size <- mcall[["cex.names"]]
         }
         if (!"cex.names" %in% names(mcall)) arg_list <- append(arg_list,list(cex.names = label_size))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = c("red","blue")))
@@ -182,7 +184,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
 
         if (!"names.arg" %in% names(mcall)) {
             # if ("cex.names" %in% names(mcall)) label_size <- cex.names
-            graphics::text(bars - 0.2*mean(diff(bars)), graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size, offset = -1.25)
+            graphics::text(bars - 0.5*mean(diff(bars)), graphics::par("usr")[1], labels = lablist, srt = 60, pos = 1, xpd = TRUE, cex = label_size, offset = 0.2)
         }
         rownames(peak_df) <- peak_df[["id"]]
         return(peak_df)

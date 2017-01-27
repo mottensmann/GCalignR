@@ -64,21 +64,26 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             unlist()
         col_names <- col_names[col_names != ""]
         col_names <- stringr::str_trim(col_names)
+        # validate retention time name
+        if ("rt_col_name" %in% names(opt)) {
+        rt_col_name <- opt[["rt_col_name"]]
+        if (!(rt_col_name %in% col_names)) stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
+        }
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data
         gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
-        ## Check that all values are numeric with proper decimal operator
-        x <- as.vector(unlist(gc_data))
-        na <- length(x[is.na(x)])
-        y <- as.vector(as.data.frame(apply(gc_data, 2, as.numeric)))
-        y <- as.vector(unlist(y))
-        if (suppressWarnings(length(y[is.na(y)]) - na > 0)) stop("Data contains non-numeric data. Make sure not to use >,< as a decimal operator")
+        ## Check that all values are numeric, SKIPPED
+        # x <- as.vector(unlist(gc_data))
+        # na <- length(x[is.na(x)])
+        # y <- as.vector(as.data.frame(apply(gc_data, 2, as.numeric)))
+        # y <- as.vector(unlist(y))
+        # if (suppressWarnings(length(y[is.na(y)]) - na > 0)) stop("Data contains non-numeric data. Make sure not to use >,< as a decimal operator")
         ## Remove just NA-rows
         gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
         ## Remove empty rows
         gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]
-        ## Transform variables to numeric
-        gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
+
+        gc_data <-  as.data.frame(gc_data)
 
         ### Check input for completeness ###
 
@@ -94,6 +99,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
         ## convert to list
         gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
 
+
 ## If data is a list of data.frames
     } else if (is.list(data)) {
         ## check that every element in the list is a data.frame
@@ -101,16 +107,9 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             pass <- FALSE
             warning("Every Sample has to be a data.frame")
         }
+
         ## Adjust sizes of data frames, each has the same number of rows
         data <- lapply(data,matrix_append,gc_peak_list = data, val = "NA")
-        ## Check that all values are numeric with proper decimal operator
-        x <- as.vector(unlist(data))
-        na <- length(x[is.na(x)])
-        x <- as.data.frame(data)
-        y <- as.vector(as.data.frame(apply(x, 2, as.numeric)))
-        y <- as.vector(unlist(y))
-        if (suppressWarnings(length(y[is.na(y)]) - na > 0)) stop("Data contains non-numeric data. Make sure not to use ',' as a decimal operator")
-        ## check all data.frames are named
         if ((is.null(names(data)))) {
             pass <- FALSE
         warning("Every data.frame needs to be named with the sample id")
@@ -121,17 +120,20 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             warning("Every sample needs to have the same number of columns")
         }
         col_names <- names(data[[1]])
+        # Validate retention time variable
+        if ("rt_col_name" %in% names(opt)) {
+        rt_col_name <- opt[["rt_col_name"]]
+        if (!(rt_col_name %in% col_names)) stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
+        }
         ind_names <- names(data)
         if (any(duplicated(ind_names))) warning("Avoid duplicates in sample names")
-        ## Check for presence of any "," instead of a "." as decimal sign
-        x <- as.vector(unlist(data))
-        na <- length(x[is.na(x)])
-        y <- as.vector(as.data.frame(apply(as.data.frame(data), 2, as.numeric)))
-        y <- as.vector(unlist(y))
-        if (length(y[is.na(y)]) - na > 0) stop("Data contains non-numeric data. Make sure not to use ',' as a decimal operator")
         gc_peak_list <- data
     }
-
+    # Validate retention times
+    if ("rt_col_name" %in% names(opt)) {
+df <- unlist(lapply(gc_peak_list,FUN = function(x,rt_col_name) x[[rt_col_name]],rt_col_name))
+if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use the correct decimal operator '.' instead of ','")
+}
 ## Do some internal checks if write_output is defined in align_chromatograms
         if (any(names(opt) == "write_output")) {
         if (any(!(opt[["write_output"]] %in% col_names))) {

@@ -4,11 +4,10 @@
 \alias{align_chromatograms}
 \title{Aligning gas-chromatography peaks based on retention times}
 \usage{
-align_chromatograms(data, sep = "\\t", conc_col_name = NULL,
-  rt_col_name = NULL, write_output = NULL, rt_cutoff_low = NULL,
-  rt_cutoff_high = NULL, reference = NULL, max_linear_shift = 0.02,
-  max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL,
-  delete_single_peak = FALSE)
+align_chromatograms(data, sep = "\\t", rt_col_name = NULL,
+  write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
+  reference = NULL, max_linear_shift = 0.02, max_diff_peak2mean = 0.02,
+  min_diff_peak2peak = 0.08, blanks = NULL, delete_single_peak = FALSE)
 }
 \arguments{
 \item{data}{Two input formats are supported. The first option is the \strong{path to a text file} with
@@ -26,10 +25,6 @@ The format can be checked by running \code{\link{check_input}}.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
-
-\item{conc_col_name}{Character string - the name of the column containing data for the quantification of peak
-abundance (usually the peak area or peak height).
-The variable needs to be numeric and the decimal separator needs to be a point.}
 
 \item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
@@ -112,7 +107,7 @@ data("peak_data")
 ## Subset for faster processing
 peak_data <- peak_data[1:4]
 peak_data <- lapply(peak_data,function(x) x <- x[1:80,])
-out <- align_chromatograms(peak_data, conc_col_name = "area", rt_col_name = "time",
+out <- align_chromatograms(peak_data, rt_col_name = "time",
        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
          max_linear_shift = 0.05, max_diff_peak2mean = 0.03, min_diff_peak2peak = 0.03,
          blanks = NULL, delete_single_peak = TRUE)

@@ -38,11 +38,6 @@
 #' The field separator character. The default is tab separated (\code{sep = '\\t'}).
 #' See the "sep" argument in \code{\link[utils]{read.table}} for details.
 #'
-#'@param conc_col_name
-#' Character string - the name of the column containing data for the quantification of peak
-#' abundance (usually the peak area or peak height).
-#' The variable needs to be numeric and the decimal separator needs to be a point.
-#'
 #'@param rt_col_name
 #' Character string - the name of the column containing the retention times.The variable needs to
 #' be numeric and the decimal separator needs to be a point.
@@ -118,13 +113,13 @@
 #' ## Subset for faster processing
 #' peak_data <- peak_data[1:4]
 #' peak_data <- lapply(peak_data,function(x) x <- x[1:80,])
-#' out <- align_chromatograms(peak_data, conc_col_name = "area", rt_col_name = "time",
+#' out <- align_chromatograms(peak_data, rt_col_name = "time",
 #'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
 #'          max_linear_shift = 0.05, max_diff_peak2mean = 0.03, min_diff_peak2peak = 0.03,
 #'          blanks = NULL, delete_single_peak = TRUE)
 #'@export
 #'
-align_chromatograms <- function(data, sep = "\t", conc_col_name = NULL, rt_col_name = NULL,
+align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
     max_linear_shift = 0.02, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL,
     delete_single_peak = FALSE) {
@@ -139,10 +134,9 @@ iterations = 1
 ### ======================
 
 # 1.1 Stop execution if mandatory checks are not passed
-x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference)
+x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference,rt_col_name = rt_col_name)
 if (x != TRUE) stop("Processing not possible, check warnings for details")
 if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
-if (is.null(conc_col_name)) stop("Column containing concentration of peaks is not specified. Define conc_col_name")
 
 
 # 1.2 Create a "Logbook" to record alignment steps and parameters
@@ -170,10 +164,17 @@ if (is.character(data)) { # txt file
     gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
     # Remove empty rows
     gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]
-    # Transform all variables to numeric
-    gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
+    # Transform to data frame
+    gc_data <-  as.data.frame(gc_data)
+    # gc_data <-  as.data.frame(apply(gc_data, 2, as.numeric))
     # convert to list
     gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
+    # convert retention times to numeric
+    fx <- function(x,rt_col_name) {
+        x[[rt_col_name]] <- as.numeric(x[[rt_col_name]])
+        return(x)
+    }
+    gc_peak_list <- lapply(gc_peak_list,FUN = fx,rt_col_name = "time")
 
 } else if (is.list(data)) { # data is in a list
     col_names <- unlist(lapply(data, function(x) out <- names(x)))
@@ -199,7 +200,7 @@ if (!is.null(reference)) {
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
     Logbook[["Input"]]["File"] <- as.character(as.character(match.call()["data"]))
     Logbook[["Input"]]["Retention_Time"] <- rt_col_name
-    Logbook[["Input"]]["Concentration"] <- conc_col_name
+    # Logbook[["Input"]]["Concentration"] <- conc_col_name
     Logbook[["Input"]]["Peaks"] <- peak_counter(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name)
     # Only created if blanks!=NULL
 if (!is.null(blanks)) Logbook[["Input"]][["Blanks"]] <- paste(blanks,collapse = "; ")

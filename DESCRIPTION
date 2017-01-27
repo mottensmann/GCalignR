@@ -18,7 +18,7 @@ Imports: stringr,
         RColorBrewer,
         reshape2,
         gridExtra,
-        License: GPL (>= 2)
+License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1
 Suggests: knitr,

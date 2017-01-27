@@ -19,7 +19,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
 ## Introduction
 
 `GCalignR` provides a simple means of aligning peaks from gas chromatography data based
-on retention times. The package functions to to visually evaluate the quality of the alignment and allow users to adjust their alignment algorithm parameters to optimize the alignment. The aligned data can easily be used as input for further widely used statistical packages such as `vegan`. We specifically developed and tested `GCalignR` as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the data and the parameters used for the initial peak detection. In other words: The clearer the peaks which were extracted from the chromatograms, the better the alignment will be. `GCalignR` has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely determined correctly in all cases when just retention times are used. Also, we highly recommend to at least partially double-check the resulting alignment with mass-spectrometry data (of available) or visual ways of comparing peaks across chromatograms.
+on retention times. The package also contains functions to visually evaluate the quality of the alignment and allow users to adjust the algorithm parameters to optimize the alignment. The aligned data can easily be used as input for statistical packages such as `vegan`. We specifically developed and tested `GCalignR` as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the raw data and the parameters used for the initial peak detection. In other words: The clearer the peaks which were extracted from the chromatograms, the better the alignment will be. `GCalignR` has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely to be determined correctly in all cases when just retention times are used. Also, we highly recommend to at least partially double-check the resulting alignment with mass-spectrometry data (of available) or visual ways of comparing peaks across chromatograms.
 
 
 ## GCalignR workflow in a larger context
@@ -27,7 +27,7 @@ on retention times. The package functions to to visually evaluate the quality of
 In the flow diagram below, we visualized the functionality of GCalignR within a complete workflow of
 analysing chemical data. After (1) analysis of the chemical samples with GC or GC-MS, an often proprietary 
 software is used to extract a list of peaks (retention times, peak area, also often peak height and
-other variables). Steps (3)-(7) are the the alignment steps within GCalignR, detailled below and in the
+other variables). Steps (3)-(7) are the the alignment steps within GCalignR, detailed below and in the
 other vignette. After alignment and normalisation, the output can be used as input for multivariate statistics
 in other packages such as vegan (8). 
 
@@ -165,6 +165,20 @@ to make sure yourself that the data fits the requirements described above.
 check_input(data = peak_data,list_peaks = F) # If list_peaks = T, a histogram of peaks is plotted 
 ```
 
+One of the steps in the algorithm is to adjust peaks that potentially represent the same substances
+but show slight differences in their retention times. For the parameter `min_diff_peak2peak` in the main function `align_chromatograms` it is therefore good to know about the difference between two peaks or substances within a chromatogram. The `peak_interspace` function plots the distances between peaks in the data. This will give an insight into how to specify the minimum difference in retention times of two different substances in a dataset with the `min_diff_peak2peak` parameter. Here we are plotting just a certain `quantile_range` of the data, as we are primarily interested in
+the minimum distance between peaks.
+```{r, fig.width=7, fig.height = 5}
+peak_interspace(data = peak_data, rt_col_name = "time", quantile_range = c(0, 0.8), quantiles = 0.02)
+```
+
+The histogram shows the distribution of retention-time 'spaces' between peaks. Most peaks are around
+0.05 minutes apart from each other. From the distribution we want to infer the potential error-margin around a peak,
+that GCalignR will correct. We can see here that very vew peaks are closer together than 0.03 minutes.
+By looking at the original chromatograms it becomes clear that these peaks are usually substances with low
+concentration which show a 'double peak', i.e. two peaks apear for what we believe is just a single
+substance. Therefore, we decide to take a value of 0.03 for the `min_diff_peak2peak` parameter below.
+
 ### Align chromatograms
 
 The core function in `GCalignR` is `align_chromatograms`, which will align the peak lists 
@@ -180,9 +194,9 @@ peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
     reference = NULL, # Reference will be choosen automatically 
     max_linear_shift = 0.05, # maximum shift of chromatograms to maximise shared peaks with a reference
-    max_diff_peak2mean = 0.03, # maximum distance of a sample peak to the mean of the peak across samples
+    max_diff_peak2mean = 0.03, # maximum. distance of a peak to the mean of the peak across samples
     min_diff_peak2peak = 0.03, # maximum distance between two peaks within a sample
-    blanks = "C2", # no blanks. Specify blanks by names (e.g. c("blank1", "blank2"))
+    blanks = "C2", # C2 is a control or blank sample. Specify blanks by names (e.g. c("blank1", "blank2"))
     delete_single_peak = TRUE, # delete peaks that are present in just one sample 
     write_output = NULL) # add c("time","area") to write aligned data.frames to .txt file
 ```

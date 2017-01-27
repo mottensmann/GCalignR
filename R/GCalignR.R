@@ -11,7 +11,6 @@
 #'
 #'\link{norm_peaks}
 #'
-#'
 #'@details
 #' Gas-chromatography (GC) & gas-chromatography-mass-spectrometry (GC-MS) are
 #' powerful analytical separation techniques that can be used for diverse

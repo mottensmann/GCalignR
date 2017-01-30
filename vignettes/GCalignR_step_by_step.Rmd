@@ -1,7 +1,7 @@
 ---
 title: "GCalignR Step by Step"
 author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph Hoffman"
-# date: "`r Sys.Date()`"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
 vignette: >
@@ -190,7 +190,7 @@ peak_data <- peak_data[1:4] # subset for speed reasons
 peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     conc_col_name = "area", # peak abundance variable name
     rt_col_name = "time", # retention time variable name 
-    rt_cutoff_low = 5, # cut peaks with retention times below 5 Minutes
+    rt_cutoff_low = 15, # cut peaks with retention times below 15 Minutes
     rt_cutoff_high = 45, # cut peaks with retention times above 45 Minutes
     reference = NULL, # Reference will be choosen automatically 
     max_linear_shift = 0.05, # maximum shift of chromatograms to maximise shared peaks with a reference

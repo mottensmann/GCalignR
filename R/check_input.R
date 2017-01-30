@@ -26,7 +26,7 @@
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
-#'@import magrittr stringr readr
+#'@import stringr readr
 #'
 #'@return
 #' If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
@@ -54,14 +54,12 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             stop("Data is not of the expected format. Specify a valid path to a .txt-file")
         }
         ## Sample Names
-        ind_names <- readr::read_lines(data, n_max = 1) %>%
-            stringr::str_split(pattern = sep) %>%
-            unlist()
+        ind_names <- readr::read_lines(data, n_max = 1)
+        ind_names <- unlist(stringr::str_split(string = ind_names,pattern = sep))
         ind_names <- ind_names[ind_names != ""]
         ## Variable Names
-        col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
-            stringr::str_split(pattern = sep) %>%
-            unlist()
+        col_names <- readr::read_lines(data, n_max = 1, skip = 1)
+        col_names <- unlist(stringr::str_split(string = col_names,pattern = sep))
         col_names <- col_names[col_names != ""]
         col_names <- stringr::str_trim(col_names)
         # validate retention time name

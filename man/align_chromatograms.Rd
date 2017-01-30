@@ -106,11 +106,10 @@ that are present in just one sample.
 data("peak_data")
 ## Subset for faster processing
 peak_data <- peak_data[1:4]
-peak_data <- lapply(peak_data,function(x) x <- x[1:80,])
 out <- align_chromatograms(peak_data, rt_col_name = "time",
-       rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
-         max_linear_shift = 0.05, max_diff_peak2mean = 0.03, min_diff_peak2peak = 0.03,
-         blanks = NULL, delete_single_peak = TRUE)
+rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M3",
+max_linear_shift = 0.02)
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@web.de)

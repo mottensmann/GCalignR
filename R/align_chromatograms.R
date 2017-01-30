@@ -105,18 +105,17 @@
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#'@import magrittr stringr
+#'@import stringr
 #'
 #'@examples
 #' ## Load example data set
 #' data("peak_data")
 #' ## Subset for faster processing
 #' peak_data <- peak_data[1:4]
-#' peak_data <- lapply(peak_data,function(x) x <- x[1:80,])
 #' out <- align_chromatograms(peak_data, rt_col_name = "time",
-#'        rt_cutoff_low = 5, rt_cutoff_high = 45, reference = "M3",
-#'          max_linear_shift = 0.05, max_diff_peak2mean = 0.03, min_diff_peak2peak = 0.03,
-#'          blanks = NULL, delete_single_peak = TRUE)
+#'rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M3",
+#'max_linear_shift = 0.02)
+#'
 #'@export
 #'
 align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
@@ -147,14 +146,12 @@ Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
 ### ============
 if (is.character(data)) { # txt file
     # Get Sample Names
-    ind_names <- readr::read_lines(data, n_max = 1) %>%
-        stringr::str_split(pattern = sep) %>%
-        unlist()
+    ind_names <- readr::read_lines(data, n_max = 1)
+    ind_names <- unlist(stringr::str_split(string = ind_names,pattern = sep))
     ind_names <- ind_names[ind_names != ""]
     # Get Variable Names
-    col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
-        stringr::str_split(pattern = sep) %>%
-        unlist()
+    col_names <- readr::read_lines(data, n_max = 1, skip = 1)
+    col_names <- unlist(stringr::str_split(string = col_names,pattern = sep))
     col_names <- col_names[col_names != ""]
     col_names <- stringr::str_trim(col_names)
     ind_names <- stringr::str_trim(ind_names)

@@ -11,7 +11,7 @@
 #' @param quantiles
 #' A numeric vector. If specified quantiles are calculated from the distribution.
 #'
-#' @import magrittr stringr
+#' @import stringr
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #' @import utils
@@ -28,16 +28,15 @@ peak_interspace <- function(data,rt_col_name = NULL, sep = "\t",quantiles = NULL
 # 2. Load Data
 # ############
     if (is.character(data)) {
-        ind_names <- readr::read_lines(data, n_max = 1) %>%
-            stringr::str_split(pattern = sep) %>%
-            unlist()
+        ind_names <- readr::read_lines(data, n_max = 1)
+        ind_names <- unlist(stringr::str_split(string = ind_names,pattern = sep))
         ind_names <- ind_names[ind_names != ""]
-        col_names <- readr::read_lines(data, n_max = 1, skip = 1) %>%
-            stringr::str_split(pattern = sep) %>%
-            unlist()
+        ind_names <- stringr::str_trim(ind_names)
+        col_names <- readr::read_lines(data, n_max = 1, skip = 1)
+        col_names <- unlist(stringr::str_split(string = col_names,pattern = sep))
         col_names <- col_names[col_names != ""]
         col_names <- stringr::str_trim(col_names)
-        ind_names <- stringr::str_trim(ind_names)
+
         gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
         gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
         gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]

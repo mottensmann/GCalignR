@@ -53,7 +53,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#' @import ggplot2
+#' @import ggplot2 reshape2
 #'
 #' @examples
 #'

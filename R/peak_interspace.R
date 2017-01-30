@@ -14,7 +14,7 @@
 #' @import magrittr stringr
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @import utils
 #' @export
 #'
 peak_interspace <- function(data,rt_col_name = NULL, sep = "\t",quantiles = NULL,quantile_range =c(0,1)) {

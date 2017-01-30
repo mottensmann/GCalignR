@@ -19,6 +19,7 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
+#' @import stats
 #' @export
 #'
 choose_optimal_reference <- function(gc_peak_list = NULL, rt_col_name = NULL){

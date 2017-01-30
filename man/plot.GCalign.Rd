@@ -4,8 +4,8 @@
 \alias{plot.GCalign}
 \title{Plot Diagonstics for an Gcalign Object}
 \usage{
-\method{plot}{GCalign}(x, which_plot = c("all", "shifts", "variation",
-  "peak_numbers", "peaks_shared"), ...)
+plot.GCalign(x, which_plot = c("all", "shifts", "variation", "peak_numbers",
+  "peaks_shared"), ...)
 }
 \arguments{
 \item{x}{\code{GCalign} object, created by \code{\link{align_chromatograms}}}

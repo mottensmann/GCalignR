@@ -26,7 +26,7 @@
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
-#'@import magrittr stringr
+#'@import magrittr stringr readr
 #'
 #'@return
 #' If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned

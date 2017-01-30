@@ -18,7 +18,7 @@
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
-#'
+#' @import stringr
 #' @export
 #'
 print.GCalign <- function(x,write_text_file=FALSE,...){

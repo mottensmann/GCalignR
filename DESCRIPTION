@@ -10,19 +10,20 @@ Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
     the rows have similar retention time means).
 Depends:
     R (>= 3.2.3)
-Imports: stringr,
-        magrittr,
-        readr,
-        vegan,
-        ggplot2,
+Imports: colorspace,
+        ggplot2 (>= 2.2.1),
         gtable,
-        reshape2,
         gridExtra,
-        scales,
-        Rcpp,
+        magrittr,
         munsell,
-        colorspace,
-        stringi
+        plyr,
+        scales,
+        stringi,
+        stringr,
+        Rcpp,
+        readr,
+        reshape2,
+        vegan
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1

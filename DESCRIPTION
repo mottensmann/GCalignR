@@ -1,5 +1,5 @@
 Package: GCalignR
-Title: Simple Peak Alignment for Gas- Chromatography Data
+Title: Simple Peak Alignment for Gas-Chromatography Data
 Version: 0.0.9000
 Authors@R: c(person("Martin", "Stoffel", email = "martin.adam.stoffel@gmail.com", role = c("aut")),
              person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre")))
@@ -9,9 +9,9 @@ Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
     representing the same substance (i.e. no sample shows peaks in both rows and
     the rows have similar retention time means).
 Depends:
-    R (>= 3.2.3)
-Imports: ggplot2 (>= 2.2.1),
-        readr (>= 1.0.0),
+    R (>= 3.2.5),
+    ggplot2 (>= 2.2.1),
+Imports: readr (>= 1.0.0),
         reshape2 (>= 1.4.2),
         stringr (>= 1.1.0)
 Suggests: vegan (>= 2.4.2)

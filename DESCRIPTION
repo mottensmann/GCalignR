@@ -21,6 +21,7 @@ Imports: stringr,
         scales,
         Rcpp,
         munsell,
+        colorspace,
         stringi
 License: GPL (>= 2)
 LazyData: true

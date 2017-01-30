@@ -11,12 +11,14 @@ You can install:
 
 -   the latest development version from github with
 
-    ``` r
-    if (packageVersion("devtools") < 1.6) {
-      install.packages("devtools")
+``` r
+    if (!("devtools" %in% rownames(installed.packages()))) { install.packages("devtools")
     }
-    devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
-    ```
+if (packageVersion("devtools") < 1.6) {
+install.packages("devtools")
+}
+devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
+```
 
 If you encounter bugs or if you have any suggestions for improvement, just contact martin.adam.stoffel\[at\]gmail.com or meinolf.ottensmann\[at\]web.de
 

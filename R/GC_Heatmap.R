@@ -53,7 +53,7 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
-#' @import ggplot2 RColorBrewer grDevices
+#' @import ggplot2
 #'
 #' @examples
 #'
@@ -76,6 +76,7 @@ gc_heatmap <- function(object, algorithm_step = c('aligned','linear_shifted','pr
     type = c("binary","discrete"), threshold = 0.05, label_size = NULL, show_legend = TRUE,
     main_title = NULL, label = TRUE) {
 
+    # removed from @import: RColorBrewer grDevices
     algorithm_step <- match.arg(algorithm_step)
     if (algorithm_step == "aligned") algorithm_step <- "aligned_rts"
     if (algorithm_step == "linear_shifted") algorithm_step <- "linear_transformed_rts"
@@ -162,7 +163,9 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
         # type == continuos
     } else {
         # Spectral colour scheme
-        myPalette <-  colorRampPalette(rev(RColorBrewer::brewer.pal(11, "Spectral")))
+        # myPalette <-  grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11, "Spectral")))
+        # col_pal = myPalette(10)
+        col_pal <- c("#5E4FA2","#378EBA","#75C8A4","#BEE4A0","#F1F9A9","#FEEDA2", "#FDBE6F","#F67B49","#D8434D","#9E0142")
         r <- c(min(heat_matrix[["diff"]],na.rm = T),max(heat_matrix[["diff"]],na.rm = T))
 
         # Take 10 colours form the spectral scheme
@@ -172,7 +175,7 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
 
         hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id', fill = 'diff'))
         hm <- hm + geom_tile(color = "white", size = 0.01)
-        hm <- hm + scale_fill_gradientn(colours = myPalette(10),guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
+        hm <- hm + scale_fill_gradientn(colours = col_pal,guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
         )
         hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
     }

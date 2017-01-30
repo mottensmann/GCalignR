@@ -19,6 +19,7 @@ Imports: stringr,
         reshape2,
         gridExtra,
         scales,
+        Rcpp,
         stringi
 License: GPL (>= 2)
 LazyData: true

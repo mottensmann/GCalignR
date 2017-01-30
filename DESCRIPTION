@@ -20,6 +20,7 @@ Imports: stringr,
         gridExtra,
         scales,
         Rcpp,
+        munsell,
         stringi
 License: GPL (>= 2)
 LazyData: true

@@ -18,12 +18,13 @@ Imports: colorspace,
         magrittr,
         munsell,
         plyr,
-        scales,
-        stringi,
-        stringr,
         Rcpp,
         readr,
         reshape2,
+        scales,
+        stringi,
+        stringr,
+        tibble,
         vegan
 License: GPL (>= 2)
 LazyData: true

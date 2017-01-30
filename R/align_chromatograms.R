@@ -210,7 +210,6 @@ if (!is.null(blanks)) Logbook[["Input"]][["Blanks"]] <- paste(blanks,collapse = 
 
 # 3.1. Cut retention times
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
-    # ! raw list contains unaligned rt´s but not necessarily all of them --> rt cutoffs
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
 
 # Write to Logbook, distinguish cases

@@ -11,6 +11,7 @@ Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
 Depends:
     R (>= 3.2.3)
 Imports: colorspace,
+        lazyeval,
         ggplot2 (>= 2.2.1),
         gtable,
         gridExtra,

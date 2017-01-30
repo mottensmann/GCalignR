@@ -105,9 +105,10 @@ that are present in just one sample.
 ## Load example data set
 data("peak_data")
 ## Subset for faster processing
-peak_data <- peak_data[1:4]
+peak_data <- peak_data[1:3]
+peak_data <- lapply(peak_data, function(x) x[1:50,])
 out <- align_chromatograms(peak_data, rt_col_name = "time",
-rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M3",
+rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M2",
 max_linear_shift = 0.02)
 
 }

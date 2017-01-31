@@ -256,12 +256,11 @@ scent <- log(scent+1) # commonly used transformation for abundance data to reduc
 
 ### Non-metric multidimensional scaling 
 ```{r, results = 'hide'}
-library(vegan)
 data("peak_factors") # factors for individual scent samples
 scent <- scent[match(row.names(peak_factors),row.names(scent)),] # bring both to the same order
 scent_nmds <- vegan::metaMDS(comm = scent) # performs Nonmetric multidimensional scaling (NMDS)
 scent_nmds <- as.data.frame(scent_nmds$points) # get the xy coordinates for every individual 
-scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony) # add the colony as a factor 
+scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony)# add the colony as a factor 
 ```
 
 ```{r,fig.align="center",fig.cap="NMDS-Plot"}

@@ -260,12 +260,12 @@ data("peak_factors") # factors for individual scent samples
 scent <- scent[match(row.names(peak_factors),row.names(scent)),] # bring both to the same order
 scent_nmds <- vegan::metaMDS(comm = scent) # performs Nonmetric multidimensional scaling (NMDS)
 scent_nmds <- as.data.frame(scent_nmds$points) # get the xy coordinates for every individual 
-scent_nmds <- cbind(scent_nmds,colony=peak_factors$colony)# add the colony as a factor 
+scent_nmds <- cbind(scent_nmds,colony = peak_factors$colony)# add the colony as a factor 
 ```
 
 ```{r,fig.align="center",fig.cap="NMDS-Plot"}
-ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color=colony)) +
-    ggplot2::geom_point(size=4) + ggplot2::stat_ellipse(size=2) + ggplot2::labs(title ="", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
+ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color = colony)) +
+    ggplot2::geom_point(size = 4) + ggplot2::stat_ellipse(size = 2) + ggplot2::labs(title = "", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
 ```
 
 ### Multivariate analysis using *adonis*

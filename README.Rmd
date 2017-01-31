@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -19,25 +17,37 @@ knitr::opts_chunk$set(
 `GCalignR` provides simple functions to align gas-chromatography data based on retention times and plots to
 evaluate the quality of the alignment.
 
-You can install:
+Installing GCalignR:
 
-* the latest development version from github with
+* Get the latest development version from github with
 
-    ```R
+```R
+    if (!("devtools" %in% rownames(installed.packages()))) { install.packages("devtools")
+    }
     if (packageVersion("devtools") < 1.6) {
-      install.packages("devtools")
+    install.packages("devtools")
     }
     devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
-    ```
-   
+```
+* If the installation fails try
 
-If you encounter bugs or if you have any suggestions for improvement, just contact
-martin.adam.stoffel[at]gmail.com or meinolf.ottensmann[at]web.de
-
-## Get started with GCalignR
+```R
+    install.packages("ggplot2",dependencies = TRUE)
+    if (!("devtools" %in% rownames(installed.packages()))) {
+    install.packages("devtools")
+    }
+    if (packageVersion("devtools") < 1.6) {
+    install.packages("devtools")
+    }
+    devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)    
+```
+### Get started with GCalignR
 
 To get started read the vignette:  
 
 ```{r, eval = FALSE}
-vignette("GCalignR_step_by_step", package = "GCalignR")
+    vignette("GCalignR_step_by_step", package = "GCalignR")
 ```
+
+If you encounter bugs or if you have any suggestions for improvement, just contact
+martin.adam.stoffel[at]gmail.com or meinolf.ottensmann[at]web.de

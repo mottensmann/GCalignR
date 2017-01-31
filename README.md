@@ -1,5 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 GCalignR
 ========
 
@@ -7,26 +6,38 @@ GCalignR
 
 `GCalignR` provides simple functions to align gas-chromatography data based on retention times and plots to evaluate the quality of the alignment.
 
-You can install:
+Installing GCalignR:
 
--   the latest development version from github with
+-   Get the latest development version from github with
 
 ``` r
-if (!("devtools" %in% rownames(installed.packages()))) { install.packages("devtools")
+    if (!("devtools" %in% rownames(installed.packages()))) { install.packages("devtools")
     }
-if (packageVersion("devtools") < 1.6) {
-install.packages("devtools")
-}
-devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
+    if (packageVersion("devtools") < 1.6) {
+    install.packages("devtools")
+    }
+    devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
 ```
 
-If you encounter bugs or if you have any suggestions for improvement, just contact martin.adam.stoffel\[at\]gmail.com or meinolf.ottensmann\[at\]web.de
+-   If the installation fails try
 
-Get started with GCalignR
--------------------------
+``` r
+    install.packages("ggplot2",dependencies = TRUE)
+    if (!("devtools" %in% rownames(installed.packages()))) {
+    install.packages("devtools")
+    }
+    if (packageVersion("devtools") < 1.6) {
+    install.packages("devtools")
+    }
+    devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)    
+```
+
+### Get started with GCalignR
 
 To get started read the vignette:
 
 ``` r
-vignette("GCalignR_step_by_step", package = "GCalignR")
+    vignette("GCalignR_step_by_step", package = "GCalignR")
 ```
+
+If you encounter bugs or if you have any suggestions for improvement, just contact martin.adam.stoffel\[at\]gmail.com or meinolf.ottensmann\[at\]web.de

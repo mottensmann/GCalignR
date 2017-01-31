@@ -9,9 +9,9 @@ Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
     representing the same substance (i.e. no sample shows peaks in both rows and
     the rows have similar retention time means).
 Depends:
-    R (>= 3.2.5),
-    ggplot2 (>= 2.2.1)
-Imports: graphics,
+    R (>= 3.2.5)
+Imports: ggplot2 (>= 2.2.1)
+        graphics,
         stats,
         readr (>= 1.0.0),
         reshape2 (>= 1.4.2),

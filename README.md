@@ -12,23 +12,22 @@ Installing GCalignR:
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) { install.packages("devtools")
-    }
-    if (packageVersion("devtools") < 1.6) {
+    } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
     devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
 ```
 
--   If the installation fails try
+-   If the installation fails try the following commands (tested with a new installation of R 3.2.5)
 
 ``` r
-    install.packages("ggplot2",dependencies = TRUE)
     if (!("devtools" %in% rownames(installed.packages()))) {
     install.packages("devtools")
-    }
-    if (packageVersion("devtools") < 1.6) {
+    } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
+    install.packages("ggplot2",dependencies = TRUE)
+    install.packages("vegan",dependencies = TRUE)
     devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)    
 ```
 

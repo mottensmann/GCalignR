@@ -151,3 +151,16 @@ function_call <- function(call,FUN="align_chromatograms"){
     return(call)
 }
 
+write_files <- function(var = NULL, data = NULL, name = NULL) {
+    filename <- paste0(name,"_",var, ".txt")
+    c <- 1
+    while (file.exists(filename)) {
+        filename <- paste0(name,"_",var,"_",as.character(c),".txt")
+        c <- c + 1
+    }
+    utils::write.table(data[[var]], # change to [[]]
+                       file = filename,
+                       sep = "\t",
+                       row.names = FALSE)
+    return(filename)
+}

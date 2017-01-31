@@ -18,7 +18,7 @@ Installing GCalignR:
     devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
 ```
 
--   If the installation fails try the following commands (tested with a new installation of R 3.2.5)
+-   If the installation fails try installing the packages devtools, ggplot2 and vegan with the commmands below (tested with a new installation of R 3.2.5)
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) {
@@ -39,4 +39,4 @@ To get started read the vignette:
     vignette("GCalignR_step_by_step", package = "GCalignR")
 ```
 
-If you encounter bugs or if you have any suggestions for improvement, just contact martin.adam.stoffel\[at\]gmail.com or meinolf.ottensmann\[at\]web.de
+If you encounter bugs or if you have any suggestions for improvement, just contact meinolf.ottensmann\[at\]web.de

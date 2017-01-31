@@ -421,8 +421,16 @@ if (delete_single_peak) {
     })
     names(input) <- col_names
 
+### 7 Some protocollation
+### =====================
+    # Call of align_chromatograms, List
+    call <- as.list(match.call())[-1]
+    # Defaults added to the function call List
+    call <- function_call(call = call,FUN = align_chromatograms)
+    Logbook[["Call"]] <- call
+### =====================
 
-### 7 Write output to text files
+### 8 Write output to text files
 ### ============================
 
 if (!is.null(write_output)) {
@@ -433,14 +441,10 @@ if (!is.null(write_output)) {
         prefix <- as.character(strsplit(prefix,split = ".txt"))
     } else {
         # For a List take "Aligned" as prefix
-        prefix <- "Aligned"
+        prefix <- as.character(Logbook[["Call"]][["data"]])
     }
-        write_files <- function(x) {
-        utils::write.table(output[[x]],
-               file = paste0(prefix,"_",x, ".txt"), sep = "\t", row.names = FALSE)
-    }
-        Logbook[["Output"]] <- lapply(write_output,function(x) paste0(prefix,"_",x, ".txt"))
-        lapply(write_output, write_files)
+        file_names <- lapply(X = write_output, FUN = write_files,data = output, name = prefix)
+        Logbook[["Output"]] <- file_names
 }
 
 ### 8 Documentation in Logbook
@@ -450,12 +454,6 @@ if (!is.null(write_output)) {
     Logbook[["Variation"]][["LinShift"]] <- unlist(align_var(gc_peak_list_linear,rt_col_name))
     Logbook[["Variation"]][["Aligned"]] <- unlist(align_var(gc_peak_list_aligned,rt_col_name))
     Logbook[["Date"]]["End"] <- as.character(strftime(Sys.time()))
-
-    # Call of align_chromatograms, List
-    call <- as.list(match.call())[-1]
-    # Defaults added to the function call List
-    call <- function_call(call = call,FUN = align_chromatograms)
-    Logbook[["Call"]] <- call
 
 ### 9 Generate a list containing all returned output
     output_algorithm <- list(aligned = output,

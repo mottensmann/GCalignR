@@ -65,7 +65,10 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
         # validate retention time name
         if ("rt_col_name" %in% names(opt)) {
         rt_col_name <- opt[["rt_col_name"]]
-        if (!(rt_col_name %in% col_names)) stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
+        if (!(rt_col_name %in% col_names)) {
+            stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
+        pass <- FALSE
+        }
         }
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data

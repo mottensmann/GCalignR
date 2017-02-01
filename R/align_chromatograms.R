@@ -172,7 +172,7 @@ if (is.character(data)) { # txt file
         x[[rt_col_name]] <- as.numeric(x[[rt_col_name]])
         return(x)
     }
-    gc_peak_list <- lapply(gc_peak_list,FUN = fx,rt_col_name = "time")
+    gc_peak_list <- lapply(gc_peak_list,FUN = fx,rt_col_name = rt_col_name)
 
 } else if (is.list(data)) { # data is in a list
     col_names <- unlist(lapply(data, function(x) out <- names(x)))

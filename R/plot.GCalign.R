@@ -33,7 +33,6 @@
 #'
 #' @return
 #' Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "all"} no output is returned.
-#' @import graphics
 #' @export
 #'
 plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbers","peaks_shared"), ...) {

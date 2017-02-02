@@ -19,7 +19,7 @@
 peak_interspace <- function(data,rt_col_name = NULL, sep = "\t",quantiles = NULL,quantile_range = c(0,1)) {
 # Checks
 # ######
-    if (missing(rt_col_name)) stop("Specify rt_col_name")
+    if (is.null(rt_col_name)) stop("Specify rt_col_name")
     if (is.character(data)) {
     a <- utils::capture.output(check_input(data = data, sep = sep,rt_col_name = rt_col_name,plot = F))
     if (missing(a)) check_input(data = data, sep = sep,rt_col_name = rt_col_name,plot = F)

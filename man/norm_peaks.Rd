@@ -4,16 +4,15 @@
 \alias{norm_peaks}
 \title{Normalisation of peaks}
 \usage{
-norm_peaks(GCout, conc_col_name = NULL, rt_col_name = NULL,
-  out = c("list", "data.frame"), percent = TRUE, which = c("aligned",
-  "raw"))
+norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL, out = c("list",
+  "data.frame"), percent = TRUE, which = c("aligned", "raw"))
 }
 \arguments{
-\item{GCout}{object of class GCaling created with \link{align_chromatograms}. Contains a list
+\item{data}{object of class GCaling created with \link{align_chromatograms}. Contains a list
 of data.frames including the retention time and other variables, of which one needs
 to be named as specified by \code{conc_col_name}.}
 
-\item{conc_col_name}{character string denoting a column in data.frames of \code{GCout}
+\item{conc_col_name}{character string denoting a column in data.frames of \code{data}
 containing a variable describing the abundance of peaks (e.g. peak area or peak height).}
 
 \item{percent}{logical, if \code{percent = TRUE} normalised conentraion scale up to 100, otherwise to 1.}

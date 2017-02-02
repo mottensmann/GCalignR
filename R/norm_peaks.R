@@ -22,8 +22,11 @@
 #' @param which
 #' character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.
 #'
+#' @param out
+#' character string defining the format of the returned data. Either "List" or "data.frame".
+#'
 #' @return
-#' a list of data.frames containing normalised peak abundances
+#' depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies.
 #'
 #'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -31,7 +34,7 @@
 #' @keywords internal
 #' @export
 #'
-norm_peaks <- function(data,conc_col_name = NULL, rt_col_name = NULL, out = c("list","data.frame"), percent = TRUE, which = c("aligned","raw")) {
+norm_peaks <- function(data,conc_col_name = NULL, rt_col_name = NULL, out = c("data.frame","list"), percent = TRUE, which = c("aligned","raw")) {
 out <- match.arg(out)
 which <- match.arg(which)
 

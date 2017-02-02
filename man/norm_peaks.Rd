@@ -15,12 +15,14 @@ to be named as specified by \code{conc_col_name}.}
 \item{conc_col_name}{character string denoting a column in data.frames of \code{data}
 containing a variable describing the abundance of peaks (e.g. peak area or peak height).}
 
+\item{out}{character string defining the format of the returned data. Either "List" or "data.frame".}
+
 \item{percent}{logical, if \code{percent = TRUE} normalised conentraion scale up to 100, otherwise to 1.}
 
 \item{which}{character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.}
 }
 \value{
-a list of data.frames containing normalised peak abundances
+depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies.
 
  @author Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)

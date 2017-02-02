@@ -4,8 +4,9 @@
 \alias{norm_peaks}
 \title{Normalisation of peaks}
 \usage{
-norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL, out = c("list",
-  "data.frame"), percent = TRUE, which = c("aligned", "raw"))
+norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL,
+  out = c("data.frame", "list"), percent = TRUE, which = c("aligned",
+  "raw"))
 }
 \arguments{
 \item{data}{object of class GCaling created with \link{align_chromatograms}. Contains a list

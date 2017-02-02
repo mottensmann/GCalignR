@@ -44,16 +44,13 @@ matrix_append <- function(gc_peak_df, gc_peak_list,val = c("Zero","NA")) {
 }
 
 
-rt_cutoff <- function(gc_peak_df, rt_col_name, low=NULL, high=NULL){
-    # RetentionCutoff removes all Retention Times below the Threshold specified by Low (default 8s).
-    # In addition Retention Times above a time defined by the Value of High (Default is Null)
-    # can be applied.
+rt_cutoff <- function(gc_peak_df, rt_col_name, low = NULL, high = NULL) {
     highrow <- nrow(gc_peak_df)
     lowrow <- 1
-    if (!is.null(low)){
+    if (!is.null(low)) {
         lowrow <- min(which(gc_peak_df[[rt_col_name]] > low))
     }
-    if (!is.null(high)){
+    if (!is.null(high)) {
         highrow <- max(which(gc_peak_df[[rt_col_name]] < high))
     }
 

@@ -95,7 +95,10 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             pass <- FALSE
             warning("Number of sample names provided does not fit to the number of columns in the data")
         }
-        if (any(duplicated(ind_names))) warning("Avoid duplicates in sample names")
+        if (any(duplicated(ind_names))) {
+            warning(paste0("Duplicated sample names are not allowed.\nChange sample(s):\n",as.character(ind_names[duplicated(ind_names)])))
+            pass <- FALSE
+        }
         ## convert to list
         gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
 
@@ -178,7 +181,7 @@ if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use
     ## Checks that every sample has the same number of values per column
     format_pass <- format_error(gc_peak_list)
     if (pass == TRUE & format_pass == TRUE) {
-        cat("All checks passed!\nReady for processing with align_chromatograms\n")
+        cat("All checks passed!\n\n")
     } else {
         cat("Not all checks have been passed. Read warning messages and change data accordingly\n")
     }

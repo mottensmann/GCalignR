@@ -183,7 +183,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
 
         if (!"names.arg" %in% names(mcall)) {
             # if ("cex.names" %in% names(mcall)) label_size <- cex.names
-            graphics::text(bars - 0.5*mean(diff(bars)), graphics::par("usr")[1], labels = lablist, srt = 60, pos = 1, xpd = TRUE, cex = label_size, offset = 0.2)
+            graphics::text(bars, graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size, offset = 0.4)
         }
         rownames(peak_df) <- peak_df[["id"]]
         return(peak_df)

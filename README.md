@@ -11,7 +11,8 @@ Installing GCalignR:
 -   Get the latest development version from github with
 
 ``` r
-    if (!("devtools" %in% rownames(installed.packages()))) { install.packages("devtools")
+    if (!("devtools" %in% rownames(installed.packages()))) { 
+    install.packages("devtools")
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }

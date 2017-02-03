@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* added the correct files to 'inst/doc'
+
 ## Release summary
 
 ## Test environments

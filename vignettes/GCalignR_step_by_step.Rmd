@@ -12,15 +12,13 @@ vignette: >
 
 ```{r, echo = FALSE}
 library(knitr)
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE,
+knitr::opts_chunk$set(collapse = TRUE, comment = ">", cache = FALSE,
     fig.width = 6, fig.height = 6) # warning = FALSE
 ```
 
 ## Introduction
 
-`GCalignR` provides a simple means of aligning peaks from gas chromatography data based
-on retention times. The package also contains functions to visually evaluate the quality of the alignment and allow users to adjust the algorithm parameters to optimize the alignment. The aligned data can easily be used as input for statistical packages such as `vegan`. We specifically developed and tested `GCalignR` as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the raw data and the parameters used for the initial peak detection. In other words: The clearer the peaks are which were extracted from the chromatograms, the better the alignment will be. `GCalignR` has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely to be determined correctly in all cases when just retention times are used. Also, we highly recommend to at least partially double-check the resulting alignment with mass-spectrometry data (of available) or visual ways of comparing peaks across chromatograms.
-
+`GCalignR` provides a simple means of aligning peaks from gas chromatography data based on retention times. The package also contains functions to visually evaluate the quality of the alignment and allow users to adjust the algorithm parameters to optimize the alignment. The aligned data can easily be used as input for statistical packages such as `vegan`. We specifically developed and tested `GCalignR` as a preprocessing tool prior to the statistical analysis of chemical samples from animal skin and preen glands [see @stoffel2015chemical for an application of the underlying algorithm]. The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the raw data and the parameters used for the initial peak detection. In other words: The clearer the peaks are which were extracted from the chromatograms, the better the alignment will be. `GCalignR` has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely to be determined correctly in all cases when just retention times are used. Also, we highly recommend to at least partially double-check the resulting alignment with mass-spectrometry data (of available) or visual ways of comparing peaks across chromatograms.
 
 ## GCalignR workflow in a larger context
 
@@ -92,24 +90,22 @@ by means of shifting them simultaneously to maximise the number of shared peaks 
 The statistical analysis of GC or GC-MS data is usually based on the detection of substance peaks within chromatograms instead of the full chromatogram. This can be done with proprietary software or free programs such as AMDIS [@stein1999integrated]. The extraction of peaks from chromatograms is based on a certain threshold which might severely influence the quality of the alignment with `GCalignR`. If for instance the peak data includes very small peaks that occurred in a very low abundance, the retention time of the peak itself will have a higher potential error than highly abundant and sharp peaks.
 
 The peak data of a chromatogram usually contain the retention time of a given peak plus additional information such as the area under the peak or its height which are used in the subsequent analysis. 
-`GCalignR` uses the retention times (and not the mass-spectra, which may not be available, e.g. when using gas-chromatography coupled to a flame ionization detector (FID)) to align the peaks across individuals for subsequent chemometric analysis and pattern detection .The simple assumption is that peaks with similar retention times represent the same substances. However, it is highly recommended to verify this assumption by comparing also the mass-spectra (if available) of the substances of interest.
+`GCalignR` uses the retention times (and not the mass-spectra, which may not be available, e.g. when using gas-chromatography coupled to a flame ionization detector (FID)) to align the peaks across individuals for subsequent chemometric analysis and pattern detection. The simple assumption is that peaks with similar retention times represent the same substances. However, it is highly recommended to verify this assumption by comparing also the mass-spectra (if available) of the substances of interest.
 
 ### Input file format
-The input file for GCalignR is a .text file, whereby all elements should be separated by tabs (with
+The input file for GCalignR is a plain text file, whereby all elements should be separated by tabs (with
 sep = "/t") or any other separator, which has to be specified with the `sep` argument (see
 `?read.table` for a list of separators). The decimal seperator has to be the point. 
 
-* The first row contains the sample names, whereby every name must be unique. Names should not
-contain whitespaces and use the underscore _ as the only special character. 
+* The first row contains the sample names, whereby every name must be unique. Names should not contain whitespaces and use the underscore as the only special character. 
 
 * The second row
-contains the names of the data columns. For example, if you extracted both the retention time of a
-peak as well as the area under the peak you would write `RT area` into the second line. You can however add more variables such as the peak height. The variable names should not
-contain whitespaces and use the underscore _ as the only special character. 
+contains the names of the data columns. For example, if both the retention time of a peak as well as the area under the peak have been extracted you would write `RT area` into the second line. You can however add more variables such as the peak height. The variable names should not
+contain whitespaces and use the underscore as the only special character. 
 
-* Starting with the third row, the actual peak data is included, whereby single samples are concatenated horizontally. Each chromatogram needs to consist of the same number of columns, whereby at least one containing retention times is required. In order to use the functionality of the function `norm_peaks`an additional column containing a concentration measure (e.g. height or area of peaks) is required. The decimal separator has to be the point (not comma!).
+* Starting with the third row, the actual peak data is included, whereby single samples are concatenated horizontally. Each chromatogram needs to consist of the same number of columns, whereby at least one containing retention times is required. In order to use the functionality of the function `norm_peaks` an additional column containing a concentration measure (e.g. height or area of peaks) is required. The decimal separator has to be the point (not comma!).
 
-```{r, out.width = 650, fig.retina = NULL, echo = FALSE}
+```{r, out.width = 650, fig.retina = NULL, echo = FALSE,fig.align='center'}
 knitr::include_graphics("example.jpg") 
 ```
 
@@ -119,10 +115,11 @@ Naturally, not all chromatograms contain the same number of peaks.
 knitr::include_graphics("example2.jpg") 
 ```
 
-### alternative input from R
+### Alternative input from R
 
-Alternatively to reading a .text file, GCalignR also takes input directly from R. Here, `data`
-has to be a `list` of `data frames`. Each `list` element (`data frame`) has the ID of an individual as its name and the `data frame` itself contains the gc peak data for this individual (again, the minimum number of columns is two: one column for the retention time and one column for another variable such as the area under the peak or it's height is required for using `norm_peaks`). All column names within `data frames` have to be the same. The attached dataset `peak_data` contains data from skin swabs of Antarctic Fur Seals (*Arctocephalus gazella*) (@stoffel2015chemical)
+Alternatively to reading a text file, GCalignR also takes input directly from R. Here, `data`
+has to be a `list` of `data frames`. Each `list` element (`data frame`) has the identity of a sample as its name and the `data frame` itself contains the gc peak data for this sample (again, the minimum number of columns is one column for the retention time and one column for another variable such as the area under the peak or it's height is required for using `norm_peaks`). All column names within `data frames` have to be the same. The attached dataset `peak_data` contains data from skin swabs of Antarctic Fur Seals *Arctocephalus gazella* [@stoffel2015chemical]
+
 
 ```{r} 
 data("peak_data")
@@ -162,7 +159,7 @@ peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     rt_col_name = "time", # retention time variable name 
     rt_cutoff_low = 15, # remove peaks below 15 Minutes
     rt_cutoff_high = 45, # remove peaks exceeding 45 Minutes
-    reference = NULL, # choosen automatically 
+    reference = NULL, # choose automatically 
     max_linear_shift = 0.05, # max. shift for linear corrections
     max_diff_peak2mean = 0.03, # max. distance of a peak to the mean across samples
     min_diff_peak2peak = 0.03, # min. expected distance between peaks 
@@ -171,7 +168,7 @@ peak_data_aligned <- align_chromatograms(data = peak_data, # input data
     write_output = NULL) # add variable names to write aligned data to text files
 ```
 
-The aligned data matrices are now stored in `data frame`'s which can be accessed as follows:
+The aligned data matrices are now stored in `data frame's` which can be accessed as follows:
 
 ```{r, eval = FALSE}
 peak_data_aligned$aligned$time # to access the aligned retention times
@@ -185,7 +182,7 @@ data("aligned_peak_data")
 
 ### Visual diagnostics for the aligned data
 
-The `gc_heatmap` function can be used to visualise aligned datasets. A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. The basic rationale of the alignment is to sort the substances with very similar retention times together, as they most likely represent one substance. The heatmap shows how the single peaks for the individuals deviate from the mean retention time of a substance. As a rule of thumb: The larger the deviation, the less likely it is the same substance. This is especially true if one or few samples deviate significantly, whereas other substances might be more variable than others. However, going back to the original chromatograms and looking at the quality of the peak might help. The heatmap can be invoked using custom threshold values. As an first orientation the default value of 0.05 can be used to inspect outliers among substances. The actual variation that will be observed on substance level will also depend on the alignment parameters, i.e. larger deviations have to be expected with increasing distance between peaks specified by `min_diff_peak2peak`in `align_chromatograms`. Check out the documentation with \code{?gc_heatmap} for further possibilities.
+The `gc_heatmap` function can be used to visualise aligned datasets. A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. The basic rationale of the alignment is to sort the substances with very similar retention times together, as they most likely represent one substance. The heatmap shows how the single peaks for the individuals deviate from the mean retention time of a substance. As a rule of thumb: The larger the deviation, the less likely it is the same substance. This is especially true if one or few samples deviate significantly, whereas other substances might be more variable than others. However, going back to the original chromatograms and looking at the quality of the peak might help. The heatmap can be invoked using custom threshold values. As an first orientation the default value of 0.05 can be used to inspect outliers among substances. The actual variation that will be observed on substance level will also depend on the alignment parameters, i.e. larger deviations have to be expected with increasing distance between peaks specified by `min_diff_peak2peak` in `align_chromatograms`. Check out the documentation with \code{?gc_heatmap} for further possibilities.
 
 ```{r,message=FALSE,fig.width=8,fig.height=8}
 gc_heatmap(aligned_peak_data,threshold = 0.03) 
@@ -198,7 +195,7 @@ plot(aligned_peak_data,which_plot = "all") # Plots, can be invoked separetely
 ```
 
 Also, print provides a verbal summary of the alignment procedure.
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 print(aligned_peak_data) 
 ```
 
@@ -215,27 +212,40 @@ scent <- log(scent + 1)
 
 ### Visualise patterns by ordination plots using the *vegan* package
 
-`vegan` offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out *?vegan* for a first overview. 
+`vegan` offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out \code{?vegan} for a first overview. 
 
 ### Non-metric multidimensional scaling 
 ```{r, results = 'hide'}
-data("peak_factors") # factors for individual scent samples
-scent <- scent[match(row.names(peak_factors),row.names(scent)),] # same order
-scent_nmds <- vegan::metaMDS(comm = scent)
-scent_nmds <- as.data.frame(scent_nmds[["points"]]) # get xy coordinates  
-scent_nmds <- cbind(scent_nmds,colony = peak_factors[["colony"]])# add colony as a factor 
+## GCalignR contains factors for the chemical dataset
+data("peak_factors") 
+## keep order of rows consistent
+scent <- scent[match(row.names(peak_factors),row.names(scent)),] 
+## NMDS using Bray-Curtis dissimilarities
+scent_nmds <- vegan::metaMDS(comm = scent, distance = "bray")
+## get x and y coordinates
+scent_nmds <- as.data.frame(scent_nmds[["points"]])  
+## add the colony as a factor to each sample
+scent_nmds <- cbind(scent_nmds,colony = peak_factors[["colony"]])
 ```
 
 ```{r,fig.align="center",fig.cap="NMDS-Plot"}
-ggplot2::ggplot(data = scent_nmds,ggplot2::aes(MDS1,MDS2,color = colony)) +
-    ggplot2::geom_point(size = 4) + ggplot2::stat_ellipse(size = 2) + ggplot2::labs(title = "", x = "MDS1", y = "MDS2") + ggplot2::theme_void()
+## ordiplot with ggplot2
+library(ggplot2)
+ggplot(data = scent_nmds,aes(MDS1,MDS2,color = colony)) +
+    geom_point(size = 4) + 
+    stat_ellipse(size = 2) + 
+    labs(title = "", x = "MDS1", y = "MDS2") +  
+    theme_void() + 
+    theme(panel.background = element_rect(colour = "black", size = 2,fill = NA))
 ```
 
 ### Multivariate analysis using *adonis*
 Using **adonis** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
 ```{r}
-vegan::adonis(scent ~ peak_factors$colony,permutations = 999) # Colonies differ in the location
-anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony)) # No dispersion effect
+## colony effect
+vegan::adonis(scent ~ peak_factors$colony,permutations = 999) 
+## no dispersion effect
+anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony))
 ```
 
 ## Literature

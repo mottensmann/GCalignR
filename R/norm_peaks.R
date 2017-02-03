@@ -7,13 +7,13 @@
 #' within the original gas-chromatography data \code{datafile} submitted to
 #' \link{align_chromatograms}.
 #'
-#' @param GCout
+#' @param data
 #' object of class GCaling created with \link{align_chromatograms}. Contains a list
 #' of data.frames including the retention time and other variables, of which one needs
 #' to be named as specified by \code{conc_col_name}.
 #'
 #' @param conc_col_name
-#' character string denoting a column in data.frames of \code{GCout}
+#' character string denoting a column in data.frames of \code{data}
 #' containing a variable describing the abundance of peaks (e.g. peak area or peak height).
 #'
 #' @param percent
@@ -22,8 +22,11 @@
 #' @param which
 #' character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.
 #'
+#' @param out
+#' character string defining the format of the returned data. Either "List" or "data.frame".
+#'
 #' @return
-#' a list of data.frames containing normalised peak abundances
+#' depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies.
 #'
 #'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -31,16 +34,16 @@
 #' @keywords internal
 #' @export
 #'
-norm_peaks <- function(GCout,conc_col_name = NULL, rt_col_name = NULL, out = c("list","data.frame"), percent = TRUE, which = c("aligned","raw")) {
+norm_peaks <- function(data,conc_col_name = NULL, rt_col_name = NULL, out = c("data.frame","list"), percent = TRUE, which = c("aligned","raw")) {
 out <- match.arg(out)
 which <- match.arg(which)
 
 if(which == "raw") which <- "input_matrix"
 # some checks
-if (class(GCout) != "GCalign") {warning("Input is not a output of align_chromatograms, assure the format is correct")}
+if (class(data) != "GCalign") {warning("Input is not a output of align_chromatograms, assure the format is correct")}
 if (is.null(conc_col_name)) {stop("List containing peak concentration is not specified. Define conc_col_name")}
 
-conc_list <- GCout[[which]][[conc_col_name]]
+conc_list <- data[[which]][[conc_col_name]]
 
 # Function to do the calculations
 rel_abund <- function(conc_df){
@@ -55,7 +58,7 @@ rel_con_list <- lapply(conc_list, rel_abund)
 if (out == "data.frame") {
         x <- rel_con_list[-1]
         x <- as.data.frame(t(do.call(cbind,x)))
-        colnames(x) <- GCout[[which]][[rt_col_name]]["mean_RT"][[1]]
+        colnames(x) <- data[[which]][[rt_col_name]]["mean_RT"][[1]]
         rel_con_list <- x
 }
 return(rel_con_list)

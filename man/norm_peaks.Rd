@@ -4,24 +4,26 @@
 \alias{norm_peaks}
 \title{Normalisation of peaks}
 \usage{
-norm_peaks(GCout, conc_col_name = NULL, rt_col_name = NULL,
-  out = c("list", "data.frame"), percent = TRUE, which = c("aligned",
+norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL,
+  out = c("data.frame", "list"), percent = TRUE, which = c("aligned",
   "raw"))
 }
 \arguments{
-\item{GCout}{object of class GCaling created with \link{align_chromatograms}. Contains a list
+\item{data}{object of class GCaling created with \link{align_chromatograms}. Contains a list
 of data.frames including the retention time and other variables, of which one needs
 to be named as specified by \code{conc_col_name}.}
 
-\item{conc_col_name}{character string denoting a column in data.frames of \code{GCout}
+\item{conc_col_name}{character string denoting a column in data.frames of \code{data}
 containing a variable describing the abundance of peaks (e.g. peak area or peak height).}
+
+\item{out}{character string defining the format of the returned data. Either "List" or "data.frame".}
 
 \item{percent}{logical, if \code{percent = TRUE} normalised conentraion scale up to 100, otherwise to 1.}
 
 \item{which}{character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.}
 }
 \value{
-a list of data.frames containing normalised peak abundances
+depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies.
 
  @author Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)

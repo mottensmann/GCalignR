@@ -3,6 +3,7 @@
 ## Test environments
 * devtools::build_win()
 * local Mac OS X El Capitan 10.11
+* local Windows 10 Home
 * Travis-CI
 
 ## R CMD check results

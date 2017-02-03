@@ -228,7 +228,7 @@ scent_nmds <- as.data.frame(scent_nmds[["points"]])
 scent_nmds <- cbind(scent_nmds,colony = peak_factors[["colony"]])
 ```
 
-```{r,fig.align="center",fig.cap="NMDS-Plot"}
+```{r,fig.align="center"}
 ## ordiplot with ggplot2
 library(ggplot2)
 ggplot(data = scent_nmds,aes(MDS1,MDS2,color = colony)) +
@@ -236,7 +236,7 @@ ggplot(data = scent_nmds,aes(MDS1,MDS2,color = colony)) +
     stat_ellipse(size = 2) + 
     labs(title = "", x = "MDS1", y = "MDS2") +  
     theme_void() + 
-    theme(panel.background = element_rect(colour = "black", size = 2,fill = NA))
+    theme(panel.background = element_rect(colour = "black", size = 2,fill = NA),aspect.ratio = 1)
 ```
 
 ### Multivariate analysis using *adonis*

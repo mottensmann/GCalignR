@@ -1,6 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
+* included examples for all functions included in NAMESPACE
 * added the correct files to 'inst/doc'
 
 ## Release summary

@@ -45,9 +45,6 @@
 #'
 #'@keywords internal
 #'
-#'@export
-#'
-#'
 align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1, rt_col_name,R = 1) {
     # print to Console
     # cat(paste('Iteration',as.character(R),'out of',as.character(iterations),' ... '))

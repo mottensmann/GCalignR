@@ -5,25 +5,23 @@
 \title{Normalisation of peaks}
 \usage{
 norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL,
-  out = c("data.frame", "list"), percent = TRUE, which = c("aligned",
-  "raw"))
+  out = c("data.frame", "list"))
 }
 \arguments{
-\item{data}{object of class GCaling created with \link{align_chromatograms}. Contains a list
-of data.frames including the retention time and other variables, of which one needs
-to be named as specified by \code{conc_col_name}.}
+\item{data}{Object of class GCalign created with \link{align_chromatograms}. Contains a list
+of data frames including the retention time and other variables, of which one needs
+to be specified as \code{conc_col_name}.}
 
-\item{conc_col_name}{character string denoting a column in data.frames of \code{data}
+\item{conc_col_name}{Character string denoting a column in data frames of \code{data}
 containing a variable describing the abundance of peaks (e.g. peak area or peak height).}
 
+\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+be numeric and the decimal separator needs to be a point.}
+
 \item{out}{character string defining the format of the returned data. Either "List" or "data.frame".}
-
-\item{percent}{logical, if \code{percent = TRUE} normalised conentraion scale up to 100, otherwise to 1.}
-
-\item{which}{character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.}
 }
 \value{
-depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies.
+Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies. Abundancies are given in percent.
 
  @author Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
@@ -32,8 +30,13 @@ depending on \code{out} either a list of data frame or a single data frame were 
 \code{norm_peaks} calculates the relative abundance of a peak by normalising
 with regard to the cumulative abundance of all peaks that are present within an
 individual chromatogram. The desired measure of peak abundance needs to be a column
-within the original gas-chromatography data \code{datafile} submitted to
-\link{align_chromatograms}.
+within the original gas-chromatography dataset aligned by \link{align_chromatograms}.
 }
-\keyword{internal}
+\examples{
+## aligned gc-dataset
+data("aligned_peak_data")
+## returns normalised peak area
+norm_peaks(data = aligned_peak_data, conc_col_name = "area", rt_col_name = "time")
+
+}
 

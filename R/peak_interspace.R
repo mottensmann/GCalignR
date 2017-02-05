@@ -7,16 +7,25 @@
 #' @inheritParams check_input
 #' @inheritParams align_chromatograms
 #' @param quantile_range
-#' A numeric vector of length two specifiying arbitrary interquartile range. Only affecting the barplot. Defaults are \code{quantile_range = c(0,1)}.
+#' A numeric vector of length two specifiying arbitrary interquartile ranges visualised in a barplot. By default the whole range is plotted \code{quantile_range = c(0,1)}.
 #' @param quantiles
-#' A numeric vector. If specified quantiles are calculated from the distribution.
-#'
+#' A numeric vector. Specified quantiles are calculated from the distribution.
+#' @return List containing summary statistics of the peak interspace distribution
 #' @import stringr
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
+#'
+#' @examples
+#' ## plotting with defaults
+#' peak_interspace(data = peak_data, rt_col_name = "time")
+#' ## plotting up to the 0.95 quantile
+#' peak_interspace(data = peak_data,rt_col_name = "time",quantile_range = c(0,0.95))
+#' ## return the 0.1 quantile
+#' peak_interspace(data = peak_data,rt_col_name = "time", quantiles = 0.1)
+#'
 #' @export
 #'
-peak_interspace <- function(data,rt_col_name = NULL, sep = "\t",quantiles = NULL,quantile_range = c(0,1)) {
+peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NULL, quantile_range = c(0,1)) {
 # Checks
 # ######
     if (is.null(rt_col_name)) stop("Specify rt_col_name")
@@ -77,4 +86,4 @@ peak_interspace <- function(data,rt_col_name = NULL, sep = "\t",quantiles = NULL
         output <- append(output,list(Quantiles = y))
     }
     return(output)
-}# end function
+} # end function

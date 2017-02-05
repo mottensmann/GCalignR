@@ -3,18 +3,20 @@
 #' @description
 #' print method for class "GCalign"
 #'
-#' @param x
-#' an object of class \strong{"GCalign"}, the result of a call to \code{\link{align_chromatograms}}
+#' @inheritParams plot.GCalign
 #'
 #' @param write_text_file
-#' logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
+#' Logical. If \code{TRUE} the output is written to a plain text file. No text is printed
 #' to the console in this case.
 #'
 #' @examples
-#' print(aligned_peak_data) # prints summary to the Console
+#' ## GCalign object
+#' data("aligned_peak_data")
+#' ## print summary
+#' print(aligned_peak_data)
 #'
 #' @param ...
-#' optional arguments passed on to methods. Internally \link{cat} is used to generate output, hence optional arguments are currently not ignored.
+#' Optional arguments passed on to methods are currently not supported.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
@@ -22,20 +24,20 @@
 #' @export
 #'
 print.GCalign <- function(x,write_text_file=FALSE, ...){
+    ## Name of a GCalign Object
+    object_name <- as.list(match.call())[["x"]]
 
-    object_name <- as.list(match.call())[["x"]] # Name of the GCalign Object
-
-    # Extract some informative pieces from the Logfile
+    ## information from Logfile
     function_call <- x[["Logfile"]][["Call"]] # List of all function arguments
     function_call[["sep"]] <- ifelse(function_call[["sep"]] == "\t","\\t",function_call[["sep"]])
-    function_call[["blanks"]] <- if(length(function_call[["blanks"]]) > 2) {
+    function_call[["blanks"]] <- if (length(function_call[["blanks"]]) > 2) {
         paste0("(",paste(as.character(function_call[["blanks"]][-1]),collapse = ", "),")")
     }
-    function_call[["write_output"]] <- if(length(function_call[["write_output"]]) > 1) {
+    function_call[["write_output"]] <- if (length(function_call[["write_output"]]) > 1) {
         paste0("(",paste(as.character(function_call[["write_output"]][-1]),collapse = ", "),")")
 
     }
-    # Tweak the NULL entries, so they are printable
+    ## Tweak the NULL entries, so they are printable
     which_NULL <- as.vector(which(lapply(function_call, function(x) out <- class(x)) == "NULL"))
     function_call[which_NULL] <- "NULL"
     names_call <- names(function_call)

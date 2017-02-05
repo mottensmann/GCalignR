@@ -9,7 +9,7 @@ check_input(data, plot = FALSE, sep = "\\t", ...)
 \arguments{
 \item{data}{Path to a data file or the name of a list in the global environment.}
 
-\item{plot}{Logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.}
+\item{plot}{Logical, if TRUE the distribution of peak numbers is plotted. By default no plot is returned.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
@@ -32,6 +32,8 @@ are allowed to contain numbers from 0-9 and "." as the only decimal character. H
 at the vignettes for examples.
 }
 \examples{
+## gc-data
+data("peak_data")
 ## Checks format
 check_input(peak_data)
 ## Includes a barplot of peak numbers in the raw data

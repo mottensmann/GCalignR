@@ -1,7 +1,7 @@
 #' Aligning gas-chromatography peaks based on retention times
 #'
 #'@description
-#'\strong{align_chromatograms} is the core function of \code{\link{GCalignR}} to align gas-chromatography peak data.
+#' This is the core function of \code{\link{GCalignR}} to align gas-chromatography peak data.
 #' Read through the documentation below and take a look at the vignettes for a thorough introduction.
 #'
 #'@details
@@ -21,8 +21,7 @@
 #' that are present in just one sample.
 #'
 #'@param data
-#' Two input formats are supported. The first option is the \strong{path to a text file} with
-#' extension containing the gc-data. It is expected that the file is formatted following this
+#' Two input formats are supported. The first option is the \strong{path to a plain text file} with extension ".txt" containing the gc-data. It is expected that the file is formatted following this
 #' principle: The first row contains sample names, the second row column names of the corresponding
 #' chromatograms. Starting with the third row, peak data are included, whereby matrices of single
 #' samples are concatenated horizontally (see the vignette or example data). The matrix for each
@@ -64,16 +63,13 @@
 #' from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same
 #' retention time to all peaks within a chromatogram to maximise the number of shared peaks with
 #' the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.
-#' See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}
 #'
 #'@param max_diff_peak2mean
-#' Numeric, defines the allowed deviation of the retention time of a given peak from the mean of the
-#' corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects
-#' the retention time range in which peaks across samples are still counted as the same 'substance',
+#' Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance',
 #' i.e. sorted in one row.
 #'
 #'@param min_diff_peak2peak
-#' Numeric, defines the expected minimum difference in retention times among different substances.
+#' Numeric values defining the expected minimum difference in retention times among different substances.
 #' Retention time rows that differ less, are therefore merged if every sample contains either
 #' one or none of the respective compounds.
 #' This parameter is a major determinant in the classification of distinct peaks.
@@ -89,8 +85,7 @@
 #' removed from all samples, before the blanks are deleted from the aligned data.
 #'
 #'@param delete_single_peak
-#' Logical, determining whether substances that occur in
-#' just one sample are removed or not. Default FALSE.
+#' Logical, determining whether substances that occur in just one sample are removed or not. Default FALSE.
 #'
 #'@return
 #' Returns an object of class "GCalign" that is a a list containing several objects that are listed below.
@@ -101,7 +96,9 @@
 #' can be used for further statistical analyses in other packages and also directly written
 #' to .txt file by specifying the write_output argument in align_chromatograms}
 #' \item{heatmap_input}{Data frames of retention times; used internally to create heatmaps}
-#' \item{Logfile}{Included several lists summarizing the data; used to print diagonistics of the alignment}
+#' \item{Logfile}{Includs several lists summarizing the data; used to print diagonistics of the alignment}
+#' \item{input_list}{List of data frames. Data frames are comprised of the raw of a sample prior to aligning}
+#' \item{input_matrix}{List of data frames. Data frames are matrices of input variables}
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #'
@@ -112,6 +109,7 @@
 #' ## Subset for faster processing
 #' peak_data <- peak_data[1:3]
 #' peak_data <- lapply(peak_data, function(x) x[1:50,])
+#' ## align data
 #' out <- align_chromatograms(peak_data, rt_col_name = "time",
 #' rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M2",
 #' max_linear_shift = 0.02)

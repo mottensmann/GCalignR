@@ -8,7 +8,7 @@
   "peak_numbers", "peaks_shared"), ...)
 }
 \arguments{
-\item{x}{\code{GCalign} object, created by \code{\link{align_chromatograms}}}
+\item{x}{Object of class GCalign, created by \code{\link{align_chromatograms}}}
 
 \item{which_plot}{character string indicating which plot is returned. Available are
 \strong{"shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
@@ -18,7 +18,7 @@ is \strong{"peak_numbers"} plotting a barchart of the number of sharings per sam
 
 \item{...}{optional arguments passed on to methods. See
 \code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
-Please Note that optional arguments are currently not passed on when plotting all figures.}
+Note that optional arguments are not passed on when plotting all figures.}
 }
 \value{
 Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "all"} no output is returned.
@@ -31,11 +31,17 @@ peaks by plotting the distribution of retention time ranges. The third plots sho
 of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram.
 }
 \examples{
+## GCalign object
+data("aligned_peak_data")
+
 ## All plots are shown by default
 plot(aligned_peak_data)
 
-## Distribution of Peaks
-plot(aligned_peak_data,which_plot="peak_numbers")
+## Distribution of peak numbers
+plot(aligned_peak_data, which_plot = "peak_numbers")
+
+## variation of retention times
+plot(aligned_peak_data, which_plot = "variation")
 
 }
 \author{

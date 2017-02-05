@@ -8,13 +8,20 @@
 #' of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram.
 #'
 #' @examples
+#' ## GCalign object
+#' data("aligned_peak_data")
+#'
 #' ## All plots are shown by default
 #' plot(aligned_peak_data)
 #'
-#' ## Distribution of Peaks
-#' plot(aligned_peak_data,which_plot="peak_numbers")
+#' ## Distribution of peak numbers
+#' plot(aligned_peak_data, which_plot = "peak_numbers")
 #'
-#' @param x \code{GCalign} object, created by \code{\link{align_chromatograms}}
+#' ## variation of retention times
+#' plot(aligned_peak_data, which_plot = "variation")
+#'
+#' @param x
+#' Object of class GCalign, created by \code{\link{align_chromatograms}}
 #'
 #' @param which_plot
 #' character string indicating which plot is returned. Available are
@@ -26,7 +33,7 @@
 #' @param ...
 #' optional arguments passed on to methods. See
 #' \code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
-#' Please Note that optional arguments are currently not passed on when plotting all figures.
+#' Note that optional arguments are not passed on when plotting all figures.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)

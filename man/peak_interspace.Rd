@@ -16,13 +16,25 @@ be numeric and the decimal separator needs to be a point.}
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{quantiles}{A numeric vector. If specified quantiles are calculated from the distribution.}
+\item{quantiles}{A numeric vector. Specified quantiles are calculated from the distribution.}
 
-\item{quantile_range}{A numeric vector of length two specifiying arbitrary interquartile range. Only affecting the barplot. Defaults are \code{quantile_range = c(0,1)}.}
+\item{quantile_range}{A numeric vector of length two specifiying arbitrary interquartile ranges visualised in a barplot. By default the whole range is plotted \code{quantile_range = c(0,1)}.}
+}
+\value{
+List containing summary statistics of the peak interspace distribution
 }
 \description{
 The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}.
 This function allows to infer a suitable value based on the input data.
+}
+\examples{
+## plotting with defaults
+peak_interspace(data = peak_data, rt_col_name = "time")
+## plotting up to the 0.95 quantile
+peak_interspace(data = peak_data,rt_col_name = "time",quantile_range = c(0,0.95))
+## return the 0.1 quantile
+peak_interspace(data = peak_data,rt_col_name = "time", quantiles = 0.1)
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@web.de)

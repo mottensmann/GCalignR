@@ -7,18 +7,21 @@
 \method{print}{GCalign}(x, write_text_file = FALSE, ...)
 }
 \arguments{
-\item{x}{an object of class \strong{"GCalign"}, the result of a call to \code{\link{align_chromatograms}}}
+\item{x}{Object of class GCalign, created by \code{\link{align_chromatograms}}}
 
-\item{write_text_file}{logical. If \code{TRUE} the output is passed to \code{.txt} file. No text is printed
+\item{write_text_file}{Logical. If \code{TRUE} the output is written to a plain text file. No text is printed
 to the console in this case.}
 
-\item{...}{optional arguments passed on to methods. Internally \link{cat} is used to generate output, hence optional arguments are currently not ignored.}
+\item{...}{Optional arguments passed on to methods are currently not supported.}
 }
 \description{
 print method for class "GCalign"
 }
 \examples{
-print(aligned_peak_data) # prints summary to the Console
+## GCalign object
+data("aligned_peak_data")
+## print summary
+print(aligned_peak_data)
 
 }
 \author{

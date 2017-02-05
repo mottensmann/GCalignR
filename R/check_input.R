@@ -16,7 +16,7 @@
 #' Path to a data file or the name of a list in the global environment.
 #'
 #'@param plot
-#' Logical, if TRUE the distribution of peak numbers is plotted. Default is FALSE.
+#' Logical, if TRUE the distribution of peak numbers is plotted. By default no plot is returned.
 #'
 #'@inheritParams align_chromatograms
 #'
@@ -31,6 +31,8 @@
 #' If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
 #'
 #' @examples
+#' ## gc-data
+#' data("peak_data")
 #' ## Checks format
 #' check_input(peak_data)
 #' ## Includes a barplot of peak numbers in the raw data

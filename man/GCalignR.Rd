@@ -6,7 +6,7 @@
 \alias{GCalignR-package}
 \title{GCalignR: A package to align gas-chromatography peaks based on retention times}
 \description{
-\code{GCalignR} contains the following functions that are explained in \href{../doc/GCalignR_step_by_step.html}{GCalignR Vignette}:
+\code{GCalignR} contains the following functions that are explained in the \href{../doc/GCalignR_step_by_step.html}{Vignette}:
 
 \link{align_chromatograms}
 

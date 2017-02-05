@@ -18,8 +18,7 @@ required variable.}
 \item{max_linear_shift}{This value defines the maximum time that one chromatogram is expected to be deviating in retention times
 from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same
 retention time to all peaks within a chromatogram to maximise the number of shared peaks with
-the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.
-See \href{../doc/GCalignR_tutorial.html}{Aligning Peaks: A Tutorial}}
+the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.}
 
 \item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 

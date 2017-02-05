@@ -18,9 +18,8 @@
 #' \item{score}{Median number of shared peaks with other samples}
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#'
+#' @keywords internal
 #' @import stats
-#' @export
 #'
 choose_optimal_reference <- function(gc_peak_list = NULL, rt_col_name = NULL){
     if (is.null(rt_col_name)) stop("Specify retention time column")

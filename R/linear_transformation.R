@@ -24,7 +24,6 @@
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #' @keywords internal
-#' @export
 #'
 linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05, step_size = 0.01, rt_col_name,Logbook){
 

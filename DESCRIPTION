@@ -9,8 +9,10 @@ Description: Aligns chromatography peaks with a three step algorithm: (1) Linear
     (2) Align peaks within a certain error-interval (3) Merges rows that are likely
     representing the same substance (i.e. no sample shows peaks in both rows and
     the rows have similar retention time means).
+    The method was first described in Stoffel et al. (2015) <doi:10.1073/pnas.1506076112>.
 Depends:
     R (>= 3.2.5)
+Methods: 
 Imports: ggplot2 (>= 2.2.1),
         graphics,
         stats,

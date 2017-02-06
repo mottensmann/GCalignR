@@ -1,8 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* included examples for all functions included in NAMESPACE
-* added the correct files to 'inst/doc'
+* Added Stoffel et al. (2015) <doi:10.1073/pnas.1506076112> as a reference for the method to DESCRIPTION. Note that we are currently preparing a manuscript for GCalignR.
 
 ## Release summary
 

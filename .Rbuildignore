@@ -5,3 +5,4 @@
 ^\.travis\.yml$
 ^test$
 cran-comments.md
+NEWS.md

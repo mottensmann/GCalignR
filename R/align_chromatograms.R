@@ -104,7 +104,7 @@
 #'
 #'
 #'@examples
-#' ## Load example data set
+#' ## Load example dataset
 #' data("peak_data")
 #' ## Subset for faster processing
 #' peak_data <- peak_data[1:3]

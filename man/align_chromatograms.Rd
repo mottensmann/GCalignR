@@ -99,7 +99,7 @@ contaminations (requires to include blanks as a control) to the removal of uninf
 that are present in just one sample.
 }
 \examples{
-## Load example data set
+## Load example dataset
 data("peak_data")
 ## Subset for faster processing
 peak_data <- peak_data[1:3]

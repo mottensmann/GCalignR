@@ -39,4 +39,3 @@ peak_interspace(data = peak_data,rt_col_name = "time", quantiles = 0.1)
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
-

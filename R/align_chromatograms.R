@@ -21,16 +21,13 @@
 #' that are present in just one sample.
 #'
 #'@param data
+#' Chemical data that has to be aligned. All variables that are available need to be included in order to align these measures based on the retention time, which is the only mandatory variable.
 #' Two input formats are supported. The first option is the \strong{path to a plain text file} with extension ".txt" containing the gc-data. It is expected that the file is formatted following this
 #' principle: The first row contains sample names, the second row column names of the corresponding
 #' chromatograms. Starting with the third row, peak data are included, whereby matrices of single
 #' samples are concatenated horizontally (see the vignette or example data). The matrix for each
-#' sample needs to consist of the same number of columns, at least two are required: The retention time and a measure of concentration
-#' (e.g. peak area or height). See the \href{../doc/GCalignR_step_by_step.html}{vignette} for an
-#' example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains
-#' the peak data for a single individual with at least two variables, the retention time of the peak
-#' and the area under the peak. The variables need to have the same names across all samples
-#' (i.e. data frames). Also, each list element has to be named with the ID of the respective sample.
+#' sample needs to consist of the same number of columns, at least one is required that contains the retention times of peaks. See the \href{../doc/GCalignR_step_by_step.html}{vignette} for an example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains
+#' the peak data for a single individual with at least one column of containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample.
 #' The format can be checked by running \code{\link{check_input}}.
 #'
 #'@param sep

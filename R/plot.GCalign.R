@@ -157,7 +157,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = ""))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = ""))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of Peaks"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of peaks"))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"cex.names" %in% names(mcall)) {
@@ -174,23 +174,26 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         } else {
             label_size <- mcall[["cex.names"]]
         }
-        if (!"cex.names" %in% names(mcall)) arg_list <- append(arg_list,list(cex.names = label_size))
+        # if (!"cex.names" %in% names(mcall)) arg_list <- append(arg_list,list(cex.names = label_size))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = c("red","blue")))
-        if (!"srt" %in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
-        if (!"las" %in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
+        # if (!"srt" %in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
+        # if (!"las" %in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
         if (!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg = rep("",each = ncol(peaks))))
         if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(0,ymax + 15)))
-        colnames(peaks) <- lablist
+        # colnames(peaks) <- lablist
 
        bars <- do.call(graphics::barplot,args = c(list(height = peaks, plot = F),arg_list,list(...)))
         if (!"xlim" %in% names(mcall)) arg_list <- append(arg_list, list(xlim = c(0, max(bars) + 3)))
         bars <- do.call(graphics::barplot,args = c(list(height = peaks),arg_list,list(...)))
+
         graphics::legend("topleft", rownames(peaks), fill = c("red","blue"), inset = c(-0.009,0), xjust = 0, cex = 0.75, bty = "n")
 
 
         if (!"names.arg" %in% names(mcall)) {
             # if ("cex.names" %in% names(mcall)) label_size <- cex.names
-            graphics::text(bars, graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size, offset = 0.4)
+        if ("cex.axis" %in% names(mcall)) label_size <- mcall[["cex.axis"]]
+            graphics::axis(side = 1, at = bars, labels = lablist, cex.axis = label_size, las = 2)
+            #graphics::text(bars, graphics::par("usr")[1], labels = lablist, srt = 90, pos = 1, xpd = TRUE, cex = label_size, offset = 0.4)
         }
         rownames(peak_df) <- peak_df[["id"]]
         return(peak_df)

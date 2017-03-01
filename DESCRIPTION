@@ -5,28 +5,30 @@ Authors@R: c(person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de"
     person("Martin", "Stoffel", email = "martin.adam.stoffel@gmail.com", role = c("aut")),
     person("Joseph I.", "Hoffman", email = "j_i_hoffman@hotmail.com", role = c("aut")))
 Description: Aligns chromatography peaks with a three step algorithm: (1) Linear
-    transformation of retention times to maximise shared peaks among samples
-    (2) Align peaks within a certain error-interval (3) Merges rows that are likely
+    transformation of retention times to maximise shared peaks among samples (2)
+    Align peaks within a certain error-interval (3) Merges rows that are likely
     representing the same substance (i.e. no sample shows peaks in both rows and
-    the rows have similar retention time means).
-    The method was first described in Stoffel et al. (2015) <doi:10.1073/pnas.1506076112>.
+    the rows have similar retention time means). The method was first described in
+    Stoffel et al. (2015) <doi:10.1073/pnas.1506076112>.
 Depends:
     R (>= 3.2.5)
-Imports: ggplot2 (>= 2.2.1),
-        graphics,
-        stats,
-        readr,
-        reshape2,
-        stringr,
-        utils
+Imports:
+    ggplot2 (>= 2.2.1),
+    graphics,
+    stats,
+    readr,
+    reshape2,
+    stringr,
+    utils
 License: GPL (>= 2)
 LazyData: true
-RoxygenNote: 6.0.1
-Suggests: knitr,
-          pander,
-          rmarkdown,
-          testthat,
-          vegan (>= 2.4.2)
+RoxygenNote: 5.0.1
+Suggests:
+    knitr,
+    pander,
+    rmarkdown,
+    testthat,
+    vegan (>= 2.4.2)
 VignetteBuilder: knitr
 BugReports: https://github.com/mastoffel/GCalignR/issues
 URL: https://github.com/mastoffel/GCalignR

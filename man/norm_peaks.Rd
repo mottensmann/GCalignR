@@ -39,3 +39,4 @@ data("aligned_peak_data")
 norm_peaks(data = aligned_peak_data, conc_col_name = "area", rt_col_name = "time")
 
 }
+

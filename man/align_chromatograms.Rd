@@ -110,3 +110,4 @@ max_linear_shift = 0.02)
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
+

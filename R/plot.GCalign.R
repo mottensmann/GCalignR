@@ -63,7 +63,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Full chromatogram shifts\n(Linear transformation)"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Shift size"))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of Samples"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of samples"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax + 0.01, by = 0.01)))
         if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
@@ -103,8 +103,8 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
 
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Variation across samples\n(Peak retention time)"))
-        if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Range [max - min]"))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of Substances"))
+        if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Range (max - min)"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of substances"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(xmin,xmax + 0.01,by = 0.01)))
         if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
@@ -179,7 +179,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         # if (!"srt" %in% names(mcall))  arg_list <- append(arg_list,list(srt = 45))
         # if (!"las" %in% names(mcall))  arg_list <- append(arg_list,list(las = 2))
         if (!"names.arg" %in% names(mcall)) arg_list <- append(arg_list,list(names.arg = rep("",each = ncol(peaks))))
-        if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(0,ymax + 15)))
+        if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list,list(ylim = c(-3,ymax + 15)))
         # colnames(peaks) <- lablist
 
        bars <- do.call(graphics::barplot,args = c(list(height = peaks, plot = F),arg_list,list(...)))
@@ -218,8 +218,8 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
 
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Shared substances"))
-        if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Frequency of samples [%]"))
-        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of Substances"))
+        if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Frequency of samples (%)"))
+        if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of substances"))
         if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(0,101,by = 1)))
         if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))

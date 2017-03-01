@@ -153,14 +153,14 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
             hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id',fill = 'diff'),colour = "Blue")
             hm <- hm + geom_tile(color = "transparent", size = 0.001)
             hm <- hm + scale_fill_gradientn(colours = 'blue',na.value = "white")
-            hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),paste("No deviations exceeding a threshold of",as.character(threshold)),main_title))
+            hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),paste("No deviations exceeding a threshold of",as.character(threshold)),main_title))
             hm <- hm + guides(fill = FALSE)
         # Usual Case, at leat some samples deviate at certain retention times
         } else {
             hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id',fill = 'diff'))
             hm <- hm + geom_tile(color = "transparent", size = 0.001)
-            hm <- hm + scale_fill_continuous(low = "#a6cee3",high = "#b2182b",breaks = c(0,1),na.value = "white", guide = 'legend',name = paste('Deviation\n','>',as.character(threshold)),labels = c('NO','YES'))
-            hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),paste("Deviation from substance mean retention time\n(Threshold = ",as.character(threshold),")"),main_title))
+            hm <- hm + scale_fill_continuous(low = "blue",high = "red",breaks = c(0,1),na.value = "white", guide = 'legend',name = paste('Deviation\n','>',as.character(threshold)),labels = c('NO','YES'))
+            hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),paste("Deviation from substance mean retention time\n(Threshold = ",as.character(threshold),")"),main_title))
         }
         # type == continuos
     } else {
@@ -179,7 +179,7 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
         hm <- hm + geom_tile(color = "white", size = 0.01)
         hm <- hm + scale_fill_gradientn(colours = col_pal,guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
         )
-        hm <- hm + labs(x = "Substances", y = "Samples", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
+        hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
     }
     hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))
     hm <- hm + theme(axis.title.x = element_text(size = 10),

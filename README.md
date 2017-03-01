@@ -41,3 +41,7 @@ To get started read the vignette:
 ```
 
 If you encounter bugs or if you have any suggestions for improvement, just contact meinolf.ottensmann\[at\]web.de
+
+### Reference
+
+[Ottensmann, M., Stoffel, M.A., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *In review*.](https://doi.org/10.1101/110494)

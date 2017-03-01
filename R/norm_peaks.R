@@ -38,18 +38,6 @@ norm_peaks <- function(data, conc_col_name = NULL, rt_col_name = NULL, out = c("
 out <- match.arg(out)
 which <- "aligned" # which <- match.arg(which)
 
-## unused code chunks
-## ----------------------------------------------
-# if (which == "raw") which <- "input_matrix"
-## additional function parameters
-#  ..., percent = TRUE, which = c("aligned","raw")
-# param percent
-# By default percent values are returned (i.e. relative abundancies scale up to 100.) If
-#
-# param which
-# character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.
-# -----------------------------------------------
-
 ## some checks
 if (class(data) != "GCalign") {warning("Input is not a output of align_chromatograms, assure the format is correct")}
 if (is.null(conc_col_name)) {stop("List containing peak concentration is not specified. Define conc_col_name")}
@@ -75,4 +63,15 @@ if (out == "data.frame") {
         rel_con_list <- x
 }
 return(rel_con_list)
+## unused code chunks
+## ----------------------------------------------
+# if (which == "raw") which <- "input_matrix"
+## additional function parameters
+#  ..., percent = TRUE, which = c("aligned","raw")
+# param percent
+# By default percent values are returned (i.e. relative abundancies scale up to 100.) If
+#
+# param which
+# character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.
+# -----------------------------------------------
 }

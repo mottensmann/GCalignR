@@ -27,6 +27,9 @@
 #'
 linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05, step_size = 0.01, rt_col_name,Logbook){
 
+# Revision 24-04-2017
+# Prior to this date, all values were rounded to two decimals. Now, calculations are based on rounded values.
+
 # Defining internal functions
 # ===========================
 
@@ -61,6 +64,9 @@ linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05
                     ref_peak <- ref[l]
                     # Avoid comparison with cases of RT=0
                     if ( temp_peak != 0) {
+                        # if ((round(temp_peak, 2) <= round(ref_peak, 2) + error) & (round(temp_peak, 2) >= round(ref_peak, 2) - error)) {
+                        #     peaks <- peaks + 1
+                        # }
                         if ((temp_peak <= ref_peak + error) & (temp_peak >= ref_peak - error)) {
                             peaks <- peaks + 1
                         }

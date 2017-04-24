@@ -5,4 +5,5 @@ inst/doc
 /test
 bin
 .gitignore
-future_changes.md
+plans.md
+data_noa.txt

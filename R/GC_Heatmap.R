@@ -13,7 +13,7 @@
 #' Object of class "GCalign", the output of a call to \link{align_chromatograms}.
 #'
 #' @param algorithm_step
-#' Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifiying the raw, linearly shifted or aligned data respectively.
+#' Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifying the raw, linearly shifted or aligned data respectively.
 #' Default is the heatmap after alignment.
 #'
 #' @param substance_subset
@@ -35,7 +35,7 @@
 #' from the mean retention time of the respective substance is highlighted in \emph{binary} heatmaps.
 #'
 #'@param label_size
-#' Integer determining the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readibility and messines due to a potentially large number of substances and samples. Note: Labels for substances on the x axis are only possible if a maximum of 150 substances are plotted.
+#' Integer determining the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readability and messiness due to a potentially large number of substances and samples. Note: Labels for substances on the x axis are only possible if a maximum of 150 substances are plotted.
 #'
 #'@param show_legend
 #' Logical determining whether a legend is included or not. Default is TRUE.
@@ -45,7 +45,7 @@
 #' Character argument used a title for the plot. If not specified, titles are generated automatically.
 #'
 #' @param label
-#' Logical determining whether labels for samples and substances are used. By default sample names are written on the vertical axis, but in large data sets its less readible and may be used effectively only for subsets of the data.
+#' Logical determining whether labels for samples and substances are used. By default sample names are written on the vertical axis, but in large data sets its less readable and may be used effectively only for subsets of the data.
 #'
 #'@return
 #' object of class "ggplot"

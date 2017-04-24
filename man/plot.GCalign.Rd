@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.GCalign.R
 \name{plot.GCalign}
 \alias{plot.GCalign}
-\title{Plot Diagonstics for an Gcalign Object}
+\title{Plot diagnostics for an GCalign Object}
 \usage{
 \method{plot}{GCalign}(x, which_plot = c("all", "shifts", "variation",
   "peak_numbers", "peaks_shared"), ...)

@@ -1,4 +1,4 @@
-#' Plot Diagonstics for an Gcalign Object
+#' Plot diagnostics for an GCalign Object
 #'
 #' @description
 #' Four plots are currently available: One plot visualises the distribution of linear shifts

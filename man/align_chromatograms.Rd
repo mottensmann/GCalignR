@@ -28,9 +28,9 @@ be numeric and the decimal separator needs to be a point.}
 \item{write_output}{Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
 Vector elements need to correspond to column names of \code{data}. Writing output is optional.}
 
-\item{rt_cutoff_low}{Lower threshold under which retention times are cutted (i.e. 5 minutes). Default NULL.}
+\item{rt_cutoff_low}{Lower threshold under which retention times are removed (i.e. 5 minutes). Default NULL.}
 
-\item{rt_cutoff_high}{Upper threshold above which retention times are cutted (i.e. 35 minutes). Default NULL.}
+\item{rt_cutoff_high}{Upper threshold above which retention times are removed (i.e. 35 minutes). Default NULL.}
 
 \item{reference}{Character string of a sample to which all other samples are aligned by means of a
 linear shift (e.g. \code{"M3"}. The name has to correspond to an individual name given
@@ -52,8 +52,8 @@ one or none of the respective compounds.
 This parameter is a major determinant in the classification of distinct peaks.
 Therefore careful consideration is required to adjust this setting to your needs
 (e.g. the resolution of your gas-chromatography pipeline).
-Large values may cause the merge truely different substances with similar retention times, if those are not
-simultaneously occuring within at least one individual, which might occure by chance for small sample
+Large values may cause the merge truly different substances with similar retention times, if those are not
+simultaneously occurring within at least one individual, which might occur by chance for small sample
 sizes. It is therefore recommended to set the value much lower (e.g. 0.02) when few individuals are
 analysed. Defaults to 0.08 (minutes).}
 
@@ -66,12 +66,12 @@ removed from all samples, before the blanks are deleted from the aligned data.}
 Returns an object of class "GCalign" that is a a list containing several objects that are listed below.
 Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
 \item{aligned}{Aligned gas-chromatography data subdivided into individual data frames for every variable.
-Samples are represented by columns, rows specifiy substances. The first column of every data frame
+Samples are represented by columns, rows specify substances. The first column of every data frame
 is comprised of the mean retention time of the respective substance (i.e. row). The aligned data
 can be used for further statistical analyses in other packages and also directly written
 to .txt file by specifying the write_output argument in align_chromatograms}
 \item{heatmap_input}{Data frames of retention times; used internally to create heatmaps}
-\item{Logfile}{Includs several lists summarizing the data; used to print diagonistics of the alignment}
+\item{Logfile}{Includes several lists summarizing the data; used to print diagnostics of the alignment}
 \item{input_list}{List of data frames. Data frames are comprised of the raw of a sample prior to aligning}
 \item{input_matrix}{List of data frames. Data frames are matrices of input variables}
 }
@@ -86,11 +86,11 @@ In brief: \strong{(1) Chromatograms (more correctly, their peaks) are shifted} t
 similarity with a reference to account for systematic shifts in retention times
 caused by gas-chromatography processing. \strong{(2) Peaks of similar retention times are aligned}
 in order to match similar retention times to the same substance. During the algorithm proceeds,
-these clusters are continously revised and every peaks is moved to the optimal
+these clusters are continuously revised and every peaks is moved to the optimal
 location(i.e. substance). \strong{(3) Peaks of similar retention time are merged} if
 they show smaller differences in mean retention times than expected by the achievable
 resolution of the gas-chromatography or the chemistry of the compounds are merged.
-This has to be specfied by the paramters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}.
+This has to be specfied by the parameters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}.
 Several optional processing steps are available, ranging from the removal of peaks representing
 contaminations (requires to include blanks as a control) to the removal of uninformative peaks
 that are present in just one sample.

@@ -21,7 +21,7 @@ be numeric and the decimal separator needs to be a point.}
 \item{out}{character string defining the format of the returned data. Either "List" or "data.frame".}
 }
 \value{
-Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies. Abundancies are given in percent.
+Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundances. Abundances are given in percent.
 
  @author Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)

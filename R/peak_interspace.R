@@ -7,7 +7,7 @@
 #' @inheritParams check_input
 #' @inheritParams align_chromatograms
 #' @param quantile_range
-#' A numeric vector of length two specifiying arbitrary interquartile ranges visualised in a barplot. By default the whole range is plotted \code{quantile_range = c(0,1)}.
+#' A numeric vector of length two specifying arbitrary interquartile ranges visualised in a barplot. By default the whole range is plotted \code{quantile_range = c(0,1)}.
 #' @param quantiles
 #' A numeric vector. Specified quantiles are calculated from the distribution.
 #' @return List containing summary statistics of the peak interspace distribution

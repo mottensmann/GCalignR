@@ -13,7 +13,7 @@ gc_heatmap(object, algorithm_step = c("aligned", "linear_shifted",
 \arguments{
 \item{object}{Object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifiying the raw, linearly shifted or aligned data respectively.
+\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{pre_alignment}, \strong{linear_shifted} or \strong{aligned} specifying the raw, linearly shifted or aligned data respectively.
 Default is the heatmap after alignment.}
 
 \item{substance_subset}{Vector containing indices of substances (ordered in ascending order of retention times) to plot. By default \code{NULL} indicates that all substances are plotted.}
@@ -29,13 +29,13 @@ deviations is plotted.}
 \item{threshold}{Numerical value denoting the threshold above which the deviation of individual peak retention times
 from the mean retention time of the respective substance is highlighted in \emph{binary} heatmaps.}
 
-\item{label_size}{Integer determining the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readibility and messines due to a potentially large number of substances and samples. Note: Labels for substances on the x axis are only possible if a maximum of 150 substances are plotted.}
+\item{label_size}{Integer determining the size of labels on y and x axis. By default the label_size is calculated (beta!) to compromise between readability and messiness due to a potentially large number of substances and samples. Note: Labels for substances on the x axis are only possible if a maximum of 150 substances are plotted.}
 
 \item{show_legend}{Logical determining whether a legend is included or not. Default is TRUE.}
 
 \item{main_title}{Character argument used a title for the plot. If not specified, titles are generated automatically.}
 
-\item{label}{Logical determining whether labels for samples and substances are used. By default sample names are written on the vertical axis, but in large data sets its less readible and may be used effectively only for subsets of the data.}
+\item{label}{Logical determining whether labels for samples and substances are used. By default sample names are written on the vertical axis, but in large data sets its less readable and may be used effectively only for subsets of the data.}
 }
 \value{
 object of class "ggplot"

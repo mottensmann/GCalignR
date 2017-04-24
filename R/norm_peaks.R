@@ -21,7 +21,7 @@
 #' @inheritParams align_chromatograms
 #'
 #' @return
-#' Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundancies. Abundancies are given in percent.
+#' Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundances. Abundances are given in percent.
 #'
 #'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -69,7 +69,7 @@ return(rel_con_list)
 ## additional function parameters
 #  ..., percent = TRUE, which = c("aligned","raw")
 # param percent
-# By default percent values are returned (i.e. relative abundancies scale up to 100.) If
+# By default percent values are returned (i.e. relative abundances scale up to 100.) If
 #
 # param which
 # character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.

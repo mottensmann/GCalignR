@@ -1,6 +1,6 @@
 ---
 title: "GCalignR Step by Step"
-author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph Hoffman"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph I. Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -9,7 +9,7 @@ vignette: >
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
-
+ 
 ```{r, echo = FALSE}
 library(knitr)
 knitr::opts_chunk$set(collapse = TRUE, comment = ">", cache = FALSE,
@@ -232,11 +232,11 @@ scent_nmds <- cbind(scent_nmds,colony = peak_factors[["colony"]])
 ## ordiplot with ggplot2
 library(ggplot2)
 ggplot(data = scent_nmds,aes(MDS1,MDS2,color = colony)) +
-    geom_point(size = 4) + 
-    stat_ellipse(size = 2) + 
-    labs(title = "", x = "MDS1", y = "MDS2") +  
+    geom_point() + 
     theme_void() + 
-    theme(panel.background = element_rect(colour = "black", size = 2,fill = NA),aspect.ratio = 1)
+    scale_color_manual(values = c("blue","red")) +
+    theme(panel.background = element_rect(colour = "black", size = 1.25,
+            fill = NA), aspect.ratio = 1, legend.position = "none")
 ```
 
 ### Multivariate analysis using *adonis*

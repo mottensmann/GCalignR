@@ -18,7 +18,7 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{quantiles}{A numeric vector. Specified quantiles are calculated from the distribution.}
 
-\item{quantile_range}{A numeric vector of length two specifiying arbitrary interquartile ranges visualised in a barplot. By default the whole range is plotted \code{quantile_range = c(0,1)}.}
+\item{quantile_range}{A numeric vector of length two specifying arbitrary interquartile ranges visualised in a barplot. By default the whole range is plotted \code{quantile_range = c(0,1)}.}
 }
 \value{
 List containing summary statistics of the peak interspace distribution

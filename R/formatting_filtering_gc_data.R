@@ -19,9 +19,11 @@ delete_space_colnames <- function(gc_data) {
 
 conv_gc_mat_to_list <- function(gc_data, ind_names, var_names) {
     extract <- seq(from = 1, to = ncol(gc_data), by = length(var_names))
-    chromatograms <- lapply(extract, function(x) gc_data[, x:(x+length(var_names)-1)])
+    chromatograms <- lapply(extract, function(x) gc_data[, x:(x + length(var_names) - 1)])
     names(chromatograms) <- ind_names
-    rename_cols = function(data, var_names){
+    # Inserted to ensure each sample is (converted) to a data frame
+    chromatograms <- lapply(X = chromatograms, as.data.frame)
+        rename_cols = function(data, var_names){
         names(data) <- var_names
         data
     }

@@ -6,9 +6,9 @@
 #'in \code{gc_peak_list}) is randomized before each run of the alignment of
 #'algorithm. The main principle of this function is to reduce the variance in
 #'retention times within rows, thereby peaks of similar retention time are
-#'grouped together. Peaks that deviate signifantly from the mean retention times
+#'grouped together. Peaks that deviate significantly from the mean retention times
 #'of the other samples are shifted to another row. At the start of a row the
-#'first two samples are compared and seperated if required, then all other
+#'first two samples are compared and separated if required, then all other
 #'samples are included consecutively. If \code{iterations > 1} the whole
 #'alogorithm is repeated accordingly.
 #'
@@ -22,7 +22,7 @@
 #'next row (i.e. retention time below average). If the retention time of the
 #'sample in evaluation shows no deviation within \strong{-max_diff_peak2mean}:
 #'\strong{max_diff_peak2mean} around the mean retention time no shifting is done
-#'and the alogrithm proceeds with the following sample.
+#'and the algorithm proceeds with the following sample.
 #'
 #'@param gc_peak_df data.frame containing GC-data (e.g. retention time, peak
 #'  area, peak height) of one sample. Variables are stored in columns, rows

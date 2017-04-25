@@ -53,7 +53,7 @@ median_sim_score <- function(gc_peak_list,ref_df,rt_col_name){
     return(stats::median(unlist(lapply(gc_peak_list, chrom_sim_score,ref_df = ref_df,rt_col_name = rt_col_name))))
 }
 
-## Function comparin two samples
+## Function comparing two samples
 chrom_sim_score <- function(gc_peak_df, ref_df, rt_col_name,error=0) {
     ## get the rts of the reference
     ref_chroma <- ref_df[[rt_col_name]][!is.na(ref_df[[rt_col_name]])]
@@ -68,7 +68,10 @@ chrom_sim_score <- function(gc_peak_df, ref_df, rt_col_name,error=0) {
             ref_peak <- ref_chroma[l]
             ## Avoid comparison with cases of RT=0
             if (temp_peak != 0) {
-                if ((temp_peak <= ref_peak + error) & (temp_peak >= ref_peak - error)) {
+                # if ((temp_peak <= ref_peak + error) & (temp_peak >= ref_peak - error)) {
+                #     peaks <- peaks + 1
+                # }
+                if ((round(temp_peak,2) <= round(ref_peak,2) + error) & (round(temp_peak,2) >= round(ref_peak,2) - error)) {
                     peaks <- peaks + 1
                 }
             }

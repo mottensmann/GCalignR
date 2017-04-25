@@ -199,7 +199,11 @@ if (!is.null(blanks)) Logbook[["Input"]][["Blanks"]] <- paste(blanks,collapse = 
 
 ### 3. Start processing
 ### ===================
-
+# If the data only contains retention times (i.e. one colum) a dummy variable is added to ensure full compatibility with the data frame based manipulations
+if (ncol(gc_peak_list[[1]]) == 1) {
+    gc_peak_list <- lapply(X = gc_peak_list, dummy_col)
+    col_names <- c(col_names, "GCalignR_Dummy")
+}
 # 3.1. Cut retention times
 if (!is.null(rt_cutoff_low) | !is.null(rt_cutoff_high)) {
     cat("\nApply retention time cut-offs ... ")
@@ -226,19 +230,22 @@ if (!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)) {
 
 # 3.2 Linear Transformation of peak retention times
 
+    # Revision 24-04-2017:
+    # Rounding is eliminated. Calculations are based on rounded values instead.
+
     # Round retention times to two decimals
-    round_rt <- function(gc_peak_df,rt_col_name = rt_col_name) {
-    gc_peak_df[rt_col_name] <- round(gc_peak_df[rt_col_name],digits = 2)
-    return(gc_peak_df)
-    }
-    gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
+    #round_rt <- function(gc_peak_df,rt_col_name = rt_col_name) {
+    #gc_peak_df[rt_col_name] <- round(gc_peak_df[rt_col_name],digits = 2)
+    #return(gc_peak_df)
+    #}
+    # gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
 if (!is.null(reference)) {
 if (reference == "reference") {
     # reference is not a true sample and is used exclusevely for linear alignment
     cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...'))
 
-gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
+gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
@@ -248,12 +255,11 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = ma
     # remove the reference from the input retention time matrix
     gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw) == reference)]
 }  else {
-    gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift,
-        step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
+    gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
-    gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
+    gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames, col_names)
 }
 } else if (is.null(reference)) {
     # If no reference was specified by the user, the reference is determined, such
@@ -265,6 +271,7 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = ma
     cat("done\n")
     text <- paste0("'",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],").")
     cat(stringr::str_wrap(paste(text,collapse = ""),width = 80,exdent = 0,indent = 0))
+}# new end
      cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...'))
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift,
         step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
@@ -272,9 +279,10 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = ma
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
-}
+#} old end
 
     Logbook[["Input"]]["Reference"] <- reference
+    # why is there a cat?
     cat(" done\n")
     # equalise chromatograms sizes
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
@@ -384,7 +392,7 @@ if (delete_single_peak) {
 ### 6: Create output matrices for Variables
 ### =======================================
 
-    # Aligned data
+        # Aligned data
     row_mean <- function(x) {if (all(x == 0)) 0 else mean(x[x != 0])}
     mean_per_row <- apply(rt_mat,1, row_mean)
     output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[y]))))
@@ -459,6 +467,18 @@ if (!is.null(write_output)) {
     Logbook[["Date"]]["End"] <- as.character(strftime(Sys.time()))
 
 ### 9 Generate a list containing all returned output
+
+    if ("GCalignR_Dummy" %in% col_names) {
+        # remove the dummy variable when one was created
+        gc_peak_list <- lapply(X = gc_peak_list, dummy_remove)
+        gc_peak_list_aligned <- lapply(X = gc_peak_list_aligned, dummy_remove)
+        gc_peak_list_linear <- lapply(X = gc_peak_list_linear, dummy_remove)
+        gc_peak_list_raw <- lapply(X = gc_peak_list_raw, dummy_remove)
+        output <- output[-2]
+        input <- input[-2]
+    }
+    # substitute manipulated retention times with the input values
+    output <- remove_linshifts(dx = output, rt_col_name = rt_col_name, Logbook = Logbook)
     output_algorithm <- list(aligned = output,
                              heatmap_input = list(input_rts = rt_raw,
                              linear_transformed_rts = rt_linear,aligned_rts = rt_aligned),

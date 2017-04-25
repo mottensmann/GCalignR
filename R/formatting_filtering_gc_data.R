@@ -39,6 +39,11 @@ conv_gc_mat_to_list <- function(gc_data, ind_names, var_names) {
     return(chromatograms)
 }
 
+correct_colnames <- function(gc_peak_df,col_names) {
+    colnames(gc_peak_df) <- col_names
+    return(gc_peak_df)
+}#end
+
 delete_empty_rows <- function(gc_peak_df, average_rts){
     gc_peak_df <- gc_peak_df[!is.na(average_rts), ]
     gc_peak_df

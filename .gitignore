@@ -6,5 +6,6 @@ inst/doc
 bin
 .gitignore
 plans.md
+notes.md
 data_noa.txt
 R\blank_substraction.R

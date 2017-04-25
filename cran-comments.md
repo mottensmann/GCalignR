@@ -1,7 +1,8 @@
 ## Resubmission
-This is a resubmission. In this version I have:
+This is a resubmission. In this version I have implemented the following changes:
 
-* Added Stoffel et al. (2015) <doi:10.1073/pnas.1506076112> as a reference for the method to DESCRIPTION. Note that we are currently preparing a manuscript for GCalignR.
+* Within align_chromatograms, retention times are not rounded to a precision of two decimals anymore prior to executing the algorithm. Instead, calculations are internally based on the the value rounded to two decimals.
+* Axis labels in plot functions were changed minorly. 
 
 ## Release summary
 

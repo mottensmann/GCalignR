@@ -48,4 +48,3 @@ plot(aligned_peak_data, which_plot = "variation")
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
 }
-

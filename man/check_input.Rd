@@ -44,4 +44,3 @@ check_input(peak_data, plot = TRUE)
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann
  (meinolf.ottensmann@web.de)
 }
-

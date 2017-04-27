@@ -5,7 +5,6 @@
 ^\.travis\.yml$
 ^test$
 cran-comments.md
-NEWS.md
 plans.md
 notes.md
 data_noa.txt

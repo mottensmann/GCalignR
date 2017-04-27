@@ -26,4 +26,3 @@ to compare chromatograms and analyse patterns across samples. GCalignR provides 
 to align chromatography peaks across samples based on retention times and simple means of evaluating the
 quality of the alignment.
 }
-

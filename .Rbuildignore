@@ -8,4 +8,5 @@ cran-comments.md
 plans.md
 notes.md
 data_noa.txt
-R\blank_substraction.R
+R/blank_substraction.R
+inst/extdata/kanarien.txt

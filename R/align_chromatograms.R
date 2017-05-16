@@ -128,9 +128,9 @@ iterations = 1
 ### ======================
 
 # 1.1 Stop execution if mandatory checks are not passed
-x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference,rt_col_name = rt_col_name)
-if (x != TRUE) stop("Processing not possible, check warnings for details")
 if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
+x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference,rt_col_name = rt_col_name)
+if (x != TRUE) stop("Processing not possible: check warnings below and change accordingly in order to proceed")
 
 
 # 1.2 Create a "Logbook" to record alignment steps and parameters

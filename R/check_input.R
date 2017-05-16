@@ -145,11 +145,21 @@ if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use
             pass <- FALSE
             warning("Names in write_output have to be included as a variable in the data!")
         }
-            }
-    if (any(stringr::str_detect(string = ind_names, pattern = " "))) warning("Avoid whitespaces in Sample Names!")
-    if (any(stringr::str_detect(string = ind_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Sample Names should only contain Letters, Numbers and '_' ")
-    if (any(stringr::str_detect(string = col_names, pattern = " "))) warning("Avoid whitespaces in Variable Names!")
-    if (any(stringr::str_detect(string = col_names, pattern = "[^a-zA-Z\\d\\_]"))) warning("Variable Names should only contain Letters, Numbers and '_' ")
+        }
+    ## Lines checking for whitespaces are redundant!
+
+    # if (any(stringr::str_detect(string = ind_names, pattern = " "))) warning("Avoid whitespaces in Sample Names!")
+
+    # Check for proper individual names
+    if (any(stringr::str_detect(string = ind_names, pattern = "[^a-zA-Z\\d\\_]"))) {
+        warning("Avoid whitespaces in sample names! Additionally they should only contain Letters, Numbers and '_' ","\n",paste(ind_names[stringr::str_detect(string = ind_names, pattern = "[^a-zA-Z\\d\\_]")],collapse = "; ")," violate(s) these requirements.")
+    }
+    #if (any(stringr::str_detect(string = col_names, pattern = " "))) warning("Avoid whitespaces in Variable Names!")
+
+    # check for proper variable naming
+    if (any(stringr::str_detect(string = col_names, pattern = "[^a-zA-Z\\d\\_]"))) {
+        warning("Avoid whitespaces in variable names! Additionally they should only contain Letters, Numbers and '_' ","\n",paste(col_names[stringr::str_detect(string = col_names, pattern = "[^a-zA-Z\\d\\_]")],collapse = "; ")," violate(s) these requirements.")
+    }
 
     if (any(names(opt) == "blank")) {
         if (any(!(opt[["blank"]] %in% ind_names))) {
@@ -173,8 +183,8 @@ if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use
         y <- unlist(lapply(gc_peak_list,check_var_count))
         if (length(which(y != 1)) > 0) {
             out <- names(y[which(y != 1)])
-            warning(paste(out,collapse = "; ") ," violate(s) the requirements.",call. = FALSE)
-            warning("Every sample needs to have the same number of values for each variable!",call. = FALSE)
+            warning("Every sample needs to have the same number of values for each variable!","\n", paste(out,collapse = "; ")," violate(s) the requirements.",call. = FALSE)
+            #warning(paste(out,collapse = "; ") ," violate(s) the requirements.",call. = FALSE)
             pass <- FALSE
         }
         return(pass)
@@ -185,7 +195,7 @@ if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use
     if (pass == TRUE & format_pass == TRUE) {
         cat("All checks passed!\n\n")
     } else {
-        cat("Not all checks have been passed. Read warning messages and change data accordingly\n")
+        cat("Not all checks have been passed. Read warning messages below and change accordingly to proceed\n\n")
     }
 
 

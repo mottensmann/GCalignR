@@ -7,6 +7,9 @@
 cran-comments.md
 plans.md
 notes.md
+NEWS.md
+NEWS.rmd
 data_noa.txt
+R/pick_peaks.R
 R/blank_substraction.R
 inst/extdata/kanarien.txt

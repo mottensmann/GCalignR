@@ -8,6 +8,10 @@ ___
 * Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for purely computational reasons. 
 * Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.
 
+### Dependencies
+The bioconductor package (MassSpecWavelet)[http://bioconductor.org/packages/MassSpecWavelet/] is added as *in R* solution for picking peaks from GC data. 
+
+
 ### warning messages
 * Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity
 

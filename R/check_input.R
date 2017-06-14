@@ -8,8 +8,8 @@
 #' @details
 #' Sample names should contain just letters, numbers and underscores and no whitespaces.
 #' Each sample has to contain the same number of columns, one of which is the retention
-#' time and the others are the other variables. All values should be numeric, i.e. they
-#' are allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look
+#' time and the others are arbitrary variables in consistent order across samples. Rentention times are expected to be numeric, i.e. they
+#' are only allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look
 #' at the vignettes for examples.
 #'
 #'@param data

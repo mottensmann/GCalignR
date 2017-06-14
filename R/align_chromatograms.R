@@ -1,7 +1,7 @@
-#' Aligning gas-chromatography peaks based on retention times
+#' Aligning peaks based on retention times
 #'
 #'@description
-#' This is the core function of \code{\link{GCalignR}} to align gas-chromatography peak data.
+#' This is the core function of \code{\link{GCalignR}} to align peak data. The input data is a peak list.
 #' Read through the documentation below and take a look at the vignettes for a thorough introduction.
 #'
 #'@details

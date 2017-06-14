@@ -2,7 +2,7 @@
 % Please edit documentation in R/align_chromatograms.R
 \name{align_chromatograms}
 \alias{align_chromatograms}
-\title{Aligning gas-chromatography peaks based on retention times}
+\title{Aligning peaks based on retention times}
 \usage{
 align_chromatograms(data, sep = "\\t", rt_col_name = NULL,
   write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
@@ -76,7 +76,7 @@ to .txt file by specifying the write_output argument in align_chromatograms}
 \item{input_matrix}{List of data frames. Data frames are matrices of input variables}
 }
 \description{
-This is the core function of \code{\link{GCalignR}} to align gas-chromatography peak data.
+This is the core function of \code{\link{GCalignR}} to align peak data. The input data is a peak list.
 Read through the documentation below and take a look at the vignettes for a thorough introduction.
 }
 \details{

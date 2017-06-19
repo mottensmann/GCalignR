@@ -1,10 +1,14 @@
 #' Shift peaks to eliminate systematic inaccuracies of peak detection by GC.
 #'
-#'@description
+#' @description
 #'\strong{linear_transformation()} shifts all peaks within chromatograms to maximise the number
 #'of shared peaks with a reference chromatogram. Optimally, the reference contains known peaks which
 #'also occur in the samples. If a sample is taken as a reference, samples with high concentrations
 #'and clear peaks will lead to a better result.
+#'
+#' @inheritParams align_chromatograms
+#'
+#' @inheritParams align_peaks
 #'
 #' @param reference
 #' character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.
@@ -12,9 +16,8 @@
 #' @param step_size
 #' integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.
 #'
-#' @inheritParams align_chromatograms
-#'
-#' @inheritParams align_peaks
+#' @param error
+#' numeric value that indicates the allowed deviation for matching peak retention times.
 #'
 #' @return
 #' \item{chroma_aligned}{Transformed data}
@@ -25,11 +28,17 @@
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
 #' @keywords internal
 #'
-linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05, step_size = 0.01, rt_col_name,Logbook){
+linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05, step_size = 0.01, error = 0, rt_col_name,Logbook) {
 
-# Revision 24-04-2017
-# Prior to this date, all values were rounded to two decimals within the main function align_chromatograms. Now, this step is subsituted by  calculations based on rounded values within this function.
-# Reordered alphabetically
+    # changes 19-06-2017
+    # ##################
+    # Error margin is changed from 0 to max_diff_peak2mean
+
+    # Revision 24-04-2017
+    # ##################
+    # Prior to this date, all values were rounded to two decimals within the main function align_chromatograms. Now, this step is subsituted by  calculations based on rounded values within this function.
+    # Reordered alphabetically
+    # ##################
 
     # Defining internal functions, The main function is peak_shift
     # ============================================================
@@ -139,7 +148,7 @@ linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05
     for (j in 1:length(temp)) {
         temp[[j]][["id"]] <- id[j]
     }
-    chrom_shift <- lapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = 0)
+    chrom_shift <- lapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
     Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
     chroma_aligned <- lapply(chrom_shift,function(x) x[-2])
     return(list(chroma_aligned = chroma_aligned,Logbook = Logbook))

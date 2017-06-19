@@ -59,26 +59,34 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         xmax <- object[["Logfile"]][["Call"]][["max_linear_shift"]]
         xmin <- -xmax
 
+        # appropriate steps for hist breaks
+        if (xmax < 0.1) bin_size <- 0.01
+        if (xmax > 0.1 & xmax < 0.75) bin_size <- 0.025
+        if (xmax > 0.75 & xmax < 5) bin_size <- 0.1
+        if (xmax > 5) bin_size <- NULL
+
         ## check for optional arguments in the function call, take defaults, if missing
         arg_list <- list()
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Full chromatogram shifts\n(Linear transformation)"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Shift size"))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of samples"))
-        if (!"breaks" %in% names(mcall)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax + 0.01, by = 0.01)))
+        if (!"breaks" %in% names(mcall) & !is.null(bin_size)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax + 0.01, by = bin_size)))
         if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))
         if (!"col" %in% names(mcall))  arg_list <- append(arg_list,list(col = "#1b9e77"))
         if (!"right" %in% names(mcall)) arg_list <- append(arg_list,list(right = FALSE))
-        if (!"xaxt" %in% names(mcall)) arg_list <- append(arg_list, list(xaxt = "n"))
         if (!"border" %in% names(mcall)) arg_list <- append(arg_list, list(border = "white"))
         # helper to find a good ylim
         p <- as.vector(as.numeric(summary(as.factor(df))))
         p <- max(p)#/sum(p)*100
         if (!"ylim" %in% names(mcall)) arg_list <- append(arg_list, list(ylim = c(0,round(p + 5,-1))))
+        if (!"breaks" %in% names(mcall) & !"xaxt" %in% names(mcall) & !is.null(bin_size)) arg_list <- append(arg_list, list(xaxt = "n"))
 
         x <- do.call(graphics::hist,args = c(list(x = df),arg_list,list(...)))
-        graphics::axis(side = 1, at = x[["mids"]], labels = seq(xmin, xmax, 0.01))
+
+        if (!"breaks" %in% names(mcall) & !"xaxt" %in% names(mcall) & !is.null(bin_size)) graphics::axis(side = 1, at = x[["mids"]], labels = seq(from = xmin, to = xmax, by = bin_size))
+
         return(df)
     }#end hist_linshift
 

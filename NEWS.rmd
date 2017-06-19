@@ -5,12 +5,10 @@ ___
 ## Changes since release 0.1.0
 
 ### Algorithm
-* Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons. 
+#### Linear Shifts
+* Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons and gurantee a high precision 
 * Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.
-
-### Dependencies
-The bioconductor package [MassSpecWavelet](http://bioconductor.org/packages/MassSpecWavelet/) is added as *in R* solution for picking peaks from GC data. 
-
+* By evaluating linear drift over the course of the chromatography run, peaks are thought to be homologous to the reference if the retention times matches within an allowed error proportional to parameter _max\_diff\_peak2mean_
 
 ### warning messages
 * Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity.

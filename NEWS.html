@@ -126,10 +126,14 @@ $(document).ready(function () {
 <h2>Changes since release 0.1.0</h2>
 <div id="algorithm" class="section level3">
 <h3>Algorithm</h3>
+<div id="linear-shifts" class="section level4">
+<h4>Linear Shifts</h4>
 <ul>
-<li>Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for purely computational reasons.</li>
+<li>Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons and gurantee a high precision</li>
 <li>Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.</li>
+<li>By evaluating linear drift over the course of the chromatography run, peaks are thought to be homologous to the reference if the retention times matches within an allowed error proportional to <em>max_diff_peak2mean</em></li>
 </ul>
+</div>
 </div>
 <div id="dependencies" class="section level3">
 <h3>Dependencies</h3>
@@ -138,21 +142,22 @@ $(document).ready(function () {
 <div id="warning-messages" class="section level3">
 <h3>warning messages</h3>
 <ul>
-<li>Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity</li>
+<li>Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity.</li>
 </ul>
 </div>
 <div id="plots" class="section level3">
 <h3>Plots</h3>
 <ul>
-<li>Added horitontal axis to barplots summarising peak numbers in <code>plot.GCalign</code></li>
-<li>Changed to more prominent colours in binary heatmaps with <code>gc_heatmap</code></li>
+<li>Added horizontal axis to barplots summarising peak numbers in <code>plot.GCalign</code>.</li>
+<li>Changed to more prominent colours in binary heatmaps with <code>gc_heatmap</code>.</li>
 </ul>
 </div>
 <div id="vignette" class="section level3">
 <h3>Vignette</h3>
 <ul>
-<li>Extended workflow and more comprehensive explainations ___</li>
+<li>Extended and rewritten to enhance clarity.</li>
 </ul>
+<hr />
 </div>
 </div>
 </div>

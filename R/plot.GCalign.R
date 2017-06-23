@@ -70,7 +70,7 @@ plot.GCalign <- function(x,which_plot = c("all","shifts","variation","peak_numbe
         if (!"main" %in% names(mcall)) arg_list <- append(arg_list,list(main = "Full chromatogram shifts\n(Linear transformation)"))
         if (!"xlab" %in% names(mcall)) arg_list <- append(arg_list,list(xlab = "Shift size"))
         if (!"ylab" %in% names(mcall)) arg_list <- append(arg_list,list(ylab = "No. of samples"))
-        if (!"breaks" %in% names(mcall) & !is.null(bin_size)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax + 0.01, by = bin_size)))
+        if (!"breaks" %in% names(mcall) & !is.null(bin_size)) arg_list <- append(arg_list,list(breaks = seq(from = xmin,to = xmax + bin_size, by = bin_size)))
         if (!"freq" %in% names(mcall) & !"frequency" %in% names(mcall)) arg_list <- append(arg_list,list(freq = TRUE))
         if (!"cex.axis" %in% names(mcall)) arg_list <- append(arg_list,list(cex.axis = 1.25))
         if (!"cex.lab" %in% names(mcall)) arg_list <- append(arg_list,list(cex.lab = 1.25))

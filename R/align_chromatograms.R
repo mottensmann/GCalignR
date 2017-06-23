@@ -118,6 +118,9 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     max_linear_shift = 0.02, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL,
     delete_single_peak = FALSE) {
 
+    # Changes 19-06-2017
+    # error margin of value max_diff_peak2mean is defined as range in which peaks of sample and reference have to match in evaluating linear shifts
+
 # Print start
 cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S")),'\n\n'))
 
@@ -245,7 +248,7 @@ if (reference == "reference") {
     # reference is not a true sample and is used exclusevely for linear alignment
     cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...'))
 
-gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
+gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook, error = max_diff_peak2mean)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))

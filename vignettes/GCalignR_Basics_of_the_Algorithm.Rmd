@@ -1,0 +1,128 @@
+---
+title: "GCalignR: How Does it Work"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph I. Hoffman"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+vignette: >
+    %\VignetteIndexEntry{GCalignR Step by Step}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+ 
+```{r, echo = FALSE}
+library(knitr)
+knitr::opts_chunk$set(collapse = TRUE, comment = ">", cache = FALSE,
+    fig.width = 10, fig.height = 6, fig.align = "center") # warning = FALSE
+```
+
+```{r, results='hide', echo=FALSE}
+library(GCalignR)
+library(ggplot2)
+```
+
+## Preface
+This Vignette shows which kind of data is supported by `GCalignR` and explains the ideas behind the alignment algorithms and their usage based on an simulated set of Chromatograms. in detail
+
+## What´s a Peak List and how to create one ?
+`GCalignR` performances all steps on a so called **peak list**. Such a list can be generated from a Chromatogram, the output of a Chromatograph (e.g. **G**as **C**hromatography **F**lame **I**onization **D**etector, GC-FID) that plots the measured electric current over the time course of a separation run. Figure 1 shows a Chromatogram containing five peaks that represent five analytes detected in this simulated sample. Here, all the peaks approximate perfect gaussian distributions and are clearly separated by the baseline signal.
+Essentially every vendor of a Chromatograph offers software that allow to detect peaks (i.e. compounds) in the generated signal based on procedures that take into account the shape of a peak, the noise level of the signal and many things more that are out of the scope for this tutorial. Nevertheless, the quality of the Chromatograms as well as a sophisticated way to detect and quantify peaks is a crucial step before one should start to think about aligning peaks for analysing the data!
+
+```{r, fig.cap="Figure 1. A Chromatogram shows an intensity signal of the course of a separation run.", echo=F}
+set.seed(123)
+df1 <- GCalignR:::simple_chroma(peaks = c(5.01,10.02,13.10,20.22,24.57), N = 1)
+chroma <- ggplot(data = df1, aes(x,y, fill = sample)) + geom_line(size = 1) + theme_classic() + xlab("Retention time\n [Minutes]") + ylab("Intensity") + scale_x_continuous(breaks = seq(0,30,1),expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) 
+chroma
+```
+
+In this example it would be adequate to define each peak by two values, the retention time and the peak height as a measure of the concentration, simply by calculating the local maxima using a custom R script. Figure 2 shows the peaks annotated by the intensity. The dashed vertical lines indicate the retention time.
+
+```{r, echo=F, fig.cap="Figure 2. Chromatogram with integrated Peaks"}
+peaks <- GCalignR:::find_peaks(df1) # this is an internal function in GCalignR
+chroma + geom_linerange(data = peaks, aes(x = x, ymin = 0, ymax = y), linetype = "dashed", col = "Darkblue") + annotate("text", x = peaks[["x"]], y = peaks[["y"]] + 0.1, label = as.character(round(peaks[["y"]],2)), angle = 0) + geom_area(fill = "blue", alpha = 0.4) + theme(legend.position = "none")
+```
+Now these and futher information (e.g. the peak area) can be summarised in the form of a peak list that contains information for every detected peak. One row of such a peak list refers to a single peak that are generally ordered by their retention time starting with the most volatile substance detected. 
+
+```{r, echo=FALSE}
+df <- data.frame(row.names = c("Peak 1", "Peak 2", "Peak 3", "Peak 4", "Peak 5"), time = peaks[["x"]], height = peaks[["y"]])
+knitr::kable(df,digits = 2)
+```
+Over the course of the analytical pipeline, retention times of the same substance can vary for a number of reasons that include column ageing, preturbations of the carrier gas flow or temperature fluctuations, all of which can be avoided with varying success. `GCalignR` comes into place, when a question regarding the similarity of a number of samples is adressed by analysing their chemical composition. For this purpose it is crucial to cluster peaks that belong to the same substance across samples. Figure 3 shows Chromatograms of four samples "A1" - "A4" that were analysed on the same GC-FID run. These peaks can be individually characterised by their retention times (see labels on each peak). In this small set of only four samples, one can easily see that several peaks are appear in consistent temporal sequence with increasing retention times in sample order in intervals of approx. 0.7 minutes. Here, it would be possible to account for this variation manually, but consider a scenario where there many more samples and peaks, perhaps in noisier chromatograms.
+For this reason we developed `GCalignR` and implemented a simple algorithm that is explained below. Before these chromatograms can be analysed, we need to get peak retention times and peak heights again. Additionally we need to format it in a way that `GCalignR´ understands the data easily.
+
+```{r, results='hide', echo = FALSE, fig.cap="Figure 3. Overlay of Chromatograms for four samples"}
+set.seed(123)
+peak_list <- sample(x = seq(from = 0, to = 26, by = 4), size = 6, replace = F)
+df <- GCalignR:::simple_chroma(peaks = peak_list, N = 4)
+# draw chromatograms and display peaks
+chroma <- ggplot(data = df, aes(x,y, col = sample, fill = sample)) + geom_line(size = 1) + theme_classic() + xlab("Retention time\n [Minutes]") + ylab("Intensity") + scale_x_continuous(breaks = seq(0,30,5),expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) + scale_color_brewer(palette = "Dark2")
+
+# peaks are in this case simply the local maxima for each sample
+peaks <- GCalignR:::find_peaks(df)
+chroma <- chroma + geom_linerange(data = peaks, aes(x = x, ymin = y, ymax = y + 0.1), linetype = "solid", col = "black") + annotate("text", x = peaks[["x"]], y = peaks[["y"]] + 0.2, label = as.character(round(peaks[["x"]],2)), angle = 90)
+print(chroma)
+```
+The standard input format is a tab-delimited text file that contains three pieces of information. (1) All sample identifiers in the first row, (2) the column names for each individual peak list and (3) peak lists for each individual. Peak lists have to be concatenated by columns in the order specified in the first row as depicted below for the Chromatrograms in Figure 3.
+
+```{r, echo=FALSE}
+sink("ChromSimul.txt",append = FALSE)
+# write sample identifier
+cat(levels(peaks[["sample"]]),sep = "\t")
+# write variables
+cat(c("\nrt","height\n"),sep = "\t")
+# merge data horizontally
+
+dat_mat <- numeric()
+
+for (i in levels(peaks[["sample"]])) {
+    temp <- as.matrix(peaks[,c("x","y")][peaks[["sample"]] == i,])
+    add <-  max(summary(peaks[["sample"]])) - nrow(temp)
+    temp <- rbind(temp, matrix(data = 0,nrow = add, ncol = 2))
+      dat_mat <- cbind(dat_mat, temp)
+} 
+write.table(dat_mat, row.names = F, col.names = F, sep = "\t")
+sink()
+```
+
+
+```{r}
+## create a text file and "sink" the console ouput in there
+# sink("MyInputFile.txt", append = FALSE)
+
+## sample identifiers
+cat(levels(peaks[["sample"]]),sep = "\t") 
+## variable names
+cat(c("\nrt","height\n"),sep = "\t") 
+
+## empty matrix to fill with the data
+dat_mat <- numeric()
+for (i in levels(peaks[["sample"]])) {
+    temp <- as.matrix(peaks[,c("x","y")][peaks[["sample"]] == i,])
+    add <-  max(summary(peaks[["sample"]])) - nrow(temp)
+    temp <- rbind(temp, matrix(data = 0,nrow = add, ncol = 2))
+    dat_mat <- cbind(dat_mat, temp)
+} 
+## output the formatted matrix
+write.table(dat_mat, row.names = F, col.names = F, sep = "\t")
+
+## the file is ready
+#sink()
+```
+
+## Aligning peak lists
+All alignment steps take only the retention time of a peak into account and tides all other variables over as they are linked to a certain peak and are embedded within a single function \code{align\_chromatograms}. 
+
+### Linear Drift
+The first step in the alignment acts on linear drifts across samples. Therefore, a reference sample is required that should be selected manually based on criteria listed below. Otherwise a reference will be selected automatically. A suitable reference would be a sample that is *a priori* expected to be similar to all other samples by sharing a proportion of substances. Is advisable to analyse at least one sample under identical conditions with two-dimensional techniques (e.g. GC-MS) and use this a reference in order to obtain valuable information on the chemical composition behind some of the peaks. Linear shifts between each sample and the reference are evaluated in a pair-wise comparison similar to a cross-correlatio based on the peak retention time alone. Thereby, the sample is slided in a user-defined window in discrete time steps. Based on the inspection of the Graph shown above, we pick "A2" as a reference and take into account that peaks of "A3" and "A4" are seemingly postponed by approx. 0.7 and 1.4 minutes, whereas "A1" shows peaks 0.7 minutes earlier. A value of \code{max\_linear\_shift = 2} yielding to a search windown in which all peaks are shifted by \code{-2:2) minutes.  
+```{r, echo=F}
+df_lin <- data.frame(x = rep(df$x[df$sample == "A1"],2), type = rep(c("reference","A2"), each = 10000), y = c(df$y[df$sample == "A1"]), df$y[df$sample == "A2"], y2 = c(rep(NA, 10000), df$y[df$sample == "A2"][233:10000], rep(0,232)))
+```
+
+```{r, echo=F}
+## plotting
+# ggplot(data = df_lin, aes(x,y, col = sample)) + geom_line(size = 1) + theme_classic() + xlab("Retention time\n [Minutes]") + ylab("Intensity") + scale_x_continuous(breaks = seq(0,30,5),expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) + scale_color_brewer(palette = "Dark2")
+
+
+
+ggplot(df_lin, aes(x = x, y = y, col = type)) + geom_line() + geom_point(size = 1) + geom_line(aes(y = y2), linetype = "dotted") 
+```

@@ -4,7 +4,7 @@
 \alias{simple_chroma}
 \title{Simulating a simple chromatogram}
 \usage{
-simple_chroma(peaks = c(10, 13, 25, 37, 50))
+simple_chroma(peaks = c(10, 13, 25, 37, 50), N = 1, min = 0, max = 30)
 }
 \arguments{
 \item{peaks}{vector of mean retention times representing peaks in a chromatogram}

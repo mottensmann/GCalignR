@@ -109,6 +109,7 @@ peak_lister <- function(gc_peak_list,rt_col_name){
     return(rt)
 }
 
+
 remove_linshifts <- function(dx = NULL, rt_col_name = NULL, Logbook = NULL) {
     df <- Logbook[["LinearShift"]]
     samples <- names(dx[[rt_col_name]])[2:length(names(dx[[rt_col_name]]))]

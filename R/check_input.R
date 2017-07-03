@@ -70,6 +70,14 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
         pass <- FALSE
         }
+        # check conc_col_name
+        if ("conc_col_name" %in% names(opt)) {
+            conc_col_name <- opt[["conc_col_name"]]
+            if (!(conc_col_name %in% col_names)) {
+                stop(print(paste(conc_col_name,"is not a valid variable name. Data contains:",paste(col_names, collapse = " & "))))
+                pass <- FALSE
+            }
+        }
         }
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data

@@ -5,6 +5,7 @@ ___
 ## Changes since release 0.1.0
 
 ### Algorithm
+
 #### Linear Shifts
 * Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons and gurantee a high precision 
 * Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.
@@ -16,10 +17,10 @@ ___
 ### Plots 
 * Added horizontal axis to barplots summarising peak numbers in `plot.GCalign`.
 * Changed to more prominent colours in binary heatmaps with `gc_heatmap`.
+* The function `draw_chromatograms` was added as another visualisation tool. 
 
 ### Vignette
-* Extended and rewritten to enhance clarity.
-
+* We included a second vignette that explains the algorithm and the supported data in detail.
 ___
 
 

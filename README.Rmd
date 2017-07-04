@@ -21,6 +21,12 @@ knitr::opts_chunk$set(
 
 Installing GCalignR:
 
+* The current release 0.1.0 is on CRAN
+
+```R
+install.packages("GCalignR", dependencies = T)
+```
+
 * Get the latest development version from github with
 
 ```R
@@ -46,10 +52,10 @@ devtools, ggplot2 and vegan with the commmands below (tested with a new installa
 ```
 ### Get started with GCalignR
 
-To get started read the vignette:  
+To get started read the vignettes:  
 
 ```{r, eval = FALSE}
-    vignette("GCalignR_step_by_step", package = "GCalignR")
+browseVignettes("GCalignR")
 ```
 
 If you encounter bugs or if you have any suggestions for improvement, just contact

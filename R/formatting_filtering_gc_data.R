@@ -109,6 +109,15 @@ peak_lister <- function(gc_peak_list,rt_col_name){
     return(rt)
 }
 
+peaks2chroma <- function(data = NULL, sample = NULL, x = seq(from = 0, to = 30, length = 10000)) {
+    scale <- max(data[["y"]])
+    data <- data[data[["sample"]] == sample,]
+    y <- rep(0, length(x))
+    for (i in 1:nrow(data)) {
+        y <- y + dnorm(x, mean = data[["x"]][i], sd = 1.1 - (data[["y"]][i]/scale))
+    }
+    return(y)
+}#end peaks2chroma
 
 remove_linshifts <- function(dx = NULL, rt_col_name = NULL, Logbook = NULL) {
     df <- Logbook[["LinearShift"]]

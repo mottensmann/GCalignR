@@ -119,7 +119,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     delete_single_peak = FALSE) {
 
     # Changes 19-06-2017
-    # error margin of value max_diff_peak2mean is defined as range in which peaks of sample and reference have to match in evaluating linear shifts. Before this change, exact match was required with a precision of two decimals.
+    # error margin of value max_diff_peak2mean is defined as range in which peaks of sample and reference have to match in evaluating linear shifts. Before this change, an exact match was required with a precision of two decimals.
 
 # Print start
 cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S")),'\n\n'))

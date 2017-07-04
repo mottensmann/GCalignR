@@ -1,6 +1,6 @@
 ---
 title: "GCalignR Step by Step"
-author: "Meinolf Ottensmann, Martin A. Stoffel, Joseph I. Hoffman"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Hazel Nichols and Joseph I. Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -97,7 +97,7 @@ The peak data of a chromatogram usually contain the retention time of a given pe
 ### Input file format
 The input file for GCalignR is a plain text file, whereby all elements should be separated by tabs (with
 sep = "/t") or any other separator, which has to be specified with the `sep` argument (see
-`?read.table` for a list of separators). The decimal seperator has to be the point. 
+`?read.table` for a list of separators). The decimal separator has to be the point. 
 
 * The first row contains the sample names, whereby every name must be unique. Names should not contain whitespaces and use the underscore as the only special character. 
 
@@ -184,7 +184,7 @@ data("aligned_peak_data")
 
 ### Visual diagnostics for the aligned data
 
-The `gc_heatmap` function can be used to visualise aligned datasets. A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. The basic rationale of the alignment is to sort the substances with very similar retention times together, as they most likely represent one substance. The heatmap shows how the single peaks for the individuals deviate from the mean retention time of a substance. As a rule of thumb: The larger the deviation, the less likely it is the same substance. This is especially true if one or few samples deviate significantly, whereas other substances might be more variable than others. However, going back to the original chromatograms and looking at the quality of the peak might help. The heatmap can be invoked using custom threshold values. As an first orientation the default value of 0.05 can be used to inspect outliers among substances. The actual variation that will be observed on substance level will also depend on the alignment parameters, i.e. larger deviations have to be expected with increasing distance between peaks specified by `min_diff_peak2peak` in `align_chromatograms`. Check out the documentation with \code{?gc_heatmap} for further possibilities.
+The `gc_heatmap` function can be used to visualise aligned datasets. A white filling indicates the absence of a peak in a sample, when using the default option of a binary heatmap. The basic rationale of the alignment is to sort the substances with very similar retention times together, as they most likely represent one substance. The heatmap shows how the single peaks for the individuals deviate from the mean retention time of a substance. As a rule of thumb: The larger the deviation, the less likely it is the same substance. This is especially true if one or few samples deviate significantly, whereas other substances might be more variable than others. However, going back to the original chromatograms and looking at the quality of the peak might help. The heatmap can be invoked using custom threshold values. As an first orientation the default value of 0.05 can be used to inspect outliers among substances. The actual variation that will be observed on substance level will also depend on the alignment parameters, i.e. larger deviations have to be expected with increasing distance between peaks specified by `min_diff_peak2peak` in `align_chromatograms`. Check out the documentation with `help("gc_heatmap")` for further possibilities.
 
 ```{r,message=FALSE,fig.width=8,fig.height=8, fig.cap="Figure 5: Heatmap showing the distribution of peaks and the variability within substances"}
 gc_heatmap(aligned_peak_data,threshold = 0.03) 
@@ -214,7 +214,7 @@ scent <- log(scent + 1)
 
 ### Visualise patterns by ordination plots using the *vegan* package
 
-`vegan` offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out \code{?vegan} for a first overview. 
+`vegan` offers a variety of useful function for the analysis of multivariate abundance data such as the scent profiles handled here. Check out `help("vegan")` for a first overview. 
 
 ### Non-metric multidimensional scaling 
 ```{r, results = 'hide'}
@@ -250,4 +250,4 @@ vegan::adonis(scent ~ peak_factors$colony,permutations = 999)
 anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony))
 ```
 
-## Literature
+## References

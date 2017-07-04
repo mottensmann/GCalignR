@@ -4,9 +4,15 @@ GCalignR
 
 ![Build Status](https://travis-ci.org/mastoffel/GCalignR.svg?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR) [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
 
-`GCalignR` provides simple functions to align gas-chromatography data based on retention times and plots to evaluate the quality of the alignment.
+`GCalignR` provides simple functions to align peak lists obtained from Gas Chromatography Flame Ionization Detectors (GC-FID) based on retention times and plots to evaluate the quality of the alignment. The package supports any other one-dimensional chromatograpy technique that enables the user to create a peak list with at least one column specifing retention times.
 
 Installing GCalignR:
+
+-   The current release 0.1.0 is on CRAN
+
+``` r
+install.packages("GCalignR", dependencies = T)
+```
 
 -   Get the latest development version from github with
 
@@ -34,10 +40,10 @@ Installing GCalignR:
 
 ### Get started with GCalignR
 
-To get started read the vignette:
+To get started read the vignettes:
 
 ``` r
-    vignette("GCalignR_step_by_step", package = "GCalignR")
+browseVignettes("GCalignR")
 ```
 
 If you encounter bugs or if you have any suggestions for improvement, just contact meinolf.ottensmann\[at\]web.de

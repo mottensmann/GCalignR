@@ -195,6 +195,9 @@ We can test that not only "A4" contributes to the peaks by moving each sample to
 x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::facet_wrap(~sample, ncol = 1)
 ```
+## Sensitivity
+Running `align_chromatograms` with default settings will be an good starting point for aligning a dataset. However, every dataset has unique features that will require to change one or more of the key parameters `max_linear_shift`, `max_diff_peak2mean` and `min_diff_peak2peak`.
+
 
 ## Remarks
 The dataset that was used for this vignette was created by picking peaks pseudo-randomly and adding arbitrary perturbations. Especially the amplitude of linear drift in the range of minutes is not expected in *real life* application of chromatography and was used to illustrate the principles. When one works with experimental data we suggest to use the original chromatograms in combination with the `draw_chromatogram` tool to explore the data carefully, for example by looking at subsets of samples and different time scales.

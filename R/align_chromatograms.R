@@ -140,6 +140,18 @@ if (x != TRUE) stop("Processing not possible: check warnings below and change ac
 Logbook <- list()
 Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
 
+### 1.3. Check that parameter combinations are sensible
+### ===================================================
+if (min_diff_peak2peak <= max_diff_peak2mean) {
+    cat("It is not advisable to set 'min_diff_peak2peak' to the same or a smaller value than 'max_diff_peak2mean'. See the vignettes for further information.\n")
+    askYesNo <- function() {
+        x <- readline("Do you want to quit the alignment now? [Yes/No] ")
+        while (!(x %in% c("Yes", "No"))) x <- readline("Type 'Yes' or 'No' ")
+        if (x == "Yes") stop("Processing interrupted on user request")
+    }
+    askYesNo()
+}
+
 ### 2. Load Data
 ### ============
 if (is.character(data)) { # txt file

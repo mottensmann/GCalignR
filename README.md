@@ -4,7 +4,9 @@ GCalignR
 
 ![Build Status](https://travis-ci.org/mastoffel/GCalignR.svg?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR) [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
 
-`GCalignR` provides simple functions to align peak lists obtained from Gas Chromatography Flame Ionization Detectors (GC-FID) based on retention times and plots to evaluate the quality of the alignment. The package supports any other one-dimensional chromatograpy technique that enables the user to create a peak list with at least one column specifing retention times.
+`GCalignR` provides simple functions to align peak lists obtained from Gas Chromatography Flame Ionization Detectors (GC-FID) based on retention times and plots to evaluate the quality of the alignment. The package supports any other one-dimensional chromatograpy technique that enables the user to create a peak list with at least one column specifying retention times as illustrated below.
+
+<img src="vignettes/Two_Chromas_Peak_List.png" width="576" style="display: block; margin: auto;" />
 
 Installing GCalignR:
 
@@ -14,7 +16,7 @@ Installing GCalignR:
 install.packages("GCalignR", dependencies = T)
 ```
 
--   Get the latest development version from github with
+-   Get the latest development version from GitHub with
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -25,7 +27,7 @@ install.packages("GCalignR", dependencies = T)
     devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
 ```
 
--   If the installation fails try installing the packages devtools, ggplot2 and vegan with the commmands below (tested with a new installation of R 3.2.5)
+-   If the installation fails, try installing the packages devtools, ggplot2 and vegan with the commands below (tested with a new installation of R 3.2.5)
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) {

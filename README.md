@@ -10,13 +10,13 @@ GCalignR
 
 Installing GCalignR:
 
--   The current release 0.1.0 is on CRAN
+-   The current release 0.1.0 is on CRAN. An upate will be released soon!
 
 ``` r
 install.packages("GCalignR", dependencies = T)
 ```
 
--   Get the latest development version from GitHub with
+-   We are currently working a lot on the package functionalities and the documentation. Get the most recent development version from GitHub with
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) { 

@@ -25,13 +25,13 @@ knitr::include_graphics(path = "vignettes/Two_Chromas_Peak_List.png", dpi = 300)
 
 Installing GCalignR:
 
-* The current release 0.1.0 is on CRAN
+* The current release 0.1.0 is on CRAN. An upate will be released soon!
 
 ```R
 install.packages("GCalignR", dependencies = T)
 ```
 
-* Get the latest development version from GitHub with
+* We are currently working a lot on the package functionalities and the documentation. Get the most recent development version from GitHub with
 
 ```R
     if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -66,4 +66,4 @@ If you encounter bugs or if you have any suggestions for improvement, just conta
 meinolf.ottensmann[at]web.de
 
 ### Reference
-[Ottensmann, M., Stoffel, M.A., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *In review*.](https://doi.org/10.1101/110494)
+[Ottensmann, M., Stoffel, M.A., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under revision*.](https://doi.org/10.1101/110494)

@@ -10,11 +10,5 @@ notes.md
 NEWS.md
 NEWS.rmd
 NEWS.html
-chromaSimul.Rmd
-
-data_noa.txt
-inst/extdata/gc
-R/pick_peaks.R
-R/blank_substraction.R
-inst/extdata/kanarien.txt
 internal
+R/chroma2peak_list.R

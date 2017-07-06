@@ -1,15 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
-inst/doc
-/test
-bin
 .gitignore
 plans.md
 notes.md
-data_noa.txt
-R/blank_substraction.R
-R/pick_peaks.R
-inst/extdata/gc
-inst/extdata/kanarien.txt
 internal

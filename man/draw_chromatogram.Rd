@@ -9,7 +9,7 @@ draw_chromatogram(data = NULL, rt_col_name = NULL, width = 0.1,
   samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE)
 }
 \arguments{
-\item{data}{Currently two formats are supported. Either a \strong{text file} containing peak lists or an \strong{"GCalign"} object. See \code{\link{align_chromatograms}} for details.}
+\item{data}{Currently three formats are supported. Either a \strong{text file} or a \strong{list} containing raw data peak lists or an \strong{"GCalign"} object. See \code{\link{align_chromatograms}} for details.}
 
 \item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}

@@ -4,7 +4,7 @@
 #'
 #' @details Peaks from the peak list are depicted as gaussian distributions. By default, peaks are visualised regardless of their concentration, thereby indicating presence/absence only. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{pre_aligned}), after correcting linear drift (\strong{lin_aligned}) or after the complete alignment was conducted (\strong{fully_aligned}). In the latter case, retention times refer to the mean retention time of a substance scored among samples and do not represent between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by chaning the value of parameter \code{width}. Note, aligned peaks (= exactly matching retention time) will overlapp completely and only the last sample plotted will be visible. Hence, the number of samples is given on top of each peak but default. The function returns a list containing the ggplot object along with the underlying data frame to allow for maximum control in adapting the plot (see examples section in this document).
 #'
-#' @param data Currently two formats are supported. Either a \strong{text file} containing peak lists or an \strong{"GCalign"} object. See \code{\link{align_chromatograms}} for details.
+#' @param data Currently three formats are supported. Either a \strong{text file} or a \strong{list} containing raw data peak lists or an \strong{"GCalign"} object. See \code{\link{align_chromatograms}} for details.
 #'
 #' @inheritParams align_chromatograms
 #'
@@ -79,8 +79,12 @@ return(df)
         out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F)
         if (out == FALSE) stop("Data is malformed. See check_input for details")
     } else {
-        if (class(data) != "GCalign") warning("The data might be not of the correct from. See helpfile for details.")
-        if (!(rt_col_name %in% names(data[["aligned"]])))  stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(names(data[["aligned"]]),collapse = " & "))))
+        if (class(data) == "GCalign") {
+            if (!(rt_col_name %in% names(data[["aligned"]])))  stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(names(data[["aligned"]]),collapse = " & "))))
+        }
+        if (class(data) == "list")
+            out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F)
+        if (out == FALSE) stop("Data is malformed. See check_input for details")
     }
 # ###################
 
@@ -88,7 +92,7 @@ return(df)
     if (is.character(data)) {
     # gather data and information
 peak_list <- read_peak_list(data, sep, rt_col_name)
-    } else {
+    } else if (class(data) == "GCalign") {
         if (is.null(step)) step <- "fully_aligned"
         if (step == "pre_aligned") {
             peak_list <- data[["input_list"]]
@@ -104,6 +108,19 @@ peak_list <- read_peak_list(data, sep, rt_col_name)
                 return(x)
         })
         }
+    } else if (class(data) == "list") {
+        peak_list <- lapply(data, FUN = function(x) {
+            if (any(is.na(rowSums(x)))) {
+                p <- as.vector(which(is.na(rowSums(x))))
+                x <- x[-p,]
+            }
+            if (any(rowSums(x) == 0)) {
+                p <- as.vector(which(rowSums(x) == 0))
+                x <- x[-p]
+            }
+            return(x)
+        })
+        peak_list <- data
     }
 
 peak_list <- lapply(peak_list, FUN = function(x) {
@@ -175,7 +192,7 @@ chroma <- ggplot(data = df, aes(x,y, col = sample)) + geom_line(size = 1) + them
 
 if (isTRUE(show_num)) {
 ## count number of substances per peak
-pn <- data.frame(x = as.numeric(names(summary(as.factor(peaks[["x"]])))), n = as.vector(summary(as.factor(peaks[["x"]]))))
+pn <- data.frame(x = as.numeric(names(summary(as.factor(peaks[["x"]]), maxsum = length(peaks[["x"]])))), n = as.vector(summary(as.factor(peaks[["x"]]), maxsum = length(peaks[["x"]]))))
 pn[["y"]] <- unlist(lapply(pn[["x"]], FUN = function(x) {
     max(peaks[["y"]][round(peaks[["x"]],4) == round(x,4)])
     }))

@@ -81,10 +81,10 @@ return(df)
     } else {
         if (class(data) == "GCalign") {
             if (!(rt_col_name %in% names(data[["aligned"]])))  stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(names(data[["aligned"]]),collapse = " & "))))
-        }
-        if (class(data) == "list")
+        } else if (class(data) == "list") {
             out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F)
-        if (out == FALSE) stop("Data is malformed. See check_input for details")
+            if (out == FALSE) stop("Data is malformed. See check_input for details")
+        }
     }
 # ###################
 

@@ -5,16 +5,16 @@
 #' Read through the documentation below and take a look at the vignettes for a thorough introduction.
 #'
 #'@details
-#' The alignment of peaks is achieved by running \strong{three major algorithms} always considering
+#' The alignment of peaks is achieved by a \strong{three-step algorithm} always considering
 #' the complete set of samples submitted to the function.
-#' In brief: \strong{(1) Chromatograms (more correctly, their peaks) are shifted} to maximise
+#' In brief: \strong{(1) Chromatograms}, i.e. teire peaks, are shifted to maximise
 #' similarity with a reference to account for systematic shifts in retention times
-#' caused by gas-chromatography processing. \strong{(2) Peaks of similar retention times are aligned}
-#' in order to match similar retention times to the same substance. During the algorithm proceeds,
-#' these clusters are continuously revised and every peaks is moved to the optimal
-#' location(i.e. substance). \strong{(3) Peaks of similar retention time are merged} if
+#' caused by Gas Chromatography separation. \strong{(2) Peaks of similar retention times are aligned}
+#' in order to cluster similar retention times to the same substance. While the algorithm proceeds,
+#' these clusters are continuously revised and every peak is moved to the optimal
+#' location (i.e. substance). \strong{(3) Peaks of similar retention time are merged} if
 #' they show smaller differences in mean retention times than expected by the achievable
-#' resolution of the gas-chromatography or the chemistry of the compounds are merged.
+#' resolution of the Gas Chromatography or the chemistry of the compounds involved.
 #' This has to be specfied by the parameters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}.
 #' Several optional processing steps are available, ranging from the removal of peaks representing
 #' contaminations (requires to include blanks as a control) to the removal of uninformative peaks
@@ -87,14 +87,14 @@
 #'@return
 #' Returns an object of class "GCalign" that is a a list containing several objects that are listed below.
 #' Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
-#' \item{aligned}{Aligned gas-chromatography data subdivided into individual data frames for every variable.
-#' Samples are represented by columns, rows specify substances. The first column of every data frame
+#' \item{aligned}{Aligned gas-chromatography data subdivided into individual data frames for every variable. Samples are represented by columns, rows specify substances. The first column of every data frame
 #' is comprised of the mean retention time of the respective substance (i.e. row). The aligned data
 #' can be used for further statistical analyses in other packages and also directly written
-#' to .txt file by specifying the write_output argument in align_chromatograms}
+#' to a text file by specifying the write_output argument in align_chromatograms. Note, retention times of samples are shown as they were included in the raw data. Indermediate transformations, e.g. linear adjustments are not considered to allow matching each retention time to the respective positio in the input.}
 #' \item{heatmap_input}{Data frames of retention times; used internally to create heatmaps}
-#' \item{Logfile}{Includes several lists summarizing the data; used to print diagnostics of the alignment}
+#' \item{Logfile}{A protocoll of the alignment process.}
 #' \item{input_list}{List of data frames. Data frames are comprised of the raw of a sample prior to aligning}
+#' \item{aligned_list}{List of data frame. Data frame are comprised of the the aligned data for each sample.}
 #' \item{input_matrix}{List of data frames. Data frames are matrices of input variables}
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)

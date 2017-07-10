@@ -8,11 +8,9 @@
 #'
 #' @return a list of peak lists for each sample
 #'
-#' @keywords internal
-#'
 #' @export
 #'
-read_peak_list <- function(data, sep, rt_col_name) {
+read_peak_list <- function(data, sep = "\t", rt_col_name) {
     ind_names <- readr::read_lines(data, n_max = 1)
     ind_names <- unlist(stringr::str_split(string = ind_names,pattern = sep))
     ind_names <- ind_names[ind_names != ""]

@@ -4,7 +4,7 @@
 \alias{read_peak_list}
 \title{Read content of a text file}
 \usage{
-read_peak_list(data, sep, rt_col_name)
+read_peak_list(data, sep = "\\t", rt_col_name)
 }
 \arguments{
 \item{data}{a text file}
@@ -21,4 +21,3 @@ a list of peak lists for each sample
 \description{
 reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
 }
-\keyword{internal}

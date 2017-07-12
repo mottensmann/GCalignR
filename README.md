@@ -6,7 +6,7 @@ GCalignR
 
 `GCalignR` provides simple functions to align peak lists obtained from Gas Chromatography Flame Ionization Detectors (GC-FID) based on retention times and plots to evaluate the quality of the alignment. The package supports any other one-dimensional chromatograpy technique that enables the user to create a peak list with at least one column specifying retention times as illustrated below.
 
-<img src="vignettes/Two_Chromas_Peak_List.png" width="576" style="display: block; margin: auto;" />
+<img src="vignettes/Two_Chromas_Peak_List.png" width="864" style="display: block; margin: auto;" />
 
 Installing GCalignR:
 
@@ -52,4 +52,4 @@ If you encounter bugs or if you have any suggestions for improvement, just conta
 
 ### Reference
 
-[Ottensmann, M., Stoffel, M.A., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *In review*.](https://doi.org/10.1101/110494)
+[Ottensmann, M., Stoffel, M.A., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under revision*.](https://doi.org/10.1101/110494)

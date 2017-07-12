@@ -176,7 +176,10 @@ print(chroma)
 ## ---- echo=FALSE, fig.cap="Figure 5. Alignment of individual peaks based on retention time matrices. Colours represent substances, black rectangles highlight causes of manipulations.",out.width = "750px"----
 knitr::include_graphics("align_peaks.png",dpi = 300)
 
-## ---- fig.cap="Figure 5. Chromatographic representation of the dataset prior to alignment"----
+## ---- echo=FALSE, fig.cap="Figure 6. Merging redudant rows of homologous peaks.",out.width = "500px"----
+knitr::include_graphics("merge_row.png",dpi = 300)
+
+## ---- fig.cap="Figure 7. Chromatographic representation of the dataset prior to alignment"----
 ## path to the data
 path <- system.file("extdata", "simulated_peak_data.txt", package = "GCalignR")
 ## draw chromatograms
@@ -186,23 +189,26 @@ x[["ggplot"]] + geom_line(size = 1.2) + theme(axis.ticks.x = element_blank()) + 
 ## ---- eval=T, results="hide"---------------------------------------------
 aligned <- align_chromatograms(data = path,
                                rt_col_name = "rt",
-                               max_linear_shift = 2,
+                               max_linear_shift = 1.6,
                                max_diff_peak2mean = 0.02,
-                               min_diff_peak2peak = 1,
+                               min_diff_peak2peak = 0.08,
                                reference = "A2")
 
 ## ------------------------------------------------------------------------
 print(aligned[["Logfile"]][["LinearShift"]])
 
-## ---- results="hide"-----------------------------------------------------
+## ---- fig.cap="Figure 8. Histogram of linear shifts."--------------------
+plot(aligned, which_plot = "shifts")
+
+## ---- results="hide", fig.cap="Figure 9. Correcting linear drift reduces the gaps between homologous peak retention times"----
 x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "lin_aligned", show_rt = F, show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 
-## ---- results="hide"-----------------------------------------------------
+## ---- results="hide", fig.cap= "Figure 10. Aligned peaks are represented by the mean retention time of a substance "----
 x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = T, plot = F)
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 
-## ------------------------------------------------------------------------
+## ---- fig.cap="Figure 11. Suplots are a convenient means of visualising aligned peak lists"----
 ## for using ggplot2::facet_wrap we need to get rid of the annotations
 x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::facet_wrap(~sample, ncol = 1) + ggplot2::scale_color_brewer(palette = "Dark2")

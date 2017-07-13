@@ -52,6 +52,18 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
     # Define the start
     current_row <- 1
     while (current_row != 'stop') {
+
+        ##############
+        ### timer ####
+        ##############
+        total <- nrow(gc_peak_list[[1]])
+        # create progress bar
+        pb <- txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
+        #Sys.sleep(1)
+        setTxtProgressBar(pb, current_row)
+        ##############
+
+
         # Randomize the order of samples
         shuffle_order <- sample(1:length(gc_peak_list))
         gc_peak_list <- gc_peak_list[shuffle_order]
@@ -90,12 +102,13 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
     gc_peak_list <- lapply(gc_peak_list, matrix_append, gc_peak_list)
     last_substance_index <- length(mean_retention_times(gc_peak_list, rt_col_name)[mean_retention_times(gc_peak_list, rt_col_name) > 0])
     # remove unused rows
-    gc_peak_list <- lapply(gc_peak_list, function(x) x[c(1:last_substance_index), ])
+    gc_peak_list <- lapply(gc_peak_list, function(x) x[c(1:last_substance_index),])
     if (current_row > nrow(gc_peak_list[[s]])) {
         # stop when the last row was handled
         current_row <- 'stop'
     }
     }
+    close(pb) # end of the progress bars
 
     return(gc_peak_list)
 }
@@ -242,7 +255,6 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
             }
         }
     }
-
     return(gc_peak_list)
 }
 # End defining internal functions

@@ -263,9 +263,9 @@ if (!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)) {
     # gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
 if (!is.null(reference)) {
+    cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
 if (reference == "reference") {
     # reference is not a true sample and is used exclusevely for linear alignment
-    cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...'))
 
 gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook, error = max_diff_peak2mean)
     Logbook <- gc_peak_list_linear[["Logbook"]]
@@ -286,22 +286,22 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_li
 } else if (is.null(reference)) {
     # If no reference was specified by the user, the reference is determined, such
     # that the sample with the highest avarage similarity to all other samples is used.
-    cat("\nNo reference was specified. Hence, a reference is selected automatically ... ")
+    cat("\nNo reference was specified. Hence, a reference will be selected automatically ...\n ")
     best.ref <- choose_optimal_reference(gc_peak_list = gc_peak_list, rt_col_name = rt_col_name)
     # set the reference
     reference <- best.ref[["sample"]]
-    cat("done\n")
-    text <- paste0("'",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],").")
-    cat(stringr::str_wrap(paste(text,collapse = ""),width = 80,exdent = 0,indent = 0))
-}# new end
-     cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...'))
+    cat("\n")
+    text <- paste0("'",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],").\n")
+    cat(stringr::str_wrap(paste(text,collapse = ""),width = 100,exdent = 0,indent = 0))
+   #    }# new end
+     cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
     gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift,
         step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
-#} old end
+}# old end
 
     Logbook[["Input"]]["Reference"] <- reference
     # why is there a cat?

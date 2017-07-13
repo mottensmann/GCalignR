@@ -20,7 +20,8 @@ Imports:
     readr,
     reshape2,
     stringr,
-    utils
+    utils,
+    pbapply
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 6.0.1

@@ -148,7 +148,8 @@ linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05
     for (j in 1:length(temp)) {
         temp[[j]][["id"]] <- id[j]
     }
-    chrom_shift <- lapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
+    pbapply::pboptions(type = "timer", char = "+", style = 1)
+    chrom_shift <- pbapply::pblapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
     Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
     chroma_aligned <- lapply(chrom_shift,function(x) x[-2])
     return(list(chroma_aligned = chroma_aligned,Logbook = Logbook))

@@ -40,13 +40,22 @@ choose_optimal_reference <- function(gc_peak_list = NULL, rt_col_name = NULL){
 
 ### define internal functions
 ## Scores for all samples
-df_median_sim_score <- function(gc_peak_list,rt_col_name){
-x <- data.frame(score = rep(NA,length(gc_peak_list)),sample = names(gc_peak_list))
-    for(i in 1:length(gc_peak_list)) {
-    x[["score"]][i] <- median_sim_score(gc_peak_list = gc_peak_list, ref_df = gc_peak_list[[i]],rt_col_name = rt_col_name)
-    }
-return(x)
-    }
+# df_median_sim_score <- function(gc_peak_list,rt_col_name){
+# x <- data.frame(score = rep(NA,length(gc_peak_list)),sample = names(gc_peak_list))
+#     for(i in 1:length(gc_peak_list)) {
+#     x[["score"]][i] <- median_sim_score(gc_peak_list = gc_peak_list, ref_df = gc_peak_list[[i]],rt_col_name = rt_col_name)
+#     }
+# return(x)
+# }
+
+df_median_sim_score <- function(gc_peak_list,rt_col_name) {
+    # set up timer
+    pbapply::pboptions(type = "timer", char = "+", style = 1)
+    temp <- pbapply::pblapply(gc_peak_list, function(x) median_sim_score(gc_peak_list = gc_peak_list, ref_df = x, rt_col_name = rt_col_name))
+    temp <- do.call("rbind", temp)
+    temp <- data.frame(score = as.vector(temp), sample = rownames(temp))
+    return(temp)
+}
 
 ## Median similiarity to all other chromas
 median_sim_score <- function(gc_peak_list,ref_df,rt_col_name){

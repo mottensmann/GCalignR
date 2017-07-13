@@ -60,7 +60,7 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
         # create progress bar
         pb <- txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
         #Sys.sleep(1)
-        setTxtProgressBar(pb, current_row)
+        setTxtProgressBar(pb, ifelse(is.numeric(current_row), current_row, total))
         ##############
 
 
@@ -240,11 +240,11 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
            ##############
            ### timer ####
            ##############
-           total <- length(similar)
+           total <- ifelse(length(similar) > 0, length(similar), 1)
            # create progress bar
            pb <- txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
            #Sys.sleep(1)
-           setTxtProgressBar(pb, counter)
+           setTxtProgressBar(pb, ifelse(is.numeric(counter),counter, total))
            ##############
 
             # stop when there are no redundancies

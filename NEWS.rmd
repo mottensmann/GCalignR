@@ -5,6 +5,7 @@ ___
 ## Changes since release 0.1.0
 
 ### Algorithm
+* Using `pbapply`, we implemented progress bars to inform the user about the progress and the estimated running time of intermediate steps in the alignment of peak lists.
 
 #### Linear Shifts
 * Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons and gurantee a high precision 

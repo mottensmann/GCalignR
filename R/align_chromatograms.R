@@ -305,7 +305,7 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_li
 
     Logbook[["Input"]]["Reference"] <- reference
     # why is there a cat?
-    cat(" done\n")
+    #cat(" done\n")
     # equalise chromatograms sizes
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 

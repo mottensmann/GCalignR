@@ -310,7 +310,7 @@ gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_li
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
 # 3.3 Align peaks
-
+    cat("\n")
     cat(c('Start aligning peaks ... ','this might take a while!\n'))
 
     # create corresponding lists
@@ -336,7 +336,7 @@ for (R in 1:iterations) {
     no_peaks[R] <- nrow(gc_peak_list_aligned[[1]])
 
 # 3.4 Merge rows
-    cat("\nMerge redundant substances ... ")
+    cat("\nMerge redundant substances ...\n ")
     gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned,
         min_diff_peak2peak = min_diff_peak2peak, rt_col_name = rt_col_name)
     # estimate Number of merged peaks
@@ -346,13 +346,13 @@ for (R in 1:iterations) {
 
     Logbook[["Aligned"]]["total"] <- no_peaks[R]
 
-    cat('done')
+    #cat('done')
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
     # delete empty rows again
     gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)
 }#end iterative loop of aligning & merging
 
-cat(paste0('\n','Alignment completed'),'\n\n')
+#cat(paste0('\n','Alignment completed'),'\n\n')
 
 ### 4 Cleaning chromatograms
 ### ========================
@@ -508,6 +508,6 @@ if (!is.null(write_output)) {
 
     class(output_algorithm) <- "GCalign"
 
-    cat(paste0('\nAlignment was successful!\n','Time:'),strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S"),'\n\n')
+    cat(paste0('\nAlignment completed!\n','Time:'),strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S"),'\n\n')
     return(output_algorithm)
 }# end align_chromatograms

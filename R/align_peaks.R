@@ -224,16 +224,29 @@ shift_rows = function(chromatograms, current_sample_index, retention_row) {
 }
 
 
-merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_name,conc_col_name,criterion="strict"){
+merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_name, conc_col_name = NULL, criterion="strict"){
 
     merging <- 'start'
     while (merging != 'stop') {
+
         # calculate mean retention times
         average_rts <- mean_retention_times(gc_peak_list, rt_col_name)
         # update similarity assessment
         similar <- similar_peaks(average_rts, min_diff_peak2peak)
         counter <- 1
-        while (counter != 'stop') {
+
+       while (counter != 'stop') {
+
+           ##############
+           ### timer ####
+           ##############
+           total <- length(similar)
+           # create progress bar
+           pb <- txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
+           #Sys.sleep(1)
+           setTxtProgressBar(pb, counter)
+           ##############
+
             # stop when there are no redundancies
             if (length(similar) == 0) {
                 merging <- "stop"
@@ -253,8 +266,9 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
                     counter <- 'stop'
                 }
             }
-        }
+       }
     }
+    close(pb)
     return(gc_peak_list)
 }
 # End defining internal functions

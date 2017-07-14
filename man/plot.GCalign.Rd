@@ -8,15 +8,15 @@
   "peak_numbers", "peaks_shared"), ...)
 }
 \arguments{
-\item{x}{Object of class GCalign, created by \code{\link{align_chromatograms}}}
+\item{x}{Object of class GCalign, created with \code{\link{align_chromatograms}}}
 
-\item{which_plot}{character string indicating which plot is returned. Available are
-\strong{"shifts"} a histogram of linear adjustments undertaken in aligning chromatograms,
-\strong{"variation"} a histogram summarising the range of retention times for every peak defined
+\item{which_plot}{Character string indicating which plot is returned. Available are:
+\strong{"shifts"}, a histogram of linear adjustments undertaken in aligning chromatograms,
+\strong{"variation"}, a histogram summarising the range of retention times for every peak defined
 by the difference between minimum and maximum retention times respectively. The third option
-is \strong{"peak_numbers"} plotting a barchart of the number of sharings per sample. Additionally \strong{"peaks_shared"} produces a histogram of the proportion with which sharings are shared among samples. This means for every sharing the proportion of samples containing the respective peak is estimated. By default all plots are returned as subplots of one figure.}
+is \strong{"peak_numbers"}, plotting a barchart of the number of sharings per sample. Additionally \strong{"peaks_shared"} produces a histogram of the proportion with which peaks (i.e. substances) are shared among samples. This means for every peak, the proportion of samples containing the respective peak is estimated. By default all plots are returned as subplots of one figure.}
 
-\item{...}{optional arguments passed on to methods. See
+\item{...}{Optional arguments passed on to methods. See
 \code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
 Note that optional arguments are not passed on when plotting all figures.}
 }
@@ -28,7 +28,7 @@ Four plots are currently available: One plot visualises the distribution of line
 that were applied in order to align chromatograms to a reference before aligning individual peaks.
 A second plot illustrates the remaining variation of retention times on the level of individual
 peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
-of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram.
+of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram. By default all plots are returned.
 }
 \examples{
 ## GCalign object

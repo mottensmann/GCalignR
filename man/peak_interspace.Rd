@@ -10,7 +10,7 @@ peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
 \arguments{
 \item{data}{Path to a data file or the name of a list in the global environment.}
 
-\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
@@ -25,7 +25,7 @@ List containing summary statistics of the peak interspace distribution
 }
 \description{
 The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}.
-This function allows to infer a suitable value based on the input data.
+This function helps to infer a suitable value based on the input data.
 }
 \examples{
 ## plotting with defaults

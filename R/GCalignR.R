@@ -1,25 +1,28 @@
 #' GCalignR: A package to align gas-chromatography peaks based on retention times
 #'
 #'@description
-#'\code{GCalignR} contains the following functions that are explained in the \href{../doc/GCalignR_step_by_step.html}{Vignette}:
+#' \strong{\code{GCalignR}} contains the functions listed below. Follow the links to access the documentation of each function.
 #'
-#'\link{align_chromatograms}
+#'\code{\link{align_chromatograms}} executes all alignment steps.
 #'
-#'\link{check_input}
+#'\code{\link{check_input}} tests the input data for formatting issues.
 #'
-#'\link{gc_heatmap}
+#'\code{\link{draw_chromatogram}} visualises peak lists in form of a chromatogram.
 #'
-#'\link{norm_peaks}
+#'\code{\link{find_peaks}} detects and calculates peak heights in chromatograms. Not intended to be used for peak integration in empirical data. Used for illustration purposes only.
+#'
+#'\code{\link{gc_heatmap}} visualises aligned datasets using heatmaps that can be customised.
+#'
+#'\code{\link{norm_peaks}} allows to compute the relative abundance of peaks with samples.
+#'
+#'\code{\link{peak_interspace}} gives a histogram of the distance between peaks within samples over the whole dataset.
+#'
+#'\code{\link{read_peak_list}} reads the content of a text file and converts it to a list.
+#'
+#'\code{\link{simple_chroma}} creates simple chromatograms for testing and illustration purposes.
 #'
 #'@details
-#' Gas-chromatography (GC) & gas-chromatography-mass-spectrometry (GC-MS) are
-#' powerful analytical separation techniques that can be used for diverse
-#' applications. Even though gas-chromatography is highly sensitive and retention
-#' times are substance-specific (in equal settings), small systematic shifts in
-#' chromatograms as well as unavoidable inaccuracies in peak detection make it difficult
-#' to compare chromatograms and analyse patterns across samples. GCalignR provides functions
-#' to align chromatography peaks across samples based on retention times and simple means of evaluating the
-#' quality of the alignment.
+#' The usage of the package is explained in the vignettes distributed with \strong{GCalignR}. Type \code{browseVignettes("GCalignR")} access them.
 #'
 #' @docType package
 #' @name GCalignR

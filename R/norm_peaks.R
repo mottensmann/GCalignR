@@ -1,13 +1,13 @@
-#' Normalisation of peaks
+#' Normalisation of peak abundancies
 #'
 #' @description
-#' \code{norm_peaks} calculates the relative abundance of a peak by normalising
+#' Calculates the relative abundance of a peak by normalising
 #' with regard to the cumulative abundance of all peaks that are present within an
-#' individual chromatogram. The desired measure of peak abundance needs to be a column
-#' within the original gas-chromatography dataset aligned by \link{align_chromatograms}.
+#' individual sample. The desired measure of peak abundance needs to be a column
+#' within the original gas-chromatography dataset aligned with \code{\link{align_chromatograms}}.
 #'
 #' @param data
-#' Object of class GCalign created with \link{align_chromatograms}. Contains a list
+#' Object of class GCalign created with \code{\link{align_chromatograms}}. Contains a list
 #' of data frames including the retention time and other variables, of which one needs
 #' to be specified as \code{conc_col_name}.
 #'
@@ -21,7 +21,7 @@
 #' @inheritParams align_chromatograms
 #'
 #' @return
-#' Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundances. Abundances are given in percent.
+#' Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundances. Abundances are given as percentages.
 #'
 #'  @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)

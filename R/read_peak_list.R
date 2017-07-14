@@ -1,12 +1,12 @@
-#' Read content of a text file
+#' Read content of a text file and convert it to a list
 #'
-#' @param data a text file
+#' @param data a text file containing a peak list. See \code{\link{align_chromatograms}} for details.
 #'
 #' @inheritParams align_chromatograms
 #'
-#' @description reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
+#' @description Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
 #'
-#' @return a list of peak lists for each sample
+#' @return A list of data frames containing peak data for every sample of \code{data}.
 #'
 #' @export
 #'

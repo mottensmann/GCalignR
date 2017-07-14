@@ -2,22 +2,22 @@
 % Please edit documentation in R/read_peak_list.R
 \name{read_peak_list}
 \alias{read_peak_list}
-\title{Read content of a text file}
+\title{Read content of a text file and convert it to a list}
 \usage{
 read_peak_list(data, sep = "\\t", rt_col_name)
 }
 \arguments{
-\item{data}{a text file}
+\item{data}{a text file containing a peak list. See \code{\link{align_chromatograms}} for details.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
 }
 \value{
-a list of peak lists for each sample
+A list of data frames containing peak data for every sample of \code{data}.
 }
 \description{
-reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
+Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
 }

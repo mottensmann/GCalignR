@@ -4,7 +4,7 @@
 #' Selects the chromatogram that shows the highest average similarity to all other samples a the reference for linear corrections of systematic shifts in peak retention times.
 #'
 #' @details
-#' In order to correct systematic errors in peak retention times the most suitable reference chromatogram is selected based on the objective criterion of the highest average similarity to all other chromatograms in the data. Precisely, the median number of shared peaks between a sample and all other samples is estimated for any chromatogram in \code{gc_peak_list}. The most suitable referene is then defined as the sample showing the highest median similarity score.
+#' In order to correct systematic errors in peak retention times the most suitable reference chromatogram is selected based on the objective criterion of the highest average similarity to all other chromatograms in the data. Precisely, the median number of shared peaks between a sample and all other samples is estimated for any chromatogram in \code{gc_peak_list}. The most suitable reference is then defined as the sample showing the highest median similarity score.
 #'
 #' @param gc_peak_list
 #' List of individual samples, where samples a data frames of numerical variables in columns. A column needs to contain retention times of peaks.

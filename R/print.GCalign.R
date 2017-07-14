@@ -1,4 +1,4 @@
-#' Summarizing Peak Alignments with GCalignR
+#' Summarising Peak Alignments with GCalignR
 #'
 #' @description
 #' print method for class "GCalign"

@@ -16,15 +16,14 @@ required variable.}
 \item{reference}{character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.}
 
 \item{max_linear_shift}{This value defines the maximum time that one chromatogram is expected to be deviating in retention times
-from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same
-retention time to all peaks within a chromatogram to maximise the number of shared peaks with
+from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same value to all peaks within a chromatogram to maximise the number of shared peaks with
 the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.}
 
 \item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 
 \item{error}{numeric value that indicates the allowed deviation for matching peak retention times.}
 
-\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
 }
 \value{

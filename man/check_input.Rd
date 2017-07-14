@@ -14,7 +14,7 @@ check_input(data, plot = FALSE, sep = "\\t", ...)
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Reguires \code{plot == TRUE}.}
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Requires \code{plot == TRUE}.}
 }
 \value{
 If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
@@ -27,7 +27,7 @@ See \code{\link{align_chromatograms}} for details.
 \details{
 Sample names should contain just letters, numbers and underscores and no whitespaces.
 Each sample has to contain the same number of columns, one of which is the retention
-time and the others are arbitrary variables in consistent order across samples. Rentention times are expected to be numeric, i.e. they
+time and the others are arbitrary variables in consistent order across samples. Retention times are expected to be numeric, i.e. they
 are only allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look
 at the vignettes for examples.
 }

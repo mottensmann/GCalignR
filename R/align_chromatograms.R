@@ -2,12 +2,12 @@
 #'
 #'@description
 #' This is the core function of \code{\link{GCalignR}} to align peak data. The input data is a peak list.
-#' Read through the documentation below and take a look at the vignettes for a thorough introduction.
+#' Read through the documentation below and take a look at the vignettes for a thorough introduction. Three parameters \code{max_linear_shift}, \code{max_diff_peak2mean} and \code{min_diff_peak2peak} are required as well as and identifier for the retention time variable \code{rt_col_name}. Arguments are described among optional parameters below.
 #'
 #'@details
 #' The alignment of peaks is achieved by a \strong{three-step algorithm} always considering
 #' the complete set of samples submitted to the function.
-#' In brief: \strong{(1) Chromatograms}, i.e. teire peaks, are shifted to maximise
+#' In brief: \strong{(1) Chromatograms}, i.e. the peaks, are shifted to maximise
 #' similarity with a reference to account for systematic shifts in retention times
 #' caused by Gas Chromatography separation. \strong{(2) Peaks of similar retention times are aligned}
 #' in order to cluster similar retention times to the same substance. While the algorithm proceeds,
@@ -15,7 +15,7 @@
 #' location (i.e. substance). \strong{(3) Peaks of similar retention time are merged} if
 #' they show smaller differences in mean retention times than expected by the achievable
 #' resolution of the Gas Chromatography or the chemistry of the compounds involved.
-#' This has to be specfied by the parameters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}.
+#' This has to be specified by the parameters \code{max_diff_peak2mean} and \code{min_diff_peak2peak}.
 #' Several optional processing steps are available, ranging from the removal of peaks representing
 #' contaminations (requires to include blanks as a control) to the removal of uninformative peaks
 #' that are present in just one sample.
@@ -23,11 +23,11 @@
 #'@param data
 #' Chemical data that has to be aligned. All variables that are available need to be included in order to align these measures based on the retention time, which is the only mandatory variable.
 #' Two input formats are supported. The first option is the \strong{path to a plain text file} with extension ".txt" containing the gc-data. It is expected that the file is formatted following this
-#' principle: The first row contains sample names, the second row column names of the corresponding
+#' principle: (1) The first row contains sample names, the (2) second row column names of the corresponding
 #' chromatograms. Starting with the third row, peak data are included, whereby matrices of single
-#' samples are concatenated horizontally (see the vignette or example data). The matrix for each
-#' sample needs to consist of the same number of columns, at least one is required that contains the retention times of peaks. See the \href{../doc/GCalignR_step_by_step.html}{vignette} for an example. Alternatively the input may be a \strong{list of data frames}. Each data frame contains
-#' the peak data for a single individual with at least one column of containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample.
+#' samples are concatenated horizontally (see the vignettes for example data). The matrix for each
+#' sample needs to consist of the same number of columns, at least one is required that contains the retention times of peaks. Alternatively, the input may be a \strong{list of data frames}. Each data frame contains
+#' the peak data for a single individual with at least one column containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample.
 #' The format can be checked by running \code{\link{check_input}}.
 #'
 #'@param sep
@@ -35,66 +35,61 @@
 #' See the "sep" argument in \code{\link[utils]{read.table}} for details.
 #'
 #'@param rt_col_name
-#' Character string - the name of the column containing the retention times.The variable needs to
+#' Character string giving the name of the column containing the retention times.The variable needs to
 #' be numeric and the decimal separator needs to be a point.
 #'
 #'@param write_output
 #' Character vector of variables to write to a text file (e.g. \code{c("RT","Area")}.
-#' Vector elements need to correspond to column names of \code{data}. Writing output is optional.
+#' Vector elements need to correspond to column names of \code{data}. Writing output to text files is optional.
 #'
 #'@param rt_cutoff_low
-#' Lower threshold under which retention times are removed (i.e. 5 minutes). Default NULL.
+#' Lower threshold under which retention times are removed (i.e. 5 minutes). By default not cut-off is applied.
 #'
 #'@param rt_cutoff_high
-#' Upper threshold above which retention times are removed (i.e. 35 minutes). Default NULL.
+#' Upper threshold above which retention times are removed (i.e. 35 minutes). By default not cut-off is applied.
 #'
 #'@param reference
-#' Character string of a sample to which all other samples are aligned by means of a
-#' linear shift (e.g. \code{"M3"}. The name has to correspond to an individual name given
-#' in the first line of \code{data}. Alternatively a sample called \code{reference} can be included
+#' Character string of a sample name to which all other samples are aligned by means of a
+#' linear shift (e.g. \code{"M3"}). The name has to correspond to an individual name given in \code{data}. Alternatively a sample called \code{reference} can be included
 #' in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to.
 #' After the linear transformation the \code{reference} will be removed from the data.
 #'
 #'@param max_linear_shift
 #' This value defines the maximum time that one chromatogram is expected to be deviating in retention times
-#' from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same
-#' retention time to all peaks within a chromatogram to maximise the number of shared peaks with
+#' from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same value to all peaks within a chromatogram to maximise the number of shared peaks with
 #' the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.
 #'
 #'@param max_diff_peak2mean
-#' Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance',
-#' i.e. sorted in one row.
+#' Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance' or 'fragmet' and will be sorted in the same row.
 #'
 #'@param min_diff_peak2peak
-#' Numeric values defining the expected minimum difference in retention times among different substances.
-#' Retention time rows that differ less, are therefore merged if every sample contains either
+#' Numeric value defining the expected minimum difference in retention times among different substances. Rows that differ less in the mean retention time, are therefore merged if every sample contains either
 #' one or none of the respective compounds.
 #' This parameter is a major determinant in the classification of distinct peaks.
 #' Therefore careful consideration is required to adjust this setting to your needs
 #' (e.g. the resolution of your gas-chromatography pipeline).
-#' Large values may cause the merge truly different substances with similar retention times, if those are not
+#' Large values may cause to merge truly different substances with similar retention times, if those are not
 #' simultaneously occurring within at least one individual, which might occur by chance for small sample
-#' sizes. It is therefore recommended to set the value much lower (e.g. 0.02) when few individuals are
-#' analysed. Defaults to 0.08 (minutes).
+#' sizes.By default set to 0.08 (minutes).
 #'
 #'@param blanks
 #' Character vector of names of negative controls. Substances found in any of the blanks will be
-#' removed from all samples, before the blanks are deleted from the aligned data.
+#' removed from all samples, before the blanks are deleted from the aligned data as well. This is an optional filtering step.
 #'
 #'@param delete_single_peak
-#' Logical, determining whether substances that occur in just one sample are removed or not. Default FALSE.
+#' Logical, determining whether substances that occur in just one sample are removed or not. By default all peaks are kept in the aligned dataset.
 #'
 #'@return
 #' Returns an object of class "GCalign" that is a a list containing several objects that are listed below.
-#' Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \emph{gc_heatmap} and \emph{print}.
-#' \item{aligned}{Aligned gas-chromatography data subdivided into individual data frames for every variable. Samples are represented by columns, rows specify substances. The first column of every data frame
+#' Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
+#' \item{aligned}{Aligned Gas Chromatography peak data subdivided into individual data frames for every variable. Samples are represented by columns, rows specify substances. The first column of every data frame
 #' is comprised of the mean retention time of the respective substance (i.e. row). The aligned data
 #' can be used for further statistical analyses in other packages and also directly written
-#' to a text file by specifying the write_output argument in align_chromatograms. Note, retention times of samples are shown as they were included in the raw data. Indermediate transformations, e.g. linear adjustments are not considered to allow matching each retention time to the respective positio in the input.}
+#' to a text file by specifying the write_output argument in \code{align_chromatograms}. Note, retention times of samples are shown as they were included in the raw data. Intermediate transformations, e.g. linear adjustments are not considered to allow matching each retention time to the respective position in the input.}
 #' \item{heatmap_input}{Data frames of retention times; used internally to create heatmaps}
-#' \item{Logfile}{A protocoll of the alignment process.}
+#' \item{Logfile}{A protocol of the alignment process.}
 #' \item{input_list}{List of data frames. Data frames are comprised of the raw of a sample prior to aligning}
-#' \item{aligned_list}{List of data frame. Data frame are comprised of the the aligned data for each sample.}
+#' \item{aligned_list}{List of data frames. Data frame are comprised of the the aligned data for each sample.}
 #' \item{input_matrix}{List of data frames. Data frames are matrices of input variables}
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@@web.de)
@@ -454,7 +449,7 @@ if (delete_single_peak) {
     })
     names(input) <- col_names
 
-### 7 Some protocollation
+### 7 Some protocolation
 ### =====================
     # Call of align_chromatograms, List
     call <- as.list(match.call())[-1]

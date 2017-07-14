@@ -1,10 +1,10 @@
-#' Draw peak lists as chromotograms
+#' Visualise peak lists as a chromatogram
 #'
 #' @description Creates a graphical representation of one or multiple peak lists in the form of simplified chromatograms. Peaks are represented by gaussian distributions centred at the peak retention time.
 #'
-#' @details Peaks from the peak list are depicted as gaussian distributions. By default, peaks are visualised regardless of their concentration, thereby indicating presence/absence only. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{pre_aligned}), after correcting linear drift (\strong{lin_aligned}) or after the complete alignment was conducted (\strong{fully_aligned}). In the latter case, retention times refer to the mean retention time of a substance scored among samples and do not represent between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by chaning the value of parameter \code{width}. Note, aligned peaks (= exactly matching retention time) will overlapp completely and only the last sample plotted will be visible. Hence, the number of samples is given on top of each peak but default. The function returns a list containing the ggplot object along with the underlying data frame to allow for maximum control in adapting the plot (see examples section in this document).
+#' @details Peaks from the peak list are depicted as gaussian distributions. By default, peaks are visualised regardless of their concentration, thereby indicating presence/absence only. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{"pre_aligned"}), after correcting linear drift (\strong{"lin_aligned"}) or after the complete alignment was conducted (\strong{"fully_aligned"}). In the latter case, retention times refer to the mean retention time of a substance scored among samples and do not represent between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by changing the value of parameter \code{width}. Note, aligned peaks (= exactly matching retention time) will overlap completely and only the last sample plotted will be visible. Hence, the number of samples is given on top of each peak but default. The function returns a list containing the ggplot object along with the underlying data frame to allow for maximum control in adapting the plot (see examples section in this document).
 #'
-#' @param data Currently three formats are supported. Either a \strong{text file} or a \strong{list} containing raw data peak lists or an \strong{"GCalign"} object. See \code{\link{align_chromatograms}} for details.
+#' @param data Currently three formats are supported. Either a \strong{text file} or a \strong{list} containing raw data peak lists or an \strong{GCalign object}. See \code{\link{align_chromatograms}} for details.
 #'
 #' @inheritParams align_chromatograms
 #'
@@ -12,19 +12,19 @@
 #'
 #' @param step Either \strong{"pre_aligned"}, \strong{"lin_aligned"} or \strong{"fully_aligned"}. Only supported when \code{data} is an object of type "GCalign". By default aligned is used.
 #'
-#' @param breaks a vector giving the breakpoints between ticks on the x axis.
+#' @param breaks A vector giving the breakpoints between ticks on the x axis.
 #'
-#' @param rt_limits a vector of length two giving min and max values or retention times to plot.
+#' @param rt_limits A vector of length two giving min and max values or retention times to plot.
 #'
-#' @param samples a character vector of sample names to draw chromatograms of a subset. By default all samples all sample will be drawn.
+#' @param samples A character vector of sample names to draw chromatograms of a subset. By default every sample will be drawn.
 #'
-#' @param show_num logical indicating whether sample numbers are drawn on top of each peak. By default TRUE.
+#' @param show_num Logical indicating whether sample numbers are drawn on top of each peak. By default TRUE.
 #'
-#' @param show_rt logical indicating whether peak retention times are drawn on top of each peak. By default FALSE.
+#' @param show_rt Logical indicating whether peak retention times are drawn on top of each peak. By default FALSE.
 #'
-#' @param plot logical indicating if a plot is printed. By default TRUE.
+#' @param plot Logical indicating if a plot is printed. By default TRUE.
 #'
-#' @return a list containing the data frame created for plotting and the ggplot object. See \code{\link[ggplot2]{ggplot}}.
+#' @return A list containing the data frame created for plotting and the ggplot object. See \code{\link[ggplot2]{ggplot}}.
 #'
 #' @examples
 #' ## load data

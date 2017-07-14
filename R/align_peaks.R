@@ -10,7 +10,7 @@
 #'of the other samples are shifted to another row. At the start of a row the
 #'first two samples are compared and separated if required, then all other
 #'samples are included consecutively. If \code{iterations > 1} the whole
-#'alogorithm is repeated accordingly.
+#'algorithm is repeated accordingly.
 #'
 #'@details For each row the retention time of every sample is compared to the
 #'mean retention time of all previously examined samples within the same row.
@@ -58,9 +58,9 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
         ##############
         total <- nrow(gc_peak_list[[1]])
         # create progress bar
-        pb <- txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
+        pb <- utils::txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
         #Sys.sleep(1)
-        setTxtProgressBar(pb, ifelse(is.numeric(current_row), current_row, total))
+        utils::setTxtProgressBar(pb, ifelse(is.numeric(current_row), current_row, total))
         ##############
 
 
@@ -242,9 +242,9 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
            ##############
            total <- ifelse(length(similar) > 0, length(similar), 1)
            # create progress bar
-           pb <- txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
+           pb <- utils::txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
            #Sys.sleep(1)
-           setTxtProgressBar(pb, ifelse(is.numeric(counter),counter, total))
+           utils::setTxtProgressBar(pb, ifelse(is.numeric(counter),counter, total))
            ##############
 
             # stop when there are no redundancies

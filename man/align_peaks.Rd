@@ -13,10 +13,9 @@ align_peaks(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
 stored in columns. Rows represent distinct peaks. Retention time is a
 required variable.}
 
-\item{max_diff_peak2mean}{Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance',
-i.e. sorted in one row.}
+\item{max_diff_peak2mean}{Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance' or 'fragmet' and will be sorted in the same row.}
 
-\item{rt_col_name}{Character string - the name of the column containing the retention times.The variable needs to
+\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
 
 \item{R}{integer indicating the current iteration of the alignment step.
@@ -40,7 +39,7 @@ grouped together. Peaks that deviate significantly from the mean retention times
 of the other samples are shifted to another row. At the start of a row the
 first two samples are compared and separated if required, then all other
 samples are included consecutively. If \code{iterations > 1} the whole
-alogorithm is repeated accordingly.
+algorithm is repeated accordingly.
 }
 \details{
 For each row the retention time of every sample is compared to the

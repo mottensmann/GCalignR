@@ -5,10 +5,6 @@
 ^\.travis\.yml$
 ^test$
 cran-comments.md
-plans.md
-notes.md
-NEWS.md
 NEWS.rmd
 NEWS.html
 internal
-R/chroma2peak_list.R

@@ -7,13 +7,13 @@
 find_peaks(df)
 }
 \arguments{
-\item{df}{a data frame containing x and y coordinates}
+\item{df}{A data frame containing x and y coordinates.}
 }
 \value{
-a data frame containing x and y coordinates of peaks
+A data frame containing x and y coordinates of peaks.
 }
 \description{
-Detects peaks in a vector and calculates their height. This function is only appropriate for symmetric gaussian peaks and does not take into accout any baseline correction as it required in 'real word' data. Therefore, it does not substitute sophisticated peak detection and integration tools and is only used for illustration purposes in our vignettes.
+Detects peaks in a vector and calculates their height. This function is only appropriate for symmetric gaussian peaks and does not take into account any baseline correction as it required in 'real word' data. Therefore, it does not substitute sophisticated peak detection and integration tools and is only used for illustration purposes in our vignettes.
 }
 \examples{
 ## create df

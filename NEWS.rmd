@@ -4,12 +4,15 @@ ___
 
 ## Changes since release 0.1.0
 
+### New functions
+* `draw_chromatograms` allows to represent a peak list in form of chromatogram.
+
 ### Algorithm
 * Using `pbapply`, we implemented progress bars to inform the user about the progress and the estimated running time of intermediate steps in the alignment of peak lists.
 
 #### Linear Shifts
-* Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons and gurantee a high precision 
-* Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.
+* Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons.
+* Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile accessible in the output.
 * By evaluating linear drift over the course of the chromatography run, peaks are thought to be homologous to the reference if the retention times matches within an allowed error proportional to parameter _max\_diff\_peak2mean_
 
 ### warning messages
@@ -22,6 +25,9 @@ ___
 
 ### Vignette
 * We included a second vignette that explains the algorithm and the supported data in detail.
+
+### Documentation
+* Partly, function help files are rewritten and errors are corrected.
 ___
 
 

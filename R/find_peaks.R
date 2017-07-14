@@ -1,10 +1,10 @@
 #' Detect local maxima in time series
 #'
-#' @description Detects peaks in a vector and calculates their height. This function is only appropriate for symmetric gaussian peaks and does not take into accout any baseline correction as it required in 'real word' data. Therefore, it does not substitute sophisticated peak detection and integration tools and is only used for illustration purposes in our vignettes.
+#' @description Detects peaks in a vector and calculates their height. This function is only appropriate for symmetric gaussian peaks and does not take into account any baseline correction as it required in 'real word' data. Therefore, it does not substitute sophisticated peak detection and integration tools and is only used for illustration purposes in our vignettes.
 #'
-#' @param df a data frame containing x and y coordinates
+#' @param df A data frame containing x and y coordinates.
 #'
-#' @return a data frame containing x and y coordinates of peaks
+#' @return A data frame containing x and y coordinates of peaks.
 #'
 #' @examples
 #' ## create df

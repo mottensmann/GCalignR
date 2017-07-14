@@ -124,20 +124,25 @@ $(document).ready(function () {
 <hr />
 <div id="changes-since-release-0.1.0" class="section level2">
 <h2>Changes since release 0.1.0</h2>
+<div id="new-functions" class="section level3">
+<h3>New functions</h3>
+<ul>
+<li><code>draw_chromatograms</code> allows to represent a peak list in form of chromatogram.</li>
+</ul>
+</div>
 <div id="algorithm" class="section level3">
 <h3>Algorithm</h3>
+<ul>
+<li>Using <code>pbapply</code>, we implemented progress bars to inform the user about the progress and the estimated running time of intermediate steps in the alignment of peak lists.</li>
+</ul>
 <div id="linear-shifts" class="section level4">
 <h4>Linear Shifts</h4>
 <ul>
-<li>Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons and gurantee a high precision</li>
-<li>Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.</li>
-<li>By evaluating linear drift over the course of the chromatography run, peaks are thought to be homologous to the reference if the retention times matches within an allowed error proportional to <em>max_diff_peak2mean</em></li>
+<li>Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons.</li>
+<li>Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile accessible in the output.</li>
+<li>By evaluating linear drift over the course of the chromatography run, peaks are thought to be homologous to the reference if the retention times matches within an allowed error proportional to parameter <em>max_diff_peak2mean</em></li>
 </ul>
 </div>
-</div>
-<div id="dependencies" class="section level3">
-<h3>Dependencies</h3>
-<p>The bioconductor package <a href="http://bioconductor.org/packages/MassSpecWavelet/">MassSpecWavelet</a> is added as <em>in R</em> solution for picking peaks from GC data.</p>
 </div>
 <div id="warning-messages" class="section level3">
 <h3>warning messages</h3>
@@ -150,14 +155,20 @@ $(document).ready(function () {
 <ul>
 <li>Added horizontal axis to barplots summarising peak numbers in <code>plot.GCalign</code>.</li>
 <li>Changed to more prominent colours in binary heatmaps with <code>gc_heatmap</code>.</li>
+<li>The function <code>draw_chromatograms</code> was added as another visualisation tool.</li>
 </ul>
 </div>
 <div id="vignette" class="section level3">
 <h3>Vignette</h3>
 <ul>
-<li>Extended and rewritten to enhance clarity.</li>
+<li>We included a second vignette that explains the algorithm and the supported data in detail.</li>
 </ul>
-<hr />
+</div>
+<div id="documentation" class="section level3">
+<h3>Documentation</h3>
+<ul>
+<li>Partly, function help files are rewritten and errors are corrected. ___</li>
+</ul>
 </div>
 </div>
 </div>

@@ -2,12 +2,12 @@
 % Please edit documentation in R/print.GCalign.R
 \name{print.GCalign}
 \alias{print.GCalign}
-\title{Summarizing Peak Alignments with GCalignR}
+\title{Summarising Peak Alignments with GCalignR}
 \usage{
 \method{print}{GCalign}(x, write_text_file = FALSE, ...)
 }
 \arguments{
-\item{x}{Object of class GCalign, created by \code{\link{align_chromatograms}}}
+\item{x}{Object of class GCalign, created with \code{\link{align_chromatograms}}}
 
 \item{write_text_file}{Logical. If \code{TRUE} the output is written to a plain text file. No text is printed
 to the console in this case.}

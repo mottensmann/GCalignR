@@ -2,7 +2,7 @@
 GCalignR
 ========
 
-![Build Status](https://travis-ci.org/mastoffel/GCalignR.svg?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR) [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
+![Build Status](https://travis-ci.org/mottensmann/GCalignR.svg?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR) [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
 
 `GCalignR` provides simple functions to align peak lists obtained from Gas Chromatography Flame Ionization Detectors (GC-FID) based on retention times and plots to evaluate the quality of the alignment. The package supports any other one-dimensional chromatograpy technique that enables the user to create a peak list with at least one column specifying retention times as illustrated below.
 
@@ -16,7 +16,7 @@ Installing GCalignR:
 install.packages("GCalignR", dependencies = T)
 ```
 
--   We are currently working a lot on the package functionalities and the documentation. Get the most recent development version from GitHub with
+-   We are currently working a lot on the package functionalities and the documentation. Get the most recent beta release from GitHub with
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -24,7 +24,7 @@ install.packages("GCalignR", dependencies = T)
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
+    devtools::install_github("mottensmann/GCalignR@0.2.0-beta", build_vignettes = TRUE)
 ```
 
 -   If the installation fails, try installing the packages devtools, ggplot2 and vegan with the commands below (tested with a new installation of R 3.2.5)
@@ -37,7 +37,7 @@ install.packages("GCalignR", dependencies = T)
     }
     install.packages("ggplot2",dependencies = TRUE)
     install.packages("vegan",dependencies = TRUE)
-    devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)    
+    devtools::install_github("mottensmann/GCalignR@0.2.0-beta", build_vignettes = TRUE)    
 ```
 
 ### Get started with GCalignR

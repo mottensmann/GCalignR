@@ -32,5 +32,5 @@ Suggests:
     testthat,
     vegan (>= 2.4.2)
 VignetteBuilder: knitr
-BugReports: https://github.com/mastoffel/GCalignR/issues
-URL: https://github.com/mastoffel/GCalignR
+BugReports: https://github.com/mottensmann/GCalignR/issues
+URL: https://github.com/mottensmann/GCalignR

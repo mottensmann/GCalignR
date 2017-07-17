@@ -203,3 +203,17 @@ write_files <- function(var = NULL, data = NULL, name = NULL) {
     return(filename)
 }
 
+remove_gaps <- function(gc_peak_list) {
+gc_peak_list <- lapply(gc_peak_list, FUN = function(x) {
+    if (any(is.na(rowSums(x)))) {
+        p <- as.vector(which(is.na(rowSums(x))))
+        x <- x[-p,]
+    }
+    if (any(rowSums(x) == 0)) {
+        p <- as.vector(which(rowSums(x) == 0))
+        x <- x[-p]
+    }
+    return(x)
+})
+return(gc_peak_list)
+}

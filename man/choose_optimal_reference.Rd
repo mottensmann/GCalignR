@@ -2,27 +2,36 @@
 % Please edit documentation in R/choose_optimal_reference.R
 \name{choose_optimal_reference}
 \alias{choose_optimal_reference}
-\title{Picks the most suitable Reference for systematic shift corrections}
+\title{Pick the Optimal Reference for Full Alignments of Peak Lists}
 \usage{
-choose_optimal_reference(gc_peak_list = NULL, rt_col_name = NULL)
+choose_optimal_reference(gc_peak_list = NULL, rt_col_name = NULL,
+  error = 0)
 }
 \arguments{
-\item{gc_peak_list}{List of individual samples, where samples a data frames of numerical variables in columns. A column needs to contain retention times of peaks.}
+\item{gc_peak_list}{A list of data frames. Each data frame contains the peak list of a single sample with one column defining retention times (see \code{rt_col_name}).}
 
-\item{rt_col_name}{Name of the column in data frames of \code{gc_peak_list} that contains retention times.}
+\item{rt_col_name}{A character giving the name of the column in data frames of that contains retention times.}
+
+\item{error}{Allowed error in matching retention times. By default with \code{error = 0} retention times need to match with a precision of two decimals.}
 }
 \value{
-returns a list with following elements
+A list with following elements
 \item{sample}{Name of the sample with the highest average similarity to all other samples}
 \item{score}{Median number of shared peaks with other samples}
 }
 \description{
-Selects the chromatogram that shows the highest average similarity to all other samples a the reference for linear corrections of systematic shifts in peak retention times.
+Full alignments of peak lists require the specification of a fixed reference to which all other samples are aligned to. This function provides an simple algorithm to find the most suitable sample among a dataset. The so defined reference can be used for full alignments using \code{\link{linear_transformation}}.
 }
 \details{
-In order to correct systematic errors in peak retention times the most suitable reference chromatogram is selected based on the objective criterion of the highest average similarity to all other chromatograms in the data. Precisely, the median number of shared peaks between a sample and all other samples is estimated for any chromatogram in \code{gc_peak_list}. The most suitable reference is then defined as the sample showing the highest median similarity score.
+Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples in pair-wise comparisons. For each peak in the reference a search for a matching counterpart in the second sample is conducted. Peaks are scored as shared among samples, when the retention times match within an user-defined error margin. Thereby, for each sample the median number of shared peaks with all other samples is estimated as similarity proxy. The optimal sample is then defined by the maximum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
+}
+\examples{
+## data("peak_data")
+## Subset for faster processing
+peak_data <- peak_data[1:3]
+choose_optimal_reference(peak_data, rt_col_name = "time")
+
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) & Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
-\keyword{internal}

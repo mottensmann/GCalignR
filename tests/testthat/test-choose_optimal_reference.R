@@ -3,8 +3,8 @@ context("choose_optimal_reference")
 library(testthat)
 data("peak_data")
 
-out <- GCalignR:::choose_optimal_reference(gc_peak_list = peak_data[1:3],rt_col_name = "time")
-out2 <- GCalignR:::choose_optimal_reference(gc_peak_list = peak_data[1:4],rt_col_name = "time")
+out <- choose_optimal_reference(gc_peak_list = peak_data[1:3],rt_col_name = "time", method = "Match")
+out2 <- choose_optimal_reference(gc_peak_list = peak_data[1:4],rt_col_name = "time", method = "Match")
 
 test_that("output is correct", {
     expect_equal(out[["sample"]], "C3") # picked reference

@@ -2,10 +2,10 @@
 % Please edit documentation in R/linear_transformation.R
 \name{linear_transformation}
 \alias{linear_transformation}
-\title{Shift peaks to eliminate systematic inaccuracies of peak detection by GC.}
+\title{Full Alignment of Peak Lists by linear retention time correction.}
 \usage{
 linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
-  step_size = 0.01, error = 0, rt_col_name, Logbook)
+  step_size = 0.01, error = 0, rt_col_name, Logbook = NULL)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data
@@ -13,32 +13,34 @@ linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
 stored in columns. Rows represent distinct peaks. Retention time is a
 required variable.}
 
-\item{reference}{character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.}
+\item{reference}{A character giving the name of a sample included in the dataset. All sample are aligned to the reference.}
 
 \item{max_linear_shift}{This value defines the maximum time that one chromatogram is expected to be deviating in retention times
 from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same value to all peaks within a chromatogram to maximise the number of shared peaks with
 the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.}
 
-\item{step_size}{integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
+\item{step_size}{Integer giving the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 
-\item{error}{numeric value that indicates the allowed deviation for matching peak retention times.}
+\item{error}{Numeric specifying the allowed deviation for matching peak retention times.}
 
 \item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
+
+\item{Logbook}{A list. If present, a summary of the applied linear shifts in full alignments of peak lists is appended to the list. If not specified, a list will be created automatically.}
 }
 \value{
+A list containing two items.
 \item{chroma_aligned}{Transformed data}
 \item{Logbook}{Logbook, record of the applied shifts}
 List of data.frames containing chromatograms with applied linear shifts
 }
 \description{
-\strong{linear_transformation()} shifts all peaks within chromatograms to maximise the number
-of shared peaks with a reference chromatogram. Optimally, the reference contains known peaks which
-also occur in the samples. If a sample is taken as a reference, samples with high concentrations
-and clear peaks will lead to a better result.
+Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts.
+}
+\details{
+A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation.
 }
 \author{
 Martin Stoffel (martin.adam.stoffel@gmail.com) &
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
-\keyword{internal}

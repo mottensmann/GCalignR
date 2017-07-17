@@ -4,7 +4,7 @@
 \name{GCalignR}
 \alias{GCalignR}
 \alias{GCalignR-package}
-\title{GCalignR: A package to align gas-chromatography peaks based on retention times}
+\title{GCalignR: A Package to Align Gas Chromatography Peaks Based on Retention Times}
 \description{
 \strong{\code{GCalignR}} contains the functions listed below. Follow the links to access the documentation of each function.
 

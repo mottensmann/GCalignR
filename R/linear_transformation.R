@@ -1,47 +1,52 @@
-#' Shift peaks to eliminate systematic inaccuracies of peak detection by GC.
+#' Full Alignment of Peak Lists by linear retention time correction.
 #'
 #' @description
-#'\strong{linear_transformation()} shifts all peaks within chromatograms to maximise the number
-#'of shared peaks with a reference chromatogram. Optimally, the reference contains known peaks which
-#'also occur in the samples. If a sample is taken as a reference, samples with high concentrations
-#'and clear peaks will lead to a better result.
+#' Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts.
+#'
+#' @details
+#' A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation.
 #'
 #' @inheritParams align_chromatograms
 #'
 #' @inheritParams align_peaks
 #'
 #' @param reference
-#' character string with the name of a sample included in \code{gc_peak_list} used as a reference to align to.
+#' A character giving the name of a sample included in the dataset. All sample are aligned to the reference.
 #'
 #' @param step_size
-#' integer, indicating the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.
+#' Integer giving the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.
 #'
 #' @param error
-#' numeric value that indicates the allowed deviation for matching peak retention times.
+#' Numeric specifying the allowed deviation for matching peak retention times.
+#'
+#' @param Logbook
+#' A list. If present, a summary of the applied linear shifts in full alignments of peak lists is appended to the list. If not specified, a list will be created automatically.
+#'
+#' @param method
+#' Method used to estimate a suitable shift. By default "Deviance".
 #'
 #' @return
+#' A list containing two items.
 #' \item{chroma_aligned}{Transformed data}
 #' \item{Logbook}{Logbook, record of the applied shifts}
 #' List of data.frames containing chromatograms with applied linear shifts
 #'
+#' @examples
+#' dat <- peak_data[1:10]
+#' dat <- lapply(dat, function(x) x[1:50,])
+#' x <- linear_transformation(gc_peak_list = dat, reference = "C2", rt_col_name = "time")
+#'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) &
 #'         Meinolf Ottensmann (meinolf.ottensmann@@web.de)
-#' @keywords internal
 #'
-linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05, step_size = 0.01, error = 0, rt_col_name,Logbook) {
+#' @export
+#'
+linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.05, step_size = 0.01, error = 0, rt_col_name, Logbook = NULL, method = c("Match","Deviance")) {
 
-    # changes 19-06-2017
-    # ##################
-    # Error margin is changed from 0 to max_diff_peak2mean
+    if (is.null(Logbook)) Logbook <- list()
+    gc_peak_list <- remove_gaps(gc_peak_list)
+    method <- match.arg(method)
 
-    # Revision 24-04-2017
-    # ##################
-    # Prior to this date, all values were rounded to two decimals within the main function align_chromatograms. Now, this step is subsituted by  calculations based on rounded values within this function.
-    # Reordered alphabetically
-    # ##################
-
-    # Defining internal functions, The main function is peak_shift
-    # ============================================================
 
     adjust_retention_time <- function(chromatogram, OptimalShift, ret_col_name){
         # Apply the best shift
@@ -89,40 +94,27 @@ linear_transformation <- function(gc_peak_list,reference,max_linear_shift = 0.05
         left_shift <- max_linear_shift * -1
         shift_steps <- seq(from = left_shift ,to = right_shift,by = step_size)
         # Table of Shifts and shared Peaks
-        output <- shared_peaks(gc_peak_df, ref_df, shift_steps, error, rt_col_name)
+        output <- shared_peaks(gc_peak_df, ref_df, shift_steps, error, rt_col_name, method = method)
         # The Best shift
         output <- best_shift(output)
         return(output)
     }#end
 
-    shared_peaks <- function(gc_peak_df, ref_df, shift_steps, error = 0, rt_col_name) {
+    shared_peaks <- function(gc_peak_df, ref_df, shift_steps, error = 0, rt_col_name, method)  {
         # get the rts of the reference
         ref <- ref_df[[rt_col_name]]
         # preallocate a vector to estimate the number of shared peaks
         no_of_peaks <- numeric(0)
-        for (j in 1:length(shift_steps)) {
-            # Shift all Peaks by the same step
-            temp <- gc_peak_df[[rt_col_name]] + shift_steps[j]
-            peaks <- 0
-            # loop through all Peaks of the current Sample
-            for (k in 1:length(temp)) {
-                # loop through the Reference Chromatogram
-                for (l in 1:length(ref)) {
-                    temp_peak <- temp[k]
-                    ref_peak <- ref[l]
-                    # Avoid comparison with cases of RT = 0
-                    if ( temp_peak != 0) {
-                        if ((round(temp_peak, 2) <= round(ref_peak, 2) + error) & (round(temp_peak, 2) >= round(ref_peak, 2) - error)) {
-                            peaks <- peaks + 1
-                        }
-                        # if ((temp_peak <= ref_peak + error) & (temp_peak >= ref_peak - error)) {
-                        #     peaks <- peaks + 1
-                        # }
-                    }
-                }
+        if (method == "Match") {
+            #define function to count peaks
+            num_sha <- function(ref, sam) { # for a given shift
+                sum(unlist(lapply(X = ref, FUN = function(fx) {
+                    ifelse(test = min(round(abs(fx - sam),2)) == 0, yes = 1, no = 0)
+                })))
             }
-            no_of_peaks  <- c(no_of_peaks, peaks)
-        }
+            # apply
+            no_of_peaks <- unlist(lapply(shift_steps, function(x) num_sha(ref = ref_df[[rt_col_name]], sam = gc_peak_df[[rt_col_name]] + x)))
+                }# end match
         output <- list(no_of_peaks, shift_steps)
         return(output)
     }#end

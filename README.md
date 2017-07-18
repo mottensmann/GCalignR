@@ -10,13 +10,13 @@ GCalignR
 
 Installing GCalignR:
 
--   The current release 0.1.0 is on CRAN. An upate will be released soon!
+-   The current release 0.1.0 is on CRAN. An update with improved performance and faster algorithm will be released soon!
 
 ``` r
 install.packages("GCalignR", dependencies = T)
 ```
 
--   We are currently working a lot on the package functionalities and the documentation. Get the most recent beta release from GitHub with
+-   We are currently working a lot on the package functionalities and the documentation. Get the most recent beta release from GitHub with ...
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -27,17 +27,15 @@ install.packages("GCalignR", dependencies = T)
     devtools::install_github("mottensmann/GCalignR@0.2.0-beta", build_vignettes = TRUE)
 ```
 
--   If the installation fails, try installing the packages devtools, ggplot2 and vegan with the commands below (tested with a new installation of R 3.2.5)
+... or try the faster developmental version ...
 
 ``` r
-    if (!("devtools" %in% rownames(installed.packages()))) {
+    if (!("devtools" %in% rownames(installed.packages()))) { 
     install.packages("devtools")
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    install.packages("ggplot2",dependencies = TRUE)
-    install.packages("vegan",dependencies = TRUE)
-    devtools::install_github("mottensmann/GCalignR@0.2.0-beta", build_vignettes = TRUE)    
+    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
 ```
 
 ### Get started with GCalignR

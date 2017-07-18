@@ -82,6 +82,8 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data
         gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+        col_class <- as.factor(unlist(lapply(lapply(X = 1:ncol(gc_data), function(x) as.vector(gc_data[,x])), class)))
+        if (any(!(col_class %in% c("numeric", "integer")))) stop(paste0("Only numeric & integer values are supported! Column(s)",paste(as.character(which(col_class == "character")), collapse = "; ")," violate the requirements. Fix to proceed." ))
         ## Check that all values are numeric, SKIPPED
         # x <- as.vector(unlist(gc_data))
         # na <- length(x[is.na(x)])

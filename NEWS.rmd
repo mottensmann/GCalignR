@@ -9,6 +9,7 @@ ___
 
 ### Algorithm
 * Using `pbapply`, we implemented progress bars to inform the user about the progress and the estimated running time of intermediate steps in the alignment of peak lists.
+* By implementing more efficient code, we were able to speed up the processing significantly. 
 
 #### Linear Shifts
 * Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons.

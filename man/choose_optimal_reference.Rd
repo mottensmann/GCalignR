@@ -5,7 +5,7 @@
 \title{Pick the Optimal Reference for Full Alignments of Peak Lists}
 \usage{
 choose_optimal_reference(gc_peak_list = NULL, rt_col_name = NULL,
-  error = 0)
+  error = 0, method = c("Match", "Deviance"))
 }
 \arguments{
 \item{gc_peak_list}{A list of data frames. Each data frame contains the peak list of a single sample with one column defining retention times (see \code{rt_col_name}).}
@@ -13,6 +13,8 @@ choose_optimal_reference(gc_peak_list = NULL, rt_col_name = NULL,
 \item{rt_col_name}{A character giving the name of the column in data frames of that contains retention times.}
 
 \item{error}{Allowed error in matching retention times. By default with \code{error = 0} retention times need to match with a precision of two decimals.}
+
+\item{method}{Method used to estimate pair-wise similarity}
 }
 \value{
 A list with following elements
@@ -26,7 +28,7 @@ Full alignments of peak lists require the specification of a fixed reference to 
 Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples in pair-wise comparisons. For each peak in the reference a search for a matching counterpart in the second sample is conducted. Peaks are scored as shared among samples, when the retention times match within an user-defined error margin. Thereby, for each sample the median number of shared peaks with all other samples is estimated as similarity proxy. The optimal sample is then defined by the maximum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
 }
 \examples{
-## data("peak_data")
+data("peak_data")
 ## Subset for faster processing
 peak_data <- peak_data[1:3]
 choose_optimal_reference(peak_data, rt_col_name = "time")

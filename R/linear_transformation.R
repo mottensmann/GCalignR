@@ -1,10 +1,11 @@
 #' Full Alignment of Peak Lists by linear retention time correction.
 #'
 #' @description
-#' Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts.
+#' Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts. A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation. The functions is envoked internally by \code{\link{align_chromatograms}}.
 #'
 #' @details
-#' A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation.
+#' A similarity score is calculated as the sum of deviations in retention times between all reference peaks and the closest peak in the sample. The principle idea is that the appropriate linear transformation will reduce the deviation in retention time between homologous peaks, whereas all other peaks should deviate randomly. Among all considered shifts, the minimum deviation score is selected for subsequent full alignment by shifting all peaks of the sample by the same value.
+#
 #'
 #' @inheritParams align_chromatograms
 #'
@@ -16,14 +17,8 @@
 #' @param step_size
 #' Integer giving the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.
 #'
-#' @param error
-#' Numeric specifying the allowed deviation for matching peak retention times.
-#'
 #' @param Logbook
 #' A list. If present, a summary of the applied linear shifts in full alignments of peak lists is appended to the list. If not specified, a list will be created automatically.
-#'
-#' @param method
-#' Method used to estimate a suitable shift. By default "Deviance".
 #'
 #' @return
 #' A list containing two items.
@@ -41,11 +36,12 @@
 #'
 #' @export
 #'
-linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.05, step_size = 0.01, error = 0, rt_col_name, Logbook = NULL, method = c("Match","Deviance")) {
+linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.05, step_size = 0.01, rt_col_name, Logbook = NULL) {
 
     if (is.null(Logbook)) Logbook <- list()
     gc_peak_list <- remove_gaps(gc_peak_list)
-    method <- match.arg(method)
+    # currently method is fixed
+    method <- "Deviance"
 
 
     adjust_retention_time <- function(chromatogram, OptimalShift, ret_col_name){
@@ -54,12 +50,19 @@ linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.0
         return(chromatogram)
     }#end
 
-    best_shift <- function(peaks) {
+    best_shift <- function(peaks, method) {
         # Determines the optimal shift
         shared <- as.vector(peaks[[1]])
         shifts <- as.vector(peaks[[2]])
-        # index of the best fit
-        index <- which(shared == max(shared))
+
+        if (method == "Match") {
+            # index of the best fit
+            index <- which(shared == max(shared))
+        } else if (method == "Deviance") {
+            index <- which(shared == min(shared))
+        }
+
+
         # Best Value
         BestFit <- shifts[index]
         if (length(BestFit) > 1) {
@@ -88,23 +91,20 @@ linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.0
         return(out)
     }#end
 
-    peak_shift <- function(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.005, error = 0, rt_col_name) {
+    peak_shift <- function(gc_peak_df, ref_df, max_linear_shift = 0.05, step_size = 0.005, rt_col_name, method) {
         # 'peak_shift' uses 'shared_peaks' and 'best_shift' to find a suitable linear adjustment
         right_shift <- max_linear_shift
         left_shift <- max_linear_shift * -1
         shift_steps <- seq(from = left_shift ,to = right_shift,by = step_size)
         # Table of Shifts and shared Peaks
-        output <- shared_peaks(gc_peak_df, ref_df, shift_steps, error, rt_col_name, method = method)
+        output <- shared_peaks(gc_peak_df, ref_df, shift_steps, rt_col_name, method = method)
         # The Best shift
-        output <- best_shift(output)
+        output <- best_shift(peaks = output, method = method)
         return(output)
     }#end
 
-    shared_peaks <- function(gc_peak_df, ref_df, shift_steps, error = 0, rt_col_name, method)  {
-        # get the rts of the reference
-        ref <- ref_df[[rt_col_name]]
-        # preallocate a vector to estimate the number of shared peaks
-        no_of_peaks <- numeric(0)
+    shared_peaks <- function(gc_peak_df, ref_df, shift_steps, rt_col_name, method)  {
+
         if (method == "Match") {
             #define function to count peaks
             num_sha <- function(ref, sam) { # for a given shift
@@ -114,17 +114,27 @@ linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.0
             }
             # apply
             no_of_peaks <- unlist(lapply(shift_steps, function(x) num_sha(ref = ref_df[[rt_col_name]], sam = gc_peak_df[[rt_col_name]] + x)))
-                }# end match
+                } else if (method == "Deviance") { #
+                    # define function to estimate sumed differences
+                    diff_sha <- function(ref, sam) { # for a given shift
+                        sum(unlist(lapply(X = ref, FUN = function(fx) {
+                            min(abs(fx - sam))
+                        })))
+                    }
+                    # apply
+                    no_of_peaks <- unlist(lapply(shift_steps, function(x) diff_sha(ref = ref_df[[rt_col_name]], sam = gc_peak_df[[rt_col_name]] + x)))
+
+                }# end method
         output <- list(no_of_peaks, shift_steps)
         return(output)
     }#end
 
-    shift_rts <- function(gc_peak_df, ref_df, max_linear_shift, step_size, error) {
+    shift_rts <- function(gc_peak_df, ref_df, max_linear_shift, step_size, method) {
         # Main Function doing the linear transformation.
         id <- gc_peak_df[["id"]][1]
         # drop the id column
         gc_peak_df <- gc_peak_df[-length(gc_peak_df)]
-        optimal_shift <- peak_shift(gc_peak_df, ref_df, max_linear_shift, step_size, error, rt_col_name)
+        optimal_shift <- peak_shift(gc_peak_df, ref_df, max_linear_shift, step_size, rt_col_name, method = method)
         shifted <- adjust_retention_time(gc_peak_df, optimal_shift, rt_col_name)
         # two lists per sample are created
         output <- list(shifted = shifted,optimal_shift = optimal_shift)
@@ -141,7 +151,7 @@ linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.0
         temp[[j]][["id"]] <- id[j]
     }
     pbapply::pboptions(type = "timer", char = "+", style = 1)
-    chrom_shift <- pbapply::pblapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, error = error)
+    chrom_shift <- pbapply::pblapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, method = method)
     Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
     chroma_aligned <- lapply(chrom_shift,function(x) x[-2])
     return(list(chroma_aligned = chroma_aligned,Logbook = Logbook))

@@ -5,8 +5,7 @@
 \title{Full Alignment of Peak Lists by linear retention time correction.}
 \usage{
 linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
-  step_size = 0.01, error = 0, rt_col_name, Logbook = NULL,
-  method = c("Match", "Deviance"))
+  step_size = 0.01, rt_col_name, Logbook = NULL)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data
@@ -22,14 +21,10 @@ the reference. We recommend to start with the default of 0.02 (minutes) and incr
 
 \item{step_size}{Integer giving the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.}
 
-\item{error}{Numeric specifying the allowed deviation for matching peak retention times.}
-
 \item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
 be numeric and the decimal separator needs to be a point.}
 
 \item{Logbook}{A list. If present, a summary of the applied linear shifts in full alignments of peak lists is appended to the list. If not specified, a list will be created automatically.}
-
-\item{method}{Method used to estimate a suitable shift. By default "Deviance".}
 }
 \value{
 A list containing two items.
@@ -38,10 +33,10 @@ A list containing two items.
 List of data.frames containing chromatograms with applied linear shifts
 }
 \description{
-Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts.
+Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts. A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation. The functions is envoked internally by \code{\link{align_chromatograms}}.
 }
 \details{
-A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation.
+A similarity score is calculated as the sum of deviations in retention times between all reference peaks and the closest peak in the sample. The principle idea is that the appropriate linear transformation will reduce the deviation in retention time between homologous peaks, whereas all other peaks should deviate randomly. Among all considered shifts, the minimum deviation score is selected for subsequent full alignment by shifting all peaks of the sample by the same value.
 }
 \examples{
 dat <- peak_data[1:10]

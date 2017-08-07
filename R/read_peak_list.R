@@ -8,9 +8,15 @@
 #'
 #' @return A list of data frames containing peak data for every sample of \code{data}.
 #'
+#' @examples
+#' path <- system.file("extdata", "simulated_peak_data.txt", package = "GCalignR")
+#' x <- read_peak_list(data = path, rt_col_name = "rt")
+#'
 #' @export
 #'
 read_peak_list <- function(data, sep = "\t", rt_col_name) {
+    check <- check_input(data = data, sep = sep, rt_col_name = rt_col_name, message = FALSE)
+    if (check == FALSE) stop("data is malformed. See check_input and fix issues raised there.")
     ind_names <- readr::read_lines(data, n_max = 1)
     ind_names <- unlist(stringr::str_split(string = ind_names,pattern = sep))
     ind_names <- ind_names[ind_names != ""]

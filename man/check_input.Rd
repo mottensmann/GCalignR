@@ -4,7 +4,7 @@
 \alias{check_input}
 \title{Check input prior to processing in GCalignR}
 \usage{
-check_input(data, plot = FALSE, sep = "\\t", ...)
+check_input(data, plot = FALSE, sep = "\\t", message = TRUE, ...)
 }
 \arguments{
 \item{data}{Path to a data file or the name of a list in the global environment.}
@@ -13,6 +13,8 @@ check_input(data, plot = FALSE, sep = "\\t", ...)
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
+
+\item{message}{Logical determining if passing all checks is indicated by a message.}
 
 \item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Requires \code{plot == TRUE}.}
 }

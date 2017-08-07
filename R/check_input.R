@@ -23,6 +23,9 @@
 #'@param ...
 #'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Requires \code{plot == TRUE}.
 #'
+#'@param message
+#'Logical determining if passing all checks is indicated by a message.
+#'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
 #'
@@ -40,7 +43,7 @@
 #'
 #' @export
 #'
-check_input <- function(data,plot = FALSE, sep = "\t", ...) {
+check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
 
     # Preallocate a flag for passing the test. Every severe issues sets pass to FALSE
     pass = TRUE
@@ -123,6 +126,18 @@ check_input <- function(data,plot = FALSE, sep = "\t", ...) {
             warning("Every Sample has to be a data.frame")
         }
 
+        # check class of columns
+        temp <- do.call("cbind", data)
+        if (!(any(apply(temp, 2, class) %in% c("numeric","integer")))) {
+            na_1 <- length(which(is.na(temp)))
+            data <- lapply(data, function(x) as.data.frame(apply(x, 2, as.numeric)))
+            na_2 <- length(which(is.na(do.call("cbind", data))))
+            if (na_2 > na_1) {
+                pass <- FALSE
+                warning("All columns need to contain only numericals or integers. NAs introduced by coercion")
+            }
+        }
+
         ## Adjust sizes of data frames, each has the same number of rows
         data <- lapply(data,matrix_append,gc_peak_list = data, val = "NA")
         if ((is.null(names(data)))) {
@@ -203,7 +218,7 @@ if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use
     ## Checks that every sample has the same number of values per column
     format_pass <- format_error(gc_peak_list)
     if (pass == TRUE & format_pass == TRUE) {
-        cat("All checks passed!\n\n")
+        if (message == TRUE) cat("All checks passed!\n\n")
     } else {
         cat("Not all checks have been passed. Read warning messages below and change accordingly to proceed\n\n")
     }

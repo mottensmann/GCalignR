@@ -11,7 +11,7 @@ out3 <- plot(x,which_plot = 'variation')
 
 test_that("output is correct", {
     expect_equal(out1, 1)
-    expect_equal(sd(out2[["shifts"]]), 0.003395857)
+    expect_equal(sd(out2[["shifts"]]), 0.005119064)
     expect_equal(out3[3,1], 0.04)
 })
 

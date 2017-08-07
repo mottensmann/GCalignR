@@ -21,3 +21,8 @@ A list of data frames containing peak data for every sample of \code{data}.
 \description{
 Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
 }
+\examples{
+path <- system.file("extdata", "simulated_peak_data.txt", package = "GCalignR")
+x <- read_peak_list(data = path, rt_col_name = "rt")
+
+}

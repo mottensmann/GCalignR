@@ -24,6 +24,9 @@
 #'
 #' @param plot Logical indicating if a plot is printed. By default TRUE.
 #'
+#' @param shape
+#' a character determining the shape of peaks. Peaks are approximated as "gaussian" by default. Alternatively, peaks can be visualised as "sticks".
+#'
 #' @return A list containing the data frame created for plotting and the ggplot object. See \code{\link[ggplot2]{ggplot}}.
 #'
 #' @examples
@@ -40,7 +43,7 @@
 #'
 #' @export
 #'
-draw_chromatogram <- function(data = NULL, rt_col_name = NULL, width = 0.1, step = NULL, sep = "\t", breaks = NULL, rt_limits = NULL, samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE) {
+draw_chromatogram <- function(data = NULL, rt_col_name = NULL, width = 0.1, step = NULL, sep = "\t", breaks = NULL, rt_limits = NULL, samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE, shape = c("gaussian","stick"))  {
 
 
 # Internal functions
@@ -71,18 +74,20 @@ return(df)
     if (is.null(data)) stop("Specify 'data'")
     if (is.null(rt_col_name)) stop("Specify 'rt_col_name'")
     if (show_num == TRUE & show_rt == TRUE) {
-        warning("Can not simulataneously annotate peaks with retention time and sample cout. Set show_rt = FALSE")
+        warning("Cannot simulataneously annotate peaks with retention time and sample cout. Set show_rt or show_num to FALSE")
         show_rt <- FALSE
     }
+shape <- match.arg(shape)
+
 
     if (is.character(data)) {
-        out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F)
+        out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F, message = F)
         if (out == FALSE) stop("Data is malformed. See check_input for details")
     } else {
         if (class(data) == "GCalign") {
             if (!(rt_col_name %in% names(data[["aligned"]])))  stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(names(data[["aligned"]]),collapse = " & "))))
         } else if (class(data) == "list") {
-            out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F)
+            out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F, message = F)
             if (out == FALSE) stop("Data is malformed. See check_input for details")
         }
     }
@@ -93,7 +98,7 @@ return(df)
     # gather data and information
 peak_list <- read_peak_list(data, sep, rt_col_name)
     } else if (class(data) == "GCalign") {
-        if (is.null(step)) step <- "fully_aligned"
+        step <- match.arg(step, choices = c("fully_aligned","pre_aligned","lin_aligned"))
         if (step == "pre_aligned") {
             peak_list <- data[["input_list"]]
         } else if (step == "lin_aligned") {
@@ -167,7 +172,7 @@ if (!is.null(conc_col_name)) {
     conc_max <- NULL
 }
 x <- rep(rt_range, length(samples))
-cat("\nComputing chromatograms ...")
+cat("Computing chromatograms ...")
 y <- as.vector(unlist(lapply(X = peak_list, FUN = p2c, x = rt_range, rt_col_name, conc_col_name = conc_col_name, conc_max = conc_max)))
 sample <- rep(samples, each = length(rt_range))
 if (isTRUE(show_num)) {
@@ -187,8 +192,13 @@ peaks <- find_peaks(df)
 min_x <- ifelse(min(peaks[["x"]]) - margins > 0,min(peaks[["x"]]) - margins,0)
 df <- subset(df, x > min_x)
 
+if (shape == "gaussian") {
+chroma <- ggplot(data = df, aes(x,y, col = sample)) + geom_line(size = 1)
+} else if (shape == "stick") {
+    chroma <- ggplot(data = peaks, aes(x, y, col = sample)) + geom_point() + geom_linerange(data = peaks, aes(x = x, ymin = 0, ymax = y), linetype = "dashed")
+}
 
-chroma <- ggplot(data = df, aes(x,y, col = sample)) + geom_line(size = 1) + theme_classic() + xlab("Retention time") + ylab("") + scale_x_continuous(breaks = breaks, expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), legend.position = "bottom") + guides(col = guide_legend(ncol = 10, title = NULL))
+chroma <- chroma + theme_classic() + xlab("Retention time") + ylab("") + scale_x_continuous(breaks = breaks, expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), legend.position = "bottom") + guides(col = guide_legend(ncol = 10, title = NULL))
 
 if (isTRUE(show_num)) {
 ## count number of substances per peak
@@ -220,7 +230,7 @@ cat("\nDone\n")
 
 ## output
 ###########
-return(list(ggplot = chroma, df = df))
+output <- list(ggplot = chroma, df = df)
 ###########
 
 }#end draw_chroma

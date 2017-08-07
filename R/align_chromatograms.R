@@ -27,7 +27,7 @@
 #' chromatograms. Starting with the third row, peak data are included, whereby matrices of single
 #' samples are concatenated horizontally (see the vignettes for example data). The matrix for each
 #' sample needs to consist of the same number of columns, at least one is required that contains the retention times of peaks. Alternatively, the input may be a \strong{list of data frames}. Each data frame contains
-#' the peak data for a single individual with at least one column containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample.
+#' the peak data for a single individual with at least one column containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. All cells may be filled with numericals or integer values but no factors or characters. NA and 0 may be used to indicate empty rows.
 #' The format can be checked by running \code{\link{check_input}}.
 #'
 #'@param sep
@@ -49,6 +49,9 @@
 #' Upper threshold above which retention times are removed (i.e. 35 minutes). By default not cut-off is applied.
 #'
 #'@param reference
+#' By default, the sample with the highest mean similarity score with respect to the
+#' remaining samples is automatically picked as the reference. Alternatively, a sample can be specified manually by entering a character name that corresponds to a sample in the dataset.
+#'
 #' Character string of a sample name to which all other samples are aligned by means of a
 #' linear shift (e.g. \code{"M3"}). The name has to correspond to an individual name given in \code{data}. Alternatively a sample called \code{reference} can be included
 #' in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to.
@@ -113,8 +116,6 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     max_linear_shift = 0.02, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL,
     delete_single_peak = FALSE) {
 
-    # Changes 19-06-2017
-    # error margin of value max_diff_peak2mean is defined as range in which peaks of sample and reference have to match in evaluating linear shifts. Before this change, an exact match was required with a precision of two decimals.
 
 # Print start
 cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S")),'\n\n'))
@@ -127,7 +128,7 @@ iterations = 1
 
 # 1.1 Stop execution if mandatory checks are not passed
 if (is.null(rt_col_name)) stop("Column containing retention times is not specifed. Define rt_col_name")
-x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference,rt_col_name = rt_col_name)
+x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference,rt_col_name = rt_col_name, message = FALSE)
 if (x != TRUE) stop("Processing not possible: check warnings below and change accordingly in order to proceed")
 
 
@@ -191,21 +192,24 @@ if (is.character(data)) { # txt file
     ind_names <- names(data)
     gc_peak_list <- lapply(data,matrix_append,gc_peak_list = data, val = "NA") # same dimensions of dfs
 
+    # # force to numeric
+    # temp <- do.call("cbind", data)
+    # if (!(any(apply(temp, 2, class) %in% c("numeric","integer")))) {
+    #     na_1 <- length(which(is.na(temp)))
+    #     data <- lapply(data, function(x) as.data.frame(apply(x, 2, as.numeric)))
+    #     na_2 <- length(which(is.na(do.call("cbind", data))))
+    #     if (na_2 > na_1) warning("All columns need to contain only numericals or integers. NAs introduced by coercion")
+    #     }
+
 } # end load data
 
 # save gc_peak_list for documentation purposes
 input_list <- gc_peak_list
 
 # Write some information about the input data to the Logfile
-if (!is.null(reference)) {
-    if (reference == "reference") {
-    cat(paste0('Data for ',as.character(length(ind_names) - 1),' samples loaded.'))
-    Logbook[["Input"]]["Samples"] <- length(ind_names) - 1
-    }
-    } else {
     cat(paste0('Data for ',as.character(length(ind_names)),' samples loaded.'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)
-}
+
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
     Logbook[["Input"]]["File"] <- as.character(as.character(match.call()["data"]))
     Logbook[["Input"]]["Retention_Time"] <- rt_col_name
@@ -259,34 +263,20 @@ if (!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)) {
 
 if (!is.null(reference)) {
     cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
-if (reference == "reference") {
-    # reference is not a true sample and is used exclusevely for linear alignment
-
-gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook, error = max_diff_peak2mean)
-    Logbook <- gc_peak_list_linear[["Logbook"]]
-    gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
-    gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
-    gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames,col_names)
-    # remove reference after the systematic errors were corrected
-    gc_peak_list_linear <- gc_peak_list_linear[-which(names(gc_peak_list_linear) == reference)]
-    # remove the reference from the input retention time matrix
-    gc_peak_list_raw <- gc_peak_list_raw[-which(names(gc_peak_list_raw) == reference)]
-}  else {
     gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
     Logbook <- gc_peak_list_linear[["Logbook"]]
     gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
     gc_peak_list_linear <- lapply(gc_peak_list_linear,function(x) data.frame(x))
     gc_peak_list_linear <- lapply(gc_peak_list_linear, correct_colnames, col_names)
-}
 } else if (is.null(reference)) {
     # If no reference was specified by the user, the reference is determined, such
     # that the sample with the highest avarage similarity to all other samples is used.
     cat("\nNo reference was specified. Hence, a reference will be selected automatically ...\n ")
-    best.ref <- choose_optimal_reference(gc_peak_list = gc_peak_list, rt_col_name = rt_col_name)
+    best.ref <- choose_optimal_reference(data = gc_peak_list, rt_col_name = rt_col_name)
     # set the reference
     reference <- best.ref[["sample"]]
     cat("\n")
-    text <- paste0("'",reference,"' was selected on the basis of highest average similarity to all samples (score = ",best.ref[["score"]],").\n")
+    text <- paste0("'",reference,"' was selected on the basis of highest average similarity to all samples (score = ",round(best.ref[["score"]],2),").\n")
     cat(stringr::str_wrap(paste(text,collapse = ""),width = 100,exdent = 0,indent = 0))
    #    }# new end
      cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))

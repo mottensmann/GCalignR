@@ -16,7 +16,7 @@ principle: (1) The first row contains sample names, the (2) second row column na
 chromatograms. Starting with the third row, peak data are included, whereby matrices of single
 samples are concatenated horizontally (see the vignettes for example data). The matrix for each
 sample needs to consist of the same number of columns, at least one is required that contains the retention times of peaks. Alternatively, the input may be a \strong{list of data frames}. Each data frame contains
-the peak data for a single individual with at least one column containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample.
+the peak data for a single individual with at least one column containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. All cells may be filled with numericals or integer values but no factors or characters. NA and 0 may be used to indicate empty rows.
 The format can be checked by running \code{\link{check_input}}.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
@@ -32,7 +32,10 @@ Vector elements need to correspond to column names of \code{data}. Writing outpu
 
 \item{rt_cutoff_high}{Upper threshold above which retention times are removed (i.e. 35 minutes). By default not cut-off is applied.}
 
-\item{reference}{Character string of a sample name to which all other samples are aligned by means of a
+\item{reference}{By default, the sample with the highest mean similarity score with respect to the
+remaining samples is automatically picked as the reference. Alternatively, a sample can be specified manually by entering a character name that corresponds to a sample in the dataset.
+
+Character string of a sample name to which all other samples are aligned by means of a
 linear shift (e.g. \code{"M3"}). The name has to correspond to an individual name given in \code{data}. Alternatively a sample called \code{reference} can be included
 in \code{data} containing user-defined peaks (e.g. an internal standard) to align the samples to.
 After the linear transformation the \code{reference} will be removed from the data.}

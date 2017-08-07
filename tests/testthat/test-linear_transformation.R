@@ -17,13 +17,13 @@ out4 <- align_chromatograms(data, sep = "\t", rt_col_name = "time", write_output
 
 path <- system.file("extdata", "simulated_peak_data.txt", package = "GCalignR")
 list <- read_peak_list(data = path, rt_col_name = "rt")
-out3 <- linear_transformation(gc_peak_list = list, reference = "A2", max_linear_shift = 2, error = 0.05, rt_col_name = "rt", Logbook = list(), step_size = 0.1, method = "Match")
+out3 <- linear_transformation(gc_peak_list = list, reference = "A2", max_linear_shift = 2, rt_col_name = "rt", Logbook = list(), step_size = 0.1)
 
 
 test_that("output is correct", {
-    expect_equal(sum(out[["heatmap_input"]][["linear_transformed_rts"]][,2:10]), 214.86) #214.95
+    expect_equal(sum(out[["heatmap_input"]][["linear_transformed_rts"]][,2:10]), 215.49) #214.95
     expect_equal(sum(out[["heatmap_input"]][["input_rts"]][,2:10]), 214.41) #291
     expect_equal(sum(out2[["heatmap_input"]][["linear_transformed_rts"]][,2:10]), 214.41)
     expect_equal(sum(out2[["heatmap_input"]][["input_rts"]][,2:10]), 214.41) #291
-    expect_equal(sum(out3[["Logbook"]][["LinearShift"]][["shift"]]), -1.6)
+    expect_equal(sum(out3[["Logbook"]][["LinearShift"]][["shift"]]), -1.4)
 })

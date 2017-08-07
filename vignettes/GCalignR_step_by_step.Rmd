@@ -250,4 +250,11 @@ vegan::adonis(scent ~ peak_factors$colony,permutations = 999)
 anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony))
 ```
 
+## Session info
+***
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+*** 
+
 ## References

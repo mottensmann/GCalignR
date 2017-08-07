@@ -61,10 +61,10 @@ plot.GCalign <- function(x, which_plot = c("all","shifts","variation","peak_numb
         xmin <- -xmax
 
         # appropriate steps for hist breaks
-        if (xmax < 0.1) bin_size <- 0.01
+        if (xmax <= 0.1) bin_size <- 0.01
         if (xmax > 0.1 & xmax < 0.75) bin_size <- 0.025
-        if (xmax > 0.75 & xmax < 5) bin_size <- 0.1
-        if (xmax > 5) bin_size <- NULL
+        if (xmax >= 0.75 & xmax < 5) bin_size <- 0.1
+        if (xmax >= 5) bin_size <- NULL
 
         ## check for optional arguments in the function call, take defaults, if missing
         arg_list <- list()

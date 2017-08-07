@@ -6,7 +6,7 @@ x <- aligned_peak_data
 out <- gc_heatmap(x)
 
 test_that("output is correct", {
-    expect_equal(length(out[["data"]][["substance"]]), 26158)
+    expect_equal(length(out[["data"]][["substance"]]), 22796)
 
 })
 

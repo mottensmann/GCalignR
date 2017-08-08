@@ -27,6 +27,9 @@
 #' @param shape
 #' a character determining the shape of peaks. Peaks are approximated as "gaussian" by default. Alternatively, peaks can be visualised as "sticks".
 #'
+#' @param legend.position
+#' See \code{\link[ggplot2]{theme}} for options of legend positions.
+#'
 #' @return A list containing the data frame created for plotting and the ggplot object. See \code{\link[ggplot2]{ggplot}}.
 #'
 #' @examples
@@ -43,7 +46,7 @@
 #'
 #' @export
 #'
-draw_chromatogram <- function(data = NULL, rt_col_name = NULL, width = 0.1, step = NULL, sep = "\t", breaks = NULL, rt_limits = NULL, samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE, shape = c("gaussian","stick"))  {
+draw_chromatogram <- function(data = NULL, rt_col_name = NULL, width = 0.1, step = NULL, sep = "\t", breaks = NULL, rt_limits = NULL, samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE, shape = c("gaussian","stick"), legend.position = "bottom")  {
 
 
 # Internal functions
@@ -172,8 +175,11 @@ if (!is.null(conc_col_name)) {
     conc_max <- NULL
 }
 x <- rep(rt_range, length(samples))
-cat("Computing chromatograms ...")
-y <- as.vector(unlist(lapply(X = peak_list, FUN = p2c, x = rt_range, rt_col_name, conc_col_name = conc_col_name, conc_max = conc_max)))
+cat("Computing chromatograms ...\n")
+
+pbapply::pboptions(type = "timer", char = "+", style = 1)
+y <- as.vector(unlist(pbapply::pblapply(X = peak_list, FUN = p2c, x = rt_range, rt_col_name, conc_col_name = conc_col_name, conc_max = conc_max)))
+# y <- as.vector(unlist(lapply(X = peak_list, FUN = p2c, x = rt_range, rt_col_name, conc_col_name = conc_col_name, conc_max = conc_max)))
 sample <- rep(samples, each = length(rt_range))
 if (isTRUE(show_num)) {
     y2 = rep(0, length(y))
@@ -198,7 +204,7 @@ chroma <- ggplot(data = df, aes(x,y, col = sample)) + geom_line(size = 1)
     chroma <- ggplot(data = peaks, aes(x, y, col = sample)) + geom_point() + geom_linerange(data = peaks, aes(x = x, ymin = 0, ymax = y), linetype = "dashed")
 }
 
-chroma <- chroma + theme_classic() + xlab("Retention time") + ylab("") + scale_x_continuous(breaks = breaks, expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), legend.position = "bottom") + guides(col = guide_legend(ncol = 10, title = NULL))
+chroma <- chroma + theme_classic() + xlab("Retention time") + ylab("") + scale_x_continuous(breaks = breaks, expand = c(0,0)) + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), legend.position = legend.position) + guides(col = guide_legend(ncol = 10, title = NULL))
 
 if (isTRUE(show_num)) {
 ## count number of substances per peak

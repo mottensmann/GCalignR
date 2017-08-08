@@ -63,7 +63,7 @@
 #' the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.
 #'
 #'@param max_diff_peak2mean
-#' Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance' or 'fragmet' and will be sorted in the same row.
+#' Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance' or 'fragment' and will be sorted in the same row.
 #'
 #'@param min_diff_peak2peak
 #' Numeric value defining the expected minimum difference in retention times among different substances. Rows that differ less in the mean retention time, are therefore merged if every sample contains either
@@ -104,10 +104,8 @@
 #' ## Subset for faster processing
 #' peak_data <- peak_data[1:3]
 #' peak_data <- lapply(peak_data, function(x) x[1:50,])
-#' ## align data
-#' out <- align_chromatograms(peak_data, rt_col_name = "time",
-#' rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M2",
-#' max_linear_shift = 0.02)
+#' ## align data with default settings
+#' out <- align_chromatograms(peak_data, rt_col_name = "time")
 #'
 #'@export
 #'
@@ -138,15 +136,15 @@ Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
 
 ### 1.3. Check that parameter combinations are sensible
 ### ===================================================
-if (min_diff_peak2peak <= max_diff_peak2mean) {
-    cat("It is not advisable to set 'min_diff_peak2peak' to the same or a smaller value than 'max_diff_peak2mean'. See the vignettes for further information.\n")
-    askYesNo <- function() {
-        x <- readline("Do you want to quit the alignment now? [Yes/No] ")
-        while (!(x %in% c("Yes", "No"))) x <- readline("Type 'Yes' or 'No' ")
-        if (x == "Yes") stop("Processing interrupted on user request")
-    }
-    askYesNo()
-}
+# if (min_diff_peak2peak <= max_diff_peak2mean) {
+#     cat("It is not advisable to set 'min_diff_peak2peak' to the same or a smaller value than 'max_diff_peak2mean'. See the vignettes for further information.\n")
+#     askYesNo <- function() {
+#         x <- readline("Do you want to quit the alignment now? [Yes/No] ")
+#         while (!(x %in% c("Yes", "No"))) x <- readline("Type 'Yes' or 'No' ")
+#         if (x == "Yes") stop("Processing interrupted on user request")
+#     }
+#     askYesNo()
+# }
 
 ### 2. Load Data
 ### ============
@@ -321,7 +319,7 @@ for (R in 1:iterations) {
     no_peaks[R] <- nrow(gc_peak_list_aligned[[1]])
 
 # 3.4 Merge rows
-    cat("\nMerge redundant substances ...\n ")
+    cat("\nMerge redundant rows ...\n ")
     gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned,
         min_diff_peak2peak = min_diff_peak2peak, rt_col_name = rt_col_name)
     # estimate Number of merged peaks
@@ -486,10 +484,15 @@ if (!is.null(write_output)) {
     }
     # substitute manipulated retention times with the input values
     output <- remove_linshifts(dx = output, rt_col_name = rt_col_name, Logbook = Logbook)
+    gc_peak_list_aligned <- remove_linshifts2(dx = gc_peak_list_aligned, rt_col_name = rt_col_name, Logbook = Logbook)
     output_algorithm <- list(aligned = output,
                              heatmap_input = list(input_rts = rt_raw,
-                             linear_transformed_rts = rt_linear,aligned_rts = rt_aligned),
-                             Logfile = Logbook, aligned_list = gc_peak_list_aligned ,input_list = input_list, input_matrix = input)
+                             linear_transformed_rts = rt_linear,
+                             aligned_rts = rt_aligned),
+                             Logfile = Logbook,
+                             aligned_list = gc_peak_list_aligned,
+                             input_list = input_list,
+                             input_matrix = input)
 
     class(output_algorithm) <- "GCalign"
 

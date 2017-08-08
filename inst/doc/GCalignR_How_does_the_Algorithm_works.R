@@ -92,8 +92,8 @@ write.table(round(dat_mat,2), row.names = F, col.names = F, sep = "\t")
 #                                N = 1,
 #                                Names = "Sample A (Reference)",
 #                                sd = c(0.30, 0.35, 0.24, 0.25, 0.23)*width),
-#                                ym2 = NA,
-#                                yp1 = NA)
+#                  ym2 = NA,
+#                  yp1 = NA)
 #  # sample b
 #  ###########
 #  bx <- c(7.6,12.2,21.8) # a peak vector
@@ -101,10 +101,10 @@ write.table(round(dat_mat,2), row.names = F, col.names = F, sep = "\t")
 #                                N = 1,
 #                                Names = "Sample B",
 #                                sd = c(0.22, 0.28, 0.27)*width),
-#                                ym2 = data.frame(simple_chroma(peaks = bx - 2, N = 1,
-#                                                               Names = "Sample B",
-#                                                               sd = c(0.22, 0.28, 0.27)*width))[["y"]],
-#                                yp1 = NA)
+#                  ym2 = data.frame(simple_chroma(peaks = bx - 2, N = 1,
+#                                                 Names = "Sample B",
+#                                                 sd = c(0.22, 0.28, 0.27)*width))[["y"]],
+#                  yp1 = NA)
 #  # sample c
 #  ###########
 #  cx <- c(4.4,15.3,19.2) # a peak vector
@@ -160,8 +160,6 @@ write.table(round(dat_mat,2), row.names = F, col.names = F, sep = "\t")
 #      geom_line(aes(x = x, y = yp1), colour = "#4DAF4A", size = 0.8, linetype = "solid") +
 #      geom_area(aes(x = x, y = yp1), fill = "#4DAF4A", alpha = 0.2) +
 #      geom_area(aes(x = x, y = ym2), fill = "#377EB8", alpha = 0.2) +
-#      geom_errorbarh(data = peaks2, aes(y = max(peaks2[["y"]]) + 0.1, xmax = x + 0.5, xmin = x - 0.5, height = 0.1),
-#                     color = "grey50", size = 1, linetype = "solid") +
 #      geom_segment(data = arrow_df, aes(x = x, y = y, xend = x2, yend = y), arrow = arrow(length = unit(0.1, "inches") ),
 #                   size = 0.8, color = "black", linetype = "solid")
 #  print(chroma)
@@ -212,4 +210,7 @@ x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 ## for using ggplot2::facet_wrap we need to get rid of the annotations
 x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::facet_wrap(~sample, ncol = 1) + ggplot2::scale_color_brewer(palette = "Dark2")
+
+## ---- echo=FALSE---------------------------------------------------------
+utils::sessionInfo()
 

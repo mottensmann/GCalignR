@@ -7,9 +7,7 @@
 #' within the original gas-chromatography dataset aligned with \code{\link{align_chromatograms}}.
 #'
 #' @param data
-#' Object of class GCalign created with \code{\link{align_chromatograms}}. Contains a list
-#' of data frames including the retention time and other variables, of which one needs
-#' to be specified as \code{conc_col_name}.
+#' Object of class GCalign created with \code{\link{align_chromatograms}} or a list of data frames that contain peak list of individual samples.
 #'
 #' @param conc_col_name
 #' Character string denoting a column in data frames of \code{data}
@@ -36,13 +34,17 @@
 norm_peaks <- function(data, conc_col_name = NULL, rt_col_name = NULL, out = c("data.frame","list")) {
 
 out <- match.arg(out)
-which <- "aligned" # which <- match.arg(which)
 
 ## some checks
-if (class(data) != "GCalign") {warning("Input is not a output of align_chromatograms, assure the format is correct")}
 if (is.null(conc_col_name)) {stop("List containing peak concentration is not specified. Define conc_col_name")}
 
-conc_list <- data[[which]][[conc_col_name]]
+if (class(data) == "GCalign") {
+    which <-  "aligned"
+    conc_list <- data[[which]][[conc_col_name]]
+} else if (is.list(data)) {
+    conc_list <- lapply(data, function(fx) fx[[conc_col_name]])
+}
+
 
 # Function to do the calculations
 rel_abund <- function(conc_df){

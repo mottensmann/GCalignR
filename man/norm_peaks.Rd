@@ -8,9 +8,7 @@ norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL,
   out = c("data.frame", "list"))
 }
 \arguments{
-\item{data}{Object of class GCalign created with \code{\link{align_chromatograms}}. Contains a list
-of data frames including the retention time and other variables, of which one needs
-to be specified as \code{conc_col_name}.}
+\item{data}{Object of class GCalign created with \code{\link{align_chromatograms}} or a list of data frames that contain peak list of individual samples.}
 
 \item{conc_col_name}{Character string denoting a column in data frames of \code{data}
 containing a variable describing the abundance of peaks (e.g. peak area or peak height).}

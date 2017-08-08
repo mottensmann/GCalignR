@@ -1,7 +1,7 @@
 #' Estimate the observed space between peaks within chromatograms
 #'
 #'@description
-#' The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a seperated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data. In the histogram proportion refer to the query (i.e. the quantile range) and not the whole population of peaks.
+#' The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a separated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data. In the histogram proportion refer to the query (i.e. the quantile range) and not the whole population of peaks.
 #'
 #' @inheritParams check_input
 #' @inheritParams align_chromatograms
@@ -9,6 +9,10 @@
 #' A numeric vector of length two specifying arbitrary interquartile ranges visualised in a barplot. By default the full range is shown.
 #' @param quantiles
 #' A numeric vector. Specified quantiles are calculated from the distribution.
+#'
+#' @param by_sample
+#' A logical that allows to calculate peak interspaces individually for each sample. By default all samples are combinded to give the global distribution of next-peak differences in retention times. When \code{by_sample = TRUE}, a series of plots (one for each sample) is created and keystroke is required to proceed.
+#'
 #' @return List containing summary statistics of the peak interspace distribution
 #' @import stringr
 #'
@@ -24,7 +28,7 @@
 #'
 #' @export
 #'
-peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NULL, quantile_range = c(0,1)) {
+peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NULL, quantile_range = c(0,1), by_sample = FALSE) {
 # Checks
 # ######
     if (is.null(rt_col_name)) stop("Specify rt_col_name")
@@ -57,9 +61,11 @@ peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NUL
         col_names <- unlist(lapply(data, function(x) out <- names(x)))
         col_names <- names(data[[1]])
         ind_names <- names(data)
-        gc_peak_list <- data }
+        gc_peak_list <- data
+        }
     # Extract retention times for all samples and list them
     fx <- function(df,rt_col_name) out <- df[[rt_col_name]]
+
     rt_list <- lapply(gc_peak_list,FUN = fx,rt_col_name = rt_col_name)
     # Calculate peak interspaces for each sample
     spaces <- round(unlist(lapply(rt_list,FUN = function(x) diff(x[x > 0 & !is.na(x)]))),2)
@@ -68,7 +74,23 @@ peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NUL
 # Prepare barplot/histogram
     bar_data <- spaces_table[min(which(breaks >= stats::quantile(spaces,quantile_range[1]))):min(which(breaks >= stats::quantile(spaces,quantile_range[2])))]
 
-    graphics::plot(bar_data/sum(bar_data),xpd = T,col = "darkblue",xlab = "Distance between neighbouring peaks\nwithin samples",ylab = "Proportion")
+    if (by_sample == FALSE) {
+        graphics::plot(bar_data/sum(bar_data),xpd = T,col = "darkblue",xlab = "Distance between neighbouring peaks\nwithin samples",ylab = "Proportion")
+    } else if (by_sample == TRUE) {
+        dat <- lapply(gc_peak_list, FUN = fx, rt_col_name = rt_col_name)
+        names <- names(dat)
+        dat_spaces <- lapply(dat, function(x) round(diff(x[x > 0 & !is.na(x)]), 2))
+        dat_table <- lapply(dat_spaces, function(x) table(as.factor(x)))
+        escape <- "start"
+        while (!(escape %in% c("stop","Stop","escape","ESC","Esc","Escpape"))) {
+        for (i in 1:length(dat_table)) {
+            graphics::plot(dat_table[[i]]/sum(dat_table[[i]]),xpd = T,col = "darkblue",xlab = "Distance between neighbouring peaks\nwithin samples",ylab = "Proportion", main = paste0(names[i], " (", i, "/", length(dat_table),")"))
+          escape <-  readline("Press enter to proceed or Esc to interrupt: ")
+          cat(escape)
+        }
+        }
+    }
+
     spaces_subset <- spaces[spaces >= stats::quantile(spaces,quantile_range[1]) & spaces <= stats::quantile(spaces,quantile_range[2])]
 
 

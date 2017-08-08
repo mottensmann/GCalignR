@@ -96,7 +96,7 @@ cat("\n\n")
 
 # Refer to plots
 # -------------
-cat("For further details type...\n")
+cat("For further details type:\n")
 text <- paste0("'gc_heatmap(",object_name,")'"," to retrieve heatmaps")
 cat(stringr::str_wrap(paste(text,collapse = " "),width = 80,exdent = 2,indent = 2))
 cat("\n")

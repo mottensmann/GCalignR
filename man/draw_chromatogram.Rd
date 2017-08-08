@@ -7,7 +7,7 @@
 draw_chromatogram(data = NULL, rt_col_name = NULL, width = 0.1,
   step = NULL, sep = "\\t", breaks = NULL, rt_limits = NULL,
   samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE,
-  shape = c("gaussian", "stick"))
+  shape = c("gaussian", "stick"), legend.position = "bottom")
 }
 \arguments{
 \item{data}{Currently three formats are supported. Either a \strong{text file} or a \strong{list} containing raw data peak lists or an \strong{GCalign object}. See \code{\link{align_chromatograms}} for details.}
@@ -35,6 +35,8 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 \item{plot}{Logical indicating if a plot is printed. By default TRUE.}
 
 \item{shape}{a character determining the shape of peaks. Peaks are approximated as "gaussian" by default. Alternatively, peaks can be visualised as "sticks".}
+
+\item{legend.position}{See \code{\link[ggplot2]{theme}} for options of legend positions.}
 }
 \value{
 A list containing the data frame created for plotting and the ggplot object. See \code{\link[ggplot2]{ggplot}}.

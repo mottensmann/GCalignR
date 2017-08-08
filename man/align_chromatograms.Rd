@@ -44,7 +44,7 @@ After the linear transformation the \code{reference} will be removed from the da
 from another chromatogram. To correct for these systematic shifts, the algorithm potentially adds the same value to all peaks within a chromatogram to maximise the number of shared peaks with
 the reference. We recommend to start with the default of 0.02 (minutes) and increase if necessary.}
 
-\item{max_diff_peak2mean}{Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance' or 'fragmet' and will be sorted in the same row.}
+\item{max_diff_peak2mean}{Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). Defaults to 0.02 (minutes). This parameter reflects the retention time range in which peaks across samples are still counted as the same 'substance' or 'fragment' and will be sorted in the same row.}
 
 \item{min_diff_peak2peak}{Numeric value defining the expected minimum difference in retention times among different substances. Rows that differ less in the mean retention time, are therefore merged if every sample contains either
 one or none of the respective compounds.
@@ -99,10 +99,8 @@ data("peak_data")
 ## Subset for faster processing
 peak_data <- peak_data[1:3]
 peak_data <- lapply(peak_data, function(x) x[1:50,])
-## align data
-out <- align_chromatograms(peak_data, rt_col_name = "time",
-rt_cutoff_low = 10, rt_cutoff_high = 30, reference = "M2",
-max_linear_shift = 0.02)
+## align data with default settings
+out <- align_chromatograms(peak_data, rt_col_name = "time")
 
 }
 \author{

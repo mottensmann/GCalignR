@@ -100,3 +100,6 @@ vegan::adonis(scent ~ peak_factors$colony,permutations = 999)
 ## no dispersion effect
 anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony))
 
+## ---- echo=FALSE---------------------------------------------------------
+utils::sessionInfo()
+

@@ -19,6 +19,10 @@
 #'
 #'\code{\link{read_peak_list}} reads the content of a text file and converts it to a list.
 #'
+#'\code{\link{remove_blanks}} removes peaks resembling contaminations from aligned datasets.
+#'
+#'\code{\link{remove_singletons}} removes peaks that are unique for one individual sample.
+#'
 #'\code{\link{simple_chroma}} creates simple chromatograms for testing and illustration purposes.
 #'
 #'@details

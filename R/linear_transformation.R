@@ -142,7 +142,7 @@ linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.0
     }#end
 
     # ============================================================
-
+if (max_linear_shift > 0) {
     ref <- gc_peak_list[[reference]]
     # temp list that allows to submit the name of the data.frames in lapply
     temp <- gc_peak_list
@@ -154,6 +154,10 @@ linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.0
     chrom_shift <- pbapply::pblapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, method = method)
     Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
     chroma_aligned <- lapply(chrom_shift,function(x) x[-2])
+} else {
+    chroma_aligned <- gc_peak_list
+    Logbook[["LinearShift"]] <- data.frame(shift = rep(0, length(gc_peak_list)), sample = names(gc_peak_list))
+}
     return(list(chroma_aligned = chroma_aligned,Logbook = Logbook))
 }#end linear_transformation
 

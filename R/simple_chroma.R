@@ -3,7 +3,7 @@
 #' @description Creates chromatograms with user defined peaks for illustrative purposes. Linear drift is applied in sample order if more than one sample is created. See parameters of the function.
 #'
 #' @param peaks
-#' A numeric vector giving the retention times on which gaussian distribution, defining peaks, are centered. If more than one sample is genereated \code{N > 1}, \code{peaks} defines a population of peaks, from which samples are generated.
+#' A numeric vector giving the retention times on which gaussian distribution, defining peaks, are centered. If more than one sample is generated \code{N > 1}, \code{peaks} defines a population of peaks, from which samples are generated.
 #'
 #' @param N An integer giving the number of chromatograms to create. By default \code{N = 1}.
 #'

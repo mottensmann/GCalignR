@@ -5,7 +5,7 @@
 \title{Estimate the observed space between peaks within chromatograms}
 \usage{
 peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
-  quantile_range = c(0, 1))
+  quantile_range = c(0, 1), by_sample = FALSE)
 }
 \arguments{
 \item{data}{Path to a data file or the name of a list in the global environment.}
@@ -19,12 +19,14 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 \item{quantiles}{A numeric vector. Specified quantiles are calculated from the distribution.}
 
 \item{quantile_range}{A numeric vector of length two specifying arbitrary interquartile ranges visualised in a barplot. By default the full range is shown.}
+
+\item{by_sample}{A logical that allows to calculate peak interspaces individually for each sample. By default all samples are combinded to give the global distribution of next-peak differences in retention times. When \code{by_sample = TRUE}, a series of plots (one for each sample) is created and keystroke is required to proceed.}
 }
 \value{
 List containing summary statistics of the peak interspace distribution
 }
 \description{
-The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a seperated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data. In the histogram proportion refer to the query (i.e. the quantile range) and not the whole population of peaks.
+The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a separated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data. In the histogram proportion refer to the query (i.e. the quantile range) and not the whole population of peaks.
 }
 \examples{
 ## plotting with defaults

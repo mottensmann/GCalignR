@@ -4,16 +4,16 @@
 \alias{gc_heatmap}
 \title{Visualises peak alignments in form of a heatmap}
 \usage{
-gc_heatmap(object = NULL, algorithm_step = c("aligned", "linear_shifted",
-  "pre_alignment"), substance_subset = NULL, legend_type = c("legend",
-  "colourbar"), samples_subset = NULL, type = c("binary", "discrete"),
-  threshold = NULL, label_size = NULL, show_legend = TRUE,
-  main_title = NULL, label = c("y", "xy", "x", "none"))
+gc_heatmap(object = NULL, algorithm_step = c("aligned", "shifted", "input"),
+  substance_subset = NULL, legend_type = c("legend", "colourbar"),
+  samples_subset = NULL, type = c("binary", "discrete"), threshold = NULL,
+  label_size = NULL, show_legend = TRUE, main_title = NULL,
+  label = c("y", "xy", "x", "none"))
 }
 \arguments{
 \item{object}{Object of class "GCalign", the output of a call to \link{align_chromatograms}.}
 
-\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{"pre_alignment"}, \strong{"linear_shifted"} or \strong{"aligned"} specifying the raw, linearly shifted or aligned data respectively. Default is the heatmap for the aligned data.}
+\item{algorithm_step}{Character indicating which step of the algorithm is plotted. Either \strong{"input"}, \strong{"shifted"} or \strong{"aligned"} specifying the raw, linearly shifted or aligned data respectively. Default is the heatmap for the aligned data.}
 
 \item{substance_subset}{A vector of integers containing indices of substances in ascending order of retention times to plot. By default all substances are plotted.}
 
@@ -50,7 +50,7 @@ The goal of aligning peaks is to group homologous peaks (ideally representing ho
  gc_heatmap(aligned_peak_data, algorithm_step = "aligned")
 
  ## Plot the input data
- gc_heatmap(aligned_peak_data,algorithm_step = "pre_alignment")
+ gc_heatmap(aligned_peak_data,algorithm_step = "input")
 
  ## Plot a subset of the first 50 scored substances
  gc_heatmap(aligned_peak_data,algorithm_step="aligned",substance_subset = 1:50)

@@ -277,14 +277,14 @@ plot(aligned, which_plot = "shifts")
 Using `draw_chromatograms` again, we can inspect how the linear corrections have changed the peak list.
 
 ```{r, results="hide", fig.cap="Figure 9. Correcting linear drift reduces the gaps between homologous peak retention times"}
-x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "lin_aligned", show_rt = F, show_num = F, plot = F)
+x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "shifted", show_rt = F, show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 ```
 
 We immediately see that the peaks were shifted accordingly and start to cluster as expected (**Figure 9**). However, there is variation in retention times among the samples within the visually separated clusters. Therefore, we utilise another algorithm that evaluates the observed variance and decides which peaks belong to the same substance. These steps were already executed with the call to `align_chromatograms` and we can inspect the results by simply defining `step = "fully_aligned"`. This time we also set `show_num = T` in order to print the number of samples *behind* each peak. This is helpful, because peaks of the same substance will overlap (**Figure 10**). 
 
 ```{r, results="hide", fig.cap= "Figure 10. Aligned peaks are represented by the mean retention time of a substance "}
-x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = T, plot = F)
+x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "aligned", show_num = T, plot = F)
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 ```
 
@@ -292,7 +292,7 @@ We can test that not only "A4" contributes to the peaks by moving each sample to
 
 ```{r, fig.cap="Figure 11. Suplots are a convenient means of visualising aligned peak lists"}
 ## for using ggplot2::facet_wrap we need to get rid of the annotations
-x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = F, plot = F)
+x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "aligned", show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::facet_wrap(~sample, ncol = 1) + ggplot2::scale_color_brewer(palette = "Dark2")
 ```
 

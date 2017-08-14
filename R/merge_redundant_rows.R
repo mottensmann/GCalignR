@@ -34,7 +34,12 @@ merge_redundant_rows <- function(data, min_diff_peak2peak = NULL) {
     if (class(data) != "GCalign") stop("Only data of type GCalign is supported")
     if (is.null(min_diff_peak2peak)) stop("Specify an numeric threshold value in minutes")
     gc_peak_list_aligned <- data[["aligned_list"]]
+
     rt_col_name <- data[["Logfile"]][["Call"]][["rt_col_name"]]
+
+    ## add linear shifts again
+    gc_peak_list_aligned <- add_linshifts2(dx = gc_peak_list_aligned, rt_col_name = rt_col_name, Logbook = data$Logfile)
+
 
     # number of peaks prior to executing this function
     N <- nrow(gc_peak_list_aligned[[1]])
@@ -50,8 +55,31 @@ merge_redundant_rows <- function(data, min_diff_peak2peak = NULL) {
     average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
     gc_peak_list_aligned <- lapply(gc_peak_list_aligned, delete_empty_rows, average_rts)
     # update heatmap and aligned_list
-    data[["heatmap_input"]][["aligned_rts"]] <- rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name = rt_col_name)
+    data[["heatmap_input"]][["aligned_rts"]] <-
+        rt_extract(gc_peak_list = gc_peak_list_aligned,rt_col_name = rt_col_name)
     data[["aligned_list"]] <- gc_peak_list_aligned
+
+    # update "aligned"
+    rt_mat <- do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[[rt_col_name]]))
+    mean_per_row <- apply(rt_mat,1, function(x) if (all(x == 0)) 0 else mean(x[x != 0]))
+    col_names <- names(gc_peak_list_aligned[[1]])
+    output <- lapply(col_names, function(y) as.data.frame(do.call(cbind, lapply(gc_peak_list_aligned, function(x) x[y]))))
+    output <- lapply(output, function(x){
+        names(x) <- names(gc_peak_list_aligned)
+        x
+    })
+
+    output <- lapply(output, function(x){
+        x <- cbind(mean_per_row, x)
+        x
+    })
+
+    output <- lapply(output, function(x){
+        names(x)[1] <- "mean_RT"
+        x
+    })
+    names(output) <- col_names
+    data[["aligned"]] <- output
 
     output <- list(GCalign = data, peak_list = gc_peak_list_aligned)
 

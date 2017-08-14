@@ -7,7 +7,7 @@
 #' Object of class "GCalign", the output of a call to \link{align_chromatograms}.
 #'
 #' @param algorithm_step
-#' Character indicating which step of the algorithm is plotted. Either \strong{"pre_alignment"}, \strong{"linear_shifted"} or \strong{"aligned"} specifying the raw, linearly shifted or aligned data respectively. Default is the heatmap for the aligned data.
+#' Character indicating which step of the algorithm is plotted. Either \strong{"input"}, \strong{"shifted"} or \strong{"aligned"} specifying the raw, linearly shifted or aligned data respectively. Default is the heatmap for the aligned data.
 #'
 #' @param substance_subset
 #' A vector of integers containing indices of substances in ascending order of retention times to plot. By default all substances are plotted.
@@ -55,7 +55,7 @@
 #'  gc_heatmap(aligned_peak_data, algorithm_step = "aligned")
 #'
 #'  ## Plot the input data
-#'  gc_heatmap(aligned_peak_data,algorithm_step = "pre_alignment")
+#'  gc_heatmap(aligned_peak_data,algorithm_step = "input")
 #'
 #'  ## Plot a subset of the first 50 scored substances
 #'  gc_heatmap(aligned_peak_data,algorithm_step="aligned",substance_subset = 1:50)
@@ -66,7 +66,7 @@
 #' @export
 #'
 gc_heatmap <- function(object = NULL,
-                       algorithm_step = c('aligned','linear_shifted','pre_alignment'),
+                       algorithm_step = c('aligned','shifted','input'),
                        substance_subset = NULL, legend_type = c('legend','colourbar'),
                        samples_subset = NULL,
                        type = c("binary","discrete"),
@@ -79,8 +79,8 @@ gc_heatmap <- function(object = NULL,
     # removed from @import: RColorBrewer grDevices
     algorithm_step <- match.arg(algorithm_step)
     if (algorithm_step == "aligned") algorithm_step <- "aligned_rts"
-    if (algorithm_step == "linear_shifted") algorithm_step <- "linear_transformed_rts"
-    if (algorithm_step == "pre_alignment") algorithm_step <- "input_rts"
+    if (algorithm_step == "shifted") algorithm_step <- "linear_transformed_rts"
+    if (algorithm_step == "input") algorithm_step <- "input_rts"
 
     if (is.null(threshold)) threshold <- object[["Logfile"]][["Call"]][["max_diff_peak2mean"]]
     type <- match.arg(type)
@@ -172,28 +172,37 @@ heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[
         hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
     }
     hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))
+
+
+    theme(axis.text.x = element_text(size = label_size, hjust = 0.5,angle = 90),
+          axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+          axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
+          axis.text.y = element_text(size = label_size,hjust = 0.5))
+
+
+
     if (label == "xy") {
         hm <- hm + theme(axis.title.x = element_text(size = 10),
                          axis.title.y = element_text(size = 10),
-                         axis.text.x = element_text(size = label_size, hjust = 0.5,angle = 90),
-                         axis.ticks.y = element_line(size = 0.3, colour = "grey40"),
-                         axis.ticks.x = element_line(size = 0.3, colour = "grey40"),
+                axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
+                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
                          axis.text.y = element_text(size = label_size,hjust = 0.5))
 
     } else if (label == "y") {
         hm <- hm + theme(axis.title.x = element_text(size = 10),
                          axis.title.y = element_text(size = 10),
                          axis.text.x = element_blank(),
-                         axis.ticks.y = element_line(size = 0.3, colour = "grey40"),
-                         axis.ticks.x = element_line(size = 0.3, colour = "grey40"),
+                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
                          axis.text.y = element_text(size = label_size,hjust = 0.5))
 
     } else if (label == "x") {
         hm <- hm + theme(axis.title.x = element_text(size = 10),
                          axis.title.y = element_text(size = 10),
-                         axis.text.x = element_text(size = label_size, hjust = 0.5,angle = 90),
-                         axis.ticks.y = element_line(size = 0.3, colour = "grey40"),
-                         axis.ticks.x = element_line(size = 0.3, colour = "grey40"),
+                axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
+                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
                          axis.text.y = element_blank())
 
     } else if (label == "none") {
@@ -225,12 +234,15 @@ my.lines <- data.frame(y = y,x = x, xend = xend,yend = yend)
 hm <- hm + geom_segment(data = my.lines, aes(x,y,xend = xend, yend = yend),color = "grey", size = 0.35,show.legend = FALSE, inherit.aes = F)
 
 # If subsets are selected, allow to plot the substance labels for better idetenfication
-if ((!is.null(substance_subset) & ncol(rt_df) < 151) || ncol(rt_df) < 151 ) {
-    hm <- hm + theme(axis.text.x = element_text(size = label_size, hjust = 0.5,angle = 90),
-                     axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
-                     axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
-                     axis.text.y = element_text(size = label_size,hjust = 0.5))
+if (is.null(label)) {
+    if ((!is.null(substance_subset) & ncol(rt_df) < 151) || ncol(rt_df) < 151 ) {
+        hm <- hm + theme(axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
+                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
+                         axis.text.y = element_text(size = label_size,hjust = 0.5))
+    }
 }
+
 if (!show_legend) hm <- hm + theme(legend.position = "none")
 # return the ggplot object
 return(hm)

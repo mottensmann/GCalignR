@@ -127,11 +127,14 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         }
 
         # check class of columns
-        temp <- do.call("cbind", data)
+        min_n <- min(as.vector(unlist(lapply(data, nrow))))
+        data2 <- lapply(data, function(x) x[1:min_n,])
+        temp <- do.call("cbind", data2)
         if (!(any(apply(temp, 2, class) %in% c("numeric","integer")))) {
             na_1 <- length(which(is.na(temp)))
             data <- lapply(data, function(x) as.data.frame(apply(x, 2, as.numeric)))
-            na_2 <- length(which(is.na(do.call("cbind", data))))
+            data2 <- lapply(data, function(x) x[1:min_n,])
+            na_2 <- length(which(is.na(do.call("cbind", data2))))
             if (na_2 > na_1) {
                 pass <- FALSE
                 warning("All columns need to contain only numericals or integers. NAs introduced by coercion")

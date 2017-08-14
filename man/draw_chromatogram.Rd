@@ -17,7 +17,7 @@ be numeric and the decimal separator needs to be a point.}
 
 \item{width}{numeric value giving the standard deviation of gaussian peaks. Decrease this value to separate overlapping peaks within samples. Default is 0.01.}
 
-\item{step}{Either \strong{"pre_aligned"}, \strong{"lin_aligned"} or \strong{"fully_aligned"}. Only supported when \code{data} is an object of type "GCalign". By default aligned is used.}
+\item{step}{Either \strong{"input"}, \strong{"shifted"} or \strong{"aligned"}. Only supported when \code{data} is an object of type "GCalign". By default aligned is used.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
@@ -45,7 +45,7 @@ A list containing the data frame created for plotting and the ggplot object. See
 Creates a graphical representation of one or multiple peak lists in the form of simplified chromatograms. Peaks are represented by gaussian distributions centred at the peak retention time.
 }
 \details{
-Peaks from the peak list are depicted as gaussian distributions. By default, peaks are visualised regardless of their concentration, thereby indicating presence/absence only. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{"pre_aligned"}), after correcting linear drift (\strong{"lin_aligned"}) or after the complete alignment was conducted (\strong{"fully_aligned"}). In the latter case, retention times refer to the mean retention time of a substance scored among samples and do not represent between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by changing the value of parameter \code{width}. Note, aligned peaks (= exactly matching retention time) will overlap completely and only the last sample plotted will be visible. Hence, the number of samples is given on top of each peak but default. The function returns a list containing the ggplot object along with the underlying data frame to allow for maximum control in adapting the plot (see examples section in this document).
+Peaks from the peak list are depicted as gaussian distributions. By default, peaks are visualised regardless of their concentration, thereby indicating presence/absence only. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{"input"}), after correcting linear drift (\strong{"shifted"}) or after the complete alignment was conducted (\strong{"aligned"}). In the latter case, retention times refer to the mean retention time of a substance scored among samples and do not represent between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by changing the value of parameter \code{width}. Note, aligned peaks (= exactly matching retention time) will overlap completely and only the last sample plotted will be visible. Hence, the number of samples is given on top of each peak but default. The function returns a list containing the ggplot object along with the underlying data frame to allow for maximum control in adapting the plot (see examples section in this document).
 }
 \examples{
 ## load data

@@ -1,16 +1,18 @@
 Package: GCalignR
 Title: Simple Peak Alignment for Gas-Chromatography Data
 Version: 0.1.0.9000
+Date: 2017
 Authors@R: c(person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre")),
     person("Martin", "Stoffel", email = "martin.adam.stoffel@gmail.com", role = c("aut")),
     person("Hazel", "Nichols", role = c("aut")),
     person("Joseph I.", "Hoffman", email = "j_i_hoffman@hotmail.com", role = c("aut")))
-Description: Aligns Chromatography peaks with a three step algorithm: (1) Linear
-    transformation of retention times to maximise shared peaks among samples (2)
-    Align peaks within a certain error-interval (3) Merges rows that are likely
-    representing the same substance (i.e. no sample shows peaks in both rows and
-    the rows have similar retention time means). The method was first described in
-    Stoffel et al. (2015) <doi:10.1073/pnas.1506076112>.
+Description: Aligns Chromatography peaks with a three step algorithm: (1) Full
+    alignment of chromatograms by linear transformation of retention times to 
+    maximise similarity among homologous peaks (2) Partial alignment of peaks within 
+    a user-defined retention time window to cluster homologous peaks (3) Merging rows
+    that are likely representing homologous substances (i.e. no sample shows peaks in 
+    both rows and the rows have similar retention time means).
+    The method was first applied in Stoffel et al. (2015) <doi:10.1073/pnas.1506076112>.
 Depends:
     R (>= 3.2.5)
 Imports:

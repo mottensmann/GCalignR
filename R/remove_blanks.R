@@ -1,6 +1,7 @@
-#' Remove contaminations
+#' Remove peaks present in negative control samples
 #'
-#' @description Removes peaks that are present in blanks (i.e. negative control samples) to elliminate contaminations in the aligned data. Afterwards, blanks are deleted itself. This function is only applicable when blanks were not discarded during a previous alignment using \code{\link{align_chromatograms}}.
+#' @description
+#' Removes peaks that are present in blanks (i.e. negative control samples) to eliminate contaminations in the aligned data. Afterwards, blanks are deleted itself. This function is only applicable when blanks were not discarded during a previous alignment using \code{\link{align_chromatograms}}.
 #'
 #' @inheritParams align_chromatograms
 #'
@@ -17,6 +18,8 @@
 #' out <- remove_blanks(data = x, blanks = c("C2","C3"))
 #' ## number of deleted peaks
 #' nrow(x[["aligned_list"]][["M2"]]) - nrow(out[["M2"]])
+#'
+#'@author Meinolf Ottensmann (meinolf.ottensmann@@web.de) & Martin Stoffel (martin.adam.stoffel@@gmail.com)
 #'
 #' @export
 #'

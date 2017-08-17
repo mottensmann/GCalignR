@@ -1,20 +1,16 @@
 #' Normalisation of peak abundancies
 #'
 #' @description
-#' Calculates the relative abundance of a peak by normalising
-#' with regard to the cumulative abundance of all peaks that are present within an
-#' individual sample. The desired measure of peak abundance needs to be a column
-#' within the original gas-chromatography dataset aligned with \code{\link{align_chromatograms}}.
+#' Calculates the relative abundance of a peak by normalising an intensity measure with regard to the cumulative abundance of all peaks that are present within an individual sample. The desired measure of peak abundance needs to be included in a column of the input dataset aligned with \code{\link{align_chromatograms}}.
 #'
 #' @param data
 #' Object of class GCalign created with \code{\link{align_chromatograms}} or a list of data frames that contain peak list of individual samples.
 #'
 #' @param conc_col_name
-#' Character string denoting a column in data frames of \code{data}
-#' containing a variable describing the abundance of peaks (e.g. peak area or peak height).
+#' Character giving the name of a column in \code{data} containing a variable describing the abundance of peaks (e.g. peak area or peak height).
 #'
 #' @param out
-#' character string defining the format of the returned data. Either "List" or "data.frame".
+#' character defining the format of the returned data. Either "List" or "data.frame".
 #'
 #' @inheritParams align_chromatograms
 #'

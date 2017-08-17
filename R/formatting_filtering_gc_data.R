@@ -1,7 +1,3 @@
-#' Internal functions used for filtering steps in the processing
-#'
-#' @keywords internal
-#'
 add_linshifts2 <- function(dx = NULL, rt_col_name = NULL, Logbook = NULL) {
     df <- Logbook[["LinearShift"]]
     samples <- names(dx)

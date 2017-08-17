@@ -8,25 +8,24 @@ peak_interspace(data, rt_col_name = NULL, sep = "\\t", quantiles = NULL,
   quantile_range = c(0, 1), by_sample = FALSE)
 }
 \arguments{
-\item{data}{Path to a data file or the name of a list in the global environment.}
+\item{data}{Dataset containing peaks that need to be aligned and matched. For every peak a arbitrary number of numerical variables can be included (e.g. peak height, peak area) in addition to the mandatory retention time. The standard format is a tab-delimited text file according to the following layout: (1) The first row contains sample names, the (2) second row column names of the corresponding peak lists. Starting with the third row, peak lists are included for every sample that needs to be incorporated in the dataset. Here, a peak list contains data for individual peaks in rows, whereas columns specifiy variables in the order given in the second row of the text file. Peak lists of individual samples are concatenated horizontally and need to be of the same width (i.e. the same number of columns in consistent order). Alternatively, the input may be a list of data frames. Each data frame contains the peak data for a single individual. Variables (i.e.columns) are named consistently across data frames. The names of elements in the list are used as sample identifiers. Cells may be filled with numeric or integer values but no factors or characters are allowed. NA and 0 may be used to indicate empty rows.}
 
-\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
-be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{quantiles}{A numeric vector. Specified quantiles are calculated from the distribution.}
 
-\item{quantile_range}{A numeric vector of length two specifying arbitrary interquartile ranges visualised in a barplot. By default the full range is shown.}
+\item{quantile_range}{A numeric vector of length two that allows to subset an arbitrary interquartile range.}
 
-\item{by_sample}{A logical that allows to calculate peak interspaces individually for each sample. By default all samples are combinded to give the global distribution of next-peak differences in retention times. When \code{by_sample = TRUE}, a series of plots (one for each sample) is created and keystroke is required to proceed.}
+\item{by_sample}{A logical that allows to calculate peak interspaces individually for each sample. By default all samples are combined to give the global distribution of next-peak differences in retention times. When \code{by_sample = TRUE}, a series of plots (one for each sample) is created and a keystroke is required to proceed.}
 }
 \value{
 List containing summary statistics of the peak interspace distribution
 }
 \description{
-The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a separated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data. In the histogram proportion refer to the query (i.e. the quantile range) and not the whole population of peaks.
+The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a separated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data.
 }
 \examples{
 ## plotting with defaults

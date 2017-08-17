@@ -2,12 +2,16 @@
 This is a resubmission. In this version I have implemented the following changes:
 
 ## Changes of existing code
-* Within `align_chromatograms`, retention times are not rounded to a precision of two decimals anymore prior to executing the algorithm. Instead, calculations are internally based on the the value rounded to two decimals. After alignment, retention times are returned as they appear in the input.
+* Progress bars are implemented using `pbapply` to estimate the run time of algorithms.
+* More efficient code allows to speed up computations by an order of magnitude for some functions. 
+* Within `align_chromatograms`, retention times are not rounded anymore prior to executing the algorithm. Instead, calculations are internally based on rounded values. The output contains the input retention time to allow cross-reference between raw data and aligned data.
 * Axis labels in `plot.GCaling` and `gc_heatmap` were changed to enhance clearity. 
+* Helpfile were rewritten.
 
 ## Extensions
 * `draw_chromatogram` is added and allows to represent peak lists graphically as chromatograms
 * A second vignette `GCalignR How does the Algorithm works?` gives a more detailed tutorial on the concepts.
+* A CITATION file was added to link the package to the preprint of our manuscript. 
 
 ## Release summary
 

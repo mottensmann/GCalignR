@@ -23,3 +23,6 @@ x <- align_chromatograms(data, rt_col_name = "time")
 out <- remove_singletons(data = x)
 
 }
+\author{
+Meinolf Ottensmann (meinolf.ottensmann@web.de) & Martin Stoffel (martin.adam.stoffel@gmail.com)
+}

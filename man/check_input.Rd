@@ -7,31 +7,24 @@
 check_input(data, plot = FALSE, sep = "\\t", message = TRUE, ...)
 }
 \arguments{
-\item{data}{Path to a data file or the name of a list in the global environment.}
+\item{data}{Dataset containing peaks that need to be aligned and matched. For every peak a arbitrary number of numerical variables can be included (e.g. peak height, peak area) in addition to the mandatory retention time. The standard format is a tab-delimited text file according to the following layout: (1) The first row contains sample names, the (2) second row column names of the corresponding peak lists. Starting with the third row, peak lists are included for every sample that needs to be incorporated in the dataset. Here, a peak list contains data for individual peaks in rows, whereas columns specifiy variables in the order given in the second row of the text file. Peak lists of individual samples are concatenated horizontally and need to be of the same width (i.e. the same number of columns in consistent order). Alternatively, the input may be a list of data frames. Each data frame contains the peak data for a single individual. Variables (i.e.columns) are named consistently across data frames. The names of elements in the list are used as sample identifiers. Cells may be filled with numeric or integer values but no factors or characters are allowed. NA and 0 may be used to indicate empty rows.}
 
-\item{plot}{Logical, if TRUE the distribution of peak numbers is plotted. By default no plot is returned.}
+\item{plot}{Boolean specifying if the distribution of peak numbers is plotted.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{message}{Logical determining if passing all checks is indicated by a message.}
+\item{message}{Boolean determining if passing all checks is indicated by a message.}
 
-\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Requires \code{plot == TRUE}.}
-}
-\value{
-If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
 }
 \description{
-Checks formatting of GCalignR input data for some of the main errors. Data is accepted in
-form of the path to a text file (i.e. "data.txt") or a list of data frames.
-See \code{\link{align_chromatograms}} for details.
+Checks input files for common formatting problems.
 }
 \details{
 Sample names should contain just letters, numbers and underscores and no whitespaces.
 Each sample has to contain the same number of columns, one of which is the retention
-time and the others are arbitrary variables in consistent order across samples. Retention times are expected to be numeric, i.e. they
-are only allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look
-at the vignettes for examples.
+time and the others are arbitrary variables in consistent order across samples. Retention times are expected to be numeric, i.e. they are only allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look at the vignettes for examples.
 }
 \examples{
 ## gc-data

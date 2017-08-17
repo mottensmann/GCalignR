@@ -10,13 +10,11 @@ norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL,
 \arguments{
 \item{data}{Object of class GCalign created with \code{\link{align_chromatograms}} or a list of data frames that contain peak list of individual samples.}
 
-\item{conc_col_name}{Character string denoting a column in data frames of \code{data}
-containing a variable describing the abundance of peaks (e.g. peak area or peak height).}
+\item{conc_col_name}{Character giving the name of a column in \code{data} containing a variable describing the abundance of peaks (e.g. peak area or peak height).}
 
-\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
-be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
 
-\item{out}{character string defining the format of the returned data. Either "List" or "data.frame".}
+\item{out}{character defining the format of the returned data. Either "List" or "data.frame".}
 }
 \value{
 Depending on \code{out} either a list of data frame or a single data frame were rows represent samples and columns relative peak abundances. Abundances are given as percentages.
@@ -25,10 +23,7 @@ Depending on \code{out} either a list of data frame or a single data frame were 
         Meinolf Ottensmann (meinolf.ottensmann@web.de)
 }
 \description{
-Calculates the relative abundance of a peak by normalising
-with regard to the cumulative abundance of all peaks that are present within an
-individual sample. The desired measure of peak abundance needs to be a column
-within the original gas-chromatography dataset aligned with \code{\link{align_chromatograms}}.
+Calculates the relative abundance of a peak by normalising an intensity measure with regard to the cumulative abundance of all peaks that are present within an individual sample. The desired measure of peak abundance needs to be included in a column of the input dataset aligned with \code{\link{align_chromatograms}}.
 }
 \examples{
 ## aligned gc-dataset

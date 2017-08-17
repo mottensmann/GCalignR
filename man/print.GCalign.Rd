@@ -9,8 +9,7 @@
 \arguments{
 \item{x}{Object of class GCalign, created with \code{\link{align_chromatograms}}}
 
-\item{write_text_file}{Logical. If \code{TRUE} the output is written to a plain text file. No text is printed
-to the console in this case.}
+\item{write_text_file}{A boolean allowing to write a text file.}
 
 \item{...}{Optional arguments passed on to methods are currently not supported.}
 }

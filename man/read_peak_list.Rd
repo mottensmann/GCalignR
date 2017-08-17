@@ -7,22 +7,24 @@
 read_peak_list(data, sep = "\\t", rt_col_name)
 }
 \arguments{
-\item{data}{a text file containing a peak list. See \code{\link{align_chromatograms}} for details.}
+\item{data}{A text file containing a peak list. See \code{\link{align_chromatograms}} for details.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
-be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
 }
 \value{
 A list of data frames containing peak data for every sample of \code{data}.
 }
 \description{
-Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
+Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and converts it to a list.
 }
 \examples{
 path <- system.file("extdata", "simulated_peak_data.txt", package = "GCalignR")
 x <- read_peak_list(data = path, rt_col_name = "rt")
 
+}
+\author{
+Meinolf Ottensmann (meinolf.ottensmann@web.de) & Martin Stoffel (martin.adam.stoffel@gmail.com)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/simple_chroma.R
 \name{simple_chroma}
 \alias{simple_chroma}
-\title{Simulate chromatograms}
+\title{Simulate simple chromatograms}
 \usage{
 simple_chroma(peaks = c(10, 13, 25, 37, 50), N = 1, min = 0, max = 30,
   Names = NULL, sd = NULL)
@@ -32,4 +32,7 @@ x <- simple_chroma(peaks = c(5,10,15), N = 1, min = 0, max = 30, Names = "MyChro
 ## plot chromatogram
 with(x, plot(x,y, xlab = "time", ylab = "intensity"))
 
+}
+\author{
+Meinolf Ottensmann (meinolf.ottensmann@web.de) & Martin Stoffel (martin.adam.stoffel@gmail.com)
 }

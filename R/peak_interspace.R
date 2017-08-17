@@ -1,17 +1,20 @@
 #' Estimate the observed space between peaks within chromatograms
 #'
 #'@description
-#' The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a separated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data. In the histogram proportion refer to the query (i.e. the quantile range) and not the whole population of peaks.
+#' The parameter \code{min_diff_peak2peak} is a major determinant in the alignment of a dataset with \code{\link{align_chromatograms}}. This function helps to infer a suitable value based on the input data. The underlying assumption here is that distinct peaks within a separated by a larger gap than homologous peaks across samples. Tightly spaced peaks within a sample will appear on the left side of the plotted distribution and can indicate the presence of split peaks in the data.
 #'
 #' @inheritParams check_input
+#'
 #' @inheritParams align_chromatograms
+#'
 #' @param quantile_range
-#' A numeric vector of length two specifying arbitrary interquartile ranges visualised in a barplot. By default the full range is shown.
+#' A numeric vector of length two that allows to subset an arbitrary interquartile range.
+#'
 #' @param quantiles
 #' A numeric vector. Specified quantiles are calculated from the distribution.
 #'
 #' @param by_sample
-#' A logical that allows to calculate peak interspaces individually for each sample. By default all samples are combinded to give the global distribution of next-peak differences in retention times. When \code{by_sample = TRUE}, a series of plots (one for each sample) is created and keystroke is required to proceed.
+#' A logical that allows to calculate peak interspaces individually for each sample. By default all samples are combined to give the global distribution of next-peak differences in retention times. When \code{by_sample = TRUE}, a series of plots (one for each sample) is created and a keystroke is required to proceed.
 #'
 #' @return List containing summary statistics of the peak interspace distribution
 #' @import stringr

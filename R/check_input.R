@@ -1,37 +1,26 @@
 #' Check input prior to processing in GCalignR
 #'
 #'@description
-#' Checks formatting of GCalignR input data for some of the main errors. Data is accepted in
-#' form of the path to a text file (i.e. "data.txt") or a list of data frames.
-#' See \code{\link{align_chromatograms}} for details.
+#' Checks input files for common formatting problems.
 #'
 #' @details
 #' Sample names should contain just letters, numbers and underscores and no whitespaces.
 #' Each sample has to contain the same number of columns, one of which is the retention
-#' time and the others are arbitrary variables in consistent order across samples. Retention times are expected to be numeric, i.e. they
-#' are only allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look
-#' at the vignettes for examples.
-#'
-#'@param data
-#' Path to a data file or the name of a list in the global environment.
+#' time and the others are arbitrary variables in consistent order across samples. Retention times are expected to be numeric, i.e. they are only allowed to contain numbers from 0-9 and "." as the only decimal character. Have a look at the vignettes for examples.
 #'
 #'@param plot
-#' Logical, if TRUE the distribution of peak numbers is plotted. By default no plot is returned.
+#' Boolean specifying if the distribution of peak numbers is plotted.
 #'
 #'@inheritParams align_chromatograms
 #'
 #'@param ...
-#'optional arguments passed to methods, see \code{\link[graphics]{barplot}}. Requires \code{plot == TRUE}.
+#'optional arguments passed to methods, see \code{\link[graphics]{barplot}}.
 #'
 #'@param message
-#'Logical determining if passing all checks is indicated by a message.
+#'Boolean determining if passing all checks is indicated by a message.
 #'
 #'@author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)
-#'
-#'
-#'@return
-#' If \code{plot = TRUE} a data frame containing sample names and the corresponding number of peaks is returned
 #'
 #' @examples
 #' ## gc-data

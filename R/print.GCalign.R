@@ -6,8 +6,7 @@
 #' @inheritParams plot.GCalign
 #'
 #' @param write_text_file
-#' Logical. If \code{TRUE} the output is written to a plain text file. No text is printed
-#' to the console in this case.
+#' A boolean allowing to write a text file.
 #'
 #' @examples
 #' ## GCalign object

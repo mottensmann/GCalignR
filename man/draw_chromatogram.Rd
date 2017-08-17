@@ -2,39 +2,38 @@
 % Please edit documentation in R/draw_chromatogram.R
 \name{draw_chromatogram}
 \alias{draw_chromatogram}
-\title{Visualise peak lists as a chromatogram}
+\title{Visualise peak lists as a pseudo-chromatogram}
 \usage{
 draw_chromatogram(data = NULL, rt_col_name = NULL, width = 0.1,
   step = NULL, sep = "\\t", breaks = NULL, rt_limits = NULL,
-  samples = NULL, show_num = TRUE, show_rt = FALSE, plot = TRUE,
+  samples = NULL, show_num = FALSE, show_rt = FALSE, plot = TRUE,
   shape = c("gaussian", "stick"), legend.position = "bottom")
 }
 \arguments{
-\item{data}{Currently three formats are supported. Either a \strong{text file} or a \strong{list} containing raw data peak lists or an \strong{GCalign object}. See \code{\link{align_chromatograms}} for details.}
+\item{data}{The input data can be either a GCalignR input file or an GCalign object. See \code{\link{align_chromatograms}} for details on both.}
 
-\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
-be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
 
-\item{width}{numeric value giving the standard deviation of gaussian peaks. Decrease this value to separate overlapping peaks within samples. Default is 0.01.}
+\item{width}{Numeric value giving the standard deviation of gaussian peaks. Decrease this value to separate overlapping peaks within samples. Default is 0.01.}
 
-\item{step}{Either \strong{"input"}, \strong{"shifted"} or \strong{"aligned"}. Only supported when \code{data} is an object of type "GCalign". By default aligned is used.}
+\item{step}{character allowing to visualise different steps of the alignment when a GCalign object is used. By default the aligned data is shown.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
-\item{breaks}{A vector giving the breakpoints between ticks on the x axis.}
+\item{breaks}{A numeric vector giving the breakpoints between ticks on the x axis.}
 
-\item{rt_limits}{A vector of length two giving min and max values or retention times to plot.}
+\item{rt_limits}{A numeric vector of length two giving min and max values or retention times to plot.}
 
-\item{samples}{A character vector of sample names to draw chromatograms of a subset. By default every sample will be drawn.}
+\item{samples}{A character vector of sample names to draw chromatograms of a subset.}
 
-\item{show_num}{Logical indicating whether sample numbers are drawn on top of each peak. By default TRUE.}
+\item{show_num}{Boolean indicating whether sample numbers are drawn on top of each peak.}
 
-\item{show_rt}{Logical indicating whether peak retention times are drawn on top of each peak. By default FALSE.}
+\item{show_rt}{Boolean indicating whether peak retention times are drawn on top of each peak.}
 
-\item{plot}{Logical indicating if a plot is printed. By default TRUE.}
+\item{plot}{Boolean indicating if the plot is printed.}
 
-\item{shape}{a character determining the shape of peaks. Peaks are approximated as "gaussian" by default. Alternatively, peaks can be visualised as "sticks".}
+\item{shape}{A character determining the shape of peaks. Peaks are approximated as "gaussian" by default. Alternatively, peaks can be visualised as "sticks".}
 
 \item{legend.position}{See \code{\link[ggplot2]{theme}} for options of legend positions.}
 }
@@ -42,10 +41,10 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 A list containing the data frame created for plotting and the ggplot object. See \code{\link[ggplot2]{ggplot}}.
 }
 \description{
-Creates a graphical representation of one or multiple peak lists in the form of simplified chromatograms. Peaks are represented by gaussian distributions centred at the peak retention time.
+Creates a graphical representation of one or multiple peak lists in the form of a pseudo- chromatogram. Peaks are represented by gaussian distributions centered at the peak retention time. The peak height is arbitrary and does not reflect any measured peak intensity.
 }
 \details{
-Peaks from the peak list are depicted as gaussian distributions. By default, peaks are visualised regardless of their concentration, thereby indicating presence/absence only. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{"input"}), after correcting linear drift (\strong{"shifted"}) or after the complete alignment was conducted (\strong{"aligned"}). In the latter case, retention times refer to the mean retention time of a substance scored among samples and do not represent between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by changing the value of parameter \code{width}. Note, aligned peaks (= exactly matching retention time) will overlap completely and only the last sample plotted will be visible. Hence, the number of samples is given on top of each peak but default. The function returns a list containing the ggplot object along with the underlying data frame to allow for maximum control in adapting the plot (see examples section in this document).
+Peaks from the are depicted as gaussian distributions. If the data is an "GCalign" object that was processed with \code{\link{align_chromatograms}}, chromatograms can be drawn for the dataset prior to alignment (\strong{"input"}), after correcting linear drift (\strong{"shifted"}) or after the complete alignment was conducted (\strong{"aligned"}). In the latter case, retention times refer to the mean retention time of a homologous peaks scored among samples and do not reflect any between-sample variation anymore. Depending on the range of retention times and the distance among substances the peak width can be adjusted to enable a better visual separation of peaks by changing the value of parameter \code{width}. Note, homologous peaks (= exactly matching retention time) will overlap completely and only the last sample plotted will be visible. Hence, the number of samples can be printed on top of each peak. The function returns a list containing the ggplot object along with the internally used data frame to allow for maximum control in adapting the plot (see examples section in this document).
 }
 \examples{
 ## load data
@@ -58,5 +57,7 @@ x <- draw_chromatogram(data = path, rt_col_name = "rt", samples = c("A2","A4"),
 x[["ggplot"]] + ggplot2::facet_wrap(~ sample, nrow = 2)
 ## plot without numbers
 x <- draw_chromatogram(data = path, show_num = FALSE, rt_col_name = "rt")
-
+}
+\author{
+Meinolf Ottensmann (meinolf.ottensmann@web.de) & Martin Stoffel (martin.adam.stoffel@gmail.com)
 }

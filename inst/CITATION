@@ -1,0 +1,22 @@
+citHeader("To cite GCalignR in publications refer to the preprint of our manuscript that is currently under review:")
+
+citEntry(entry = "Article",
+         author       = personList(as.person("Meinolf Ottensmann"),
+                                   as.person("Martin A. Stoffel"),
+                                   as.person("Hazel Nichols"),
+                                   as.person("Joseph I. Hoffman")),
+         title        = "GCalignR: An R package for aligning Gas-Chromatography data",
+         year         = "2017",
+         doi = "10.1101/110494",
+         publisher = "Cold Spring Harbor Labs Journals",
+         URL          = "http://www.biorxiv.org/content/early/2017/02/22/110494",
+         eprint = "http://www.biorxiv.org/content/early/2017/02/22/110494.full.pdf",
+         journal      = "bioRxiv",
+         textVersion  =
+             paste("Ottensmann M., Stoffel M. A., Nichols H. & Hoffman J. I. (2017).",
+                   "GCalignR: An R package for aligning Gas-Chromatography data.",
+                   "bioRxiv.",
+                   "http://www.biorxiv.org/content/early/2017/02/22/110494")
+)
+
+

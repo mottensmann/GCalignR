@@ -10,25 +10,16 @@
 \arguments{
 \item{x}{Object of class GCalign, created with \code{\link{align_chromatograms}}}
 
-\item{which_plot}{Character string indicating which plot is returned. Available are:
-\strong{"shifts"}, a histogram of linear adjustments undertaken in aligning chromatograms,
-\strong{"variation"}, a histogram summarising the range of retention times for every peak defined
-by the difference between minimum and maximum retention times respectively. The third option
-is \strong{"peak_numbers"}, plotting a barchart of the number of sharings per sample. Additionally \strong{"peaks_shared"} produces a histogram of the proportion with which peaks (i.e. substances) are shared among samples. This means for every peak, the proportion of samples containing the respective peak is estimated. By default all plots are returned as subplots of one figure.}
+\item{which_plot}{A character defining which plot is created. Options are "shifts", "variation", "peak_numbers" and "peaks_shared". By default all four are created.}
 
 \item{...}{Optional arguments passed on to methods. See
-\code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}.
-Note that optional arguments are not passed on when plotting all figures.}
+\code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}. Note that optional arguments are not passed on when plotting all figures.}
 }
 \value{
-Depending on the value of \code{which_plot} a data frame containing the data source of the respective plot is returned. If \code{which_plot = "all"} no output is returned.
+Depending on the selected plot a data frame containing the data source of the respective plot is returned. If all plots are created, no output will be returned.
 }
 \description{
-Four plots are currently available: One plot visualises the distribution of linear shifts
-that were applied in order to align chromatograms to a reference before aligning individual peaks.
-A second plot illustrates the remaining variation of retention times on the level of individual
-peaks by plotting the distribution of retention time ranges. The third plots shows a distribution
-of peak numbers after aligning the chromatograms. A fourth plot illustrates the amount of peak sharing among chromatograms in a histogram. By default all plots are returned.
+Visualises the aligned data based on four diagnostic plots. One plot shows the distribution of peak numbers per sample in the raw data and after alignment. A second plot gives the distribution of linear shifts that were applied in order to conduct a full alignment of samples with respect to reference. A third sample gives a distribution of the variation in retention times of homologous peaks. The fourth plot shows a frequency distribution of peaks shared among samples.
 }
 \examples{
 ## GCalign object

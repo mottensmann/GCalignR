@@ -1,30 +1,29 @@
 #' Full Alignment of Peak Lists by linear retention time correction.
 #'
 #' @description
-#' Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of landmark peaks that are shared among samples are required to find the most adequate linear shifts. A reference needs to be selected before, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yield the same similarity score, the smallest absolute value wins in order to avoid overcompensation. The functions is envoked internally by \code{\link{align_chromatograms}}.
+#' Shifts all peaks within samples to maximise the similarity to a reference sample. For optimal results, a sufficient number of shared peaks are required to find a optimal solution. A reference needs to be specified, for instance using \code{\link{choose_optimal_reference}}. Linear shifts are evaluated within a user-defined window in discrete steps. The highest similarity score defines the shift that will be applied. If more than a single shift step yields to the same similarity score, the smallest absolute value wins in order to avoid overcompensation. The functions is envoked internally by \code{\link{align_chromatograms}}.
 #'
 #' @details
 #' A similarity score is calculated as the sum of deviations in retention times between all reference peaks and the closest peak in the sample. The principle idea is that the appropriate linear transformation will reduce the deviation in retention time between homologous peaks, whereas all other peaks should deviate randomly. Among all considered shifts, the minimum deviation score is selected for subsequent full alignment by shifting all peaks of the sample by the same value.
 #
-#'
 #' @inheritParams align_chromatograms
 #'
 #' @inheritParams align_peaks
 #'
 #' @param reference
-#' A character giving the name of a sample included in the dataset. All sample are aligned to the reference.
+#' A character giving the name of a sample included in the dataset. All samples are aligned to the reference.
 #'
 #' @param step_size
-#' Integer giving the step size in which linear shifts are evaluated between \strong{max_linear_shift} and \strong{-max_linear_shift}.
+#' Integer giving the step size in which linear shifts are evaluated between \code{max_linear_shift} and \code{-max_linear_shift}.
 #'
 #' @param Logbook
 #' A list. If present, a summary of the applied linear shifts in full alignments of peak lists is appended to the list. If not specified, a list will be created automatically.
 #'
 #' @return
 #' A list containing two items.
-#' \item{chroma_aligned}{Transformed data}
+#' \item{chroma_aligned}{List containing the transformed data}
 #' \item{Logbook}{Logbook, record of the applied shifts}
-#' List of data.frames containing chromatograms with applied linear shifts
+#'
 #'
 #' @examples
 #' dat <- peak_data[1:10]

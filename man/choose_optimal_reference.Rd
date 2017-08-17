@@ -2,22 +2,14 @@
 % Please edit documentation in R/choose_optimal_reference.R
 \name{choose_optimal_reference}
 \alias{choose_optimal_reference}
-\title{Pick the Optimal Reference for Full Alignments of Peak Lists}
+\title{Select the optimal reference for full alignments of peak lists}
 \usage{
 choose_optimal_reference(data = NULL, rt_col_name = NULL, sep = "\\t")
 }
 \arguments{
-\item{data}{Chemical data that has to be aligned. All variables that are available need to be included in order to align these measures based on the retention time, which is the only mandatory variable.
-Two input formats are supported. The first option is the \strong{path to a plain text file} with extension ".txt" containing the gc-data. It is expected that the file is formatted following this
-principle: (1) The first row contains sample names, the (2) second row column names of the corresponding
-chromatograms. Starting with the third row, peak data are included, whereby matrices of single
-samples are concatenated horizontally (see the vignettes for example data). The matrix for each
-sample needs to consist of the same number of columns, at least one is required that contains the retention times of peaks. Alternatively, the input may be a \strong{list of data frames}. Each data frame contains
-the peak data for a single individual with at least one column containing retention times of peaks. Variables need to have the same names across all samples (i.e. data frames). Also, each list element has to be named with the ID of the respective sample. All cells may be filled with numericals or integer values but no factors or characters. NA and 0 may be used to indicate empty rows.
-The format can be checked by running \code{\link{check_input}}.}
+\item{data}{Dataset containing peaks that need to be aligned and matched. For every peak a arbitrary number of numerical variables can be included (e.g. peak height, peak area) in addition to the mandatory retention time. The standard format is a tab-delimited text file according to the following layout: (1) The first row contains sample names, the (2) second row column names of the corresponding peak lists. Starting with the third row, peak lists are included for every sample that needs to be incorporated in the dataset. Here, a peak list contains data for individual peaks in rows, whereas columns specifiy variables in the order given in the second row of the text file. Peak lists of individual samples are concatenated horizontally and need to be of the same width (i.e. the same number of columns in consistent order). Alternatively, the input may be a list of data frames. Each data frame contains the peak data for a single individual. Variables (i.e.columns) are named consistently across data frames. The names of elements in the list are used as sample identifiers. Cells may be filled with numeric or integer values but no factors or characters are allowed. NA and 0 may be used to indicate empty rows.}
 
-\item{rt_col_name}{Character string giving the name of the column containing the retention times.The variable needs to
-be numeric and the decimal separator needs to be a point.}
+\item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
 
 \item{sep}{The field separator character. The default is tab separated (\code{sep = '\\t'}).
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
@@ -28,10 +20,10 @@ A list with following elements
 \item{score}{Median number of shared peaks with other samples}
 }
 \description{
-Full alignments of peak lists require the specification of a fixed reference to which all other samples are aligned to. This function provides an simple algorithm to find the most suitable sample among a dataset. The so defined reference can be used for full alignments using \code{\link{linear_transformation}}. The functions is envoked internally by \code{\link{align_chromatograms}} if no reference was specified by the user.
+Full alignments of peak lists require the specification of a fixed reference to which all other samples are aligned to. This function provides an simple algorithm to find the most suitable sample among a dataset. The so defined reference can be used for full alignments using \code{\link{linear_transformation}}. The functions is evoked internally by \code{\link{align_chromatograms}} if no reference was specified by the user.
 }
 \details{
-Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples. In pair-wise comparisons the sum of deviations in retention times between all reference peaks and the closest peak in the sample divided by the number of reference peaks is calculated as a similarity score. For each sample the median score in comparison with all other samples is used as a similarity proxy. The optimal sample is then defined by the minimum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
+Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples. For a reference-sample pair, the deviation in retention times between all reference peaks and the always nearest peak in the sample is summed and divided by the number of reference peaks. The calculated value is a similarity score that converges to zero the more similar reference and sample are. For every potential reference, the median score of all pair-wise comparisons is used as a similarity proxy. The optimal sample is then defined by the minimum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
 }
 \examples{
 ## 1.) input is a list

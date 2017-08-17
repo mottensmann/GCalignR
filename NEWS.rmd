@@ -4,17 +4,23 @@ ___
 
 ## Changes since release 0.1.0
 
-### New functions
+### New functions are exported
+* `choose_optimal_reference` offers an automatism to pick suitable references.
 * `draw_chromatograms` allows to represent a peak list in form of chromatogram.
+* `remove_blanks`allows to get rid of peaks that represent contamination after aligning a dataset
+* `remove_singletons` allows to remove single peaks from the dataset after aligning
+* `merge_redundant_rows` allows to merge rows that were not recognised as redundant during the alignment by increasing the threshold value for the evaluation of similarity
 
 ### Algorithm
 * Using `pbapply`, we implemented progress bars to inform the user about the progress and the estimated running time of intermediate steps in the alignment of peak lists.
-* By implementing more efficient code, we were able to speed up the processing significantly. 
+* By implementing more efficient code, we were able to speed up the processing, especially picking references is faster by an order of magnitude. 
 
-#### Linear Shifts
+#### Full alignment of peaks
 * Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons.
 * Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile accessible in the output.
-* By evaluating linear drift over the course of the chromatography run, peaks are thought to be homologous to the reference if the retention times matches within an allowed error proportional to parameter _max\_diff\_peak2mean_
+
+#### Reference selection
+* Reference samples that are used for the coarse alignment of retention times can be picked using a novel algorithm that determines the average similarity across the dataset. 
 
 ### warning messages
 * Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity.
@@ -28,7 +34,7 @@ ___
 * We included a second vignette that explains the algorithm and the supported data in detail.
 
 ### Documentation
-* Partly, function help files are rewritten and errors are corrected.
+* Helpfiles were rewritten to enhance clarity and solve some issues
 ___
 
 

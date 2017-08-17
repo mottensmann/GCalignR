@@ -1,19 +1,25 @@
-#' Simulate chromatograms
+#' Simulate simple chromatograms
 #'
-#' @description Creates chromatograms with user defined peaks for illustrative purposes. Linear drift is applied in sample order if more than one sample is created. See parameters of the function.
+#' @description
+#' Creates chromatograms with user defined peaks for illustrative purposes. Linear drift is applied in sample order if more than one sample is created. See parameters of the function.
 #'
 #' @param peaks
 #' A numeric vector giving the retention times on which gaussian distribution, defining peaks, are centered. If more than one sample is generated \code{N > 1}, \code{peaks} defines a population of peaks, from which samples are generated.
 #'
-#' @param N An integer giving the number of chromatograms to create. By default \code{N = 1}.
+#' @param N
+#' An integer giving the number of chromatograms to create. By default \code{N = 1}.
 #'
-#' @param min A numeric giving the minimum retention time.
+#' @param min
+#' A numeric giving the minimum retention time.
 #'
-#' @param max A numeric giving the maximum retention time.
+#' @param max
+#' A numeric giving the maximum retention time.
 #'
-#' @param Names A character vector giving sample names. If not specified, names are generated automatically.
+#' @param Names
+#' A character vector giving sample names. If not specified, names are generated automatically.
 #'
-#' @param sd A numeric vector of the same length as peaks giving the standard deviation of each peak. Only supported if N = 1.
+#' @param sd
+#' A numeric vector of the same length as peaks giving the standard deviation of each peak. Only supported if N = 1.
 #'
 #' @return A data frame containing x and y coordinates and corresponding sample names.
 #'
@@ -22,6 +28,8 @@
 #' x <- simple_chroma(peaks = c(5,10,15), N = 1, min = 0, max = 30, Names = "MyChroma")
 #' ## plot chromatogram
 #' with(x, plot(x,y, xlab = "time", ylab = "intensity"))
+#'
+#'@author Meinolf Ottensmann (meinolf.ottensmann@@web.de) & Martin Stoffel (martin.adam.stoffel@@gmail.com)
 #'
 #' @export
 #'

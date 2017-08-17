@@ -1,16 +1,20 @@
 #' Read content of a text file and convert it to a list
 #'
-#' @param data a text file containing a peak list. See \code{\link{align_chromatograms}} for details.
+#' @param data
+#' A text file containing a peak list. See \code{\link{align_chromatograms}} for details.
 #'
 #' @inheritParams align_chromatograms
 #'
-#' @description Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and creates a peak list.
+#' @description
+#' Reads the content of text file that is formatted as described in \code{\link{align_chromatograms}} and converts it to a list.
 #'
 #' @return A list of data frames containing peak data for every sample of \code{data}.
 #'
 #' @examples
 #' path <- system.file("extdata", "simulated_peak_data.txt", package = "GCalignR")
 #' x <- read_peak_list(data = path, rt_col_name = "rt")
+#'
+#' @author Meinolf Ottensmann (meinolf.ottensmann@@web.de) & Martin Stoffel (martin.adam.stoffel@@gmail.com)
 #'
 #' @export
 #'

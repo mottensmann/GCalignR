@@ -1,7 +1,7 @@
-#' merge redundant rows
+#' Merge redundant rows
 #'
 #' @description
-#' Sometimes, redundant rows (i.e. groups of substances) remain in an aligned dataset. This is the case when two or more adjacent rows exhibit a difference in the mean retention time that is greater than \code{min_diff_peak2peak}, the parameter that determines a threshold below that redundancy is check within \code{\link{align_chromatograms}}. Therefore, this function allows to raise the threshold for a post processing step that groups the homologous peaks together.
+#' Sometimes, redundant rows (i.e. groups of resembling a homologous peak) remain in an aligned dataset. This is the case when two or more adjacent rows exhibit a difference in the mean retention time that is greater than \code{min_diff_peak2peak}, the parameter that determines a threshold below that redundancy is checked within \code{\link{align_chromatograms}}. Therefore, this function allows to raise the threshold for a post processing step that groups the homologous peaks together without the need of repeating a potentially time-consuming alignment with adjusted parameters.
 #'
 #' @details
 #' Based on the value of parameter \code{threshold}, possibly redundant rows are identified by comparing mean retention times. Next, rows are checked for redundancy. When one or more samples contain peaks in a pair of compared rows, no redundancy is existent and the pair is skipped.
@@ -27,6 +27,8 @@
 #' max_diff_peak2mean = 0.01, min_diff_peak2peak = 0.02)
 #' ## relax threshold to merge redundant rows
 #' out2 <- merge_redundant_rows(data = out, min_diff_peak2peak = 0.05)
+#'
+#' @author Meinolf Ottensmann (meinolf.ottensmann@@web.de) & Martin Stoffel (martin.adam.stoffel@@gmail.com)
 #'
 #' @export
 #'

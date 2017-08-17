@@ -2,21 +2,20 @@
 % Please edit documentation in R/remove_blanks.R
 \name{remove_blanks}
 \alias{remove_blanks}
-\title{Remove contaminations}
+\title{Remove peaks present in negative control samples}
 \usage{
 remove_blanks(data, blanks)
 }
 \arguments{
 \item{data}{An object of class "GCalign". See \code{\link{align_chromatograms}} for details. Alternatively, a list of data frames. Whereby each data frame contains the peak list for an individual sample.}
 
-\item{blanks}{Character vector of names of negative controls. Substances found in any of the blanks will be
-removed from all samples, before the blanks are deleted from the aligned data as well. This is an optional filtering step.}
+\item{blanks}{Character vector of names of negative controls. Substances found in any of the blanks will be removed from the aligned dataset, before the blanks are deleted from the aligned data as well. This is an optional filtering step.}
 }
 \value{
 a list of data frames for each individual.
 }
 \description{
-Removes peaks that are present in blanks (i.e. negative control samples) to elliminate contaminations in the aligned data. Afterwards, blanks are deleted itself. This function is only applicable when blanks were not discarded during a previous alignment using \code{\link{align_chromatograms}}.
+Removes peaks that are present in blanks (i.e. negative control samples) to eliminate contaminations in the aligned data. Afterwards, blanks are deleted itself. This function is only applicable when blanks were not discarded during a previous alignment using \code{\link{align_chromatograms}}.
 }
 \examples{
 data("peak_data")
@@ -27,4 +26,7 @@ out <- remove_blanks(data = x, blanks = c("C2","C3"))
 ## number of deleted peaks
 nrow(x[["aligned_list"]][["M2"]]) - nrow(out[["M2"]])
 
+}
+\author{
+Meinolf Ottensmann (meinolf.ottensmann@web.de) & Martin Stoffel (martin.adam.stoffel@gmail.com)
 }

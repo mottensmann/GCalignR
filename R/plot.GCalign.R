@@ -241,21 +241,21 @@ plot.GCalign <- function(x, which_plot = c("all","shifts","variation","peak_numb
     if (which_plot == "shifts") {
         out <- hist_linshift(object = x,mcall = mcall,...)
         out <- data.frame(shifts = out)
-        out
+        return(out)
     } else if (which_plot == "variation") {
         out <- hist_peakvar(x = x,mcall = mcall,...)
         out <- data.frame(range = as.vector(out), index_sharing = 1:length(as.vector(out)))
-        out
+        return(out)
     } else if (which_plot == "peak_numbers") {
         out <- bar_peakdistr(x = x,mcall = mcall,...)
         out <- data.frame(sample = rownames(out), pre_aligned = out[["pre-aligned"]],aligned = out[["aligned"]],row.names = 1:nrow(out))
-        out
+        return(out)
 
     } else if (which_plot == "peaks_shared") {
         ## Plot peak sharing distribution
         out <- hist_shared_peaks(x = x,mcall = mcall,...)
         out <- data.frame(rt = out[["time"]], prop = out[["prop"]])
-        out
+        return(out)
     } else if (which_plot == "all")  {
         graphics::layout(matrix(c(1,1,1,2,3,4), 2, 3, byrow = TRUE))
         bar_peakdistr(x = x,mcall = mcall)

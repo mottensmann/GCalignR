@@ -10,6 +10,8 @@
 
 \code{\link{align_chromatograms}} executes all alignment steps.
 
+\code{\link{as.data.frame.GCalign}} exports aligned data to data frames.
+
 \code{\link{check_input}} tests the input data for formatting issues.
 
 \code{\link{draw_chromatogram}} visualises peak lists in form of a chromatogram.

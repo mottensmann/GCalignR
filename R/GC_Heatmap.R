@@ -13,7 +13,7 @@
 #' A vector of integers containing indices of substances in ascending order of retention times to plot.
 #'
 #' @param legend_type
-#' A character specifying the type of colourbar as 'discrete' or 'gradient' to present deviations of retention times of the mean.
+#' A character specifying how to present deviations of retention times from the mean. Either in form of discrete steps or on a gradient scale using 'legend' or 'colourbar' respectively. Changes are only possible when \code{type = "discrete"}
 #'
 #' @param  samples_subset
 #' A vector indicating which samples are plotted on the heatmap by giving either indices or names of samples.

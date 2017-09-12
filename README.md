@@ -50,4 +50,4 @@ If you encounter bugs or if you have any suggestions for improvement, just conta
 
 ### Reference
 
-[Ottensmann, M., Stoffel, M.A., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under revision*.](https://doi.org/10.1101/110494)
+[Ottensmann, M., Stoffel, M.A., Nichols, H., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under revision*.](https://doi.org/10.1101/110494)

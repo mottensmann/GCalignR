@@ -1,3 +1,15 @@
+add_linshifts <- function(mat = NULL, object = NULL) {
+    samples <- colnames(mat)
+    df <- object[["Logfile"]][["LinearShift"]]
+    for (x in samples) {
+mat[,which(colnames(mat) == x)][mat[,which(colnames(mat) == x)] > 0] <-
+            mat[,which(colnames(mat) == x)][mat[,which(colnames(mat) == x)] > 0] +
+    df[["shift"]][which(df[["sample"]] == x)]
+    }
+    return(mat)
+}#add_linshift
+
+
 add_linshifts2 <- function(dx = NULL, rt_col_name = NULL, Logbook = NULL) {
     df <- Logbook[["LinearShift"]]
     samples <- names(dx)

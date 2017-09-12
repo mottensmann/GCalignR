@@ -61,15 +61,4 @@ if (out == "data.frame") {
         rel_con_list <- x
 }
 return(rel_con_list)
-## unused code chunks
-## ----------------------------------------------
-# if (which == "raw") which <- "input_matrix"
-## additional function parameters
-#  ..., percent = TRUE, which = c("aligned","raw")
-# param percent
-# By default percent values are returned (i.e. relative abundances scale up to 100.) If
-#
-# param which
-# character string naming the data source to normalise. Either the aligned data or the raw data prior to alignment. The latter can be used for demonstration purposes.
-# -----------------------------------------------
 }

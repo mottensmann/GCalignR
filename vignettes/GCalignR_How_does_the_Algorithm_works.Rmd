@@ -1,6 +1,6 @@
 ---
 title: "GCalignR: How does the Algorithm works?"
-author: "Meinolf Ottensmann, Martin A. Stoffel, Hazel Nichols and Joseph I. Hoffman"
+author: "Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
@@ -21,16 +21,16 @@ library(GCalignR)
 library(ggplot2)
 ```
 
-## Preface
+## Introduction
 
-The intention of this vignette is to illustrate how the algorithms in `GCalignR` handle the data during each of the processing steps. Simultaneously we deploy some simple datasets that can be generated within R to visualise the outcome of the processing steps in an easy way. For the fairly simple math behind the algorithm we refer to our manuscript that is available as a preprint [@Ottensmann.2017]. 
+The intention of this vignette is to illustrate how the algorithms in `GCalignR` handles the data during each of the processing steps. Simultaneously we deploy some simple datasets that can be generated within R to visualise the outcome of the processing steps in an easy way. For further descriptions of the algorithm we refer to our manuscript [@Ottensmann.2017]. 
 Here, we give a detailed introduction into the concept behind the package and illustrate how it works by simulating simple datasets with arbitrary peaks. To enhance readability, not all code lines are show within this vignette, but they can be easily accessed by typing `browseVignettes("GCalignR")` and clicking on `R code`. The datasets are pseudo-randomly created and can therefore differ from run to run. For consistency, we supply the dataset that is used to demonstrate the alignment progress with the package. An accompanying vignette *"GCalignR: Step by step"* focuses on the workflow with this package and the integration into a broader analysis pipeline. 
 
 
 ## What´s a Peak List and how to create one ?
 
 `GCalignR` performs all steps on a so called peak list. Such a list can be generated for every chromatogram, defined as the output of a Chromatograph (e.g. **G**as **C**hromatography **F**lame **I**onization **D**etector, GC-FID) that plots the measured electric current over the time course of a separation run. **Figure 1** shows a chromatogram containing five peaks that represent five chemicals detected in this simulated sample. Here, all the distinct peaks approximate perfect Gaussian distributions and are clearly separated.
-Essentially every vendor of a Chromatograph offers software that allow to detect peaks (i.e. compounds) in the generated signal based on procedures that take into account the shape of a peak, the noise level of the signal and many things more that are out of the scope of `GCalignR` and we refer to specialised resources [@Grob.2004]. Nevertheless, the quality of the chromatograms as well as a sophisticated way to detect and quantify peaks is a crucial step before one should start to think about aligning peaks for downstream analysis!
+Essentially every vendor of a Chromatograph offers software that allows to detect peaks (i.e. substances) in the generated signal based on procedures that take into account the shape of a peak, the noise level of the signal and many things more that are out of the scope of `GCalignR` and we refer to specialised resources [@Grob.2004]. Nevertheless, the quality of the chromatograms as well as a sophisticated way to detect and quantify peaks is a crucial step before one should start to think about aligning peaks for downstream analysis!
 
 ```{r, fig.cap="Figure 1. A Chromatogram plots an intensity signal over the course of a separation run.", echo=F}
 set.seed(123)
@@ -59,7 +59,7 @@ df <- data.frame(row.names = c("Peak 1", "Peak 2", "Peak 3", "Peak 4", "Peak 5")
 knitr::kable(df,digits = 2)
 ```
 
-**Figure 3** shows chromatograms of four samples "A1" to "A4" that were analysed on the same fictive GC-FID run. These peaks can be individually characterised by their retention times (see labels on each peak). In this small set of samples, one can easily see that several peaks appear in consistent temporal sequence with increasing retention times in sample order approximating intervals of 0.7 minutes. Here, it would be possible to account for this variation manually, but consider a scenario where there are many more samples and peaks, perhaps in noisier chromatograms.
+**Figure 3** shows chromatograms of four samples "A1" to "A4" that were analysed on the same hypothetical GC-FID run. These peaks can be individually characterised by their retention times (see labels on each peak). In this small set of samples, one can easily see that several peaks appear in consistent temporal sequence with increasing retention times in sample order approximating intervals of 0.7 minutes. Here, it would be possible to account for this variation manually, but consider a scenario where there are many more samples and peaks, perhaps in noisier chromatograms.
 For this reason we developed `GCalignR` and implemented simple algorithms that are explained below. Before these chromatograms can be analysed, we need to obtain peak retention times and peak heights again. Additionally we need to format it for using `GCalignR` to align the peaks. `GCalignR` is distributed with sample files that can be used as templates.
 
 ```{r, results='hide', echo = FALSE, fig.cap="Figure 3. Overlay of Chromatograms from four samples"}
@@ -118,13 +118,13 @@ write.table(round(dat_mat,2), row.names = F, col.names = F, sep = "\t")
 
 ## Aligning peak lists
 
-Over the course of the analytic pipeline, retention times of the same substance can vary for a number of reasons that include column ageing, perturbations of the carrier gas flow or temperature fluctuations, all of which can be avoided with varying success. `GCalignR` comes into place, when a question regarding the similarity of a number of samples is addressed by analysing their chemical composition. For this purpose it is crucial to cluster peaks that belong to the same substance across samples. 
+Over the course of the analytic pipeline, retention times of the same substance can vary for a number of reasons that include column ageing, perturbations of the carrier gas flow or temperature fluctuations, all of which can be avoided with varying success. `GCalignR` comes into place, when a question regarding the similarity of a number of samples is addressed by analysing their chemical composition. For this purpose it is crucial to cluster peaks that belong to the putatively homologous substance across samples. 
 All alignment steps take only the retention time of a peak into account and are embedded within a single function `align_chromatograms` that conducts the alignment sequentially. Any other variable included in the dataset remains always associated with the retention time of the peak and is not treated any further. The single steps undertaken by the function to align the data can be traced back from the output that is returned after execution of `align_chromatograms`.
 
-### Linear Drift
+### Full alignment of peaks lists
 
-The first step in the alignment acts on linear drifts across samples. Therefore, a reference sample is required that will be selected automatically, by picking the sample with the highest average similarity to all others samples based on the original retention times. Otherwise, a reference can be selected manually. A suitable reference would be a sample that is *a priori* expected to be similar to all other samples by sharing a proportion of substances. It is advisable to analyse at least one sample under identical conditions with two-dimensional techniques (e.g. GC-MS) and use this as a reference in order to obtain valuable information on the chemical composition behind some of the peaks. Linear shifts between each sample and the reference are evaluated in a pair-wise comparison similar to a cross-correlation based on the peak retention time alone. Thereby, the sample is slided in a user-defined window in discrete time steps. 
-**Figure 4** illustrates this for two samples (Sample "B" & "C"), where the linear shift was evaluated by in a window ranging from -2 to +2 minutes. Here, the "true" linear shift between reference and sample is approximated by searching for the minimum total deviation in retention times between all reference peaks and the closest peak in a sample. When more than one shift size (including 0!) yield to the same similarity score, the smallest value is taken to avoid overshooting. In this example, Sample B is shifted by - 2 and Sample C by + 1, whereas all other considered steps would result in greater deviations in retention times to the reference peaks. However, it is important to note that putatively three peaks are shared between the reference Sample A and Sample B and Sample C respectively, but due to non-linear perturbations not all peaks align well after the full alignment took place. 
+The first step in the alignment acts on linear drifts across samples. Therefore, a reference sample is required that will be selected automatically, by picking the sample with the highest average similarity to all others samples based on the original retention times. Otherwise, a reference can be selected manually. Linear shifts between each sample and the reference are evaluated in a pairwise comparison similar to a cross-correlation based on the peak retention time alone. Thereby, the sample is slided in a user-defined window in discrete time steps. 
+**Figure 4** illustrates this for two samples (Sample "B" & "C"), where the linear shift was evaluated by in a window ranging from -2 to +2 minutes. Here, the "true" linear shift between reference (Sample A) and each sample is approximated by searching for the minimum total deviation in retention times between all reference peaks and the closest peak in a sample. When more than one shift size (including 0!) yield to the same similarity score, the smallest value is taken to avoid overshooting. In this example, Sample B is shifted by - 2 and Sample C by + 1, whereas all other considered steps would result in greater deviations in retention times to the reference peaks. However, it is important to note that putatively three peaks are shared between the reference Sample A and Sample B and Sample C respectively, but due to non-linear perturbations not all peaks align well after the full alignment took place. 
 
 ```{r, eval = FALSE, echo = FALSE, fig.cap="Figure 4. Corrected linear drift between Reference and Focal sample at a shift of -1"}
 ## Not executed for computational reasons. A warning is raised due to NAs in the data frame.
@@ -220,10 +220,10 @@ knitr::include_graphics(path = "Lin_Shift.png")
 
 
 
-### Aligning individual peaks
+### Partial alignment of peaks
 
-As shown in **Figure 4**, non-linear errors in retention times need to be accounted for in order to cluster similar retention times that belong putatively to the same substance. This step of the algorithm takes the linearly adjusted peak retention times as input, but does not manipulate them any further. 
-All computation is from now onwards based on the concept of a retention matrix, in which columns represent samples and rows are the operational unit of a substance. Because of the more or less subtle variations in the retention times, the core alignment is focusing at only one substance (i.e. row of the matrix) at a time and works itself through all the substances it will get to see, starting with the first row in the matrix. **Figure 5** shows the matrix operations for an already linearly corrected example. All the operations are based on the comparison of a focal retention time with the mean retention time of all previous samples within the same row, always starting with the first column. If a focal retention times deviates significantly from the mean a matrix manipulation is conducted to solve the conflict. Whenever the focal peak has a larger retention time, a gab is introduced by inserting a zero and moving the peak to the next row, whereas a gap is introduced in all previous samples is introduced if the focal peak has a smaller retention time value. Here, the significance is determined by user-defined threshold that is set by the parameter `max_diff_peak2mean = 0.5` in this example. In order to follow the steps more easily, the order of samples is kept constant in this illustration, whereas the implemented algorithm uses random starts for each row to prevent any systematic errors that remained until now, from inflating results. 
+As shown in **Figure 4**, non-linear errors in retention times need to be accounted for in order to cluster similar retention times that belong to putatively homologous substances. This step of the algorithm takes the linearly adjusted peak retention times as input, but does not manipulate them any further. 
+All computation is from now onwards based on the concept of a retention matrix, in which columns represent samples and rows are the operational unit of a substance. Because of the more or less subtle variations in the retention times, the core alignment is focusing one substance (i.e. row of the matrix) at a time and works itself through all the substances it will get to see, starting with the first row in the matrix. **Figure 5** shows the matrix operations for an already linearly corrected example. All the operations are based on the comparison of a focal retention time with the mean retention time of all previous samples within the same row, always starting with the first column. If a focal retention time deviates significantly from the mean a matrix manipulation is conducted to solve the conflict. Whenever the focal peak has a larger retention time, a gap is introduced by inserting a zero and moving the peak to the next row, whereas a gap is introduced in all previous samples is introduced if the focal peak has a smaller retention time value. Here, a user-defined threshold, set by the parameter `max_diff_peak2mean = 0.5` in this example, defines when manipulations will be conducted. In order to follow the steps more easily, the order of samples is kept constant in this illustration, whereas the implemented algorithm uses random starts for each row to prevent any systematic errors that remained until now, from inflating results. 
 
 ```{r, echo=FALSE, fig.cap="Figure 5. Alignment of individual peaks based on retention time matrices. Colours represent substances, black rectangles highlight causes of manipulations.",out.width = "750px"}
 knitr::include_graphics("align_peaks.png",dpi = 300)
@@ -231,15 +231,15 @@ knitr::include_graphics("align_peaks.png",dpi = 300)
 
 ## Merging rows
 
-Looking at final retention matrix (bottom left) in Figure 5, we immediately see that rows 1 and 2 have very similar mean retention times. Here, the difference is even smaller than specified by `max_diff_peak2mean` and the separation was triggered *accidentally* by comparing the two extreme values prior to the first manipulation (upper left matrix). For this and similar situations, a third step in the alignment is available that tries to merge rows that differ by (i) less than `min_diff_peak2peak` in mean retetion times and (ii) show a clear pattern, by which not a single sample shows peaks in all of the focal rows. Setting `min_diff_peak2peak` to a value of two-times `max_diff_peak2mean` will solve this conflict by merging both of the rows (Figure 6).
+Looking at final retention matrix (bottom left) in Figure 5, we immediately see that rows 1 and 2 have very similar mean retention times. Here, the difference is even smaller than specified by `max_diff_peak2mean` and the separation was triggered *accidentally* by comparing the two extreme values prior to the first manipulation (upper left matrix). For this and similar situations, a third step in the alignment is available that tries to merge rows that differ by (i) less than `min_diff_peak2peak` in mean retention times and (ii) show a clear pattern, by which not a single sample shows peaks in all of the focal rows. Setting `min_diff_peak2peak` to a value of two-times `max_diff_peak2mean` will solve this conflict by merging both of the rows (Figure 6).
 
 ```{r, echo=FALSE, fig.cap="Figure 6. Merging redudant rows of homologous peaks.",out.width = "500px"}
 knitr::include_graphics("merge_row.png",dpi = 300)
 ```
 
-## Applying the algorithms to a real dataset
+## Aligning the a hypothetical dataset
 
-Now we are going to apply the alignment to a dataset that is highly similar to the example depicted in Figure 3. Here, all peaks are shown with the same shape, which is appropriate as we are only interested in the retention times. Based on the inspection of the graph shown in **Figure 7**, we pick "A2" as a reference and take into account that peaks of "A3" and "A4" are seemingly postponed by approx. 0.7 and 1.4 minutes, whereas "A1" shows peaks 0.7 minutes earlier. Therefore, a good estimate for the required window size to correct for linear shifts is given by `max_linear_shift = 1.6` yielding to a window of 1.6 Minutes around the retention times of the reference sample, including a safety margin. We can check if the search window is of appropriate size after executing the algorithm. For aligning individual peaks were stick to the default values `max_diff_peak2mean = 0.02` and `min_diff_peak2peak = 0.08` for now.
+Now we are going to apply the alignment to a dataset that is highly similar to the example depicted in Figure 3. Here, all peaks are shown with the same shape, which is appropriate as we are only interested in the retention times. Based on the inspection of the graph shown in **Figure 7**, we pick "A2" as a reference and take into account that peaks of "A3" and "A4" are seemingly postponed by approx. 0.7 and 1.4 minutes, whereas "A1" shows peaks 0.7 minutes earlier. Therefore, a good estimate for the required window size to correct for linear shifts is given by `max_linear_shift = 1.6` yielding to a window of 1.6 Minutes around the retention times of the reference sample, including a safety margin. We can check if the search window is of appropriate size after executing the algorithm. For aligning individual peaks were stick to the default values `max_diff_peak2mean = 0.02` and `min_diff_peak2peak = 0.08` for now. 
 
 ```{r, fig.cap="Figure 7. Chromatographic representation of the dataset prior to alignment", eval = FALSE}
 ## path to the data
@@ -281,7 +281,7 @@ x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "shifted", sho
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 ```
 
-We immediately see that the peaks were shifted accordingly and start to cluster as expected (**Figure 9**). However, there is variation in retention times among the samples within the visually separated clusters. Therefore, we utilise another algorithm that evaluates the observed variance and decides which peaks belong to the same substance. These steps were already executed with the call to `align_chromatograms` and we can inspect the results by simply defining `step = "fully_aligned"`. This time we also set `show_num = T` in order to print the number of samples *behind* each peak. This is helpful, because peaks of the same substance will overlap (**Figure 10**). 
+We immediately see that the peaks were shifted accordingly and start to cluster as expected (**Figure 9**). However, there is variation in retention times among the samples within the visually separated clusters. Therefore, we utilise another algorithm that evaluates the observed variance and decides which peaks belong to the same substance. These steps were already executed with the call to `align_chromatograms` and we can inspect the results by simply defining `step = "fully_aligned"`. This time we also set `show_num = T` in order to print the number of samples *behind* each peak. This is helpful, because peaks of the same substance will overlap indicating that the retention time is exactly matched (**Figure 10**). 
 
 ```{r, results="hide", fig.cap= "Figure 10. Aligned peaks are represented by the mean retention time of a substance "}
 x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "aligned", show_num = T, plot = F)
@@ -298,17 +298,8 @@ x[["ggplot"]] + ggplot2::facet_wrap(~sample, ncol = 1) + ggplot2::scale_color_br
 
 ## Remarks
 
-Running `align_chromatograms` with default settings will be a good starting point for aligning a dataset and we were able to show that parameter settings are generally robust [@Ottensmann.2017]. However, every dataset has unique features that will require to change one or more of the key parameters `max_linear_shift`, `max_diff_peak2mean` and `min_diff_peak2peak`. The parameter `max_linear_shift` has a large impact on the runtime of the alignment procedure and should not be set to large values without good reason.
-For the example above, we created a dataset by picking peaks pseudo-randomly and adding arbitrary perturbations. Especially the amplitude of linear drift in the range of minutes is not expected in *real life* applications of chromatography and was used to illustrate the principles. When one works with experimental data we suggest to use the original chromatograms in combination with the `draw_chromatogram` tool to explore the data carefully, for example by looking at subsets of samples and different time scales. All of the optional parameters that enable options of filtering and preprocessing need to be applied with caution always. For example, excluding peaks that are unique for a single sample is adequate for pattern comparative approaches but not helpful for charactersing the composition of a sample. 
-In another vignette `GCalignR step by step` we focus on a more complicated dataset and illustrate how `GCalignR` can be used within a broader workflow.
-
-## Session info
-***
-```{r, echo=FALSE}
-utils::sessionInfo()
-```
-*** 
+Running `align_chromatograms` with default settings will be a good starting point for aligning a dataset and we were able to show that parameter settings are generally robust [@Ottensmann.2017]. However, every dataset has unique features that will require to change one or more of the two parameters `max_diff_peak2mean` and `min_diff_peak2peak`.
+For the example above, we created a dataset by picking peaks pseudo-randomly and adding arbitrary perturbations. Especially the amplitude of linear drift in the range of minutes is not expected in *real life* applications of chromatography and was used to illustrate the principles. When one works with experimental data we suggest to use the original chromatograms in combination with the `draw_chromatogram` tool to explore the data carefully, for example by looking at subsets of samples and different time scales. All of the optional parameters that enable options of filtering and preprocessing need to be applied with caution. For example, excluding peaks that are unique for a single sample is adequate for similarity analyses but not helpful for characterising the composition of a sample and is also possible afterwards. 
+In another vignette `GCalignR step by step` we focus on a empirical dataset and illustrate how `GCalignR` can be used within a broader workflow.
 
 ## References
-
-

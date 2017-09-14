@@ -4,7 +4,7 @@ Version: 1.0.0
 Date: 2017-09-15
 Authors@R: c(person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre")),
     person("Martin", "Stoffel", email = "martin.adam.stoffel@gmail.com", role = c("aut")),
-    person("Hazel", "Nichols", role = c("aut")),
+    person("Hazel J.", "Nichols", role = c("aut")),
     person("Joseph I.", "Hoffman", role = c("aut")))
 Description: Aligns peak based on peak retention times and matches homologous peaks
     across samples. The underlying alignment procedure comprises three sequential steps.

@@ -1,10 +1,9 @@
-# GCalignR 0.1.0.9000
-
+# GCalignR 1.0.0
 ___
 
 ## Changes since release 0.1.0
 
-### New functions are exported
+### New functions are implemented
 * `choose_optimal_reference` offers an automatism to pick suitable references.
 * `draw_chromatograms` allows to represent a peak list in form of chromatogram.
 * `remove_blanks`allows to get rid of peaks that represent contamination after aligning a dataset
@@ -34,7 +33,7 @@ ___
 * We included a second vignette that explains the algorithm and the supported data in detail.
 
 ### Documentation
-* Helpfiles were rewritten to enhance clarity and solve some issues
+* Helpfiles were rewritten to enhance clarity.
 ___
 
 

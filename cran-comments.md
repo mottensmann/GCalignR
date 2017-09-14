@@ -1,5 +1,5 @@
-## Resubmission
-This is a resubmission. In this version I have implemented the following changes:
+## GCalignR version 1.0.0
+In this version I have implemented the following changes:
 
 1. The documentation of the package was significantly enhanced and a new vignette was added.
 2. More efficient coding allowed to reduce the computation time of several functions.

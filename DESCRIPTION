@@ -13,7 +13,7 @@ Description: Aligns peak based on peak retention times and matches homologous pe
     a user-defined retention time window to cluster homologous peaks (3) Merging rows
     that are likely representing homologous substances (i.e. no sample shows peaks in 
     both rows and the rows have similar retention time means). The algorithm is described in detail
-    in Ottensmann et al. submitted <doi:10.1101/110494>
+    in Ottensmann et al. submitted <doi:10.1101/110494>.
 Depends:
     R (>= 3.2.5)
 Imports:

@@ -33,5 +33,5 @@
 \code{\link{simple_chroma}} creates simple chromatograms for testing and illustration purposes.
 }
 \details{
-The usage of the package is explained in the vignettes distributed with \strong{GCalignR}. Type \code{browseVignettes("GCalignR")} access them.
+More details on the package are found in the vignettes that can be accessed via \code{browseVignettes("GCalignR")}.
 }

@@ -1,14 +1,13 @@
 ## ---- echo = FALSE-------------------------------------------------------
 library(knitr)
-knitr::opts_chunk$set(collapse = TRUE, comment = ">", cache = FALSE,
-    fig.width = 6, fig.height = 6) # warning = FALSE
+knitr::opts_chunk$set(cache = FALSE, fig.width = 8, fig.height = 8,highlight = TRUE,comment = "#>",strip.white = TRUE,collapse = TRUE, fig.align = "center", cache = F, warning = F, message = F)
 
-## ---- out.width = 650, fig.retina = NULL, echo = FALSE, fig.cap="Figure 1: Extended Workflow"----
+## ---- out.width = 650, fig.retina = NULL, echo = FALSE, fig.cap="Extended Workflow using GCalignR in the analysis of chemical similarity patterns."----
 knitr::include_graphics("workflow.png") 
 
 ## ---- eval = FALSE-------------------------------------------------------
 #  install.packages("devtools")
-#  devtools::install_github("mastoffel/GCalignR", build_vignettes = TRUE)
+#  devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
 
 ## ------------------------------------------------------------------------
 library("GCalignR") 
@@ -16,10 +15,10 @@ library("GCalignR")
 ## ---- eval = FALSE-------------------------------------------------------
 #  ?GCalignR # documentation
 
-## ---- out.width = 650, fig.retina = NULL, echo = FALSE,fig.align='center', fig.cap="Figure 2: Example of a input datafile. Only the head of the file is shown."----
+## ---- out.width = 650, fig.retina = NULL, echo = FALSE,fig.align='center', fig.cap="Example of a input datafile. Only the head of the file is shown."----
 knitr::include_graphics("example.jpg") 
 
-## ---- out.width = 650, fig.retina = NULL, echo = FALSE, fig.cap="Figure 3: Tail of the input file"----
+## ---- out.width = 650, fig.retina = NULL, echo = FALSE, fig.cap="Tail of the input file"----
 knitr::include_graphics("example2.jpg") 
 
 ## ------------------------------------------------------------------------
@@ -57,10 +56,10 @@ peak_interspace(data = peak_data, rt_col_name = "time",
 ## ------------------------------------------------------------------------
 data("aligned_peak_data") 
 
-## ----message=FALSE,fig.width=8,fig.height=8, fig.cap="Figure 5: Heatmap showing the distribution of peaks and the variability within substances"----
+## ----message=FALSE,fig.width=8,fig.height=8, fig.cap="Heatmap showing the distribution of peaks and the variability within substances"----
 gc_heatmap(aligned_peak_data,threshold = 0.03) 
 
-## ----message=FALSE,fig.width=8,fig.height=8, fig.cap="Figure 6: Summary plot of the aligned dataset"----
+## ----message=FALSE,fig.width=8,fig.height=8, fig.cap="Diagnostic plot of the aligned dataset"----
 plot(aligned_peak_data,which_plot = "all") # Plots, can be invoked separetely
 
 ## ---- eval=TRUE----------------------------------------------------------
@@ -99,7 +98,4 @@ ggplot(data = scent_nmds,aes(MDS1,MDS2,color = colony)) +
 vegan::adonis(scent ~ peak_factors$colony,permutations = 999) 
 ## no dispersion effect
 anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony))
-
-## ---- echo=FALSE---------------------------------------------------------
-utils::sessionInfo()
 

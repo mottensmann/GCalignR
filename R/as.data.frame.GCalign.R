@@ -10,7 +10,8 @@
 #'
 #' @author Meinolf Ottensmann (meinolf.ottensmann@@web.de) & Martin Stoffel (martin.adam.stoffel@@gmail.com)
 #'
-#' @example
+#' @examples
+#' data("aligned_peak_data")
 #' out <- as.data.frame(x = aligned_peak_data)
 #'
 #' @export

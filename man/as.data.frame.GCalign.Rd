@@ -2,7 +2,7 @@
 % Please edit documentation in R/as.data.frame.GCalign.R
 \name{as.data.frame.GCalign}
 \alias{as.data.frame.GCalign}
-\title{Coearce aligned data to a data frame}
+\title{Output aligned data in form of a data frame for each variable}
 \usage{
 \method{as.data.frame}{GCalign}(x, row.names = NULL, optional = FALSE, ...)
 }
@@ -21,11 +21,13 @@
 
 \item{...}{additional arguments to be passed to or from methods.}
 }
-\value{
-A list of data frames for each variable of the dataset.
-}
 \description{
-Coverts aligned datasets into a data frame with columns for each peak and rows representing samples.
+Based on an object of class "GCalign" that was created using \code{\link{align_chromatograms}}, a list of data frames for each variable in the dataset is returned. Within data frames rows represent substances and columns are variables (i.e. substances).
+}
+\examples{
+data("aligned_peak_data")
+out <- as.data.frame(x = aligned_peak_data)
+
 }
 \author{
 Meinolf Ottensmann (meinolf.ottensmann@web.de) & Martin Stoffel (martin.adam.stoffel@gmail.com)

@@ -12,7 +12,7 @@ vignette: >
  
 ```{r, echo = FALSE}
 library(knitr)
-knitr::opts_chunk$set(cache = FALSE, fig.width = 8, fig.height = 8,tidy = TRUE,highlight = TRUE,comment = "#>",strip.white = TRUE,collapse = TRUE, fig.align = "center", cache = F, warning = F, message = F)
+knitr::opts_chunk$set(cache = FALSE, fig.width = 8, fig.height = 8,highlight = TRUE,comment = "#>",strip.white = TRUE,collapse = TRUE, fig.align = "center", cache = F, warning = F, message = F)
 ```
 
 ## Introduction

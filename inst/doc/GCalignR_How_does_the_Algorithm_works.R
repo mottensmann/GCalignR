@@ -199,18 +199,15 @@ print(aligned[["Logfile"]][["LinearShift"]])
 plot(aligned, which_plot = "shifts")
 
 ## ---- results="hide", fig.cap="Figure 9. Correcting linear drift reduces the gaps between homologous peak retention times"----
-x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "lin_aligned", show_rt = F, show_num = F, plot = F)
+x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "shifted", show_rt = F, show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 
 ## ---- results="hide", fig.cap= "Figure 10. Aligned peaks are represented by the mean retention time of a substance "----
-x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = T, plot = F)
+x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "aligned", show_num = T, plot = F)
 x[["ggplot"]] + ggplot2::scale_color_brewer(palette = "Dark2")
 
 ## ---- fig.cap="Figure 11. Suplots are a convenient means of visualising aligned peak lists"----
 ## for using ggplot2::facet_wrap we need to get rid of the annotations
-x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "fully_aligned", show_num = F, plot = F)
+x <- draw_chromatogram(data = aligned, rt_col_name = "rt", step = "aligned", show_num = F, plot = F)
 x[["ggplot"]] + ggplot2::facet_wrap(~sample, ncol = 1) + ggplot2::scale_color_brewer(palette = "Dark2")
-
-## ---- echo=FALSE---------------------------------------------------------
-utils::sessionInfo()
 

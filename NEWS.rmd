@@ -36,5 +36,12 @@ ___
 * Helpfiles were rewritten to enhance clarity.
 ___
 
+# GCalignR 1.0.1-beta
+___
+
+## Changes since release 1.0.0
+* A bugfix was applied for handling multiple blanks correctly.
+___
+
 
 

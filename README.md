@@ -10,13 +10,13 @@ GCalignR
 
 Installing GCalignR:
 
--   The current release 0.1.0 is on CRAN. An update with improved performance and faster algorithm will be released soon!
+-   The current release 1.0.0 is on CRAN.
 
 ``` r
 install.packages("GCalignR", dependencies = T)
 ```
 
--   We are currently working a lot on the package functionalities and the documentation. Get the most recent beta release from GitHub with ...
+-   The beta release 1.0.1-beta is availabe via GitHub.
 
 ``` r
     if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -24,18 +24,7 @@ install.packages("GCalignR", dependencies = T)
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    devtools::install_github("mottensmann/GCalignR@0.2.0-beta", build_vignettes = TRUE)
-```
-
-... or try the faster developmental version ...
-
-``` r
-    if (!("devtools" %in% rownames(installed.packages()))) { 
-    install.packages("devtools")
-    } else if (packageVersion("devtools") < 1.6) {
-    install.packages("devtools")
-    }
-    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
+    devtools::install_github("mottensmann/GCalignR@1.0.1-beta", build_vignettes = TRUE)
 ```
 
 ### Get started with GCalignR
@@ -50,4 +39,4 @@ If you encounter bugs or if you have any suggestions for improvement, just conta
 
 ### Reference
 
-[Ottensmann, M., Stoffel, M.A., Nichols, H., Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under revision*.](https://doi.org/10.1101/110494)
+[Ottensmann, M., Stoffel, M.A., Nichols, H.J. Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under review*.](https://doi.org/10.1101/110494)

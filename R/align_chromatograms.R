@@ -301,19 +301,15 @@ for (R in 1:iterations) {
 if (!is.null(blanks)) {
     cat("Remove contaminations and remove blanks ... ")
     # delete peaks present in blanks
-    delete_blank <- function(blank, gc_peak_list_aligned) {
-        # indices of peaks
-    del_substances <- which(gc_peak_list_aligned[[blank]][[rt_col_name]] > 0)
-    # remove peaks, delete row
-    chroma_out <- lapply(gc_peak_list_aligned, function(x) x[-del_substances,])
-    # removes the blank from the list
-    chroma_out[blank] <- NULL
-    return(chroma_out)
-    }
+
     # Number of Peaks including Blanks
     N <- nrow(gc_peak_list_aligned[[1]])
-    # delete all blanks
-for (i in blanks) {gc_peak_list_aligned <- delete_blank(i, gc_peak_list_aligned)}
+    # delete all blanks and peaks found in those
+
+    gc_peak_list_aligned <- delete_blank(blanks = blanks,
+                                         gc_peak_list_aligned = gc_peak_list_aligned,
+                                         rt_col_name = rt_col_name)
+
     N <- N -  nrow(gc_peak_list_aligned[[1]])
     Logbook[["Filtering"]]["Blank_Peaks"] <- N
     Logbook[["Aligned"]]["blanks"] <- N

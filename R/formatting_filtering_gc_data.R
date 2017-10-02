@@ -68,6 +68,24 @@ correct_colnames <- function(gc_peak_df,col_names) {
     return(gc_peak_df)
 }#correct_colnames
 
+delete_blank <- function(blanks, gc_peak_list_aligned, rt_col_name) {
+
+    # indices of peaks
+    delete <- sort(unique(unlist(lapply(blanks, function(fx) {
+        which(gc_peak_list_aligned[[fx]][[rt_col_name]] > 0)
+    }))))
+
+    chroma_out <- gc_peak_list_aligned
+
+    # remove blanks
+    chroma_out[blanks] <- NULL
+
+    # remove peaks from samples
+    if (length(delete) > 0) chroma_out <- lapply(chroma_out, function(x) x[-delete,])
+
+    return(chroma_out)
+}
+
 delete_empty_rows <- function(gc_peak_df, average_rts){
     gc_peak_df <- gc_peak_df[!is.na(average_rts), ]
     gc_peak_df
@@ -300,7 +318,7 @@ rt_cutoff <- function(gc_peak_df, rt_col_name, low = NULL, high = NULL) {
     return(out)
 }#rt_cutoff
 
-rt_extract <- function(gc_peak_list,rt_col_name){
+rt_extract <- function(gc_peak_list, rt_col_name) {
     # blanks and del_single_sub are removed, since their removal
     # is of importance only for the last step, where it is applied
     # outside this function call
@@ -312,7 +330,7 @@ rt_extract <- function(gc_peak_list,rt_col_name){
     rt_mat2 <- rt_mat
     rt_mat2[rt_mat2 == 0] <- NA
     colnames(rt_mat) <-
-        as.character(colMeans(rt_mat2,na.rm = T)) # No rounding, are not plotted as labels anyway
+    as.character(colMeans(rt_mat2,na.rm = T)) # No rounding, are not plotted as labels anyway
     rt_mat <- cbind(id,rt_mat)
 }#rt_extract
 

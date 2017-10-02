@@ -33,16 +33,22 @@ remove_blanks <- function(data, blanks) {
     } else {
             stop("data is not of class GCalign or a list of data frames")
     }
-    del_peaks <- function(x, data) {
+
+    del_peaks <- function(blanks, data) {
         # get indices
-        del_substances <- which(data[[x]][[rt_col_name]] > 0)
-        # remove respective rows
-        chroma_out <- lapply(data, function(x) x[-del_substances,])
+
+        delete <- sort(unique(unlist(lapply(blanks, function(fx) {
+            which(data[[fx]][[rt_col_name]] > 0)
+        }))))
+
         # remove blanks
-        chroma_out[x] <- NULL
-        return(chroma_out)
+        data[blanks] <- NULL
+
+        # remove peaks from samples
+        if (length(delete) > 0) data <- lapply(data, function(x) x[-delete,])
+        return(data)
     }
-    for (i in blanks) data <- del_peaks(x = i, data = data)
+    data <- del_peaks(blanks = blanks, data = data)
 return(data)
     }
 

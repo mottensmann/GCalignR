@@ -39,7 +39,7 @@ install.packages("GCalignR", dependencies = T)
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    devtools::install_github("mottensmann/GCalignR@1.0.1-beta", build_vignettes = TRUE)
+    devtools::install_github("mottensmann/GCalignR@v1.0.1-beta", build_vignettes = TRUE)
 ```
 ### Get started with GCalignR
 

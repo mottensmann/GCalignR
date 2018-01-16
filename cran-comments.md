@@ -1,11 +1,9 @@
-## GCalignR version 1.0.0
+## GCalignR version 1.0.1
 In this version I have implemented the following changes:
 
-1. The documentation of the package was significantly enhanced and a new vignette was added.
-2. More efficient coding allowed to reduce the computation time of several functions.
-3. Progress bars have been implemented to estimate run times of the algorithm.
-4. The functionality is enhanced by adding several new functions to the package.
-5. A CITATION file was added to link the package to our manuscript that is currently under revision. 
+1. A bug was fixed that prevented the use of multiple blank samples
+2. Progress bars are removed in non-interactive R sessions
+3. A unit test that failed on some environments was corrected 
 
 ## Release summary
 

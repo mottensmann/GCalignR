@@ -58,9 +58,11 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
         ##############
         total <- nrow(gc_peak_list[[1]])
         # create progress bar
+
+        if (interactive()) {
         pb <- utils::txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
-        #Sys.sleep(1)
         utils::setTxtProgressBar(pb, ifelse(is.numeric(current_row), current_row, total))
+        }
         ##############
 
 
@@ -108,7 +110,7 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
         current_row <- 'stop'
     }
     }
-    close(pb) # end of the progress bars
+    if (exists("pb")) close(pb)
 
     return(gc_peak_list)
 }

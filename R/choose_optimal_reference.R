@@ -62,7 +62,7 @@ choose_optimal_reference <- function(data = NULL, rt_col_name = NULL, sep = "\t"
 #### ################## ####
 df_median_sim_score <- function(gc_peak_list, rt_col_name, method) {
 
-    pbapply::pboptions(type = "timer", char = "+", style = 1) # set up timer
+    pbapply::pboptions(char = "+", style = 1) # set up timer
     temp <- pbapply::pblapply(gc_peak_list, function(x) median_sim_score(gc_peak_list = gc_peak_list, ref_df = x, rt_col_name = rt_col_name, method = method))
     temp <- do.call("rbind", temp)
     ## number of peaks per sample

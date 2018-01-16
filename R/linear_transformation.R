@@ -149,7 +149,7 @@ if (max_linear_shift > 0) {
     for (j in 1:length(temp)) {
         temp[[j]][["id"]] <- id[j]
     }
-    pbapply::pboptions(type = "timer", char = "+", style = 1)
+    pbapply::pboptions(char = "+", style = 1)
     chrom_shift <- pbapply::pblapply(X = temp,FUN =  shift_rts, ref_df = ref, max_linear_shift = max_linear_shift, step_size = step_size, method = method)
     Logbook[["LinearShift"]] <- Logbooker(chrom_shift)
     chroma_aligned <- lapply(chrom_shift,function(x) x[-2])

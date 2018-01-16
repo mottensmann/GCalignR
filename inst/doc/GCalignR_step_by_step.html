@@ -12,7 +12,7 @@
 
 <meta name="author" content="Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman" />
 
-<meta name="date" content="2017-09-14" />
+<meta name="date" content="2018-01-16" />
 
 <title>GCalignR Step by Step</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">GCalignR Step by Step</h1>
 <h4 class="author"><em>Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman</em></h4>
-<h4 class="date"><em>2017-09-14</em></h4>
+<h4 class="date"><em>2018-01-16</em></h4>
 
 
 
@@ -94,7 +94,7 @@ Extended Workflow using GCalignR in the analysis of chemical similarity patterns
 <h2>Installation</h2>
 <p>The development version can be downloaded from <a href="https://github.com/mottensmann/GCalignR">GitHub</a> with the following code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>) 
-devtools::<span class="kw">install_github</span>(<span class="st">&quot;mottensmann/GCalignR&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>) </code></pre></div>
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;mottensmann/GCalignR&quot;</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>) </code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;GCalignR&quot;</span>) </code></pre></div>
 <p>The package documentation can be accessed with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">?GCalignR <span class="co"># documentation</span></code></pre></div>
@@ -203,7 +203,7 @@ Figure 4: Histogram of Peak interspaces
 <div id="align-chromatograms" class="section level3">
 <h3>Align chromatograms</h3>
 <p>The core function in <code>GCalignR</code> is <code>align_chromatograms</code>, which will align the peak lists with the algorithm described above. See <code>?align_chromatograms</code> for a detailed description of the arguments. The alignment process will take a few minutes to several hours on a standard computer depending on mainly three factors; (1) the number of samples and (2) the number of peaks per sample and (3) the number of substances that are classified during the alignment procedure. Progress bars and run time estimates (where possible) indicate the progress of the alignment run.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peak_data &lt;-<span class="st"> </span>peak_data[<span class="dv">1</span>:<span class="dv">4</span>] <span class="co"># subset for speed reasons</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peak_data &lt;-<span class="st"> </span>peak_data[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>] <span class="co"># subset for speed reasons</span>
 peak_data_aligned &lt;-<span class="st"> </span><span class="kw">align_chromatograms</span>(<span class="dt">data =</span> peak_data, <span class="co"># input data</span>
     <span class="dt">rt_col_name =</span> <span class="st">&quot;time&quot;</span>, <span class="co"># retention time variable name </span>
     <span class="dt">rt_cutoff_low =</span> <span class="dv">15</span>, <span class="co"># remove peaks below 15 Minutes</span>
@@ -216,8 +216,8 @@ peak_data_aligned &lt;-<span class="st"> </span><span class="kw">align_chromatog
     <span class="dt">delete_single_peak =</span> <span class="ot">TRUE</span>, <span class="co"># delete peaks that are present in just one sample </span>
     <span class="dt">write_output =</span> <span class="ot">NULL</span>) <span class="co"># add variable names to write aligned data to text files</span></code></pre></div>
 <p>The aligned data matrices are now stored in data frames which can be accessed as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peak_data_aligned$aligned$time <span class="co"># to access the aligned retention times</span>
-peak_data_aligned$aligned$area <span class="co"># to access the aligned area data</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peak_data_aligned<span class="op">$</span>aligned<span class="op">$</span>time <span class="co"># to access the aligned retention times</span>
+peak_data_aligned<span class="op">$</span>aligned<span class="op">$</span>area <span class="co"># to access the aligned area data</span></code></pre></div>
 <p>The package includes the already aligned data set for all samples using default alignment parameter settings.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;aligned_peak_data&quot;</span>) </code></pre></div>
 </div>
@@ -278,7 +278,7 @@ Diagnostic plot of the aligned dataset
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## normalise area and return a data frame
 scent &lt;-<span class="st"> </span><span class="kw">norm_peaks</span>(aligned_peak_data, <span class="dt">conc_col_name =</span> <span class="st">&quot;area&quot;</span>,<span class="dt">rt_col_name =</span> <span class="st">&quot;time&quot;</span>,<span class="dt">out =</span> <span class="st">&quot;data.frame&quot;</span>) 
 ## common transformation for abundance data to reduce the extent of mean-variance trends
-scent &lt;-<span class="st"> </span><span class="kw">log</span>(scent +<span class="st"> </span><span class="dv">1</span>) </code></pre></div>
+scent &lt;-<span class="st"> </span><span class="kw">log</span>(scent <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) </code></pre></div>
 </div>
 <div id="visualise-patterns-by-ordination-plots-using-the-vegan-package" class="section level3">
 <h3>Visualise patterns by ordination plots using the <em>vegan</em> package</h3>
@@ -291,17 +291,17 @@ scent &lt;-<span class="st"> </span><span class="kw">log</span>(scent +<span cla
 ## keep order of rows consistent
 scent &lt;-<span class="st"> </span>scent[<span class="kw">match</span>(<span class="kw">row.names</span>(peak_factors),<span class="kw">row.names</span>(scent)),] 
 ## NMDS using Bray-Curtis dissimilarities
-scent_nmds &lt;-<span class="st"> </span>vegan::<span class="kw">metaMDS</span>(<span class="dt">comm =</span> scent, <span class="dt">distance =</span> <span class="st">&quot;bray&quot;</span>)
+scent_nmds &lt;-<span class="st"> </span>vegan<span class="op">::</span><span class="kw">metaMDS</span>(<span class="dt">comm =</span> scent, <span class="dt">distance =</span> <span class="st">&quot;bray&quot;</span>)
 ## get x and y coordinates
 scent_nmds &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(scent_nmds[[<span class="st">&quot;points&quot;</span>]])  
 ## add the colony as a factor to each sample
 scent_nmds &lt;-<span class="st"> </span><span class="kw">cbind</span>(scent_nmds,<span class="dt">colony =</span> peak_factors[[<span class="st">&quot;colony&quot;</span>]])</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## ordiplot with ggplot2
 <span class="kw">library</span>(ggplot2)
-<span class="kw">ggplot</span>(<span class="dt">data =</span> scent_nmds,<span class="kw">aes</span>(MDS1,MDS2,<span class="dt">color =</span> colony)) +
-<span class="st">    </span><span class="kw">geom_point</span>() +<span class="st"> </span>
-<span class="st">    </span><span class="kw">theme_void</span>() +<span class="st"> </span>
-<span class="st">    </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>)) +
+<span class="kw">ggplot</span>(<span class="dt">data =</span> scent_nmds,<span class="kw">aes</span>(MDS1,MDS2,<span class="dt">color =</span> colony)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_void</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;red&quot;</span>)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">theme</span>(<span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">1.25</span>,
             <span class="dt">fill =</span> <span class="ot">NA</span>), <span class="dt">aspect.ratio =</span> <span class="dv">1</span>, <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center">
@@ -315,7 +315,7 @@ NMDS plot
 <h3>Multivariate analysis using <em>adonis</em></h3>
 <p>Using <strong>adonis</strong> and <strong>betadisper</strong> we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## colony effect
-vegan::<span class="kw">adonis</span>(scent ~<span class="st"> </span>peak_factors$colony,<span class="dt">permutations =</span> <span class="dv">999</span>) 
+vegan<span class="op">::</span><span class="kw">adonis</span>(scent <span class="op">~</span><span class="st"> </span>peak_factors<span class="op">$</span>colony,<span class="dt">permutations =</span> <span class="dv">999</span>) 
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; vegan::adonis(formula = scent ~ peak_factors$colony, permutations = 999) </span>
@@ -332,7 +332,7 @@ vegan::<span class="kw">adonis</span>(scent ~<span class="st"> </span>peak_facto
 <span class="co">#&gt; ---</span>
 <span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 ## no dispersion effect
-<span class="kw">anova</span>(vegan::<span class="kw">betadisper</span>(vegan::<span class="kw">vegdist</span>(scent),peak_factors$colony))
+<span class="kw">anova</span>(vegan<span class="op">::</span><span class="kw">betadisper</span>(vegan<span class="op">::</span><span class="kw">vegdist</span>(scent),peak_factors<span class="op">$</span>colony))
 <span class="co">#&gt; Analysis of Variance Table</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Response: Distances</span>
@@ -345,7 +345,7 @@ vegan::<span class="kw">adonis</span>(scent ~<span class="st"> </span>peak_facto
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-Ottensmann.2017">
-<p>Ottensmann, Meinolf, Martin A Stoffel, Hazel Nichols, and Joseph I Hoffman. 2017. “GCalignR: An R Package for Aligning Gas-Chromatography Data.” <em>BioRxiv</em>. Cold Spring Harbor Labs Journals. doi:<a href="https://doi.org/10.1101/110494">10.1101/110494</a>.</p>
+<p>Ottensmann, Meinolf, Martin A Stoffel, Hazel Nichols, and Joseph I Hoffman. 2017. “GCalignR: An R Package for Aligning Gas-Chromatography Data.” <em>bioRxiv</em>. Cold Spring Harbor Labs Journals. doi:<a href="https://doi.org/10.1101/110494">10.1101/110494</a>.</p>
 </div>
 <div id="ref-stoffel2015chemical">
 <p>Stoffel, Martin A, Barbara A Caspers, Jaume Forcada, Athina Giannakara, Markus Baier, Luke Eberhart-Phillips, Caroline Müller, and Joseph I Hoffman. 2015. “Chemical Fingerprints Encode Mother–offspring Similarity, Colony Membership, Relatedness, and Genetic Quality in Fur Seals.” <em>Proceedings of the National Academy of Sciences</em> 112 (36). National Acad Sciences: E5005–E5012.</p>

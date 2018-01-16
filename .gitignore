@@ -3,3 +3,4 @@
 .RData
 .gitignore
 internal
+vignettes/test_GCalignR*

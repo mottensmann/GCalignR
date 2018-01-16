@@ -1,47 +1,50 @@
-# GCalignR 1.0.0
+# GCalignR 1.0.1
+
+**Bugfixes**
+
+* A bugfix was applied for handling multiple blanks correctly.
+* Progressbars are removed in non-interactive R sessions
+
 ___
 
-## Changes since release 0.1.0
+# GCalignR 1.0.0
 
-### New functions are implemented
+**New functions implemented**
+
 * `choose_optimal_reference` offers an automatism to pick suitable references.
 * `draw_chromatograms` allows to represent a peak list in form of chromatogram.
 * `remove_blanks`allows to get rid of peaks that represent contamination after aligning a dataset
 * `remove_singletons` allows to remove single peaks from the dataset after aligning
 * `merge_redundant_rows` allows to merge rows that were not recognised as redundant during the alignment by increasing the threshold value for the evaluation of similarity
 
-### Algorithm
+**Algorithm**
+
 * Using `pbapply`, we implemented progress bars to inform the user about the progress and the estimated running time of intermediate steps in the alignment of peak lists.
 * By implementing more efficient code, we were able to speed up the processing, especially picking references is faster by an order of magnitude. 
-
-#### Full alignment of peaks
 * Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for computational reasons.
 * Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile accessible in the output.
-
-#### Reference selection
 * Reference samples that are used for the coarse alignment of retention times can be picked using a novel algorithm that determines the average similarity across the dataset. 
 
-### warning messages
+**warning messages**
+
 * Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity.
 
-### Plots 
+**Plots** 
+
 * Added horizontal axis to barplots summarising peak numbers in `plot.GCalign`.
 * Changed to more prominent colours in binary heatmaps with `gc_heatmap`.
 * The function `draw_chromatograms` was added as another visualisation tool. 
 
-### Vignette
+**Vignettes**
+
 * We included a second vignette that explains the algorithm and the supported data in detail.
 
-### Documentation
+**Documentation**
+
 * Helpfiles were rewritten to enhance clarity.
+
 ___
 
-# GCalignR 1.0.1-beta
-___
-
-## Changes since release 1.0.0
-* A bugfix was applied for handling multiple blanks correctly.
-___
 
 
 

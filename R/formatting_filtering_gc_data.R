@@ -177,8 +177,11 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
         while (counter != 'stop') {
             total <- ifelse(length(similar) > 0, length(similar), 1)
             # create progress bar
+
+            if (interactive()) {
             pb <- utils::txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
             utils::setTxtProgressBar(pb, ifelse(is.numeric(counter),counter, total))
+            }
             # stop when there are no redundancies
             if (length(similar) == 0) {
                 merging <- "stop"
@@ -200,7 +203,7 @@ merge_redundant_peaks <- function(gc_peak_list,min_diff_peak2peak=0.05, rt_col_n
             }
         }
     }
-    close(pb)
+    if (exists("pb")) close(pb)
     return(gc_peak_list)
 }#merge_redundant_peaks
 

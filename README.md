@@ -10,21 +10,10 @@ GCalignR
 
 Installing GCalignR:
 
--   The current release 1.0.0 is on CRAN.
+-   The current release 1.0.1 is on CRAN.
 
 ``` r
 install.packages("GCalignR", dependencies = T)
-```
-
--   The beta release 1.0.1-beta is availabe via GitHub.
-
-``` r
-    if (!("devtools" %in% rownames(installed.packages()))) { 
-    install.packages("devtools")
-    } else if (packageVersion("devtools") < 1.6) {
-    install.packages("devtools")
-    }
-    devtools::install_github("mottensmann/GCalignR@v1.0.1-beta", build_vignettes = TRUE)
 ```
 
 ### Get started with GCalignR

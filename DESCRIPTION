@@ -1,7 +1,7 @@
 Package: GCalignR
 Title: Simple Peak Alignment for Gas-Chromatography Data
-Version: 1.0.1
-Date: 2018-01-16
+Version: 1.0.1.1
+Date: 2018-06-08
 Authors@R: c(person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre")),
     person("Martin", "Stoffel", email = "martin.adam.stoffel@gmail.com", role = c("aut")),
     person("Hazel J.", "Nichols", role = c("aut")),
@@ -13,7 +13,7 @@ Description: Aligns peak based on peak retention times and matches homologous pe
     a user-defined retention time window to cluster homologous peaks (3) Merging rows
     that are likely representing homologous substances (i.e. no sample shows peaks in 
     both rows and the rows have similar retention time means). The algorithm is described in detail
-    in Ottensmann et al. submitted <doi:10.1101/110494>.
+    in Ottensmann et al., 2018 <doi:10.1371/journal.pone.0198311>. 
 Depends:
     R (>= 3.2.5)
 Imports:

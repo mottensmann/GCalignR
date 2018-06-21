@@ -1,7 +1,6 @@
 ---
 title: "GCalignR Step by Step"
 author: "Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
 vignette: >
@@ -21,7 +20,7 @@ The input format of `GCalignR` is a peak list, which is comprised of retention t
 
 The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the raw data and the parameters used for the initial peak detection. In other words: The clearer the peaks are which were extracted from the chromatograms, the better the alignment will be. `GCalignR` has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely to be determined correctly in all cases when just retention times are used. Also, we recommend to double-check the resulting alignment with mass-spectrometry data, where available. Furthermore, replicates that were analysed using both GC-MS and GC-FID with identical gas chromatography settings can be aligned together and may be used to identify peaks and validate alignment results. 
 
-This vignette gives an quick introduction into using `GCalignR`, whereas a more detailed description of the background is found in our manuscript[@Ottensmann.2017] and in the second vignette of the package *"GCalignR: How does the Algorithm works?"*.
+This vignette gives an quick introduction into using `GCalignR`, whereas a more detailed description of the background is found in our manuscript[@Ottensmann.2017] and in the second vignette of the package *"GCalignR: How does the Algorithm work?"*.
 
 
 ## GCalignR workflow in a larger context

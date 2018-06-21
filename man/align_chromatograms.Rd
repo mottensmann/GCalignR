@@ -7,7 +7,8 @@
 align_chromatograms(data, sep = "\\t", rt_col_name = NULL,
   write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
   reference = NULL, max_linear_shift = 0.02, max_diff_peak2mean = 0.02,
-  min_diff_peak2peak = 0.08, blanks = NULL, delete_single_peak = FALSE)
+  min_diff_peak2peak = 0.08, blanks = NULL, delete_single_peak = FALSE,
+  ...)
 }
 \arguments{
 \item{data}{Dataset containing peaks that need to be aligned and matched. For every peak a arbitrary number of numerical variables can be included (e.g. peak height, peak area) in addition to the mandatory retention time. The standard format is a tab-delimited text file according to the following layout: (1) The first row contains sample names, the (2) second row column names of the corresponding peak lists. Starting with the third row, peak lists are included for every sample that needs to be incorporated in the dataset. Here, a peak list contains data for individual peaks in rows, whereas columns specifiy variables in the order given in the second row of the text file. Peak lists of individual samples are concatenated horizontally and need to be of the same width (i.e. the same number of columns in consistent order). Alternatively, the input may be a list of data frames. Each data frame contains the peak data for a single individual. Variables (i.e.columns) are named consistently across data frames. The names of elements in the list are used as sample identifiers. Cells may be filled with numeric or integer values but no factors or characters are allowed. NA and 0 may be used to indicate empty rows.}
@@ -34,6 +35,8 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 \item{blanks}{Character vector of names of negative controls. Substances found in any of the blanks will be removed from the aligned dataset, before the blanks are deleted from the aligned data as well. This is an optional filtering step.}
 
 \item{delete_single_peak}{Boolean, determining whether substances that occur in just one sample are removed or not. #'}
+
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
 }
 \value{
 Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.

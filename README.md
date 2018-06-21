@@ -8,13 +8,15 @@ GCalignR
 
 <img src="vignettes/Two_Chromas_Peak_List.png" width="864" style="display: block; margin: auto;" />
 
-Installing GCalignR:
+### Installing GCalignR:
 
 -   The current release 1.0.1 is on CRAN.
 
 ``` r
 install.packages("GCalignR", dependencies = T)
 ```
+
+-   Get the latest developmental version
 
 ### Get started with GCalignR
 
@@ -28,4 +30,4 @@ If you encounter bugs or if you have any suggestions for improvement, just conta
 
 ### Reference
 
-[Ottensmann, M., Stoffel, M.A., Nichols, H.J. Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under review*.](https://doi.org/10.1101/110494)
+[Ottensmann M, Stoffel MA, Nichols HJ, Hoffman JI (2018) GCalignR: An R package for aligning gas-chromatography data for ecological and evolutionary studies. PLoS ONE 13(6): e0198311. https://doi.org/10.1371/journal.pone.0198311](https://doi.org/10.1371/journal.pone.0198311)

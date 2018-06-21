@@ -1,11 +1,10 @@
 ---
-title: "GCalignR: How does the Algorithm works?"
+title: "GCalignR: How does the Algorithm work?"
 author: "Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
 vignette: >
-    %\VignetteIndexEntry{GCalignR How does the Algorithms works?}
+    %\VignetteIndexEntry{GCalignR How does the Algorithms work?}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---

@@ -206,7 +206,7 @@ for (i in 1:nrow(pn)) {
 
 #check resolution of chromas
 expected_peaks <- sum(as.vector(unlist(lapply(peak_list, function(x) nrow(x)))))
-if (sum(pn[["n"]]) < expected_peaks) warning("Can not resolve all peak. Decrease the peak width an run again.")
+if (sum(pn[["n"]]) < expected_peaks) warning("Can not resolve all peaks. Decrease the peak width an run again.")
 
 if (isTRUE(show_num)) {
 chroma <- chroma +

@@ -12,7 +12,6 @@
 
 <meta name="author" content="Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman" />
 
-<meta name="date" content="2018-01-16" />
 
 <title>GCalignR Step by Step</title>
 
@@ -70,7 +69,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">GCalignR Step by Step</h1>
 <h4 class="author"><em>Meinolf Ottensmann, Martin A. Stoffel, Hazel J. Nichols and Joseph I. Hoffman</em></h4>
-<h4 class="date"><em>2018-01-16</em></h4>
 
 
 
@@ -78,7 +76,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Introduction</h2>
 <p>We developed <code>GCalignR</code> primarily as an alignment tool for GC-FID data based on peak retention times, but other types of data that contain retention time information for peaks (e.g. GC-MS) are supported as well. <code>GCalignR</code> implements a fast and objective method to cluster putatively homologous substances prior to multivariate statistical analyses. Using sophisticated visualisations, the resulting alignments can then be fine tuned. The input format of <code>GCalignR</code> is a peak list, which is comprised of retention times and arbitrary variables (e.g. peak height, peak area) that characterise each peak in a dataset.</p>
 <p>The implemented algorithm is purely based on retention time data, which is why the quality of the alignment is highly dependent on the quality of the raw data and the parameters used for the initial peak detection. In other words: The clearer the peaks are which were extracted from the chromatograms, the better the alignment will be. <code>GCalignR</code> has been created for situations where the main interest of the research is in exploring broader patterns rather then the specific function of a certain chemical, which is unlikely to be determined correctly in all cases when just retention times are used. Also, we recommend to double-check the resulting alignment with mass-spectrometry data, where available. Furthermore, replicates that were analysed using both GC-MS and GC-FID with identical gas chromatography settings can be aligned together and may be used to identify peaks and validate alignment results.</p>
-<p>This vignette gives an quick introduction into using <code>GCalignR</code>, whereas a more detailed description of the background is found in our manuscript<span class="citation">(Ottensmann et al. 2017)</span> and in the second vignette of the package <em>“GCalignR: How does the Algorithm works?”</em>.</p>
+<p>This vignette gives an quick introduction into using <code>GCalignR</code>, whereas a more detailed description of the background is found in our manuscript<span class="citation">(Ottensmann et al. 2017)</span> and in the second vignette of the package <em>“GCalignR: How does the Algorithm work?”</em>.</p>
 </div>
 <div id="gcalignr-workflow-in-a-larger-context" class="section level2">
 <h2>GCalignR workflow in a larger context</h2>

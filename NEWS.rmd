@@ -1,3 +1,8 @@
+# GCalignR 1.0.1.1
+
+* The accompanying manuscript is published <https://doi.org/10.1371/journal.pone.0198311>
+* The function `read_empower2` allows to import HPLC data that has been generated using the EMPOWER 2 software
+
 # GCalignR 1.0.1
 
 **Bugfixes**

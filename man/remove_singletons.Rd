@@ -13,7 +13,7 @@ remove_singletons(data)
 a list of data frames for each individual.
 }
 \description{
-Identifies and removes singletons (i.e. peaks that unique for one sample) from the aligned dataset.
+Identifies and removes singletons (i.e. peaks that are unique for one sample) from the aligned dataset.
 }
 \examples{
 data("peak_data")

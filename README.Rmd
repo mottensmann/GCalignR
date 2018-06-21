@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 knitr::include_graphics(path = "vignettes/Two_Chromas_Peak_List.png", dpi = 300)
 ```
 
-Installing GCalignR:
+### Installing GCalignR:
 
 * The current release 1.0.1 is on CRAN.
 
@@ -31,17 +31,16 @@ Installing GCalignR:
 install.packages("GCalignR", dependencies = T)
 ```
 
+* Get the latest developmental version
+
 ```{r, eval=FALSE, echo=FALSE}
-# The beta release 1.0.1-beta is availabe via GitHub.
     if (!("devtools" %in% rownames(installed.packages()))) { 
     install.packages("devtools")
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    devtools::install_github("mottensmann/GCalignR@v1.0.1-beta", build_vignettes = TRUE)
+    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
 ```
-
-
 
 ### Get started with GCalignR
 
@@ -55,4 +54,4 @@ If you encounter bugs or if you have any suggestions for improvement, just conta
 meinolf.ottensmann[at]web.de
 
 ### Reference
-[Ottensmann, M., Stoffel, M.A., Nichols, H.J. Hoffman, J.I. GCalignR: An R package for aligning Gas-Chromatography data. *under review*.](https://doi.org/10.1101/110494)
+[Ottensmann M, Stoffel MA, Nichols HJ, Hoffman JI (2018) GCalignR: An R package for aligning gas-chromatography data for ecological and evolutionary studies. PLoS ONE 13(6): e0198311. https://doi.org/10.1371/journal.pone.0198311](https://doi.org/10.1371/journal.pone.0198311)

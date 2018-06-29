@@ -1,6 +1,8 @@
 ---
 output: github_document
+    self_contained: no
 ---
+<!-- rmarkdown v1 -->
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -27,13 +29,13 @@ knitr::include_graphics(path = "vignettes/Two_Chromas_Peak_List.png", dpi = 300)
 
 * The current release 1.0.1 is on CRAN.
 
-```R
+```{r}
 install.packages("GCalignR", dependencies = T)
 ```
 
 * Get the latest developmental version
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, eval=FALSE}
     if (!("devtools" %in% rownames(installed.packages()))) { 
     install.packages("devtools")
     } else if (packageVersion("devtools") < 1.6) {

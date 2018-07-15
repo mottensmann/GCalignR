@@ -2,6 +2,7 @@
 output: github_document
     self_contained: no
 ---
+
 <!-- rmarkdown v1 -->
 
 
@@ -17,6 +18,15 @@ output: github_document
 
 <img src="vignettes/Two_Chromas_Peak_List.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
 
+### A short note on the input format
+
+As with many software you need to get used to the input format which is shown in the illustration:
+
+* Row 1: All sample names
+* Row 2: Variable names
+* Row 3-N: GC data
+    + Each block belongs to a sample as shown for sample A (green) and sample B (orange) above
+
 ### Installing GCalignR:
 
 * The current release 1.0.1 is on CRAN.
@@ -24,9 +34,6 @@ output: github_document
 
 ```r
 install.packages("GCalignR", dependencies = T)
-#> Installing package into 'C:/Users/MOMO/Documents/R/win-library/3.4'
-#> (as 'lib' is unspecified)
-#> Error in contrib.url(repos, "source"): trying to use CRAN without setting a mirror
 ```
 
 * Get the latest developmental version
@@ -50,8 +57,10 @@ To get started read the vignettes:
 browseVignettes("GCalignR")
 ```
 
-If you encounter bugs or if you have any suggestions for improvement, just contact
-meinolf.ottensmann[at]web.de
+If you encounter bugs or if you have any suggestions for improvement, just contact meinolf.ottensmann[at]web.de
+
+*Also I´m happy to provide help if you can´t get it to work. Usually it is easy to solve small problems. However, in order to simplifiy this process please send a short describton of the problem along with the code you have been using as a script file (.R) together with a minimal example input file (.txt).* 
 
 ### Reference
+
 [Ottensmann M, Stoffel MA, Nichols HJ, Hoffman JI (2018) GCalignR: An R package for aligning gas-chromatography data for ecological and evolutionary studies. PLoS ONE 13(6): e0198311. https://doi.org/10.1371/journal.pone.0198311](https://doi.org/10.1371/journal.pone.0198311)

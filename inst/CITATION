@@ -1,4 +1,4 @@
-citHeader("To cite GCalignR in publications refer to the preprint of our manuscript that is currently under review:")
+citHeader("To cite GCalignR in publications please refer to our paper:")
 
 citEntry(entry = "Article",
          author       = personList(as.person("Meinolf Ottensmann"),
@@ -7,7 +7,7 @@ citEntry(entry = "Article",
                                    as.person("Joseph I. Hoffman")),
          title        = "GCalignR: An R package for aligning gas-chromatography data for ecological and evolutionary studies",
          year         = "2018",
-         doi = "<doi:10.1371/journal.pone.0198311>",
+         doi = "<10.1371/journal.pone.0198311>",
          journal      = "PLOS ONE",
          textVersion  =
              paste("Ottensmann M., Stoffel MA, Nichols HJ. & Hoffman JI. (2018).",

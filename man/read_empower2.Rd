@@ -25,23 +25,4 @@ a list of data frames (each corresponding to a sample)
 \description{
 reads output files of the EMPOWER 2 SOFTWARE (Waters). Input files must contain data of single samples deposited within the same directory.
 }
-\examples{
-
-file <- tempfile(fileext = ".empower2")
-sink(file)
-cat(c("SampleName", "RT", "Area"), sep = "\\t")
-cat(c("\\nSample_A", "12.03", "330"), sep = "\\t")
-cat(c("\\nSample_A", "34.02", "734"), sep = "\\t")
-cat(c("\\nSample_A", "44.02", "74"), sep = "\\t")
-sink()
-
-data <- GCalignR:::read_empower2(path = dirname(file),
-                                sep = "\\t",
-                                skip = 0,
-                                id = "SampleName",
-                                pattern = "empower2")
-
-check_input(data)
-
-}
 \keyword{beta}

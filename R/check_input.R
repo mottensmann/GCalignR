@@ -57,19 +57,19 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         col_names <- stringr::str_trim(col_names)
         # validate retention time name
         if ("rt_col_name" %in% names(opt)) {
-        rt_col_name <- opt[["rt_col_name"]]
-        if (!(rt_col_name %in% col_names)) {
-            stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
-        pass <- FALSE
-        }
-        # check conc_col_name
-        if ("conc_col_name" %in% names(opt)) {
-            conc_col_name <- opt[["conc_col_name"]]
-            if (!(conc_col_name %in% col_names)) {
-                stop(print(paste(conc_col_name,"is not a valid variable name. Data contains:",paste(col_names, collapse = " & "))))
+            rt_col_name <- opt[["rt_col_name"]]
+            if (!(rt_col_name %in% col_names)) {
+                stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
                 pass <- FALSE
             }
-        }
+            # check conc_col_name
+            if ("conc_col_name" %in% names(opt)) {
+                conc_col_name <- opt[["conc_col_name"]]
+                if (!(conc_col_name %in% col_names)) {
+                    stop(print(paste(conc_col_name,"is not a valid variable name. Data contains:",paste(col_names, collapse = " & "))))
+                    pass <- FALSE
+                }
+            }
         }
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data
@@ -93,11 +93,11 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
 
         if (!((ncol(gc_data) / length(col_names)) %% 1) == 0) {
             pass <- FALSE
-        warning("Number of data columns is not a multiple of the column names provided")
+            stop("Number of data columns is not a multiple of the column names provided")
         }
         if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) {
             pass <- FALSE
-            warning("Number of sample names provided does not fit to the number of columns in the data")
+            stop("Number of sample names provided does not fit to the number of columns in the data")
         }
         if (any(duplicated(ind_names))) {
             warning(paste0("Duplicated sample names are not allowed.\nChange sample(s):\n",as.character(ind_names[duplicated(ind_names)])))
@@ -107,7 +107,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         gc_peak_list <- conv_gc_mat_to_list(gc_data, ind_names, var_names = col_names)
 
 
-## If data is a list of data.frames
+        ## If data is a list of data.frames
     } else if (is.list(data)) {
         ## check that every element in the list is a data.frame
         if (!(all(unlist(lapply(data, is.data.frame))))) {
@@ -134,7 +134,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         data <- lapply(data,matrix_append,gc_peak_list = data, val = "NA")
         if ((is.null(names(data)))) {
             pass <- FALSE
-        warning("Every data.frame needs to be named with the sample id")
+            warning("Every data.frame needs to be named with the sample id")
         }
         col_names <- unlist(lapply(data, function(x) out <- names(x)))
         if (any(table(col_names) != length(data))) {
@@ -144,8 +144,8 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         col_names <- names(data[[1]])
         # Validate retention time variable
         if ("rt_col_name" %in% names(opt)) {
-        rt_col_name <- opt[["rt_col_name"]]
-        if (!(rt_col_name %in% col_names)) stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
+            rt_col_name <- opt[["rt_col_name"]]
+            if (!(rt_col_name %in% col_names)) stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
         }
         ind_names <- names(data)
         if (any(duplicated(ind_names))) warning("Avoid duplicates in sample names")
@@ -153,16 +153,16 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
     }
     # Validate retention times
     if ("rt_col_name" %in% names(opt)) {
-df <- unlist(lapply(gc_peak_list,FUN = function(x,rt_col_name) x[[rt_col_name]],rt_col_name))
-if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use the correct decimal operator '.' instead of ','")
-}
-## Do some internal checks if write_output is defined in align_chromatograms
-        if (any(names(opt) == "write_output")) {
+        df <- unlist(lapply(gc_peak_list,FUN = function(x,rt_col_name) x[[rt_col_name]],rt_col_name))
+        if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use the correct decimal operator '.' instead of ','")
+    }
+    ## Do some internal checks if write_output is defined in align_chromatograms
+    if (any(names(opt) == "write_output")) {
         if (any(!(opt[["write_output"]] %in% col_names))) {
             pass <- FALSE
             warning("Names in write_output have to be included as a variable in the data!")
         }
-        }
+    }
     ## Lines checking for whitespaces are redundant!
 
     # if (any(stringr::str_detect(string = ind_names, pattern = " "))) warning("Avoid whitespaces in Sample Names!")
@@ -181,15 +181,15 @@ if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use
     if (any(names(opt) == "blank")) {
         if (any(!(opt[["blank"]] %in% ind_names))) {
             pass <- FALSE
-        warning("blanks have to refer to samples in the data!")
+            warning("blanks have to refer to samples in the data!")
         }
     }
     if (any(names(opt) == "reference")) {
         if (!is.null(opt[["reference"]]) & any(!(opt[["reference"]] %in% ind_names))) {
-    pass <- FALSE
-    warning("reference has to be included as a sample in the data!")
-}
-}
+            pass <- FALSE
+            warning("reference has to be included as a sample in the data!")
+        }
+    }
     format_error <- function(x){
         pass <- TRUE
         check_var_count <- function(x) {

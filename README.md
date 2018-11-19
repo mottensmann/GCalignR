@@ -18,18 +18,16 @@ output: github_document
 
 <img src="vignettes/Two_Chromas_Peak_List.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" />
 
-### A short note on the input format
+As with other software you need to get used to the input format which is shown in the illustration:
 
-As with many software you need to get used to the input format which is shown in the illustration:
-
-* Row 1: All sample names
+* Row 1: Sample names
 * Row 2: Variable names
 * Row 3-N: GC data
     + Each block belongs to a sample as shown for sample A (green) and sample B (orange) above
 
 ### Installing GCalignR:
 
-* The current release 1.0.1 is on CRAN.
+* The current release 1.0.2 is on CRAN.
 
 
 ```r

@@ -35,7 +35,7 @@ As with other software you need to get used to the input format which is shown i
 
 ### Installing GCalignR:
 
-* The current release 1.0.1 is on CRAN.
+* The current release 1.0.2 is on CRAN.
 
 ```{r, eval = FALSE}
 install.packages("GCalignR", dependencies = T)

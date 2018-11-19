@@ -4,7 +4,8 @@
 \alias{as.data.frame.GCalign}
 \title{Output aligned data in form of a data frame for each variable}
 \usage{
-\method{as.data.frame}{GCalign}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.data.frame}{GCalign}(x, row.names = NULL, optional = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{An object of class "GCalign". See \code{\link{align_chromatograms}} for details.}

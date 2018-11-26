@@ -73,7 +73,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         }
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data
-        gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+        gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F, fill = T)
         col_class <- as.factor(unlist(lapply(lapply(X = 1:ncol(gc_data), function(x) as.vector(gc_data[,x])), class)))
         if (any(!(col_class %in% c("numeric", "integer")))) stop(paste0("Only numeric & integer values are supported! Column(s)",paste(as.character(which(col_class == "character")), collapse = "; ")," violate the requirements. Fix to proceed." ))
         ## Check that all values are numeric, SKIPPED
@@ -97,7 +97,8 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         }
         if (!((ncol(gc_data) / length(col_names))  == length(ind_names))) {
             pass <- FALSE
-            stop("Number of sample names provided does not fit to the number of columns in the data")
+            stop(paste0("Number of sample names provided does not fit to the number of columns in the data."),
+                 "\n\tExpected # = ", ncol(gc_data) / length(col_names), " ;Provided # = ", length(ind_names))
         }
         if (any(duplicated(ind_names))) {
             warning(paste0("Duplicated sample names are not allowed.\nChange sample(s):\n",as.character(ind_names[duplicated(ind_names)])))
@@ -215,7 +216,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
     if (pass == TRUE & format_pass == TRUE) {
         if (message == TRUE) cat("All checks passed!\n\n")
     } else {
-        cat("Not all checks have been passed. Read warning messages below and change accordingly to proceed\n\n")
+        cat("\nNot all checks have been passed. Read warning messages below and change accordingly to proceed\n\n")
     }
 
 

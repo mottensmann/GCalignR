@@ -118,7 +118,7 @@ if (is.character(data)) { # txt file
     col_names <- stringr::str_trim(col_names)
     ind_names <- stringr::str_trim(ind_names)
     # Get Data
-    gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+    gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F, fill = T)
     # Remove just NA-rows
     gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
     # Remove empty rows

@@ -4,7 +4,7 @@
 \alias{read_peak_list}
 \title{Read content of a text file and convert it to a list}
 \usage{
-read_peak_list(data, sep = "\\t", rt_col_name)
+read_peak_list(data, sep = "\\t", rt_col_name, check = T)
 }
 \arguments{
 \item{data}{A text file containing a peak list. See \code{\link{align_chromatograms}} for details.}
@@ -13,6 +13,8 @@ read_peak_list(data, sep = "\\t", rt_col_name)
 See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
+
+\item{check}{logical}
 }
 \value{
 A list of data frames containing peak data for every sample of \code{data}.

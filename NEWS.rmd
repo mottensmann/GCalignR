@@ -1,4 +1,9 @@
-# GCalignR 1.0.1.1
+# GCalignR 1.0.2.9
+___
+* Added fill = T as a parameter in utils::read.table to load the GC data within internal functions. *Loading GC data with utils::read.table failed in cases of missing values in a column (i.e. empty). This is the correct behaviour as missing data should always be coded explicitly by 'NA'. Note, the most likely reason of missing data seems to be a mistake in preparing the input file using copy & paste indexing wrong column indices.*
+* Tibles are now coerced to data frames
+
+# GCalignR 1.0.2
 ___
 
 * The accompanying manuscript is published <https://doi.org/10.1371/journal.pone.0198311> and the citation has been added to GCalignR

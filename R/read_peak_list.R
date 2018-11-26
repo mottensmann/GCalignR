@@ -3,6 +3,9 @@
 #' @param data
 #' A text file containing a peak list. See \code{\link{align_chromatograms}} for details.
 #'
+#' @param check
+#' logical
+#'
 #' @inheritParams align_chromatograms
 #'
 #' @description
@@ -18,8 +21,12 @@
 #'
 #' @export
 #'
-read_peak_list <- function(data, sep = "\t", rt_col_name) {
-    check <- check_input(data = data, sep = sep, rt_col_name = rt_col_name, message = FALSE)
+read_peak_list <- function(data, sep = "\t", rt_col_name, check = T) {
+    if (check == TRUE) {
+        check <- check_input(data = data, sep = sep, rt_col_name = rt_col_name, message = FALSE)
+    } else {
+        check <- TRUE
+    }
     if (check == FALSE) stop("data is malformed. See check_input and fix issues raised there.")
     ind_names <- readr::read_lines(data, n_max = 1)
     ind_names <- unlist(stringr::str_split(string = ind_names,pattern = sep))
@@ -31,7 +38,7 @@ read_peak_list <- function(data, sep = "\t", rt_col_name) {
     col_names <- stringr::str_trim(col_names)
     ind_names <- stringr::str_trim(ind_names)
     # Get Data
-    gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F)
+    gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F, fill = T)
     # Remove just NA-rows
     gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
     # Remove empty rows

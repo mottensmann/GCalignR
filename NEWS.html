@@ -90,6 +90,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -121,8 +124,16 @@ $(document).ready(function () {
 </div>
 
 
-<div id="gcalignr-1.0.1.1" class="section level1">
-<h1>GCalignR 1.0.1.1</h1>
+<div id="gcalignr-1.0.2.9" class="section level1">
+<h1>GCalignR 1.0.2.9</h1>
+<hr />
+<ul>
+<li>Added fill = T as a parameter in utils::read.table to load the GC data within internal functions. <em>Loading GC data with utils::read.table failed in cases of missing values in a column (i.e. empty). This is the correct behaviour as missing data should always be coded explicitly by ‘NA’. Note, the most likely reason of missing data seems to be a mistake in preparing the input file using copy &amp; paste indexing wrong column indices.</em></li>
+<li>Tibles are now coerced to data frames</li>
+</ul>
+</div>
+<div id="gcalignr-1.0.2" class="section level1">
+<h1>GCalignR 1.0.2</h1>
 <hr />
 <ul>
 <li>The accompanying manuscript is published <a href="https://doi.org/10.1371/journal.pone.0198311" class="uri">https://doi.org/10.1371/journal.pone.0198311</a> and the citation has been added to GCalignR</li>

@@ -8,7 +8,8 @@ align_chromatograms(data, sep = "\\t", rt_col_name = NULL,
   write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL,
   reference = NULL, max_linear_shift = 0.02,
   max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08,
-  blanks = NULL, delete_single_peak = FALSE, ...)
+  blanks = NULL, delete_single_peak = FALSE, remove_empty = FALSE,
+  ...)
 }
 \arguments{
 \item{data}{Dataset containing peaks that need to be aligned and matched. For every peak a arbitrary number of numerical variables can be included (e.g. peak height, peak area) in addition to the mandatory retention time. The standard format is a tab-delimited text file according to the following layout: (1) The first row contains sample names, the (2) second row column names of the corresponding peak lists. Starting with the third row, peak lists are included for every sample that needs to be incorporated in the dataset. Here, a peak list contains data for individual peaks in rows, whereas columns specify variables in the order given in the second row of the text file. Peak lists of individual samples are concatenated horizontally and need to be of the same width (i.e. the same number of columns in consistent order). Alternatively, the input may be a list of data frames. Each data frame contains the peak data for a single individual. Variables (i.e.columns) are named consistently across data frames. The names of elements in the list are used as sample identifiers. Cells may be filled with numeric or integer values but no factors or characters are allowed. NA and 0 may be used to indicate empty rows.}
@@ -36,16 +37,19 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{delete_single_peak}{Boolean, determining whether substances that occur in just one sample are removed or not. #'}
 
-\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
-}
-\value{
-Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
+\item{remove_empty}{Boolean, allows to remove samples which lack any peak after the alignment finished. By default FALSE
+
 \item{aligned}{Aligned Gas Chromatography peak data subdivided into individual data frames for every variable. Samples are represented by columns, rows specify homologous peaks. The first column of every data frame is comprised of the mean retention time of the respective peak (i.e. row). Retention times of samples resemble the values of the raw data. Internally, linear adjustments are considered where appropriate}
 \item{heatmap_input}{Used internally to create heatmaps of the aligned data}
 \item{Logfile}{A protocol of the alignment process.}
 \item{input_list}{Input data in form of a list of data frames.}
 \item{aligned_list}{Aligned data in form of a list of data frames.}
-\item{input_matrix}{List of matrices. Each matrix contains the input data for a variable}
+\item{input_matrix}{List of matrices. Each matrix contains the input data for a variable}}
+
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
+}
+\value{
+Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
 }
 \description{
 This is the core function of \code{\link{GCalignR}} to align peak data. The input data is a peak list. Read through the documentation below and take a look at the vignettes for a thorough introduction. Three parameters \code{max_linear_shift}, \code{max_diff_peak2mean} and \code{min_diff_peak2peak} are required as well as the column name of the peak retention time variable \code{rt_col_name}. Arguments are described among optional parameters below.

@@ -43,6 +43,8 @@ install.packages("GCalignR", dependencies = T)
 
 * Get the latest developmental version
 
+*The most recent version on GitHub introduces the new parameter `remove_empty` wihtin the `align_chromatograms` functions and allows to remove empty samples (i.e. no peaks after blanks and/or singletons were removed) from the dataset once the alignment finished*
+
 ```{r, eval=FALSE}
     if (!("devtools" %in% rownames(installed.packages()))) { 
     install.packages("devtools")

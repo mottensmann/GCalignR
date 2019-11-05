@@ -1,7 +1,9 @@
-# GCalignR 0.1.0.9000
+# GCalignR 1.0.2.9
+## Recent changes
 
+* Added a new boolean parameter 'remove_empty' for the function 'align_chromatograms'. If samples are empty  (ie. no peak) this parameter allows to remove those cases from the dataset to avoid problems in post-hoc analyses. By default FALSE, ie. all but the blank samples are kept.
 ___
-
+# GCalignR 0.1.0.9000
 ## Changes since release 0.1.0
 
 ### Algorithm

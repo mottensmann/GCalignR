@@ -216,6 +216,8 @@ hljs.initHighlightingOnLoad();
 <li>Get the latest developmental version</li>
 </ul>
 
+<p><em>The most recent version on GitHub introduces the new parameter <code>remove_empty</code> within the <code>align_chromatograms</code> function. This parameter allows to remove empty samples (i.e. no peak is left after the processing) from the dataset. Otherwise issues with downstream analyses can occur</em></p>
+
 <pre><code class="r">    if (!(&quot;devtools&quot; %in% rownames(installed.packages()))) { 
     install.packages(&quot;devtools&quot;)
     } else if (packageVersion(&quot;devtools&quot;) &lt; 1.6) {

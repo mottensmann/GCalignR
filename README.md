@@ -36,6 +36,8 @@ install.packages("GCalignR", dependencies = T)
 
 * Get the latest developmental version
 
+*The most recent version on GitHub introduces the new parameter `remove_empty` within the `align_chromatograms` function. This parameter allows to remove empty samples (i.e. no peak is left after the processing) from the dataset. Otherwise issues with downstream analyses can occur*
+
 
 ```r
     if (!("devtools" %in% rownames(installed.packages()))) { 

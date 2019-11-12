@@ -35,21 +35,22 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 
 \item{blanks}{Character vector of names of negative controls. Substances found in any of the blanks will be removed from the aligned dataset, before the blanks are deleted from the aligned data as well. This is an optional filtering step.}
 
-\item{delete_single_peak}{Boolean, determining whether substances that occur in just one sample are removed or not. #'}
+\item{delete_single_peak}{Boolean, determining whether substances that occur in just one sample are removed or not.}
 
-\item{remove_empty}{Boolean, allows to remove samples which lack any peak after the alignment finished. By default FALSE
+\item{remove_empty}{Boolean, allows to remove samples which lack any peak after the alignment finished. By default FALSE}
+
+\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
+}
+\value{
+Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
+
 
 \item{aligned}{Aligned Gas Chromatography peak data subdivided into individual data frames for every variable. Samples are represented by columns, rows specify homologous peaks. The first column of every data frame is comprised of the mean retention time of the respective peak (i.e. row). Retention times of samples resemble the values of the raw data. Internally, linear adjustments are considered where appropriate}
 \item{heatmap_input}{Used internally to create heatmaps of the aligned data}
 \item{Logfile}{A protocol of the alignment process.}
 \item{input_list}{Input data in form of a list of data frames.}
 \item{aligned_list}{Aligned data in form of a list of data frames.}
-\item{input_matrix}{List of matrices. Each matrix contains the input data for a variable}}
-
-\item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
-}
-\value{
-Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
+\item{input_matrix}{List of matrices. Each matrix contains the input data for a variable}
 }
 \description{
 This is the core function of \code{\link{GCalignR}} to align peak data. The input data is a peak list. Read through the documentation below and take a look at the vignettes for a thorough introduction. Three parameters \code{max_linear_shift}, \code{max_diff_peak2mean} and \code{min_diff_peak2peak} are required as well as the column name of the peak retention time variable \code{rt_col_name}. Arguments are described among optional parameters below.

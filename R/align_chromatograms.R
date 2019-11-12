@@ -43,11 +43,13 @@
 #' Character vector of names of negative controls. Substances found in any of the blanks will be removed from the aligned dataset, before the blanks are deleted from the aligned data as well. This is an optional filtering step.
 #'
 #'@param delete_single_peak
-#' Boolean, determining whether substances that occur in just one sample are removed or not. #'
-#'@return
-#' Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
+#' Boolean, determining whether substances that occur in just one sample are removed or not.
 #' @param remove_empty
 #' Boolean, allows to remove samples which lack any peak after the alignment finished. By default FALSE
+#'
+#'@return
+#' Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
+#'
 #'
 #' \item{aligned}{Aligned Gas Chromatography peak data subdivided into individual data frames for every variable. Samples are represented by columns, rows specify homologous peaks. The first column of every data frame is comprised of the mean retention time of the respective peak (i.e. row). Retention times of samples resemble the values of the raw data. Internally, linear adjustments are considered where appropriate}
 #' \item{heatmap_input}{Used internally to create heatmaps of the aligned data}

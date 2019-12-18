@@ -6,3 +6,5 @@ doc
 .gitignore
 internal
 vignettes/test_GCalignR*
+README.html
+NEWS.html

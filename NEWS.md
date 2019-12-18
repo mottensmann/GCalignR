@@ -1,29 +1,96 @@
+
 # GCalignR 1.0.2.9
-## Recent changes
 
-* Added a new boolean parameter 'remove_empty' for the function 'align_chromatograms'. If samples are empty  (ie. no peak) this parameter allows to remove those cases from the dataset to avoid problems in post-hoc analyses. By default FALSE, ie. all but the blank samples are kept.
-___
-# GCalignR 0.1.0.9000
-## Changes since release 0.1.0
+-----
 
-### Algorithm
-* Retention times are not rounded to two decimals anymore. Calculations still capture a precision of two decimals for purely computational reasons. 
-* Within the aligned results, retention times correspond to the input values. Linear adjustments are only used internally and are documented within the Logfile found in the output.
+  - Added `fill = TRUE` as a parameter in `utils::read.table` when
+    reading data from text within internal functions. *Loading GC data
+    with utils::read.table failed in cases of missing values in a column
+    (i.e. empty). This is the correct behaviour as missing data should
+    always be coded explicitly by ‘NA’*
+  - Tibles are now coerced to data frames
+  - Added a new boolean parameter `remove_empty` for the main function
+    `align_chromatograms`. If samples are empty (ie. no peak) this
+    parameter allows to remove those cases from the dataset to avoid
+    problems in post-hoc analyses. By default `FALSE`, ie. all but the
+    blank samples are kept.
 
-### Dependencies
-The bioconductor package (MassSpecWavelet)[http://bioconductor.org/packages/MassSpecWavelet/] is added as *in R* solution for picking peaks from GC data. 
+# GCalignR 1.0.2
 
+-----
 
-### warning messages
-* Warnings addressing formatting issues are now more explicit and partly rephrased to avoid ambiguity
+  - The accompanying manuscript is published
+    <https://doi.org/10.1371/journal.pone.0198311> and the citation has
+    been added to GCalignR
+  - The function *beta* `read_empower2` allows to import HPLC data that
+    has been generated using the EMPOWER 2 software
 
-### Plots 
-* Added horitontal axis to barplots summarising peak numbers in `plot.GCalign`
-* Changed to more prominent colours in binary heatmaps with `gc_heatmap`
+# GCalignR 1.0.1
 
-### Vignette
-* Extended workflow and more comprehensive explainations
-___
+-----
 
+**Bugfixes**
 
+  - A bugfix was applied for handling multiple blanks correctly.
+  - Progressbars are removed in non-interactive R sessions
 
+-----
+
+# GCalignR 1.0.0
+
+**New functions implemented**
+
+  - `choose_optimal_reference` offers an automatism to pick suitable
+    references.
+  - `draw_chromatograms` allows to represent a peak list in form of
+    chromatogram.
+  - `remove_blanks`allows to get rid of peaks that represent
+    contamination after aligning a dataset
+  - `remove_singletons` allows to remove single peaks from the dataset
+    after aligning
+  - `merge_redundant_rows` allows to merge rows that were not recognised
+    as redundant during the alignment by increasing the threshold value
+    for the evaluation of similarity
+
+**Algorithm**
+
+  - Using `pbapply`, we implemented progress bars to inform the user
+    about the progress and the estimated running time of intermediate
+    steps in the alignment of peak lists.
+  - By implementing more efficient code, we were able to speed up the
+    processing, especially picking references is faster by an order of
+    magnitude.
+  - Retention times are not rounded to two decimals anymore.
+    Calculations still capture a precision of two decimals for
+    computational reasons.
+  - Within the aligned results, retention times correspond to the input
+    values. Linear adjustments are only used internally and are
+    documented within the Logfile accessible in the output.
+  - Reference samples that are used for the coarse alignment of
+    retention times can be picked using a novel algorithm that
+    determines the average similarity across the dataset.
+
+**warning messages**
+
+  - Warnings addressing formatting issues are now more explicit and
+    partly rephrased to avoid ambiguity.
+
+**Plots**
+
+  - Added horizontal axis to barplots summarising peak numbers in
+    `plot.GCalign`.
+  - Changed to more prominent colours in binary heatmaps with
+    `gc_heatmap`.
+  - The function `draw_chromatograms` was added as another visualisation
+    tool.
+
+**Vignettes**
+
+  - We included a second vignette that explains the algorithm and the
+    supported data in detail.
+
+**Documentation**
+
+  - Helpfiles were rewritten to enhance clarity.
+
+-----

@@ -1,18 +1,20 @@
 ---
 output: github_document
-    self_contained: no
 ---
 
 <!-- rmarkdown v1 -->
 
 
 
-# GCalignR
+# GCalignR  <img src="vignettes/GCalignRLogo.png" height="200" align="right" />
 
 ![Build Status](https://travis-ci.org/mottensmann/GCalignR.svg?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
+[![](https://img.shields.io/badge/doi-10.1371/journal.pone.0198311-Darkorange.svg)](https://doi.org/10.1371/journal.pone.0198311)
+[![](https://img.shields.io/badge/Altmetric-14-Darkorange.svg)](https://www.altmetric.com/details/43624695)
 
+<img src="" height="300"/>
 
 `GCalignR` provides simple functions to align peak lists obtained from Gas Chromatography Flame Ionization Detectors (GC-FID) based on retention times and plots to evaluate the quality of the alignment. The package supports any other one-dimensional chromatograpy technique that enables the user to create a peak list with at least one column specifying retention times as illustrated below.
 

@@ -4,8 +4,14 @@
 \alias{linear_transformation}
 \title{Full Alignment of Peak Lists by linear retention time correction.}
 \usage{
-linear_transformation(gc_peak_list, reference, max_linear_shift = 0.05,
-  step_size = 0.01, rt_col_name, Logbook = NULL)
+linear_transformation(
+  gc_peak_list,
+  reference,
+  max_linear_shift = 0.05,
+  step_size = 0.01,
+  rt_col_name,
+  Logbook = NULL
+)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data

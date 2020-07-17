@@ -4,10 +4,21 @@
 \alias{draw_chromatogram}
 \title{Visualise peak lists as a pseudo-chromatogram}
 \usage{
-draw_chromatogram(data = NULL, rt_col_name = NULL, width = 0.1,
-  step = NULL, sep = "\\t", breaks = NULL, rt_limits = NULL,
-  samples = NULL, show_num = FALSE, show_rt = FALSE, plot = TRUE,
-  shape = c("gaussian", "stick"), legend.position = "bottom")
+draw_chromatogram(
+  data = NULL,
+  rt_col_name = NULL,
+  width = 0.1,
+  step = NULL,
+  sep = "\\t",
+  breaks = NULL,
+  rt_limits = NULL,
+  samples = NULL,
+  show_num = FALSE,
+  show_rt = FALSE,
+  plot = TRUE,
+  shape = c("gaussian", "stick"),
+  legend.position = "bottom"
+)
 }
 \arguments{
 \item{data}{The input data can be either a GCalignR input file or an GCalign object. See \code{\link{align_chromatograms}} for details on both.}

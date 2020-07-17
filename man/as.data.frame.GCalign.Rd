@@ -4,8 +4,7 @@
 \alias{as.data.frame.GCalign}
 \title{Output aligned data in form of a data frame for each variable}
 \usage{
-\method{as.data.frame}{GCalign}(x, row.names = NULL, optional = FALSE,
-  ...)
+\method{as.data.frame}{GCalign}(x, row.names = NULL, optional = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "GCalign". See \code{\link{align_chromatograms}} for details.}
@@ -15,10 +14,10 @@
 
 \item{optional}{logical. If \code{TRUE}, setting row names and
     converting column names (to syntactic names: see
-    \code{\link{make.names}}) is optional.  Note that all of \R's
+    \code{\link[base]{make.names}}) is optional.  Note that all of \R's
     \pkg{base} package \code{as.data.frame()} methods use
     \code{optional} only for column names treatment, basically with the
-    meaning of \code{\link{data.frame}(*, check.names = !optional)}.
+    meaning of \code{\link[base]{data.frame}(*, check.names = !optional)}.
     See also the \code{make.names} argument of the \code{matrix} method.}
 
 \item{...}{additional arguments to be passed to or from methods.}

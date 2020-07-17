@@ -4,8 +4,10 @@
 \name{aligned_peak_data}
 \alias{aligned_peak_data}
 \title{Aligned Gas-Chromatography data}
-\format{Object of class "GCalign" including three lists. List \strong{"aligned"} includes data.frames
-for all variables present in the raw data ("time" and "area"). The list \strong{"heatmap_input"} holds data frames with retention times of the input data, linearly adjusted retention times as well as the final output, were peaks are aligned among samples. This file is primarily used in \code{\link{gc_heatmap}}. The list \strong{"Logfile"} summarises the alignment process and the data structure before, during and after running \code{\link{align_chromatograms}}. For a convenient overview use \code{\link{print.GCalign}}.}
+\format{
+Object of class "GCalign" including three lists. List \strong{"aligned"} includes data.frames
+for all variables present in the raw data ("time" and "area"). The list \strong{"heatmap_input"} holds data frames with retention times of the input data, linearly adjusted retention times as well as the final output, were peaks are aligned among samples. This file is primarily used in \code{\link{gc_heatmap}}. The list \strong{"Logfile"} summarises the alignment process and the data structure before, during and after running \code{\link{align_chromatograms}}. For a convenient overview use \code{\link{print.GCalign}}.
+}
 \source{
 http://www.pnas.org/content/suppl/2015/08/05/1506076112.DCSupplemental/pnas.1506076112.sd02.xlsx
 }

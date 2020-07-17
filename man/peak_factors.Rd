@@ -4,7 +4,9 @@
 \name{peak_factors}
 \alias{peak_factors}
 \title{Grouping factors corresponding to gas-chromatography data of Antarctic Fur Seals (\emph{Arctocephalus gazella})}
-\format{A data frame where columns represent factors, rows are samples.}
+\format{
+A data frame where columns represent factors, rows are samples.
+}
 \source{
 http://www.pnas.org/content/suppl/2015/08/05/1506076112.DCSupplemental/pnas.1506076112.sd02.xlsx
 }

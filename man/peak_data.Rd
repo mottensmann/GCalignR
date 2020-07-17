@@ -4,9 +4,11 @@
 \name{peak_data}
 \alias{peak_data}
 \title{Gas-chromatography data for Antarctic Fur Seals (\emph{Arctocephalus gazella})}
-\format{A \code{list} of \code{data.frame}'s. Each \code{data.frame} contains gas-chromatography peak data of a single sample.
+\format{
+A \code{list} of \code{data.frame}'s. Each \code{data.frame} contains gas-chromatography peak data of a single sample.
 The variables within each \code{data.frame} are: "time" (peak retention time) and "area" (integral of the peak curve).
-Each list element i.e. each \code{data.frame}is named with the unique sample ID.}
+Each list element i.e. each \code{data.frame}is named with the unique sample ID.
+}
 \source{
 http://www.pnas.org/content/suppl/2015/08/05/1506076112.DCSupplemental/pnas.1506076112.sd02.xlsx
 }

@@ -4,8 +4,11 @@
 \alias{plot.GCalign}
 \title{Plot diagnostics for an GCalign Object}
 \usage{
-\method{plot}{GCalign}(x, which_plot = c("all", "shifts", "variation",
-  "peak_numbers", "peaks_shared"), ...)
+\method{plot}{GCalign}(
+  x,
+  which_plot = c("all", "shifts", "variation", "peak_numbers", "peaks_shared"),
+  ...
+)
 }
 \arguments{
 \item{x}{Object of class GCalign, created with \code{\link{align_chromatograms}}}

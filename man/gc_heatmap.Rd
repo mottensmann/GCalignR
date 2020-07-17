@@ -4,11 +4,19 @@
 \alias{gc_heatmap}
 \title{Visualises peak alignments in form of a heatmap}
 \usage{
-gc_heatmap(object = NULL, algorithm_step = c("aligned", "shifted",
-  "input"), substance_subset = NULL, legend_type = c("legend",
-  "colourbar"), samples_subset = NULL, type = c("binary", "discrete"),
-  threshold = NULL, label_size = NULL, show_legend = TRUE,
-  main_title = NULL, label = c("y", "xy", "x", "none"))
+gc_heatmap(
+  object = NULL,
+  algorithm_step = c("aligned", "shifted", "input"),
+  substance_subset = NULL,
+  legend_type = c("legend", "colourbar"),
+  samples_subset = NULL,
+  type = c("binary", "discrete"),
+  threshold = NULL,
+  label_size = NULL,
+  show_legend = TRUE,
+  main_title = NULL,
+  label = c("y", "xy", "x", "none")
+)
 }
 \arguments{
 \item{object}{Object of class "GCalign", the output of a call to \code{\link{align_chromatograms}}.}

@@ -4,8 +4,14 @@
 \alias{simple_chroma}
 \title{Simulate simple chromatograms}
 \usage{
-simple_chroma(peaks = c(10, 13, 25, 37, 50), N = 1, min = 0,
-  max = 30, Names = NULL, sd = NULL)
+simple_chroma(
+  peaks = c(10, 13, 25, 37, 50),
+  N = 1,
+  min = 0,
+  max = 30,
+  Names = NULL,
+  sd = NULL
+)
 }
 \arguments{
 \item{peaks}{A numeric vector giving the retention times on which gaussian distribution, defining peaks, are centered. If more than one sample is generated \code{N > 1}, \code{peaks} defines a population of peaks, from which samples are generated.}

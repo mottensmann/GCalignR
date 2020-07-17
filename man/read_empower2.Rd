@@ -4,8 +4,13 @@
 \alias{read_empower2}
 \title{Import data from single EMPOWER2 HPLC files}
 \usage{
-read_empower2(path = NULL, pattern = ".txt", sep = "\\t", skip = 2,
-  id = "SampleName")
+read_empower2(
+  path = NULL,
+  pattern = ".txt",
+  sep = "\\t",
+  skip = 2,
+  id = "SampleName"
+)
 }
 \arguments{
 \item{path}{path to a folder containing input files}

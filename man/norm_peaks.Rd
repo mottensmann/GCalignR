@@ -4,8 +4,12 @@
 \alias{norm_peaks}
 \title{Normalisation of peak abundancies}
 \usage{
-norm_peaks(data, conc_col_name = NULL, rt_col_name = NULL,
-  out = c("data.frame", "list"))
+norm_peaks(
+  data,
+  conc_col_name = NULL,
+  rt_col_name = NULL,
+  out = c("data.frame", "list")
+)
 }
 \arguments{
 \item{data}{Object of class GCalign created with \code{\link{align_chromatograms}} or a list of data frames that contain peak list of individual samples.}

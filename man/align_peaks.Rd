@@ -4,8 +4,13 @@
 \alias{align_peaks}
 \title{align peaks individually among chromatograms}
 \usage{
-align_peaks(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
-  rt_col_name, R = 1)
+align_peaks(
+  gc_peak_list,
+  max_diff_peak2mean = 0.02,
+  iterations = 1,
+  rt_col_name,
+  R = 1
+)
 }
 \arguments{
 \item{gc_peak_list}{List of data.frames. Each data.frame contains GC-data

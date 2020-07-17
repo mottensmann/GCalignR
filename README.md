@@ -8,7 +8,7 @@ Status](https://travis-ci.org/mottensmann/GCalignR.svg?branch=master)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
 [![](https://img.shields.io/badge/doi-10.1371/journal.pone.0198311-Darkorange.svg)](https://doi.org/10.1371/journal.pone.0198311)
-[![](https://img.shields.io/badge/Altmetric-14-Darkorange.svg)](https://www.altmetric.com/details/43624695)
+[![](https://img.shields.io/badge/Altmetric-13-Darkorange.svg)](https://www.altmetric.com/details/43624695)
 
 `GCalignR` provides simple functions to align peak lists obtained from
 Gas Chromatography Flame Ionization Detectors (GC-FID) based on
@@ -17,7 +17,7 @@ package supports any other one-dimensional chromatograpy technique that
 enables the user to create a peak list with at least one column
 specifying retention times as illustrated below.
 
-<img src="vignettes/Two_Chromas_Peak_List.png" style="display: block; margin: auto;" />
+<img src="vignettes/Two_Chromas_Peak_List.png" width="864" style="display: block; margin: auto;" />
 
 As with other software you need to get used to the input format which is
 shown in the illustration:
@@ -63,8 +63,9 @@ To get started read the vignettes:
 browseVignettes("GCalignR")
 ```
 
-If you encounter bugs or if you have any suggestions for improvement,
-just contact meinolf.ottensmann\[at\]web.de
+If you encounter bugs or if you have any suggestions for improvement
+(for instance on how to speed up the algorithm\!), just contact
+meinolf.ottensmann\[at\]web.de
 
 *Also I´m happy to provide help if you can´t get it to work. Usually it
 is easy to solve small problems. However, in order to simplifiy this

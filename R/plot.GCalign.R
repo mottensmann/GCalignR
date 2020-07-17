@@ -24,7 +24,7 @@
 #'
 #' @param ...
 #' Optional arguments passed on to methods. See
-#' \code{\link[graphics]{plot}}, \code{\link[graphics]{hist}} and \code{\link[graphics]{barplot}}. Note that optional arguments are not passed on when plotting all figures.
+#' \code{\link[=graphics]{plot}}, \code{\link[=graphics]{hist}} and \code{\link[=graphics]{barplot}}. Note that optional arguments are not passed on when plotting all figures.
 #'
 #' @author Martin Stoffel (martin.adam.stoffel@@gmail.com) & Meinolf Ottensmann
 #'  (meinolf.ottensmann@@web.de)

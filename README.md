@@ -68,8 +68,8 @@ If you encounter bugs or if you have any suggestions for improvement
 meinolf.ottensmann\[at\]web.de
 
 *Also I´m happy to provide help if you can´t get it to work. Usually it
-is easy to solve small problems. However, in order to simplifiy this
-process please send a short describton of the problem along with the
+is easy to solve small problems. However, in order to simplify this
+process please send a short description of the problem along with the
 code you have been using as a script file (.R) together with a minimal
 example input file (.txt).*
 

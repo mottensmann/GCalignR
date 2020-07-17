@@ -14,6 +14,10 @@
     parameter allows to remove those cases from the dataset to avoid
     problems in post-hoc analyses. By default `FALSE`, ie. all but the
     blank samples are kept.
+  - Added a new boolean parameter `permute` for the functions
+    `align_chromatograms` and `align_peaks`. This allows to change the
+    default behaviour of random permutation of samples during the
+    alignment and might be useful if exact replication is needed.
 
 # GCalignR 1.0.2
 

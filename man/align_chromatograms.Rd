@@ -18,6 +18,7 @@ align_chromatograms(
   blanks = NULL,
   delete_single_peak = FALSE,
   remove_empty = FALSE,
+  permute = TRUE,
   ...
 )
 }
@@ -48,6 +49,10 @@ See the "sep" argument in \code{\link[utils]{read.table}} for details.}
 \item{delete_single_peak}{Boolean, determining whether substances that occur in just one sample are removed or not.}
 
 \item{remove_empty}{Boolean, allows to remove samples which lack any peak after the alignment finished. By default FALSE}
+
+\item{permute}{Boolean, by default a random permutation of samples is conducted prior for each row-wise alignment step. Setting this parameter to FALSE causes alignment of the dataset as it is.
+
+order of samples is constantly randomised during the alignment. Allows to prevent this behaviour for maximal repeatability if needed.}
 
 \item{...}{optional arguments passed to methods, see \code{\link[graphics]{barplot}}.}
 }

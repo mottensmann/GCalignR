@@ -9,6 +9,7 @@ align_peaks(
   max_diff_peak2mean = 0.02,
   iterations = 1,
   rt_col_name,
+  permute = TRUE,
   R = 1
 )
 }
@@ -21,6 +22,10 @@ required variable.}
 \item{max_diff_peak2mean}{Numeric value defining the allowed deviation of the retention time of a given peak from the mean of the corresponding row (i.e. scored substance). This parameter reflects the retention time range in which peaks across samples are still matched as homologous peaks (i.e. substance). Peaks with retention times exceeding the threshold are sorted into a different row.}
 
 \item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
+
+\item{permute}{Boolean, by default a random permutation of samples is conducted prior for each row-wise alignment step. Setting this parameter to FALSE causes alignment of the dataset as it is.
+
+order of samples is constantly randomised during the alignment. Allows to prevent this behaviour for maximal repeatability if needed.}
 
 \item{R}{integer indicating the current iteration of the alignment step.
 Created by \link{align_chromatograms}.}
@@ -37,7 +42,7 @@ a list of data.frames containing GC-data with aligned peaks.
 so that shared peaks are consistently located at the the same location (i.e.
 defined as the same substance). The order of chromatograms (i.e. data.frames
 in \code{gc_peak_list}) is randomized before each run of the alignment of
-algorithm. The main principle of this function is to reduce the variance in
+algorithm (if randomisation is not needed, this behaviour can be changed by setting \strong{permute = FALSE}). The main principle of this function is to reduce the variance in
 retention times within rows, thereby peaks of similar retention time are
 grouped together. Peaks that deviate significantly from the mean retention times
 of the other samples are shifted to another row. At the start of a row the

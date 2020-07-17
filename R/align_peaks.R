@@ -4,7 +4,7 @@
 #'so that shared peaks are consistently located at the the same location (i.e.
 #'defined as the same substance). The order of chromatograms (i.e. data.frames
 #'in \code{gc_peak_list}) is randomized before each run of the alignment of
-#'algorithm. The main principle of this function is to reduce the variance in
+#'algorithm (if randomisation is not needed, this behaviour can be changed by setting \strong{permute = FALSE}). The main principle of this function is to reduce the variance in
 #'retention times within rows, thereby peaks of similar retention time are
 #'grouped together. Peaks that deviate significantly from the mean retention times
 #'of the other samples are shifted to another row. At the start of a row the
@@ -45,7 +45,7 @@
 #'
 #'@keywords internal
 #'
-align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1, rt_col_name,R = 1) {
+align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1, rt_col_name, permute = TRUE, R = 1) {
     # print to Console
     # cat(paste('Iteration',as.character(R),'out of',as.character(iterations),' ... '))
 
@@ -67,8 +67,10 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
 
 
         # Randomize the order of samples
-        shuffle_order <- sample(1:length(gc_peak_list))
-        gc_peak_list <- gc_peak_list[shuffle_order]
+        if (isTRUE(permute)) {
+            shuffle_order <- sample(1:length(gc_peak_list))
+            gc_peak_list <- gc_peak_list[shuffle_order]
+        }
 
         # Start with the second sample (S = 2)
     for (s in 2:length(gc_peak_list)) {

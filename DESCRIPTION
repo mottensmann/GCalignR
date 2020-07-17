@@ -30,6 +30,7 @@ Imports:
     pbapply,
     tibble
 License: GPL (>= 2) | file LICENSE
+LANGUAGE: en-GB
 LazyData: true
 RoxygenNote: 7.1.0
 Suggests:

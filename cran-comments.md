@@ -1,10 +1,10 @@
 ## Submission GCalignR version 1.0.3
 
-This is a new minor release with small additions and changes in the documentation.
+This is a new minor release with small extension of existing functions as well as updates in the documentation.
 
 ## Test environments
 * devtools::build_win()
-* 
+* devtools::check_rhub()
 * local Windows 10 Home
 * Travis-CI
 

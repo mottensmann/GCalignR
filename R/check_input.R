@@ -114,7 +114,7 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         if (!(all(unlist(lapply(data, is.data.frame))))) {
             pass <- FALSE
             warning("Every Sample has to be a data.frame")
-        } else if (all(unlist(lapply(data, tibble::is.tibble)))) {
+        } else if (all(unlist(lapply(data, tibble::is_tibble)))) {
             message("Detected tibbles, coerce to data frame")
             data <- lapply(data, as.data.frame)
         }

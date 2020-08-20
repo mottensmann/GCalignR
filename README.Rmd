@@ -36,9 +36,9 @@ As with other software you need to get used to the input format which is shown i
 
 ### Installing GCalignR:
 
-* Get the latest version 1.0.3 from `GitHub`
+* Get the latest version 1.0.3 on `GitHub`
 
-*The most recent version on GitHub introduces the new parameter `remove_empty` within the `align_chromatograms` function. This parameter allows to remove empty samples (i.e. no peak is left after the processing) from the dataset. Otherwise issues with downstream analyses can occur*
+*The most recent version on GitHub introduces the new parameter `remove_empty` within the `align_chromatograms` function. This parameter allows to remove empty samples (i.e. no peak is left after the processing) from the dataset. Otherwise issues with downstream analyses might occur*
 
 ```{r, eval=FALSE}
     if (!("devtools" %in% rownames(installed.packages()))) { 

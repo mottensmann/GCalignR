@@ -3,10 +3,10 @@ output: github_document
 html_preview: false
 ---
 
-# GCalignR 1.0.2.9
+# GCalignR 1.0.3
 ___
 * Added `fill = TRUE` as a parameter in `utils::read.table` when reading data from text within internal functions. *Loading GC data with utils::read.table failed in cases of missing values in a column (i.e. empty). This is the correct behaviour as missing data should always be coded explicitly by 'NA'*
-* Tibles are now coerced to data frames
+* Tibbles are now coerced to data frames
 * Added a new boolean parameter `remove_empty` for the main function `align_chromatograms`. If samples are empty  (ie. no peak) this parameter allows to remove those cases from the dataset to avoid problems in post-hoc analyses. By default `FALSE`, ie. all but the blank samples are kept.
 * Added a new boolean parameter `permute` for the functions `align_chromatograms` and `align_peaks`. This allows to change the default behaviour of random permutation of samples during the alignment and might be useful if exact replication is needed.
 

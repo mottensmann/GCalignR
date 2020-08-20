@@ -1,14 +1,10 @@
-## Resubmission GCalignR version 1.0.2
-This is a resubmission. In this version I have:
+## Submission GCalignR version 1.0.3
 
-1. Corrected the  DOI in the CITATION file
-2. Citation to the published accompanying paper added
-
-## Release summary
+This is a new minor release with small additions and changes in the documentation.
 
 ## Test environments
 * devtools::build_win()
-* local Mac OS X El Capitan 10.11
+* 
 * local Windows 10 Home
 * Travis-CI
 

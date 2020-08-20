@@ -17,7 +17,7 @@ package supports any other one-dimensional chromatograpy technique that
 enables the user to create a peak list with at least one column
 specifying retention times as illustrated below.
 
-<img src="vignettes/Two_Chromas_Peak_List.png" width="864" style="display: block; margin: auto;" />
+<img src="vignettes/Two_Chromas_Peak_List.png" style="display: block; margin: auto;" />
 
 As with other software you need to get used to the input format which is
 shown in the illustration:
@@ -30,15 +30,7 @@ shown in the illustration:
 
 ### Installing GCalignR:
 
-  - The current release 1.0.2 is on CRAN.
-
-<!-- end list -->
-
-``` r
-install.packages("GCalignR", dependencies = T)
-```
-
-  - Get the latest developmental version
+  - Get the latest version 1.0.3 from `GitHub`
 
 *The most recent version on GitHub introduces the new parameter
 `remove_empty` within the `align_chromatograms` function. This parameter
@@ -52,7 +44,15 @@ can occur*
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
+    devtools::install_github("mottensmann/GCalignR@v1.0.3", build_vignettes = TRUE)
+```
+
+  - The current release 1.0.2 is on `CRAN.`
+
+<!-- end list -->
+
+``` r
+install.packages("GCalignR", dependencies = T)
 ```
 
 ### Get started with GCalignR

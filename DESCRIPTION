@@ -30,9 +30,9 @@ Imports:
     pbapply,
     tibble
 License: GPL (>= 2) | file LICENSE
-LANGUAGE: en-GB
+Language: en-GB
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests:
     knitr,
     pander,

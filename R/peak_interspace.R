@@ -65,7 +65,18 @@ peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NUL
         col_names <- names(data[[1]])
         ind_names <- names(data)
         gc_peak_list <- data
-        }
+
+        ## remove rows only containing NA.
+        gc_peak_list <- lapply(gc_peak_list, function(gc_data) {
+            gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
+            ## Remove empty rows
+            gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]
+            as.data.frame(gc_data)
+        })
+    }
+
+
+
     # Extract retention times for all samples and list them
     fx <- function(df,rt_col_name) out <- df[[rt_col_name]]
 

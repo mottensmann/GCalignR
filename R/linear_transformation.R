@@ -38,7 +38,7 @@
 linear_transformation <- function(gc_peak_list,reference, max_linear_shift = 0.05, step_size = 0.01, rt_col_name, Logbook = NULL) {
 
     if (is.null(Logbook)) Logbook <- list()
-    gc_peak_list <- remove_gaps(gc_peak_list)
+    gc_peak_list <- remove_gaps(gc_peak_list, rt_col_name)
     # currently method is fixed
     method <- "Deviance"
 

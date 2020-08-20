@@ -66,7 +66,7 @@ df_median_sim_score <- function(gc_peak_list, rt_col_name, method) {
     temp <- pbapply::pblapply(gc_peak_list, function(x) median_sim_score(gc_peak_list = gc_peak_list, ref_df = x, rt_col_name = rt_col_name, method = method))
     temp <- do.call("rbind", temp)
     ## number of peaks per sample
-    temp_gc_peak_list <- remove_gaps(gc_peak_list = gc_peak_list)
+    temp_gc_peak_list <- remove_gaps(gc_peak_list = gc_peak_list, rt_col_name = rt_col_name)
     temp <- data.frame(score = as.vector(temp),
                        sample = rownames(temp),
                        n_peaks = as.vector(unlist(lapply(temp_gc_peak_list, nrow))))

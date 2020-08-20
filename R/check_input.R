@@ -74,14 +74,19 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         ind_names <- stringr::str_trim(ind_names)
         ## Get Peak Data
         gc_data <- utils::read.table(data, skip = 2, sep = sep, stringsAsFactors = F, fill = T)
-        col_class <- as.factor(unlist(lapply(lapply(X = 1:ncol(gc_data), function(x) as.vector(gc_data[,x])), class)))
-        if (any(!(col_class %in% c("numeric", "integer")))) stop(paste0("Only numeric & integer values are supported! Column(s)",paste(as.character(which(col_class == "character")), collapse = "; ")," violate the requirements. Fix to proceed." ))
-        ## Check that all values are numeric, SKIPPED
-        # x <- as.vector(unlist(gc_data))
-        # na <- length(x[is.na(x)])
-        # y <- as.vector(as.data.frame(apply(gc_data, 2, as.numeric)))
-        # y <- as.vector(unlist(y))
-        # if (suppressWarnings(length(y[is.na(y)]) - na > 0)) stop("Data contains non-numeric data. Make sure not to use >,< as a decimal operator")
+
+
+        if (!"rt_col_name" %in% names(opt)) {
+            col_class <- as.factor(unlist(lapply(lapply(X = 1:ncol(gc_data), function(x) as.vector(gc_data[,x])), class)))
+            if (any(!(col_class %in% c("numeric", "integer")))) {
+                message(
+                    paste0("Retention times need to be numeric. Column(s)",
+                           paste(as.character(which(!col_class %in% c("numeric", "integer"))), collapse = "; "),
+                           " violate the requirements." ))
+            }
+        }
+
+
         ## Remove just NA-rows
         gc_data <- gc_data[!(rowSums(is.na(gc_data)) == ncol(gc_data)), ]
         ## Remove empty rows
@@ -124,14 +129,15 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         data2 <- lapply(data, function(x) x[1:min_n,])
         temp <- do.call("cbind", data2)
         if (!(any(apply(temp, 2, class) %in% c("numeric","integer")))) {
-            na_1 <- length(which(is.na(temp)))
-            data <- lapply(data, function(x) as.data.frame(apply(x, 2, as.numeric)))
-            data2 <- lapply(data, function(x) x[1:min_n,])
-            na_2 <- length(which(is.na(do.call("cbind", data2))))
-            if (na_2 > na_1) {
-                pass <- FALSE
-                warning("All columns need to contain only numericals or integers. NAs introduced by coercion")
-            }
+            # na_1 <- length(which(is.na(temp)))
+            # data <- lapply(data, function(x) as.data.frame(apply(x, 2, as.numeric)))
+            # data2 <- lapply(data, function(x) x[1:min_n,])
+            # na_2 <- length(which(is.na(do.call("cbind", data2))))
+            message("Non-numeric variables. Make sure all retention time values are numeric\n")
+            # if (na_2 > na_1) {
+            #     pass <- FALSE
+            #     warning("NAs introduced by coercion\n")
+            # }
         }
 
         ## Adjust sizes of data frames, each has the same number of rows
@@ -152,14 +158,22 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
             if (!(rt_col_name %in% col_names)) stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(col_names,collapse = " & "))))
         }
         ind_names <- names(data)
-        if (any(duplicated(ind_names))) warning("Avoid duplicates in sample names")
+        if (any(duplicated(ind_names))) warning("Avoid duplicates in sample names\n")
         gc_peak_list <- data
-    }
+    }# end of checking on list
+
     # Validate retention times
     if ("rt_col_name" %in% names(opt)) {
         df <- unlist(lapply(gc_peak_list,FUN = function(x,rt_col_name) x[[rt_col_name]],rt_col_name))
-        if (!is.numeric(df)) stop("Not all retention times are numeric. Make sure to use the correct decimal operator '.' instead of ','")
+        if (!is.numeric(df)) stop("Not all retention times are numeric! Make sure to use the correct decimal operator '.' instead of ','")
     }
+
+    if ("conc_col_name" %in% names(opt)) {
+        df <- unlist(lapply(gc_peak_list,FUN = function(x,rt_col_name) x[[conc_col_name]],conc_col_name))
+        if (!is.numeric(df)) stop("Not all concentration values are numeric! Make sure to use the correct decimal operator '.' instead of ','")
+    }
+
+
     ## Do some internal checks if write_output is defined in align_chromatograms
     if (any(names(opt) == "write_output")) {
         if (any(!(opt[["write_output"]] %in% col_names))) {

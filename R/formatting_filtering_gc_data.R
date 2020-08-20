@@ -286,21 +286,20 @@ rename_cols <- function(data, var_names) {
     data
 }#rename_cols
 
-remove_gaps <- function(gc_peak_list) {
+remove_gaps <- function(gc_peak_list, rt_col_name) {
     gc_peak_list <- lapply(gc_peak_list, FUN = function(x) {
-        if (any(is.na(rowSums(x)))) {
-            p <- as.vector(which(is.na(rowSums(x))))
+        if (any(is.na(x[[rt_col_name]]))) {
+            p <- as.vector(which(is.na(x[[rt_col_name]])))
             x <- x[-p,]
         }
-        if (any(rowSums(x) == 0)) {
-            p <- as.vector(which(rowSums(x) == 0))
+        if (any(x[[rt_col_name]] == 0)) {
+            p <- as.vector(which(x[[rt_col_name]] == 0))
             x <- x[-p]
         }
         return(x)
     })
     return(gc_peak_list)
 }#remove_gaps
-
 
 rt_cutoff <- function(gc_peak_df, rt_col_name, low = NULL, high = NULL) {
     # make sure gc_peak_df is a data frame

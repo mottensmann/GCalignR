@@ -72,6 +72,11 @@ peak_interspace <- function(data,rt_col_name = NULL, sep = "\t", quantiles = NUL
             ## Remove empty rows
             gc_data <- gc_data[,!(colSums(is.na(gc_data)) == nrow(gc_data))]
             as.data.frame(gc_data)
+            })
+        ## coerce to numeric
+        gc_peak_list <- lapply(gc_peak_list, function(x) {
+            x[[rt_col_name]] <- as.numeric(x[[rt_col_name]])
+            return(x)
         })
     }
 

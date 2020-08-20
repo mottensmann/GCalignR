@@ -1,5 +1,5 @@
 
-# GCalignR 1.0.2.9
+# GCalignR 1.0.3
 
 -----
 
@@ -8,7 +8,7 @@
     with utils::read.table failed in cases of missing values in a column
     (i.e. empty). This is the correct behaviour as missing data should
     always be coded explicitly by ‘NA’*
-  - Tibles are now coerced to data frames
+  - Tibbles are now coerced to data frames
   - Added a new boolean parameter `remove_empty` for the main function
     `align_chromatograms`. If samples are empty (ie. no peak) this
     parameter allows to remove those cases from the dataset to avoid

@@ -9,7 +9,6 @@ Status](https://travis-ci.org/mottensmann/GCalignR.svg?branch=master)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
 [![](https://img.shields.io/badge/doi-10.1371/journal.pone.0198311-Darkorange.svg)](https://doi.org/10.1371/journal.pone.0198311)
 [![](https://img.shields.io/badge/Altmetric-13-Darkorange.svg)](https://www.altmetric.com/details/43624695)
-[![](https://img.shields.io/badge/cited%20in%20Web%20of%20Science%20Core%20Collection--blue.svg)](http://apps.webofknowledge.com/InboundService.do?customersID=LinksAMR&mode=FullRecord&IsProductCode=Yes&product=WOS&Init=Yes&Func=Frame&DestFail=http%3A%2F%2Fwww.webofknowledge.com&action=retrieve&SrcApp=PARTNER_APP&SrcAuth=LinksAMR&SID=F37s1YuMNyRR8cqMmcR&UT=WOS%3A000434384900030)
 
 `GCalignR` provides simple functions to align peak lists obtained from
 Gas Chromatography Flame Ionization Detectors (GC-FID) based on

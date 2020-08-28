@@ -36,9 +36,13 @@ As with other software you need to get used to the input format which is shown i
 
 ### Installing GCalignR:
 
-* Get the latest version 1.0.3 on `GitHub`
+The latest release v1.0.3 is on `CRAN`. [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
 
-*The most recent version on GitHub introduces the new parameter `remove_empty` within the `align_chromatograms` function. This parameter allows to remove empty samples (i.e. no peak is left after the processing) from the dataset. Otherwise issues with downstream analyses might occur*
+```{r, eval = FALSE}
+install.packages("GCalignR", dependencies = T)
+```
+
+*The developmental (currently identical to the CRAN release) is always available on GitHub*
 
 ```{r, eval=FALSE}
     if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -46,15 +50,8 @@ As with other software you need to get used to the input format which is shown i
     } else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
     }
-    devtools::install_github("mottensmann/GCalignR@v1.0.3", build_vignettes = TRUE)
+    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
 ```
-
-* The current release 1.0.2 is on `CRAN.`
-
-```{r, eval = FALSE}
-install.packages("GCalignR", dependencies = T)
-```
-
 
 ### Get started with GCalignR
 

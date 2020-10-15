@@ -162,6 +162,22 @@ check_input <- function(data,plot = FALSE, sep = "\t", message = TRUE, ...) {
         gc_peak_list <- data
     }# end of checking on list
 
+    ## check that each peak consistently is ordered by increasing
+    ## peak retention times
+    if ("rt_col_name" %in% names(opt)) {
+        ordered.input <- sapply(gc_peak_list, function(x) {
+            any(diff(order(x[[rt_col_name]])) != 1)
+        })
+        if (any(ordered.input == TRUE)) {
+            warning("At least one peak list contains unordered retention times.\n Retention times will be reordered by increasing retention times, (i.e. from low to high values)\n")
+            gc_peak_list <- lapply(gc_peak_list, function(x) {
+                ## sort by increasing retention times
+                x[order(x[[rt_col_name]], decreasing = F),]
+            })
+        }
+    }
+
+
     # Validate retention times
     if ("rt_col_name" %in% names(opt)) {
         df <- unlist(lapply(gc_peak_list,FUN = function(x,rt_col_name) x[[rt_col_name]],rt_col_name))

@@ -99,7 +99,6 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     x <- check_input(data,sep,write_output = write_output,blank = blanks,reference = reference,rt_col_name = rt_col_name, message = FALSE)
     if (x != TRUE) stop("Processing not possible: check warnings below and change accordingly in order to proceed")
 
-
     # 1.2 Create a "Logbook" to record alignment steps and parameters
     Logbook <- list()
     Logbook[["Date"]]["Start"] <- as.character(strftime(Sys.time()))
@@ -171,6 +170,17 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
 
     } # end load data
 
+    ## check that each peak consistently is ordered by increasing
+    ## peak retention times
+    ordered.input <- sapply(gc_peak_list, function(x) {
+        any(diff(order(x[[rt_col_name]])) != 1)
+    })
+    if (any(ordered.input == TRUE)) {
+        gc_peak_list <- lapply(gc_peak_list, function(x) {
+            ## sort by increasing retention times
+            x[order(x[[rt_col_name]], decreasing = F),]
+        })
+    }
 
     ## subset samples
     if ("samples" %in% names(opt)) gc_peak_list[opt[["samples"]]]

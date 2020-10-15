@@ -3,6 +3,9 @@ output: github_document
 html_preview: false
 ---
 
+# GCalignR 1.0.3.9
+* Added a test for detecting inconsistently ordered retention times within samples. Retention times are expected in increasing order, starting with the lowest number. If this assumption is violated, retention times are reordered as indicated by a warning.
+
 # GCalignR 1.0.3
 ___
 * Added `fill = TRUE` as a parameter in `utils::read.table` when reading data from text within internal functions. *Loading GC data with utils::read.table failed in cases of missing values in a column (i.e. empty). This is the correct behaviour as missing data should always be coded explicitly by 'NA'*

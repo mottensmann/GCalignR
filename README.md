@@ -17,7 +17,7 @@ package supports any other one-dimensional chromatograpy technique that
 enables the user to create a peak list with at least one column
 specifying retention times as illustrated below.
 
-<img src="vignettes/Two_Chromas_Peak_List.png" style="display: block; margin: auto;" />
+<img src="vignettes/Two_Chromas_Peak_List.png" width="864" style="display: block; margin: auto;" />
 
 As with other software you need to get used to the input format which is
 shown in the illustration:

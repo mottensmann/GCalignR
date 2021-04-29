@@ -138,7 +138,8 @@ if (is.null(label_size)) {
 heat_matrix['diff'][heat_matrix['rt'] == 0] <- NA
 
 # Simplify substance names
-heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[['substance']])),digits = 2))
+heat_matrix['substance'] <- as.factor(as.numeric(as.character(heat_matrix[['substance']])))
+#heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[['substance']])), digits = 2))
 
 # Plot the heatmap
     if (type == "binary") {

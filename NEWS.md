@@ -1,4 +1,14 @@
 
+# GCalignR 1.0.3.9
+
+  - Small bug fixed that caused problems when plotting x-axis labels in
+    `gc_heatmap`. An error occurred in case of two peaks that were
+    identical when rounded to decimal places.
+  - Added a test for detecting inconsistently ordered retention times
+    within samples. Retention times are expected in increasing order,
+    starting with the lowest number. If this assumption is violated,
+    retention times are reordered as indicated by a warning.
+
 # GCalignR 1.0.3
 
 -----
@@ -10,9 +20,9 @@
     always be coded explicitly by ‘NA’*
   - Tibbles are now coerced to data frames
   - Added a new boolean parameter `remove_empty` for the main function
-    `align_chromatograms`. If samples are empty (ie. no peak) this
+    `align_chromatograms`. If samples are empty (i.e.. no peak) this
     parameter allows to remove those cases from the dataset to avoid
-    problems in post-hoc analyses. By default `FALSE`, ie. all but the
+    problems in post-hoc analyses. By default `FALSE`, i.e.. all but the
     blank samples are kept.
   - Added a new boolean parameter `permute` for the functions
     `align_chromatograms` and `align_peaks`. This allows to change the
@@ -25,7 +35,7 @@
 
   - The accompanying manuscript is published
     <https://doi.org/10.1371/journal.pone.0198311> and the citation has
-    been added to GCalignR
+    been added
   - The function *beta* `read_empower2` allows to import HPLC data that
     has been generated using the EMPOWER 2 software
 

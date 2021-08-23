@@ -16,7 +16,8 @@
 #' @keywords beta
 #'
 #' @examples
-#' out <- blank_substraction(aligned_peak_data, blanks = "M2", conc_col_name = "area")
+#' ## Not run
+#' #out <- blank_substraction(aligned_peak_data, blanks = "M2", conc_col_name = "area")
 #'
 #'
 blank_substraction <- function(input = NULL, blanks = NULL, conc_col_name = NULL) {

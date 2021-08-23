@@ -20,7 +20,8 @@ For each substance that is present in blanks, samples are corrected by subtracti
 Substances that are present in one or more blanks are identified in the aligned dataset, then the mean abundance is calculated for the blanks and the corresponding value is subtracted from each sample. If the control contains higher concentration (i.e. blank substation creates negative abundances) warnings will be shown and the respective value will be set to zero
 }
 \examples{
-out <- blank_substraction(aligned_peak_data, blanks = "M2", conc_col_name = "area")
+## Not run
+#out <- blank_substraction(aligned_peak_data, blanks = "M2", conc_col_name = "area")
 
 
 }

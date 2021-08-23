@@ -58,7 +58,7 @@
 #'
 #' @export
 #'
-draw_chromatogram <- function(data = NULL, rt_col_name = NULL, width = 0.1, step = NULL, sep = "\t", breaks = NULL, rt_limits = NULL, samples = NULL, show_num = FALSE, show_rt = FALSE, plot = TRUE, shape = c("gaussian","stick"), legend.position = "bottom")  {
+draw_chromatogram <- function(data = NULL, rt_col_name = NULL, conc_col_name = NULL, width = 0.1, step = NULL, sep = "\t", breaks = NULL, rt_limits = NULL, samples = NULL, show_num = FALSE, show_rt = FALSE, plot = TRUE, shape = c("gaussian","stick"), legend.position = "bottom")  {
 
     shape <- match.arg(shape)
 
@@ -66,7 +66,7 @@ draw_chromatogram <- function(data = NULL, rt_col_name = NULL, width = 0.1, step
     if (is.null(data)) stop("Specify 'data'")
     if (is.null(rt_col_name)) stop("Specify 'rt_col_name'")
     if (show_num == TRUE & show_rt == TRUE) {
-        warning("Cannot simulataneously annotate peaks with retention time and sample cout. Set show_rt or show_num to FALSE")
+        warning("Cannot simulataneously annotate peaks with retention time and sample count. Set show_rt or show_num to FALSE")
         show_rt <- FALSE
     }
 
@@ -147,7 +147,7 @@ rt_range <- c(0, max(temp, na.rm = T) + 1)
 rt_range <- seq(from = rt_range[1], to = rt_range[2], length = 10000)
 
 
-conc_col_name <- NULL
+#conc_col_name <- NULL
 if (!is.null(conc_col_name)) {
     if (!any(colnames(peak_list[[1]]) %in% conc_col_name)) stop(paste0("can not access '",conc_col_name," '. Ensure this is a valid variable name!"))
     conc_max <- max(as.vector(unlist(lapply(X = peak_list, FUN = conc_max, conc_col_name))))

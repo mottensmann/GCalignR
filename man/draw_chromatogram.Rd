@@ -7,6 +7,7 @@
 draw_chromatogram(
   data = NULL,
   rt_col_name = NULL,
+  conc_col_name = NULL,
   width = 0.1,
   step = NULL,
   sep = "\\t",

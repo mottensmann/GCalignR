@@ -84,30 +84,30 @@ gc_heatmap <- function(object = NULL,
     legend_type <- match.arg(legend_type)
     label <- match.arg(label)
 
-# Get the retention time matrix for the selected step
+    # Get the retention time matrix for the selected step
     rt_df <- object[['heatmap_input']][[algorithm_step]]
     rt_df[,'id'] <- as.character(rt_df[,'id'])
 
-# Try to estimate a suitable label_size
-if (is.null(label_size)) {
+    # Try to estimate a suitable label_size
+    if (is.null(label_size)) {
         lab_thresh <- c(20,40,60,80,100,120,140, Inf)
-    lab_size <- c(12,10,8,8,6,5,4,4)
-    samples_size <- nrow(rt_df)
-    # find the matching size
-    temp <- which(lab_thresh > samples_size)
-    if (min(temp) == 1) {
-        label_size <- lab_size[1]
-    } else {
-        label_size <- lab_size[min(temp) - 1]
+        lab_size <- c(12,10,8,8,6,5,4,4)
+        samples_size <- nrow(rt_df)
+        # find the matching size
+        temp <- which(lab_thresh > samples_size)
+        if (min(temp) == 1) {
+            label_size <- lab_size[1]
+        } else {
+            label_size <- lab_size[min(temp) - 1]
+        }
     }
-}
 
-# Substance subsetting
+    # Substance subsetting
     if (!is.null(substance_subset)) {
         # always keep id column, therefore + 1
         rt_df <- rt_df[,c(1,substance_subset + 1)]
     }
-# samples subsetting
+    # samples subsetting
     if (!is.null(samples_subset)) {
         if (is.character(samples_subset)) {
             rt_df <- rt_df[rt_df[,1] %in% samples_subset,]
@@ -115,33 +115,33 @@ if (is.null(label_size)) {
             rt_df <- rt_df[samples_subset,]
         }
     }
-# Create a data frame for plotting with ggolot
+    # Create a data frame for plotting with ggolot
     heat_matrix <- reshape2::melt(data = rt_df,id.vars = 'id')
     names(heat_matrix) <- c('id','substance','rt')
     heat_matrix[,'substance'] <- as.numeric(as.character(heat_matrix[,'substance']))
 
-# Calculate the deviation of each peak from its substance mean
+    # Calculate the deviation of each peak from its substance mean
     heat_matrix[,'diff'] <- (as.numeric(heat_matrix[,'rt']) - heat_matrix[,'substance'])
     # zero means no substance is present
     heat_matrix['diff'][heat_matrix['rt'] == 0] <- 0
     heat_matrix[,'id'] <- ordered( heat_matrix[,'id'], levels = as.factor(rt_df[,'id']))
     heat_matrix[,'substance'] <- ordered( heat_matrix[,'substance'], levels = as.factor(colnames(rt_df)[2:ncol(rt_df)]))
 
-# If binary heatmap was selected, code violoation at the level of the threshold by 0/1
+    # If binary heatmap was selected, code violoation at the level of the threshold by 0/1
     if (type == "binary") {
         # Deviation coded by 1
         heat_matrix['diff'][abs(heat_matrix['diff']) > threshold] <- 1
         # No deviation coded by 0
         heat_matrix['diff'][abs(heat_matrix['diff']) < threshold] <- 0
     }
-# Code absence by NA
-heat_matrix['diff'][heat_matrix['rt'] == 0] <- NA
+    # Code absence by NA
+    heat_matrix['diff'][heat_matrix['rt'] == 0] <- NA
 
-# Simplify substance names
-heat_matrix['substance'] <- as.factor(as.numeric(as.character(heat_matrix[['substance']])))
-#heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[['substance']])), digits = 2))
+    # Simplify substance names
+    heat_matrix['substance'] <- as.factor(as.numeric(as.character(heat_matrix[['substance']])))
+    #heat_matrix['substance'] <- as.factor(round(as.numeric(as.character(heat_matrix[['substance']])), digits = 2))
 
-# Plot the heatmap
+    # Plot the heatmap
     if (type == "binary") {
         # Case that no deviations are present, i.e. perfect alignment
         if (max(heat_matrix['diff'],na.rm = T) == 0) {
@@ -150,60 +150,66 @@ heat_matrix['substance'] <- as.factor(as.numeric(as.character(heat_matrix[['subs
             hm <- hm + scale_fill_gradientn(colours = 'blue',na.value = "white")
             hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),paste("No deviations exceeding a threshold of",as.character(threshold)),main_title))
             hm <- hm + guides(fill = FALSE)
-        # Usual Case, at leat some samples deviate at certain retention times
-        } else {
-            hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id',fill = 'diff'))
+            # Usual Case, at leat some samples deviate at certain retention times
+        } else if (all(heat_matrix['diff'][!is.na(heat_matrix['diff'])] == 1)) {
+            hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id',fill = 'diff'),colour = "Blue")
             hm <- hm + geom_tile(color = "transparent", size = 0.001)
-            hm <- hm + scale_fill_continuous(low = "blue",high = "red",breaks = c(0,1),na.value = "white", guide = 'legend',name = paste('Deviation\n','>',as.character(threshold)),labels = c('NO','YES'))
-            hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),paste("Deviation from substance mean retention time\n(Threshold = ",as.character(threshold),")"),main_title))
-        }
-        # type == continuos
-    } else {
-        col_pal <- c("#5E4FA2","#378EBA","#75C8A4","#BEE4A0","#F1F9A9","#FEEDA2", "#FDBE6F","#F67B49","#D8434D","#9E0142")
-        r <- c(min(heat_matrix[["diff"]],na.rm = T),max(heat_matrix[["diff"]],na.rm = T))
-
-
-        hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id', fill = 'diff'))
-        hm <- hm + geom_tile(color = "white", size = 0.01)
-        hm <- hm + scale_fill_gradientn(colours = col_pal,guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
-        )
-        hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
+            hm <- hm + scale_fill_gradientn(colours = 'red',na.value = "white")
+            hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),paste("Deviations exceeding threshold of",as.character(threshold)),main_title))
+            hm <- hm + guides(fill = FALSE)
+        } else {
+        hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id',fill = 'diff'))
+        hm <- hm + geom_tile(color = "transparent", size = 0.001)
+        hm <- hm + scale_fill_continuous(low = "blue",high = "red",breaks = c(0,1),na.value = "white", guide = 'legend',name = paste('Deviation\n','>',as.character(threshold)),labels = c('NO','YES'))
+        hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),paste("Deviation from substance mean retention time\n(Threshold = ",as.character(threshold),")"),main_title))
     }
-    hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))
+    # type == continuous
+} else {
+    col_pal <- c("#5E4FA2","#378EBA","#75C8A4","#BEE4A0","#F1F9A9","#FEEDA2", "#FDBE6F","#F67B49","#D8434D","#9E0142")
+    r <- c(min(heat_matrix[["diff"]],na.rm = T),max(heat_matrix[["diff"]],na.rm = T))
 
 
-    theme(axis.text.x = element_text(size = label_size, hjust = 0.5,angle = 90),
-          axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
-          axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
-          axis.text.y = element_text(size = label_size,hjust = 0.5))
+    hm <- ggplot(heat_matrix, aes_string(x = 'substance', y = 'id', fill = 'diff'))
+    hm <- hm + geom_tile(color = "white", size = 0.01)
+    hm <- hm + scale_fill_gradientn(colours = col_pal,guide = "legend",name = 'Deviation',na.value = "white", limits = c(-round(max(abs(r)),2) - 0.01,round(max(abs(r)),2) + 0.01)
+    )
+    hm <- hm + labs(x = "substance", y = "sample", title = ifelse(is.null(main_title),"Variation of retention times",main_title))
+}
+hm <- hm + theme(plot.title = element_text(hjust = 0.5,vjust = 1,size = 10,face = 'bold'))
+
+
+theme(axis.text.x = element_text(size = label_size, hjust = 0.5,angle = 90),
+      axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+      axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
+      axis.text.y = element_text(size = label_size,hjust = 0.5))
 
 
 
-    if (label == "xy") {
-        hm <- hm + theme(axis.title.x = element_text(size = 10),
-                         axis.title.y = element_text(size = 10),
-                axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
-                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
-                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
-                         axis.text.y = element_text(size = label_size,hjust = 0.5))
+if (label == "xy") {
+    hm <- hm + theme(axis.title.x = element_text(size = 10),
+                     axis.title.y = element_text(size = 10),
+                     axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
+                     axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                     axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
+                     axis.text.y = element_text(size = label_size,hjust = 0.5))
 
-    } else if (label == "y") {
-        hm <- hm + theme(axis.title.x = element_text(size = 10),
-                         axis.title.y = element_text(size = 10),
-                         axis.text.x = element_blank(),
-                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
-                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
-                         axis.text.y = element_text(size = label_size,hjust = 0.5))
+} else if (label == "y") {
+    hm <- hm + theme(axis.title.x = element_text(size = 10),
+                     axis.title.y = element_text(size = 10),
+                     axis.text.x = element_blank(),
+                     axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                     axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
+                     axis.text.y = element_text(size = label_size,hjust = 0.5))
 
-    } else if (label == "x") {
-        hm <- hm + theme(axis.title.x = element_text(size = 10),
-                         axis.title.y = element_text(size = 10),
-                axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
-                         axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
-                         axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
-                         axis.text.y = element_blank())
+} else if (label == "x") {
+    hm <- hm + theme(axis.title.x = element_text(size = 10),
+                     axis.title.y = element_text(size = 10),
+                     axis.text.x = element_text(size = label_size, vjust = 0.5,angle = 90),
+                     axis.ticks.y = element_line(size = 0.3, colour = "grey60"),
+                     axis.ticks.x = element_line(size = 0.3, colour = "grey60"),
+                     axis.text.y = element_blank())
 
-    } else if (label == "none") {
+} else if (label == "none") {
     hm <- hm + theme(axis.title.x = element_text(size = 10),
                      axis.title.y = element_text(size = 10),
                      axis.text.x = element_blank(),
@@ -211,10 +217,10 @@ heat_matrix['substance'] <- as.factor(as.numeric(as.character(heat_matrix[['subs
                      axis.ticks.x = element_line(size = 0.3, colour = "grey40"),
                      axis.text.y = element_blank())
 
-    }
-    hm <- hm + theme(plot.background = element_rect(fill = "grey95"))
+}
+hm <- hm + theme(plot.background = element_rect(fill = "grey95"))
 
-    # Scoping issues reuire the following loop way to define the data frame
+# Scoping issues reuire the following loop way to define the data frame
 y <- 1:nrow(rt_df) + 0.5
 x <- rep(0,nrow(rt_df))
 yend <- 1:nrow(rt_df) + 0.5

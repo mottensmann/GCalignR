@@ -42,15 +42,15 @@ The latest release v1.0.3 is on `CRAN`. [Click here](https://github.com/mottensm
 install.packages("GCalignR", dependencies = T)
 ```
 
-*The developmental is always available on GitHub*
+*The current developmental version 1.0.4 is available on GitHub*
 
 ```{r, eval=FALSE}
-    if (!("devtools" %in% rownames(installed.packages()))) { 
+if (!("devtools" %in% rownames(installed.packages()))) { 
     install.packages("devtools")
-    } else if (packageVersion("devtools") < 1.6) {
+} else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
-    }
-    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
+}
+devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
 ```
 
 ### Get started with GCalignR
@@ -78,7 +78,7 @@ aligned <- align_chromatograms(data = peak_data[1:10], # list of data frame
                                min_diff_peak2peak = 0.08) 
 ```
 
-*The parameter values above differ from the defaults shown in the paper and the package vignette. In a nutshell, we now suggest in most cases to set `max_diff_peak2mean = 0`. This way peaks are first simply sorted based on the given retention time value and then purely `min_diff_peak2peak` specifies which peaks will be evaluated for a merge. Additionally, this enables the possibility for a considerable boost in computation speed!*
+**The parameter values above differ from the defaults shown in the paper and the package vignette. In a nutshell, we now suggest in most cases to set `max_diff_peak2mean = 0`. This way peaks are first simply sorted based on the given retention time value and then purely `min_diff_peak2peak` specifies which peaks will be evaluated for a merge. Additionally, this enables the possibility for a considerable boost in computation speed of the first alginment steps (available since version 1.0.4, currently only on GitHub!)**
 
 If you encounter bugs or if you have any suggestions for improvement (for instance on how to speed up the algorithm!), just contact meinolf.ottensmann[at]web.de
 

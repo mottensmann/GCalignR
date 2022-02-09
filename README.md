@@ -38,15 +38,15 @@ of past releases and a brief description of applied changes.
 install.packages("GCalignR", dependencies = T)
 ```
 
-*The developmental is always available on GitHub*
+*The current developmental version 1.0.4 is available on GitHub*
 
 ``` r
-    if (!("devtools" %in% rownames(installed.packages()))) { 
+if (!("devtools" %in% rownames(installed.packages()))) { 
     install.packages("devtools")
-    } else if (packageVersion("devtools") < 1.6) {
+} else if (packageVersion("devtools") < 1.6) {
     install.packages("devtools")
-    }
-    devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
+}
+devtools::install_github("mottensmann/GCalignR", build_vignettes = TRUE)
 ```
 
 ### Get started with GCalignR
@@ -75,7 +75,7 @@ aligned <- align_chromatograms(data = peak_data[1:10], # list of data frame
                                max_diff_peak2mean = 0, 
                                min_diff_peak2peak = 0.08) 
 #> Run GCalignR
-#> Start: 2022-02-09 15:45:43
+#> Start: 2022-02-09 16:39:31
 #> 
 #> Data for 10 samples loaded.
 #> No reference was specified. Hence, a reference will be selected automatically ...
@@ -88,16 +88,17 @@ aligned <- align_chromatograms(data = peak_data[1:10], # list of data frame
 #> Merge redundant rows ...
 #>  
 #> Alignment completed!
-#> Time: 2022-02-09 15:46:06
+#> Time: 2022-02-09 16:39:54
 ```
 
-*The parameter values above differ from the defaults shown in the paper
+**The parameter values above differ from the defaults shown in the paper
 and the package vignette. In a nutshell, we now suggest in most cases to
 set `max_diff_peak2mean = 0`. This way peaks are first simply sorted
 based on the given retention time value and then purely
 `min_diff_peak2peak` specifies which peaks will be evaluated for a
 merge. Additionally, this enables the possibility for a considerable
-boost in computation speed!*
+boost in computation speed of the first alginment steps (available since
+version 1.0.4, currently only on GitHub!)**
 
 If you encounter bugs or if you have any suggestions for improvement
 (for instance on how to speed up the algorithm!), just contact

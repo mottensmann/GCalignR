@@ -5,9 +5,9 @@ html_preview: false
 
 # GCalignR 1.0.3.9
 
-* **Speedboost** when setting `max_diff_peak2mean = 0`: In this special case there is no need to use a time-consuming iterative approach but peaks can be sorted simply based on absolute values. 
-* Small bug fixed that caused problems when plotting x-axis labels in `gc_heatmap`. An error occurred in case of two peaks that were identical when rounded to decimal places. 
-* Added a test for detecting inconsistently ordered retention times within samples. Retention times are expected in increasing order, starting with the lowest number. If this assumption is violated, retention times are reordered as indicated by a warning.
+* **Speedboost** when setting `max_diff_peak2mean = 0`: In this special case there is no need to use a time-consuming iterative approach but peaks can be sorted simply based on absolute values. This is implemented in two steps. (1) Across all samples, unique retention times are extracted, sorted in increasing temporal order and written to a template data frame. (2) For each sample, peaks are matched to the corresponding row of the template data frame. 
+* Small bug fixed that caused problems when plotting x-axis labels in `gc_heatmap`. 
+* Added a test for detecting inconsistently ordered retention times within samples. Retention times are expected in increasing order, starting with the lowest number. If this assumption is violated, retention times are reordered and a warning is shown.
 
 # GCalignR 1.0.3
 ___

@@ -287,9 +287,15 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
 
     # Iterations are currently limited to one loop
     for (R in 1:iterations) {
-        gc_peak_list_aligned <- align_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean,
-                                            iterations = iterations, rt_col_name = rt_col_name,R = R,
-                                            permute = permute)
+
+        if (max_diff_peak2mean > 0) {
+            gc_peak_list_aligned <- align_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean,
+                                                iterations = iterations, rt_col_name = rt_col_name,R = R,
+                                                permute = permute)
+        } else if (max_diff_peak2mean == 0) {
+            gc_peak_list_aligned <- align_peaks_fast(gc_peak_list_aligned, rt_col_name = rt_col_name)
+        }
+
         # mean rt per row
         average_rts <- mean_retention_times(gc_peak_list_aligned, rt_col_name = rt_col_name)
         # remove empty rows

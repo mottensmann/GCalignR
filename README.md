@@ -8,7 +8,7 @@ Status](https://travis-ci.org/mottensmann/GCalignR.svg?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GCalignR)](https://cran.r-project.org/package=GCalignR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GCalignR)](https://cran.r-project.org/package=GCalignR)
 [![](https://img.shields.io/badge/doi-10.1371/journal.pone.0198311-Darkorange.svg)](https://doi.org/10.1371/journal.pone.0198311)
-[![](https://img.shields.io/badge/Altmetric-14-Darkorange.svg)](https://www.altmetric.com/details/43624695)
+[![](https://img.shields.io/badge/Altmetric-13-Darkorange.svg)](https://www.altmetric.com/details/43624695)
 
 `GCalignR` provides simple functions to align peak lists obtained from
 Gas Chromatography Flame Ionization Detectors (GC-FID) based on
@@ -75,20 +75,20 @@ aligned <- align_chromatograms(data = peak_data[1:10], # list of data frame
                                max_diff_peak2mean = 0, 
                                min_diff_peak2peak = 0.08) 
 #> Run GCalignR
-#> Start: 2022-02-09 16:39:31
+#> Start: 2022-06-19 23:11:25
 #> 
 #> Data for 10 samples loaded.
 #> No reference was specified. Hence, a reference will be selected automatically ...
 #>  
-#> 'C3' was selected on the basis of highest average similarity to all samples (score = 0.12).
-#> Start correcting linear shifts with "C3" as a reference ...
+#> 'M7' was selected on the basis of highest average similarity to all samples (score = 0.05).
+#> Start correcting linear shifts with "M7" as a reference ...
 #> 
 #> Start aligning peaks ...  this might take a while!
 #> 
 #> Merge redundant rows ...
 #>  
 #> Alignment completed!
-#> Time: 2022-02-09 16:39:54
+#> Time: 2022-06-19 23:11:56
 ```
 
 **The parameter values above differ from the defaults shown in the paper

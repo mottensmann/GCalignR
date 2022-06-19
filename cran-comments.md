@@ -1,6 +1,6 @@
-## Submission GCalignR version 1.0.3
+## Submission GCalignR version 1.0.5
 
-This is a new minor release with small extension of existing functions as well as updates in the documentation.
+This is a minor release correcting an indexing error in the function choose_optimal_reference
 
 ## Test environments
 * devtools::build_win()

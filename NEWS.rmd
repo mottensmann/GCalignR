@@ -3,6 +3,10 @@ output: github_document
 html_preview: false
 ---
 
+# GCalignR 1.0.5
+
+* Bugfix in `choose_optimal_reference` that always selected the first sample as a reference. Thanks to Heberto del Rio who pointed this out on https://github.com/mottensmann/GCalignR/issues/27
+
 # GCalignR 1.0.3.9
 
 * **Speedboost** when setting `max_diff_peak2mean = 0`: In this special case there is no need to use a time-consuming iterative approach but peaks can be sorted simply based on absolute values. This is implemented in two steps. (1) Across all samples, unique retention times are extracted, sorted in increasing temporal order and written to a template data frame. (2) For each sample, peaks are matched to the corresponding row of the template data frame. 

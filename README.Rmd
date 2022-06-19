@@ -42,7 +42,7 @@ The latest release v1.0.3 is on `CRAN`. [Click here](https://github.com/mottensm
 install.packages("GCalignR", dependencies = T)
 ```
 
-*The current developmental version 1.0.4 is available on GitHub*
+*The current developmental version 1.0.5 is available on GitHub*
 
 ```{r, eval=FALSE}
 if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -78,7 +78,7 @@ aligned <- align_chromatograms(data = peak_data[1:10], # list of data frame
                                min_diff_peak2peak = 0.08) 
 ```
 
-**The parameter values above differ from the defaults shown in the paper and the package vignette. In a nutshell, we now suggest in most cases to set `max_diff_peak2mean = 0`. This way peaks are first simply sorted based on the given retention time value and then purely `min_diff_peak2peak` specifies which peaks will be evaluated for a merge. Additionally, this enables the possibility for a considerable boost in computation speed of the first alginment steps (available since version 1.0.4, currently only on GitHub!)**
+**The parameter values above differ from the defaults shown in the paper and the package vignette. In a nutshell, we now suggest in most cases to set `max_diff_peak2mean = 0`. This way peaks are first simply sorted based on the given retention time value and then purely `min_diff_peak2peak` specifies which peaks will be evaluated for a merge. Additionally, this enables the possibility for a considerable boost in computation speed of the first alignment steps (available since version 1.0.5, currently only on GitHub!)**
 
 If you encounter bugs or if you have any suggestions for improvement (for instance on how to speed up the algorithm!), just contact meinolf.ottensmann[at]web.de
 

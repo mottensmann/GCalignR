@@ -4,7 +4,7 @@
 #' Full alignments of peak lists require the specification of a fixed reference to which all other samples are aligned to. This function provides an simple algorithm to find the most suitable sample among a dataset. The so defined reference can be used for full alignments using \code{\link{linear_transformation}}. The functions is evoked internally by \code{\link{align_chromatograms}} if no reference was specified by the user.
 #'
 #' @details
-#' Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples. For a reference-sample pair, the deviation in retention times between all reference peaks and the always nearest peak in the sample is summed and divided by the number of reference peaks. The calculated value is a similarity score that converges to zero the more similar reference and sample are. For every potential reference, the median score of all pair-wise comparisons is used as a similarity proxy. The optimal sample is then defined by the minimum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
+#' Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples. For a reference-sample pair, the deviation in retention times between all reference peaks and the always nearest peak in the sample is summed up and divided by the number of reference peaks. The calculated value is a similarity score that converges to zero the more similar reference and sample are. For every potential reference, the median score of all pair-wise comparisons is used as a similarity proxy. The optimal sample is then defined by the minimum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
 #'
 #' @inheritParams align_chromatograms
 #'
@@ -40,11 +40,14 @@ choose_optimal_reference <- function(data = NULL, rt_col_name = NULL, sep = "\t"
     ## get the median scores for shared peaks
     x <- df_median_sim_score(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name, method = method)
 
-    ## take the best, depending on the method choose
+    ## take the best, depending on the method chosen
     if (method == "Match") {
         index <- which(x[["score"]] == max(x[["score"]]))
     } else if (method == "Deviance") {
-        index <- which(min(x[["score"]]/x[["n_peaks"]]) == min(x[["score"]]/x[["n_peaks"]]))
+        #index <- which(min(x[["score"]]/x[["n_peaks"]]) == min(x[["score"]]/x[["n_peaks"]]))
+        # Sun Jun 19 22:40:46 2022 ------------------------------
+        # Bugfix thanks to hebertodelrio on GitHub!
+        index <- which(x[["score"]]/x[["n_peaks"]] == min(x[["score"]]/x[["n_peaks"]]))
     }
 
     ## If more than one would get the same score, take the most central run

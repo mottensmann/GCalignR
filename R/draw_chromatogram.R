@@ -78,16 +78,16 @@ draw_chromatogram <- function(data = NULL, rt_col_name = NULL, conc_col_name = N
         out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F, message = F)
         if (out == FALSE) stop("Data is not formatted correctly. See check_input for details")
         } else {
-        if (class(data) == "GCalign") {
+        if (inherits(data, "GCalign")) {
             if (!(rt_col_name %in% names(data[["aligned"]])))  stop(print(paste(rt_col_name,"is not a valid variable name. Data contains:",paste(names(data[["aligned"]]),collapse = " & "))))
-        } else if (class(data) == "list") {
+        } else if (inherits(data, "list")) {
             out <- check_input(data = data, rt_col_name = rt_col_name, sep = sep, plot = F, message = F)
             if (out == FALSE) stop("Data is malformed. See check_input for details")
         }
     }
     if (is.character(data)) {
 peak_list <- read_peak_list(data, sep, rt_col_name)
-    } else if (class(data) == "GCalign") {
+    } else if (inherits(data, "GCalign")) {
         step <- match.arg(step, choices = c("aligned","input","shifted"))
         if (step == "input") {
             peak_list <- data[["input_list"]]
@@ -103,7 +103,7 @@ peak_list <- read_peak_list(data, sep, rt_col_name)
                 return(x)
         })
         }
-    } else if (class(data) == "list") {
+    } else if (inherits(data, "list")) {
         peak_list <- lapply(data, FUN = function(x) {
             if (any(is.na(rowSums(x)))) {
                 p <- as.vector(which(is.na(rowSums(x))))

@@ -24,7 +24,7 @@
 #' @export
 #'
 remove_blanks <- function(data, blanks) {
-    if (class(data) == "GCalign") {
+    if (inherits(data, "GCalign")) {
         rt_col_name <-  data[["Logfile"]][["Call"]][["rt_col_name"]]
         data <- data[["aligned_list"]]
     } else if (is.list(data)) {

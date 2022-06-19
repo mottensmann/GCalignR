@@ -59,7 +59,7 @@ if (is.null(input)) stop("No input was defined")
 if (is.null(blanks)) stop("Define name(s) of blanks")
 
     # read data and prepare a list
-if (class(input) == "GCalign") {
+if (inherits(input, "GCalign")) {
     if (is.null(conc_col_name)) stop("Define the name of a data frame")
     if (conc_col_name %in%  names(input[["aligned"]])) {
     input2 <- input[["aligned"]][[conc_col_name]]

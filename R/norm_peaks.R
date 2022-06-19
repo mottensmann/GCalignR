@@ -34,7 +34,7 @@ out <- match.arg(out)
 ## some checks
 if (is.null(conc_col_name)) {stop("List containing peak concentration is not specified. Define conc_col_name")}
 
-if (class(data) == "GCalign") {
+if (inherits(data, "GCalign")) {
     which <-  "aligned"
     conc_list <- data[[which]][[conc_col_name]]
 } else if (is.list(data)) {

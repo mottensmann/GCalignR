@@ -36,13 +36,13 @@ As with other software you need to get used to the input format which is shown i
 
 ### Installing GCalignR:
 
-The latest release v1.0.3 is on `CRAN`. [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
+The latest release v1.0.5 is on `CRAN`. [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
 
 ```{r, eval = FALSE}
 install.packages("GCalignR", dependencies = T)
 ```
 
-*The current developmental version 1.0.5 is available on GitHub*
+*The current developmental version is identical to the CRAN release*
 
 ```{r, eval=FALSE}
 if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -63,7 +63,7 @@ browseVignettes("GCalignR")
 
 Basic usage of the main function to align peaks:
 
-+ `peak_data`: List of data frames, each corresponding to a sample
++ `data`: Path to a text file (see input format above), or list of data frames, each corresponding to a sample 
 + `rt_col_name`: column name of retention time values
 + `max_linear_shift`: Here, no adjustment of systematic linear drift
 + `max_diff_peak2mean`: Here, sort all peaks strictly by retention time
@@ -84,6 +84,18 @@ If you encounter bugs or if you have any suggestions for improvement (for instan
 
 *Also I´m happy to provide help if you can´t get it to work. Usually it is easy to solve small problems. However, in order to simplify this process please send a short description of the problem along with the code you have been using as a script file (.R) together with a minimal example input file (.txt).* 
 
-### Reference
+### Published paper 
 
 [Ottensmann M, Stoffel MA, Nichols HJ, Hoffman JI (2018) GCalignR: An R package for aligning gas-chromatography data for ecological and evolutionary studies. PLoS ONE 13(6): e0198311. https://doi.org/10.1371/journal.pone.0198311](https://doi.org/10.1371/journal.pone.0198311)
+
+```{r, eval=TRUE, echo=FALSE}
+df <- scholar::get_article_cite_history(id = "jB8EJjQAAAAJ", article = "_kc_bZDykSQC")
+df <- data.frame(Year = df[["year"]], Citations = df[["cites"]])
+library(ggplot2)
+ggplot(df, aes(Year, Citations)) +
+    geom_bar(stat = "identity", col = "#D95F02" , fill = "#1B9E77") +
+    egg::theme_article(base_size = 14) +
+    labs(title = "GCalignR usage", 
+         caption = paste("Citations as of", Sys.Date(), "[Google Scholar]"))
+```
+

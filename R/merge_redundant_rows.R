@@ -33,7 +33,7 @@
 #' @export
 #'
 merge_redundant_rows <- function(data, min_diff_peak2peak = NULL) {
-    if (class(data) != "GCalign") stop("Only data of type GCalign is supported")
+    if (!methods::is(data, "GCalign")) stop("Only data of type GCalign is supported")
     if (is.null(min_diff_peak2peak)) stop("Specify an numeric threshold value in minutes")
     gc_peak_list_aligned <- data[["aligned_list"]]
 

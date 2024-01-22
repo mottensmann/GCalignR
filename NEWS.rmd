@@ -3,7 +3,12 @@ output: github_document
 html_preview: false
 ---
 
+# GcalignR 1.0.6
+___
+* Removing unused argument `gc_peak_df` from `align_peaks`
+
 # GCalignR 1.0.5
+___
 
 * Bugfix in `choose_optimal_reference` that always selected the first sample as a reference. Thanks to Heberto del Rio who pointed this out on https://github.com/mottensmann/GCalignR/issues/27
 

@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # GCalignR [<img src="vignettes/GCalignRLogo.png" height="200" align="right"/>](https://github.com/mottensmann/GCalignR)
 
 ![Build
@@ -30,7 +28,7 @@ shown in the illustration:
 
 ### Installing GCalignR:
 
-The latest release v1.0.5 is on `CRAN`. [Click
+The latest release v1.0.5.2 is on `CRAN`. [Click
 here](https://github.com/mottensmann/GCalignR/releases) for an overview
 of past releases and a brief description of applied changes.
 
@@ -69,26 +67,26 @@ Basic usage of the main function to align peaks:
 
 ``` r
 library(GCalignR)
-aligned <- align_chromatograms(data = peak_data[1:10], # list of data frame 
+aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame 
                                rt_col_name = "time", # retention time
                                max_linear_shift = 0, #
                                max_diff_peak2mean = 0, 
                                min_diff_peak2peak = 0.08) 
 #> Run GCalignR
-#> Start: 2023-06-20 12:44:08
+#> Start: 2024-01-22 17:51:11
 #> 
-#> Data for 10 samples loaded.
+#> Data for 4 samples loaded.
 #> No reference was specified. Hence, a reference will be selected automatically ...
 #>  
-#> 'M7' was selected on the basis of highest average similarity to all samples (score = 0.05).
-#> Start correcting linear shifts with "M7" as a reference ...
+#> 'C2' was selected on the basis of highest average similarity to all samples (score = 0.06).
+#> Start correcting linear shifts with "C2" as a reference ...
 #> 
 #> Start aligning peaks ...  this might take a while!
 #> 
 #> Merge redundant rows ...
 #>  
 #> Alignment completed!
-#> Time: 2023-06-20 12:44:32
+#> Time: 2024-01-22 17:51:15
 ```
 
 **The parameter values above differ from the defaults shown in the paper
@@ -116,7 +114,5 @@ example input file (.txt).*
 package for aligning gas-chromatography data for ecological and
 evolutionary studies. PLoS ONE 13(6): e0198311.
 https://doi.org/10.1371/journal.pone.0198311](https://doi.org/10.1371/journal.pone.0198311)
-
-    #> Warning: package 'ggplot2' was built under R version 4.2.3
 
 ![](README-unnamed-chunk-7-1.png)<!-- -->

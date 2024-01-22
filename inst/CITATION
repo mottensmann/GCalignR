@@ -1,10 +1,10 @@
 citHeader("To cite GCalignR in publications please refer to our paper:")
 
-citEntry(entry = "Article",
-         author       = personList(as.person("Meinolf Ottensmann"),
-                                   as.person("Martin A. Stoffel"),
-                                   as.person("Hazel J. Nichols"),
-                                   as.person("Joseph I. Hoffman")),
+bibentry(bibtype = "Article",
+         author       = c(person("Meinolf Ottensmann"),
+                                   person("Martin A. Stoffel"),
+                                   person("Hazel J. Nichols"),
+                                   person("Joseph I. Hoffman")),
          title        = "GCalignR: An R package for aligning gas-chromatography data for ecological and evolutionary studies",
          year         = "2018",
          doi = "10.1371/journal.pone.0198311",

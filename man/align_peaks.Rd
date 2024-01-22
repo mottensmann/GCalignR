@@ -29,10 +29,6 @@ order of samples is constantly randomised during the alignment. Allows to preven
 
 \item{R}{integer indicating the current iteration of the alignment step.
 Created by \link{align_chromatograms}.}
-
-\item{gc_peak_df}{data.frame containing GC-data (e.g. retention time, peak
-area, peak height) of one sample. Variables are stored in columns, rows
-represent peaks.}
 }
 \value{
 a list of data.frames containing GC-data with aligned peaks.

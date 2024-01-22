@@ -24,10 +24,6 @@
 #'\strong{max_diff_peak2mean} around the mean retention time no shifting is done
 #'and the algorithm proceeds with the following sample.
 #'
-#'@param gc_peak_df data.frame containing GC-data (e.g. retention time, peak
-#'  area, peak height) of one sample. Variables are stored in columns, rows
-#'  represent peaks.
-#'
 #'@param gc_peak_list List of data.frames. Each data.frame contains GC-data
 #'  (e.g. retention time, peak area, peak height) of one sample. Variables are
 #'  stored in columns. Rows represent distinct peaks. Retention time is a

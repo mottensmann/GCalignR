@@ -1,6 +1,6 @@
 Package: GCalignR
 Title: Simple Peak Alignment for Gas-Chromatography Data
-Version: 1.0.6
+Version: 1.0.6.1
 Date: 2024-01-22
 Encoding: UTF-8
 Authors@R: c(

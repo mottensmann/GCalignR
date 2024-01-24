@@ -28,9 +28,10 @@ shown in the illustration:
 
 ### Installing GCalignR:
 
-The latest release v1.0.5.2 is on `CRAN`. [Click
-here](https://github.com/mottensmann/GCalignR/releases) for an overview
-of past releases and a brief description of applied changes.
+The latest release v1.0.6 is on
+[CRAN](https://cran.r-project.org/web/packages/GCalignR/index.html).
+[Click here](https://github.com/mottensmann/GCalignR/releases) for an
+overview of past releases and a brief description of applied changes.
 
 ``` r
 install.packages("GCalignR", dependencies = T)
@@ -73,7 +74,7 @@ aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame
                                max_diff_peak2mean = 0, 
                                min_diff_peak2peak = 0.08) 
 #> Run GCalignR
-#> Start: 2024-01-22 17:51:11
+#> Start: 2024-01-24 11:07:29
 #> 
 #> Data for 4 samples loaded.
 #> No reference was specified. Hence, a reference will be selected automatically ...
@@ -86,7 +87,7 @@ aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame
 #> Merge redundant rows ...
 #>  
 #> Alignment completed!
-#> Time: 2024-01-22 17:51:15
+#> Time: 2024-01-24 11:07:32
 ```
 
 **The parameter values above differ from the defaults shown in the paper

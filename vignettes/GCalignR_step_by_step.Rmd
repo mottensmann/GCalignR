@@ -248,12 +248,15 @@ ggplot(data = scent_nmds,aes(MDS1,MDS2,color = colony)) +
             fill = NA), aspect.ratio = 1, legend.position = "none")
 ```
 
-### Multivariate analysis using *adonis*
-Using **adonis** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
+### Multivariate analysis using *adonis2*
+
+*Update July 2024: vegan::adonis2 is replacing the now defunct function vegan::adonis*
+
+Using **adonis2** and **betadisper** we can immediately do multivariate statistics, showing that the two colonies differ significantly. This illustrates a location effect.
 
 ```{r}
 ## colony effect
-vegan::adonis(scent ~ peak_factors$colony,permutations = 999) 
+vegan::adonis2(scent ~ peak_factors$colony,permutations = 999)
 ## no dispersion effect
 anova(vegan::betadisper(vegan::vegdist(scent),peak_factors$colony))
 ```

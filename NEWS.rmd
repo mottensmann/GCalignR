@@ -3,7 +3,11 @@ output: github_document
 html_preview: false
 ---
 
-# GcalignR 1.0.6
+# GCalignR 1.0.7
+___
+* replacing defunct vegan::adonis by vegan::adonis2
+
+# GCalignR 1.0.6
 ___
 * Removing unused argument `gc_peak_df` from `align_peaks`
 

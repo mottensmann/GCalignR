@@ -1,7 +1,7 @@
 Package: GCalignR
 Title: Simple Peak Alignment for Gas-Chromatography Data
-Version: 1.0.6.1
-Date: 2024-01-22
+Version: 1.0.7
+Date: 2024-07-03
 Encoding: UTF-8
 Authors@R: c(
     person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre"), 
@@ -33,7 +33,7 @@ Imports:
 License: GPL (>= 2) | file LICENSE
 Language: en-GB
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests:
     knitr,
     pander,

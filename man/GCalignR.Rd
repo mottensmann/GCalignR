@@ -2,6 +2,7 @@
 % Please edit documentation in R/GCalignR.R
 \docType{package}
 \name{GCalignR}
+\alias{GCalignR-package}
 \alias{GCalignR}
 \title{GCalignR: A Package to Align Gas Chromatography Peaks Based on Retention Times}
 \description{
@@ -33,4 +34,23 @@
 }
 \details{
 More details on the package are found in the vignettes that can be accessed via \code{browseVignettes("GCalignR")}.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mottensmann/GCalignR}
+  \item Report bugs at \url{https://github.com/mottensmann/GCalignR/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Meinolf Ottensmann \email{meinolf.ottensmann@web.de} (\href{https://orcid.org/0000-0003-3112-6928}{ORCID})
+
+Authors:
+\itemize{
+  \item Martin Stoffel \email{martin.adam.stoffel@gmail.com}
+  \item Hazel J. Nichols
+  \item Joseph I. Hoffman
+}
+
 }

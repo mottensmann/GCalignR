@@ -29,9 +29,9 @@ shown in the illustration:
 ### Installing GCalignR:
 
 The latest release v1.0.6 is on
-[CRAN](https://cran.r-project.org/web/packages/GCalignR/index.html).
-[Click here](https://github.com/mottensmann/GCalignR/releases) for an
-overview of past releases and a brief description of applied changes.
+[CRAN](https://cran.r-project.org/package=GCalignR). [Click
+here](https://github.com/mottensmann/GCalignR/releases) for an overview
+of past releases and a brief description of applied changes.
 
 ``` r
 install.packages("GCalignR", dependencies = T)
@@ -68,13 +68,17 @@ Basic usage of the main function to align peaks:
 
 ``` r
 library(GCalignR)
+#> Warning: package 'GCalignR' was built under R version 4.4.1
+```
+
+``` r
 aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame 
                                rt_col_name = "time", # retention time
                                max_linear_shift = 0, #
                                max_diff_peak2mean = 0, 
                                min_diff_peak2peak = 0.08) 
 #> Run GCalignR
-#> Start: 2024-01-24 11:07:29
+#> Start: 2024-07-03 14:53:38
 #> 
 #> Data for 4 samples loaded.
 #> No reference was specified. Hence, a reference will be selected automatically ...
@@ -87,7 +91,7 @@ aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame
 #> Merge redundant rows ...
 #>  
 #> Alignment completed!
-#> Time: 2024-01-24 11:07:32
+#> Time: 2024-07-03 14:53:41
 ```
 
 **The parameter values above differ from the defaults shown in the paper
@@ -115,5 +119,7 @@ example input file (.txt).*
 package for aligning gas-chromatography data for ecological and
 evolutionary studies. PLoS ONE 13(6): e0198311.
 https://doi.org/10.1371/journal.pone.0198311](https://doi.org/10.1371/journal.pone.0198311)
+
+    #> Warning: package 'ggplot2' was built under R version 4.4.1
 
 ![](README-unnamed-chunk-7-1.png)<!-- -->

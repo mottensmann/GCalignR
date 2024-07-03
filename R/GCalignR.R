@@ -30,7 +30,6 @@
 #'@details
 #' More details on the package are found in the vignettes that can be accessed via \code{browseVignettes("GCalignR")}.
 #'
-#' @docType package
 #' @name GCalignR
 #'
-NULL
+"_PACKAGE"

@@ -34,7 +34,7 @@ As with other software you need to get used to the input format which is shown i
 
 ### Installing GCalignR:
 
-The latest release v1.0.6 is on [CRAN](https://cran.r-project.org/web/packages/GCalignR/index.html). [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
+The latest release v1.0.6 is on [CRAN](https://cran.r-project.org/package=GCalignR). [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
 
 ```{r, eval = FALSE}
 install.packages("GCalignR", dependencies = T)

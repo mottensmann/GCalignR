@@ -34,13 +34,13 @@ As with other software you need to get used to the input format which is shown i
 
 ### Installing GCalignR:
 
-The latest release v1.0.6 is on [CRAN](https://cran.r-project.org/package=GCalignR). [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
+The latest release v1.0.7 is on [CRAN](https://cran.r-project.org/package=GCalignR). [Click here](https://github.com/mottensmann/GCalignR/releases) for an overview of past releases and a brief description of applied changes.
 
 ```{r, eval = FALSE}
 install.packages("GCalignR", dependencies = T)
 ```
 
-*The current developmental version is identical to the CRAN release*
+*The developmental version, currently identical to the CRAN release, is available here:*
 
 ```{r, eval=FALSE}
 if (!("devtools" %in% rownames(installed.packages()))) { 
@@ -95,6 +95,6 @@ ggplot(df, aes(Year, Citations)) +
     egg::theme_article(base_size = 14) +
     scale_x_continuous(breaks = seq(2018,2024,1)) +
     labs(title = "GCalignR citations on Google Scholar", 
-         caption = paste("Citations as of", Sys.Date()))
+         caption = paste(sum(df$Citations), "Citations as of", Sys.Date()))
 ```
 

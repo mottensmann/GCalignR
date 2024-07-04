@@ -1,7 +1,7 @@
 Package: GCalignR
 Title: Simple Peak Alignment for Gas-Chromatography Data
-Version: 1.0.7
-Date: 2024-07-03
+Version: 1.0.7.1
+Date: 2024-09-29
 Encoding: UTF-8
 Authors@R: c(
     person("Meinolf", "Ottensmann", email = "meinolf.ottensmann@web.de", role = c("aut","cre"), 

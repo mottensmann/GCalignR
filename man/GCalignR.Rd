@@ -48,6 +48,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Meinolf Ottensmann \email{meinolf.ottensmann@web.de} (\href{https://orcid.org/0000-0003-3112-6928}{ORCID})
   \item Martin Stoffel \email{martin.adam.stoffel@gmail.com}
   \item Hazel J. Nichols
   \item Joseph I. Hoffman

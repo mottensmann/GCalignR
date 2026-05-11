@@ -13,3 +13,5 @@ internal
 vignettes/test_GCalignR*
 README.html
 ^CRAN-SUBMISSION$
+^\.positai$
+^\.claude$

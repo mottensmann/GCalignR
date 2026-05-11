@@ -15,7 +15,7 @@ package supports any other one-dimensional chromatography technique that
 enables the user to create a peak list with at least one column
 specifying retention times as illustrated below.
 
-<img src="vignettes/Two_Chromas_Peak_List.png" width="864" style="display: block; margin: auto;" />
+<img src="vignettes/Two_Chromas_Peak_List.png" alt="" width="864" style="display: block; margin: auto;" />
 
 As with other software you need to get used to the input format which is
 shown in the illustration:
@@ -75,7 +75,7 @@ aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame
                                max_diff_peak2mean = 0, 
                                min_diff_peak2peak = 0.08) 
 #> Run GCalignR
-#> Start: 2024-09-27 21:55:21
+#> Start: 2026-05-11 17:41:46
 #> 
 #> Data for 4 samples loaded.
 #> No reference was specified. Hence, a reference will be selected automatically ...
@@ -88,7 +88,7 @@ aligned <- align_chromatograms(data = peak_data[1:4], # list of data frame
 #> Merge redundant rows ...
 #>  
 #> Alignment completed!
-#> Time: 2024-09-27 21:55:24
+#> Time: 2026-05-11 17:41:48
 ```
 
 **The parameter values above differ from the defaults shown in the paper

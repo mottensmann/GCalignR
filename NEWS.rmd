@@ -3,6 +3,10 @@ output: github_document
 html_preview: false
 ---
 
+# GCalignR (development version)
+
+* `align_chromatograms()` now supports `verbose = FALSE` to suppress progress output.
+
 # GCalignR 1.0.7
 ___
 * replacing defunct vegan::adonis by vegan::adonis2

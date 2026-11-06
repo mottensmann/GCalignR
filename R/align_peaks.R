@@ -41,7 +41,7 @@
 #'
 #'@keywords internal
 #'
-align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1, rt_col_name, permute = TRUE, R = 1) {
+align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1, rt_col_name, permute = TRUE, R = 1, verbose = TRUE) {
     # print to Console
     # cat(paste('Iteration',as.character(R),'out of',as.character(iterations),' ... '))
 
@@ -55,7 +55,7 @@ align_peaks <- function(gc_peak_list, max_diff_peak2mean = 0.02, iterations = 1,
         total <- nrow(gc_peak_list[[1]])
         # create progress bar
 
-        if (interactive()) {
+        if (interactive() && verbose) {
         pb <- utils::txtProgressBar(min = 0, max = total, style = 3, char = "+", width = 80)
         utils::setTxtProgressBar(pb, ifelse(is.numeric(current_row), current_row, total))
         }

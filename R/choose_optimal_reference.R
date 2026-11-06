@@ -7,6 +7,8 @@
 #' Every sample is considered in determining the optimal reference in comparison to all other samples by estimating the similarity to all other samples. For a reference-sample pair, the deviation in retention times between all reference peaks and the always nearest peak in the sample is summed up and divided by the number of reference peaks. The calculated value is a similarity score that converges to zero the more similar reference and sample are. For every potential reference, the median score of all pair-wise comparisons is used as a similarity proxy. The optimal sample is then defined by the minimum value among these scores. This functions is used internally in \code{\link{align_chromatograms}} to select a reference if non was specified by the user.
 #'
 #' @inheritParams align_chromatograms
+#' @param verbose Logical. Print the progress indicator while selecting a
+#'   reference. Defaults to TRUE.
 #'
 #' @examples
 #' ## 1.) input is a list
@@ -27,7 +29,7 @@
 #'
 #' @export
 #'
-choose_optimal_reference <- function(data = NULL, rt_col_name = NULL, sep = "\t") {
+choose_optimal_reference <- function(data = NULL, rt_col_name = NULL, sep = "\t", verbose = TRUE) {
     if (is.null(rt_col_name)) stop("Specify retention time column")
     if (is.null(data)) stop("Provide a list of sampples or the path to a text file")
     gc_peak_list <- data
@@ -38,7 +40,7 @@ choose_optimal_reference <- function(data = NULL, rt_col_name = NULL, sep = "\t"
 
 
     ## get the median scores for shared peaks
-    x <- df_median_sim_score(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name, method = method)
+    x <- df_median_sim_score(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name, method = method, verbose = verbose)
 
     ## take the best, depending on the method chosen
     if (method == "Match") {
@@ -63,8 +65,13 @@ choose_optimal_reference <- function(data = NULL, rt_col_name = NULL, sep = "\t"
     }
 #### internal functions ####
 #### ################## ####
-df_median_sim_score <- function(gc_peak_list, rt_col_name, method) {
+df_median_sim_score <- function(gc_peak_list, rt_col_name, method, verbose = TRUE) {
 
+    old_pboptions <- pbapply::pboptions()
+    if (!verbose) {
+        on.exit(pbapply::pboptions(old_pboptions), add = TRUE)
+        pbapply::pboptions(type = "none")
+    }
     pbapply::pboptions(char = "+", style = 1) # set up timer
     temp <- pbapply::pblapply(gc_peak_list, function(x) median_sim_score(gc_peak_list = gc_peak_list, ref_df = x, rt_col_name = rt_col_name, method = method))
     temp <- do.call("rbind", temp)

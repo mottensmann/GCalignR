@@ -10,7 +10,8 @@ align_peaks(
   iterations = 1,
   rt_col_name,
   permute = TRUE,
-  R = 1
+  R = 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -23,12 +24,12 @@ required variable.}
 
 \item{rt_col_name}{A character giving the name of the column containing the retention times. The decimal separator needs to be a point.}
 
-\item{permute}{Boolean, by default a random permutation of samples is conducted prior for each row-wise alignment step. Setting this parameter to FALSE causes alignment of the dataset as it is.
-
-order of samples is constantly randomised during the alignment. Allows to prevent this behaviour for maximal repeatability if needed.}
+\item{permute}{Boolean, by default a random permutation of samples is conducted prior for each row-wise alignment step. Setting this parameter to FALSE causes alignment of the dataset as it is. The order of samples is constantly randomised during the alignment. Allows to prevent this behaviour for maximal repeatability if needed.}
 
 \item{R}{integer indicating the current iteration of the alignment step.
 Created by \link{align_chromatograms}.}
+
+\item{verbose}{Logical. Print progress information during alignment. Defaults to TRUE.}
 }
 \value{
 a list of data.frames containing GC-data with aligned peaks.

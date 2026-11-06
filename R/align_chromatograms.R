@@ -50,9 +50,11 @@
 #' Boolean, allows to remove samples which lack any peak after the alignment finished. By default FALSE
 #'
 #' @param permute
-#' Boolean, by default a random permutation of samples is conducted prior for each row-wise alignment step. Setting this parameter to FALSE causes alignment of the dataset as it is.
+#' Boolean, by default a random permutation of samples is conducted prior for each row-wise alignment step. Setting this parameter to FALSE causes alignment of the dataset as it is. The order of samples is constantly randomised during the alignment. Allows to prevent this behaviour for maximal repeatability if needed.
 #'
-#' order of samples is constantly randomised during the alignment. Allows to prevent this behaviour for maximal repeatability if needed.
+#' @param verbose
+#' Logical. Print progress information during alignment. Defaults to TRUE.
+#'
 #'
 #'@return
 #' Returns an object of class "GCalign" that is a a list containing several objects that are listed below. Note, that the objects "heatmap_input" and "Logfile" are best inspected by calling the provided functions \code{gc_heatmap} and \code{print}.
@@ -81,12 +83,20 @@
 #'
 align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
                                 write_output = NULL, rt_cutoff_low = NULL, rt_cutoff_high = NULL, reference = NULL,
-                                max_linear_shift = 0.02, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL, delete_single_peak = FALSE, remove_empty = FALSE, permute = TRUE, ...) {
+                                max_linear_shift = 0.02, max_diff_peak2mean = 0.02, min_diff_peak2peak = 0.08, blanks = NULL, delete_single_peak = FALSE, remove_empty = FALSE, permute = TRUE, verbose = TRUE, ...) {
 
     opt <- list(...)
+    progress_message <- function(...) {
+        if (verbose) cat(...)
+    }
+    if (!verbose) {
+        old_pboptions <- pbapply::pboptions()
+        on.exit(pbapply::pboptions(old_pboptions), add = TRUE)
+        pbapply::pboptions(type = "none")
+    }
 
     # Print start
-    cat(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S")),'\n\n'))
+    progress_message(paste0('Run GCalignR\n','Start: ',as.character(strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S")),'\n\n'))
 
     # Iteration have been deleted as function paramter.
     iterations = 1
@@ -189,7 +199,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     input_list <- gc_peak_list
 
     # Write some information about the input data to the Logfile
-    cat(paste0('Data for ',as.character(length(ind_names)),' samples loaded.'))
+    progress_message(paste0('Data for ',as.character(length(ind_names)),' samples loaded.'))
     Logbook[["Input"]]["Samples"] <- length(ind_names)
 
     Logbook[["Input"]]["Range"] <- paste((range(peak_lister(gc_peak_list = gc_peak_list,rt_col_name = rt_col_name))),collapse = "-")
@@ -209,12 +219,12 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     }
     # 3.1. Cut retention times
     if (!is.null(rt_cutoff_low) | !is.null(rt_cutoff_high)) {
-        cat("\nApply retention time cut-offs ... ")
+        progress_message("\nApply retention time cut-offs ... ")
     }
     gc_peak_list <- lapply(gc_peak_list, rt_cutoff, low = rt_cutoff_low, high = rt_cutoff_high, rt_col_name = rt_col_name)
     gc_peak_list_raw <- lapply(gc_peak_list, matrix_append, gc_peak_list)
     if (!is.null(rt_cutoff_low) | !is.null(rt_cutoff_high)) {
-        cat("done")
+        progress_message("done")
     }
     # Write to Logbook, distinguish cases
     if (!is.null(rt_cutoff_low) & is.null(rt_cutoff_high)) {
@@ -244,7 +254,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     # gc_peak_list <- lapply(X = gc_peak_list,FUN = round_rt)
 
     if (!is.null(reference)) {
-        cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
+        progress_message(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
         gc_peak_list_linear <- linear_transformation(gc_peak_list = gc_peak_list, max_linear_shift = max_linear_shift, step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
         Logbook <- gc_peak_list_linear[["Logbook"]]
         gc_peak_list_linear <- gc_peak_list_linear[["chroma_aligned"]]
@@ -253,15 +263,15 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     } else if (is.null(reference)) {
         # If no reference was specified by the user, the reference is determined, such
         # that the sample with the highest avarage similarity to all other samples is used.
-        cat("\nNo reference was specified. Hence, a reference will be selected automatically ...\n ")
-        best.ref <- choose_optimal_reference(data = gc_peak_list, rt_col_name = rt_col_name)
+        progress_message("\nNo reference was specified. Hence, a reference will be selected automatically ...\n ")
+        best.ref <- choose_optimal_reference(data = gc_peak_list, rt_col_name = rt_col_name, verbose = verbose)
         # set the reference
         reference <- best.ref[["sample"]]
-        cat("\n")
+        progress_message("\n")
         text <- paste0("'",reference,"' was selected on the basis of highest average similarity to all samples (score = ",round(best.ref[["score"]],2),").\n")
-        cat(stringr::str_wrap(paste(text,collapse = ""),width = 100,exdent = 0,indent = 0))
+        progress_message(stringr::str_wrap(paste(text,collapse = ""),width = 100,exdent = 0,indent = 0))
         #    }# new end
-        cat(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
+        progress_message(paste0('\nStart correcting linear shifts with ',"\"",as.character(reference),"\"",' as a reference ...\n'))
         gc_peak_list_linear <- linear_transformation(gc_peak_list, max_linear_shift = max_linear_shift,
                                                      step_size = 0.01, reference = reference, rt_col_name = rt_col_name, Logbook = Logbook)
         Logbook <- gc_peak_list_linear[["Logbook"]]
@@ -277,8 +287,8 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     gc_peak_list_linear <- lapply(gc_peak_list_linear, matrix_append, gc_peak_list_linear)
 
     # 3.3 Align peaks
-    cat("\n")
-    cat(c('Start aligning peaks ... ','this might take a while!\n'))
+    progress_message("\n")
+    progress_message(c('Start aligning peaks ... ','this might take a while!\n'))
 
     # create corresponding lists
     gc_peak_list_aligned <- gc_peak_list_linear
@@ -291,7 +301,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
         if (max_diff_peak2mean > 0) {
             gc_peak_list_aligned <- align_peaks(gc_peak_list_aligned, max_diff_peak2mean = max_diff_peak2mean,
                                                 iterations = iterations, rt_col_name = rt_col_name,R = R,
-                                                permute = permute)
+                                                permute = permute, verbose = verbose)
         } else if (max_diff_peak2mean == 0) {
             gc_peak_list_aligned <- align_peaks_fast(gc_peak_list_aligned, rt_col_name = rt_col_name)
         }
@@ -310,7 +320,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
         no_peaks[R] <- nrow(gc_peak_list_aligned[[1]])
 
         # 3.4 Merge rows
-        cat("\nMerge redundant rows ...\n ")
+        progress_message("\nMerge redundant rows ...\n ")
         gc_peak_list_aligned <- merge_redundant_peaks(gc_peak_list_aligned,
                                                       min_diff_peak2peak = min_diff_peak2peak, rt_col_name = rt_col_name)
         # estimate Number of merged peaks
@@ -334,7 +344,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
 
     # delete peaks present in blanks, then remove the blank itself
     if (!is.null(blanks)) {
-        cat("Remove contaminations and remove blanks ... ")
+        progress_message("Remove contaminations and remove blanks ... ")
         # delete peaks present in blanks
 
         # Number of Peaks including Blanks
@@ -348,7 +358,7 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
         N <- N -  nrow(gc_peak_list_aligned[[1]])
         Logbook[["Filtering"]]["Blank_Peaks"] <- N
         Logbook[["Aligned"]]["blanks"] <- N
-        cat('done\n')
+        progress_message('done\n')
     }
 
     # Create a retention time matrix
@@ -357,29 +367,29 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
     singular_peaks <- nrow(rt_mat)
     # find single retention times in rows
     if (delete_single_peak) {
-        cat("remove single peaks ... ")
+        progress_message("remove single peaks ... ")
         single_subs_ind <- which(rowSums(rt_mat > 0) == 1)
         # delete substances occurring in just one individual
         if (length(single_subs_ind) > 0) {
             gc_peak_list_aligned <- lapply(gc_peak_list_aligned, function(x) x[-single_subs_ind, ])
         }
-        cat(paste(as.character(length(single_subs_ind)),'have been removed\n'))
+        progress_message(paste(as.character(length(single_subs_ind)),'have been removed\n'))
         Logbook[["Aligned"]]["singular"] <- length(single_subs_ind)
     }
 
     ## added 2019-11-05
     ## Remove samples which are empty
     if (remove_empty) {
-        cat("remove empty samples ...")
+        progress_message("remove empty samples ...")
         ## check if sum of retention times is zero for entire sample
         check_empty <- lapply(gc_peak_list_aligned, function(x) sum(x[[rt_col_name]]))
         empty_sample_names <- which(check_empty == 0) %>% names
         # remove blanks
         gc_peak_list_aligned[empty_sample_names] <- NULL
 
-        if (length(empty_sample_names) == 0) cat('no sample was removed\n')
-        if (length(empty_sample_names) == 1) cat(paste(empty_sample_names), 'was removed\n')
-        if (length(empty_sample_names) > 1) cat(paste(empty_sample_names), 'were removed\n')
+        if (length(empty_sample_names) == 0) progress_message('no sample was removed\n')
+        if (length(empty_sample_names) == 1) progress_message(paste(empty_sample_names), 'was removed\n')
+        if (length(empty_sample_names) > 1) progress_message(paste(empty_sample_names), 'were removed\n')
     }
 
     # Final RT Matrix
@@ -500,6 +510,6 @@ align_chromatograms <- function(data, sep = "\t", rt_col_name = NULL,
 
     class(output_algorithm) <- "GCalign"
 
-    cat(paste0('\nAlignment completed!\n','Time:'),strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S"),'\n\n')
+    progress_message(paste0('\nAlignment completed!\n','Time:'),strftime(Sys.time(),format = "%Y-%m-%d %H:%M:%S"),'\n\n')
     return(output_algorithm)
 }# end align_chromatograms

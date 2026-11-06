@@ -1,4 +1,9 @@
 
+# GCalignR (development version)
+
+- `align_chromatograms()` now supports `verbose = FALSE` to suppress
+  progress output.
+
 # GCalignR 1.0.7
 
 ------------------------------------------------------------------------
